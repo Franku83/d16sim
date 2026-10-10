@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "status": "AWAITING_FIELD_DATA",
+  "gate": "S25 closes NUMERICALLY_VERIFIED_ONLY until C1-C6 land (P1 external). No synthetic stands in for field data.",
+  "train": [],
+  "holdout": [],
+  "required_campaigns": ["C1", "C2", "C3", "C4", "C5", "C6"],
+  "rules": [
+    "holdout motor MUST differ from every train motor (no leakage)",
+    "REAL trials MUST carry provenance (bench/operator/date/conditions)",
+    "SYNTHETIC_SELFTEST allowed in train-side tooling checks ONLY, never in holdout",
+    "every comparative plot MUST label real/simulated and train/holdout"
+  ]
+}

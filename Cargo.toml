@@ -21,6 +21,7 @@ members = [
     "crates/thermal",
     "crates/lube",
     "crates/leak",
+    "crates/calibration",
     "crates/physics",
     "crates/simulation",
     "crates/cli",

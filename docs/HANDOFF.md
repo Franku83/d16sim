@@ -1,7 +1,7 @@
 # HANDOFF — punto de entrada al siguiente agente
 
-Fecha: 2026-10-10 · Sprints: **S00–S24 APROBADOS (batch S21–S25)**.
-Siguiente: **S25 (último del batch)**. **S26 prohibido sin autorización.**
+Fecha: 2026-10-10 · Sprints: **S00–S25 APROBADOS — batch S21–S25 COMPLETO**.
+**S26 PROHIBIDO sin autorización explícita. Trabajo detenido.** **S26 prohibido sin autorización.**
 
 ## Estado científico/arquitectónico actual
 
@@ -164,7 +164,11 @@ Crate `leak` + `leak-test` + ADR-030. Ver `docs/sprints/S23.md`.
 
 `diagnostics::mech` + `mech-demo` + ADR-031. Ver `docs/sprints/S24.md`.
 
-## Brief S25 (siguiente y último del batch autorizado)
+## Brief S25 (APROBADO 2026-10-10, NUMERICALLY_VERIFIED_ONLY)
+
+Crate `calibration` + `calibration-demo` + `docs/calibration/` + ADR-032. Ver `docs/sprints/S25.md`.
+
+## Brief S26 (PROHIBIDO sin autorización explícita del propietario)
 
 Calibración stock con datos reales o cierre NUMERICALLY_VERIFIED_ONLY:
 campañas, parámetros identificables con priors, train/holdout sin

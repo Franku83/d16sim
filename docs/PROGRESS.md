@@ -376,3 +376,18 @@ Solo hechos constatables; sin cifras improvisadas.
   corregido (1400 kPa).
 - Gate S24: PASS — ≥2 mediciones, sin flags, sin dependencia del truth.
 - Deuda: causa válvula sin modelo S23, curvas reales, umbrales, 3er test.
+
+## 2026-10-10 · S25 · Calibración sin datos de campo (APROBADO, NUMERICALLY_VERIFIED_ONLY)
+
+- Crate `calibration` (params con priors + manifiesto anti-leakage +
+  Gauss-Newton con escalado/backtracking/covarianza + Morris);
+  `d16sim calibration-demo` (recuperación exacta, SYNTHETIC rotulado);
+  `docs/calibration/` (reporte, C1–C7, manifiesto vacío, model cards);
+  ADR-032; H-S25-01..04.
+- Tests: 4 passed (set, split —incl. rechazo de sintético en holdout—,
+  recuperación exacta, ranking). Bugs reales: lockfile, `max` ambiguo,
+  GN sin backtracking, covarianza singular → ancla sellada.
+- Gate S25: PASS por ausencia declarada — cero dyno inventado, cero
+  validación con sintéticos. 8 vacíos numerados; reapertura con C1–C6+M2.
+- DETENCIÓN honesta: sin evidencia externa indispensable (P1), el batch
+  termina aquí como ordenó el propietario.

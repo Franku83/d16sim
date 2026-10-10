@@ -195,6 +195,8 @@ enum Command {
         #[arg(long, default_value = "ring_leak_cyl3")]
         scenario: String,
     },
+    /// Self-consistency del fitter + sensibilidad (S25, sintético rotulado).
+    CalibrationDemo,
     /// Dinámica de cigüeñal con traza motored (S14, ilustrativo).
     CrankDynamics {
         #[arg(long, default_value_t = 750.0)]
@@ -344,6 +346,7 @@ fn run() -> Result<(), EngineError> {
         Command::LubricationTest { case } => lubrication_test_cmd(&case),
         Command::LeakTest { scenario } => leak_test_cmd(&scenario),
         Command::MechDemo { scenario } => mech_demo_cmd(&scenario),
+        Command::CalibrationDemo => calibration_demo_cmd(),
         Command::CrankDynamics { rpm0, seconds } => crank_dynamics_cmd(rpm0, seconds),
         Command::ColdCrank => cold_crank_cmd(),
     }
@@ -1729,5 +1732,52 @@ fn mech_demo_cmd(scenario: &str) -> Result<(), EngineError> {
     );
     println!("  verdict             : {verdict:?}");
     let _ = tot;
+    Ok(())
+}
+
+/// Comando S25: verifica la maquinaria de calibración con datos
+/// SYNTHETIC_SELFTEST (recupera C y p_ideal del cranking + ranking de
+/// Morris) y muestra el estado del manifiesto. NO valida nada: sin banco
+/// real el cierre es NUMERICALLY_VERIFIED_ONLY.
+fn calibration_demo_cmd() -> Result<(), EngineError> {
+    use calibration::{calibration_set, least_squares, local_elasticities, morris_effects};
+
+    let err = |e: String| EngineError::SchemaValidation(e);
+    let c_true = 8.0e5;
+    let p_true = 1500.0;
+    let areas = [1e-9, 0.5e-6, 1.0e-6, 2.0e-6, 4.0e-6, 8.0e-6];
+    let model = |p: &[f64], a: f64| p[1] * 400e-6 / (400e-6 + 8e-6) / (1.0 + p[0] * a * 0.6 * 4.0);
+    let y: Vec<f64> = areas.iter().map(|a| model(&[c_true, p_true], *a)).collect();
+    let w = vec![1.0; y.len()];
+    let f = |p: &[f64]| areas.iter().map(|a| model(p, *a)).collect::<Vec<_>>();
+    let r = least_squares(f, &y, &w, &[2.4e6, 1800.0], 1e-9).map_err(|e| err(e.to_string()))?;
+    let f1 = |p: &[f64]| model(p, 2e-6);
+    let el = local_elasticities(f1, &[c_true, p_true], &["crank_c_leak", "crank_p_ideal"]);
+    let mo = morris_effects(
+        |p: &[f64]| model(p, 2e-6),
+        &["crank_c_leak", "crank_p_ideal"],
+        &[(1e5, 5e6), (800.0, 2200.0)],
+        4,
+    );
+    let set = calibration_set();
+    let nid = set.iter().filter(|p| p.identifiable).count();
+    println!("calibration-demo (SYNTHETIC_SELFTEST: verifies machinery, validates NOTHING):");
+    println!(
+        "  recovered C         : {:.3e} (true {:.3e})",
+        r.params[0], c_true
+    );
+    println!(
+        "  recovered p_ideal   : {:.1} kPa (true {p_true:.1})",
+        r.params[1]
+    );
+    println!(
+        "  std_k1              : {:.3e} {:.3e}",
+        r.std_k1[0], r.std_k1[1]
+    );
+    println!("  max_corr            : {:.3}", r.max_abs_correlation);
+    println!("  elasticities        : {el:.3?}");
+    println!("  morris_rank         : {} > {}", mo[0].0, mo[1].0);
+    println!("  identifiable/blocked: {nid}/{}", set.len() - nid);
+    println!("  dataset status      : NO FIELD DATA — NUMERICALLY_VERIFIED_ONLY (P1 blocked)");
     Ok(())
 }

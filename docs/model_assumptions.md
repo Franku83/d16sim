@@ -196,3 +196,12 @@ futuros: toda aproximación pasa por aquí + `ModelCard` (§11.4).
 | H-S24-03 | Reparto como observación del harness | S24 | Decisión ADR-031 | Tester S25 |
 | H-S24-04 | Umbrales de taller sin calibrar | S24 | Ayuda declarada | Manual/banco |
 | H-S24-05 | Subapretada≈anillos con 2 tests (3º prescrito) | S24 | Límite documentado | 3er test |
+
+## Registro S25 (calibración sin datos de campo)
+
+| ID | Hipótesis | Dominio | Fuente | Invalida si |
+|---|---|---|---|---|
+| H-S25-01 | 6 params identificables con taller; 8 bloqueados | S25 | Decisión ADR-032 | Llegada de C1–C7 |
+| H-S25-02 | Self-test sintético verifica fitter, no valida | S25 | Regla EVIDENCE | Mal uso (prohibido) |
+| H-S25-03 | Ancla sellada rompe degenerescencia C/p_ideal | S25 | Análisis (corr −0.98→−0.54) | Banco C2 |
+| H-S25-04 | Cierre NUMERICALLY_VERIFIED_ONLY; precisión bloqueada | S25 | Decisión ADR-032 | Manifiesto con datos |
