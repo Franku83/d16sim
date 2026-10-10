@@ -6,17 +6,17 @@ No saltar gates para mostrar progreso visual.
 
 | Sprint | Objetivo (resumen) | Dep. | Estado |
 |---|---|---|---|
-| S00 | Charter, alcance, reglas repo | — | **En curso (este sprint)** |
-| S01 | Variante + manual OEM + ficha maestra | S00 | Pendiente |
-| S02 | Toolchain, CI, runner headless | S00 | Pendiente |
-| S03 | Unidades, constantes, álgebra | S02 | Pendiente |
-| S04 | Catálogo estructural e instancias | S01–S03 | Pendiente |
-| S05 | Eventos, snapshots, replay | S02–S04 | Pendiente |
-| S06 | Cinemática cigüeñal/pistón/biela | S03–S05 | Pendiente |
-| S07 | Herramientas y contactos | S04,S06 | Pendiente |
-| S08 | Pernos, precarga, junta | S01,S03–S05,S07 | Pendiente |
-| S09 | Gas ideal / cilindro sellado | S03,S06 | Pendiente |
-| S10 | Combustión reducida | S09 | Pendiente |
+| S00 | Charter, alcance, reglas repo | — | **APROBADO** |
+| S01 | Variante + manual OEM + ficha maestra | S00 | **APROBADO** |
+| S02 | Toolchain, CI, runner headless | S00 | **APROBADO** |
+| S03 | Unidades, constantes, álgebra | S02 | **APROBADO** |
+| S04 | Catálogo estructural e instancias | S01–S03 | **APROBADO** |
+| S05 | Eventos, snapshots, replay | S02–S04 | **APROBADO** |
+| S06 | Cinemática cigüeñal/pistón/biela | S03–S05 | **APROBADO** |
+| S07 | Herramientas y contactos | S04,S06 | **APROBADO** |
+| S08 | Pernos, precarga, junta | S01,S03–S05,S07 | **APROBADO** |
+| S09 | Gas ideal / cilindro sellado | S03,S06 | **APROBADO** |
+| S10 | Combustión reducida | S09 | **APROBADO** |
 | S11 | Distribución SOHC | S06–S07,S09 | Pendiente |
 | S12 | Flujos adm/esc 0D | S09,S11 | Pendiente |
 | S13 | Combustible rail/inyector | S03,S10,S12 | Pendiente |

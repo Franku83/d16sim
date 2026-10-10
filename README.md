@@ -18,9 +18,9 @@ implementado, calibrado ni validado**.
 
 ## Estado de sprints
 
-- **S00 (en curso):** charter, alcance científico y reglas del repositorio.
-  Sin código de física. Ver `docs/sprints/S00.md`.
-- **S01–S37: pendientes.** No adelantar. Ver `docs/SPRINTS.md`.
+- **S00–S10 APROBADOS.** Ver `docs/sprints/S00.md`–`S10.md` y gates en
+  `docs/SPRINTS.md`.
+- **S11–S37: pendientes.** No adelantar. Ver `docs/SPRINTS.md`.
 
 ## Estructura
 
@@ -31,15 +31,18 @@ docs/
   definition-of-done.md  # DoD + criterios de rechazo
   EVIDENCE_POLICY.md     # etiquetas [F/D/H/P/X] + clases OEM/FORUM + transferencia
   limitations.md         # no-soportado y dominios de extrapolación
-  model_assumptions.md   # libro de hipótesis (vacío en S00: sin modelos)
+  model_assumptions.md   # libro de hipótesis (H-S06..H-S10 registradas)
   RISK_MATRIX.md         # matriz de riesgos
-  BACKLOG.md             # backlog documental (sprints como backlog, no tickets de física)
+  BACKLOG.md             # backlog documental (estados S00–S10 aprobados)
   SPRINTS.md             # dependencias, estado y gates
   PROGRESS.md            # log objetivo de cambios ejecutados
   HANDOFF.md             # estado actual + cómo continuar
-  LICENSE_STATUS.md    # licencia por decidir
-  adr/                   # ADR-001..012 + plantilla
-  sprints/S00.md         # ficha de ejecución S00
+  LICENSE_STATUS.md    # licencia Apache-2.0 (decidida, solo código propio)
+  adr/                   # ADR-001..017 + plantilla
+  sprints/S00.md         # fichas de ejecución S00–S10 (una por sprint)
+crates/                  # workspace Rust: engine-types, math, units,
+                         # assembly, kinematics, contacts, fastener,
+                         # thermo, combustion, physics (stub), simulation, cli
 data/
   provenance_registry.yaml  # catálogo de fuentes Rxx/CFxx (índice, no valores)
 ```
@@ -73,6 +76,7 @@ bash -c 'test -f docs/foundation.md && echo FOUNDATION_OK'
 
 ## Licencia
 
-Pendiente de decisión. Ver `docs/LICENSE_STATUS.md`. No hay código que
-licenciar en S00; no copiar firmware Speeduino (GPL-2.0) ni scans del manual
-Honda ni CAD de terceros.
+Apache-2.0 solo para el código propio (decisión del propietario
+2026-10-10). Ver `docs/LICENSE_STATUS.md` y `THIRD_PARTY_NOTICES.md`.
+No copiar firmware Speeduino (GPL-2.0) ni scans del manual Honda ni
+CAD de terceros.

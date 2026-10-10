@@ -1,13 +1,17 @@
 # HANDOFF — punto de entrada al siguiente agente
 
-Fecha: 2026-10-10 · Sprints: **S00–S10 APROBADOS (batch S06–S10)**.
-**S11 NO iniciado: prohibido sin autorización explícita.**
+Fecha: 2026-10-10 · Sprints: **S00–S10 APROBADOS; batch S11–S15
+AUTORIZADO por el propietario**. Siguiente: **S11 (EN_CURSO)**.
 
 ## Estado científico/arquitectónico actual
 
 - Spec normativa: `docs/foundation.md` (v0.2). Research intactos en raíz.
-- Sin código de física, sin crates, sin UI. `model_assumptions.md` vacío
-  intencional. Todo número D16Y7 = `PENDING` / `MISSING-DATA`.
+- 12 crates en workspace (`crates/`): tipos, runner, unidades, grafo de
+  montaje, cinemática, contactos, pernos, termo, combustión, `physics`
+  aún stub, simulación, CLI. Sin UI. Numéricos con etiqueta de
+  verificación (`VERIFIED_NUMERICALLY`), nunca validación.
+- `model_assumptions.md` con H-S06..H-S10 registradas. Números OEM D16Y7
+  siguen `PENDING` / `MISSING-DATA`; presets ilustrativos etiquetados.
 - Evidencia: `docs/EVIDENCE_POLICY.md`. Riesgos: `docs/RISK_MATRIX.md`.
 - DoD y rechazo: `docs/definition-of-done.md`. Gate S00:
   `docs/sprints/S00.md`.
@@ -101,8 +105,10 @@ Crate `thermo` + `closed-cycle` + ADR-016. Ver `docs/sprints/S09.md`.
 Crate `combustion` + `closed-cycle-burn` + ADR-017. Ver
 `docs/sprints/S10.md`.
 
-## Brief S11 (PROHIBIDO sin autorización explícita del propietario)
+## Brief S11 (EN_CURSO — batch S11–S15 autorizado 2026-10-10)
 
 Distribución SOHC: `CamProfile` lift-vs-θ, cinemática 2:1 + offset de
 correa, valvetrain cuasiestático, clearance/volumen efectivo, detección
-de contacto (daño pospuesto a material). Dep: S06–S07, S09.
+de contacto (daño pospuesto a material). Dep: S06–S07, S09. Gate: los
+cuatro cilindros derivan eventos de un cam+crank compartidos; sin daños
+automáticos.

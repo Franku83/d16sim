@@ -175,3 +175,14 @@ Solo hechos constatables; sin cifras improvisadas.
   (barrido 340/350/360), no calibrada; sin dyno al freno.
 - Deuda: γ(T,mezcla), residuales, pared L1, ciclo-a-ciclo, knock
   (UNSUPPORTED), gas exchange (S12), p(θ) medida (S25).
+
+## 2026-10-10 · Revisión de consistencia pre-batch S11–S15 (sin cambios científicos)
+
+- Cruzados `HANDOFF.md`, `SPRINTS.md`, `PROGRESS.md`: gates S00–S10,
+  fechas, hashes y deuda coinciden; historial `git log` 1 commit/sprint
+  (S02 con fixup `target/`); sin contradicciones científicas.
+- Corregidas solo declaraciones obsoletas de estado: `README.md`
+  (sprints, árbol, licencia), `SPRINTS.md` (línea S01+), `HANDOFF.md`
+  (crates/código/hipótesis), `BACKLOG.md` (estados S00–S10), índice ADR
+  (014–017). Intactos: historial PROGRESS, gates, ADRs, research,
+  `docs/sprints/S00.md`.
