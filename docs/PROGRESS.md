@@ -254,3 +254,18 @@ Solo hechos constatables; sin cifras improvisadas.
   trazas V·I inspeccionables.
 - Deuda: integración con combustión S16, gas exchange vivo, starter
   medido, Bendix, fricción fría.
+
+## 2026-10-10 · S16 · Motor integrado end-to-end (APROBADO)
+
+- Crate `engine` (4 cámaras + nodos + control open-loop + arranque +
+  snapshot reanudable bit-idéntico); `d16sim engine-run` (ralentí ~1026
+  rpm con mariposa 0.05+bypass 0.02; speed-density 1920/3102/5552;
+  0/0/699 en fallos; masa 1e−11, energía 7e−5); ADR-023;
+  `docs/physics/integrated_engine.md`; H-S16-01..05.
+- Tests: 7 passed (ralentí sin clamp, orden causal, corte coherente,
+  snapshot bit-idéntico, determinismo+convergencia, flancos, sellado).
+- Bugs reales corregidos (4+2 auditoría): rebanado bajo deadtime,
+  doble disparo floor, −p·dV perdido, Q vs E_chem y ΔKE en auditoría.
+- Gate S16: PASS — ralentí emergente reportado tal cual; sin magia.
+- Deuda: lazo cerrado, AFR→quemado, multicilindro diferenciado,
+  periódico largo, control S19, arranque parametrizado.

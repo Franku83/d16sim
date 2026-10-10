@@ -39,6 +39,7 @@ sources:
   - {id: CF15-CF20, kind: epc, desc: PNs 1997 DX 5MT (culata/junta/tornillos/pistones/inyectores/bombas/distribuidores), class: OEM-EPC-identity-only}
   - {id: CF21-CF35, kind: forum+mfr, desc: casos montaje M01-M13 + Motorservice/King/Fel-Pro/ARP generales, class: FORUM-CASE/MEASURED + MFR-TECH-general}
   - {id: CF36-CF52, kind: forum, desc: casos electronica E01-E12 (CKP/TDC/CYP, timing 12BTDC, IACV 3 hilos, P2E/OBD2a-b, P06/P28), class: FORUM-CASE/MEASURED/CLAIM}
+  - {id: TRIG-2026-10-10, kind: forum-practitioner, desc: patron 24/4/1 + mitad-velocidad (hondabase 2026 + rusEFI blundar 2021, TD-80U/98U no nombrados, 16BTDC era OBD1), CKF separado en bomba (serie B), carmanualsonline 403 sin leer, file: research/raw/trigger-distributor-2026-10-10.md, class: FORUM-CLAIM/CASE-candidate, use: GENERIC_TRIGGER-only-until-scope-plus-OEM-page}
   - {id: CF53-CF62, kind: forum+mfr, desc: casos turbo/dyno T01-T08 + fabricantes, class: FORUM-CASE/CLAIM, note: no-curva-stock-CF59-CF07}
 
 conflicts_open:

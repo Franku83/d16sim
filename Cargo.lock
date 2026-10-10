@@ -185,6 +185,7 @@ dependencies = [
  "contacts",
  "crank",
  "electrical",
+ "engine",
  "engine-types",
  "fastener",
  "flow",
@@ -218,6 +219,25 @@ dependencies = [
  "kinematics",
  "thiserror",
  "units",
+]
+
+[[package]]
+name = "engine"
+version = "0.1.0"
+dependencies = [
+ "combustion",
+ "crank",
+ "electrical",
+ "engine-types",
+ "flow",
+ "fuel",
+ "kinematics",
+ "serde",
+ "serde_json",
+ "thermo",
+ "thiserror",
+ "units",
+ "valvetrain",
 ]
 
 [[package]]

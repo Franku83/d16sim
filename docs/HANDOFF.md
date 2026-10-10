@@ -1,7 +1,8 @@
 # HANDOFF — punto de entrada al siguiente agente
 
-Fecha: 2026-10-10 · Sprints: **S00–S15 APROBADOS (batch S11–S15)**.
-**S16 NO iniciado: prohibido sin autorización explícita.**
+Fecha: 2026-10-10 · Sprints: **S00–S16 APROBADOS (batch S16–S20)**.
+Siguiente: **S17** (triggers con TRIG-2026-10-10 como GENERIC_TRIGGER).
+**S21 prohibido sin autorización.**
 
 ## Estado científico/arquitectónico actual
 
@@ -32,9 +33,10 @@ Fecha: 2026-10-10 · Sprints: **S00–S15 APROBADOS (batch S11–S15)**.
    2026-10-10.
 2. ~~Licencia sin decidir~~ — resuelto: Apache-2.0 solo código propio
    (propietario 2026-10-10); `LICENSE` + `THIRD_PARTY_NOTICES.md` creados.
-3. S01–S15 APROBADOS 2026-10-10 (S14: cierre 2.7e−8; S15: 236.8 rpm
-   sin arranque por diseño). Deuda: CI Windows sin ejecutar; integración
-   con combustión en S16; starter medido.
+3. S01–S16 APROBADOS 2026-10-10 (S15: sin arranque por diseño; S16:
+   ~1026 rpm emergentes, snapshot bit-idéntico). Trigger 24/4/1 archivado
+   como GENERIC_TRIGGER (TRIG-2026-10-10, CKF pendiente). Deuda: lazo
+   cerrado, gas exchange vivo, CKP scope + página OEM.
 
 ## Roles y reglas de cambio (S00)
 
@@ -126,12 +128,16 @@ Crate `crank` + `crank-dynamics` + ADR-021. Ver `docs/sprints/S14.md`.
 
 Crate `electrical` + `cold-crank` + ADR-022. Ver `docs/sprints/S15.md`.
 
-## Brief S16 (PROHIBIDO sin autorización explícita del propietario)
+## Brief S16 (APROBADO 2026-10-10)
 
-Primer motor que puede arrancar: 4 cámaras acopladas al mismo cigüeñal,
-ignición/inyección por eventos explícitos (sin clamp de RPM ni torque
-mágico), mezcla/mariposa/carga base, aire de ralentí, run-on/shutdown
-coherentes. Dep: S10–S15.
+Crate `engine` + `engine-run` + ADR-023. Ver `docs/sprints/S16.md`.
+
+## Brief S17 (siguiente en batch autorizado)
+
+Hardware CKP/TDC/CYP + transductores: geometría de rotores GENERIC_TRIGGER
+(TRIG-2026-10-10, prohibido OEM), forma de onda VR vs tiempo, cableado,
+muestreo para scope, niveles vs RPM, escenarios de fallo. Gate: patrón
+trazado a fuente o GENERIC_TRIGGER.
 
 Arranque: batería (Voc/Rint/SOC/T) + starter (torque vs ω) + compresión
 resistiva + fricción de arranque + bobina/dwell simplificada con evento

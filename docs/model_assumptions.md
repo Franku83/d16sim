@@ -111,3 +111,13 @@ futuros: toda aproximación pasa por aquí + `ModelCard` (§11.4).
 | H-S15-03 | Reductora 12:1 ilustrativa explícita | S15 | Supuesto declarado | Relación OEM |
 | H-S15-04 | Compresión = traza S12 (velocidad pendiente) | S15 | Supuesto declarado | Gas exchange vivo S16 |
 | H-S15-05 | `started=false` por diseño; bootstrap prohibido | S15 | Decisión ADR-022 | Integración S16 |
+
+## Registro S16 (integración causal)
+
+| ID | Hipótesis | Dominio | Fuente | Invalida si |
+|---|---|---|---|---|
+| H-S16-01 | Splitting explícito + Euler; convergencia medida | S16 | ADR-023 | Rigidez/implícito |
+| H-S16-02 | Control open-loop (ηv 0.75, AFR 13.5, avance 15° fijos) | S16 | Supuesto declarado | Lazo cerrado S18 |
+| H-S16-03 | AFR→quemado sin acoplar; eff=1, γ const | S16 | Limitación declarada | Modelo S12+quemado |
+| H-S16-04 | Punto ralentí = posición de mariposa (experimento) | S16 | Supuesto declarado | Control S19 |
+| H-S16-05 | Régimen emergente reportado tal cual, no stock | S16 | Gate S16 | Validación S25 |

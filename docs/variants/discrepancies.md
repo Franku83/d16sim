@@ -23,6 +23,8 @@ régimen/T/variante/instrumento, bloquear calibración. No promediar.
 | C-16 | potencia catálogo | 106hp@6200 / 103lb-ft@4600 | variantes 6400/8000, 4300, 89.4mm | agregadores | FORUM-CLAIM; OEM pendiente |
 | C-17 | I/E escape | ratio 0.77–0.82 P2A-06 | 0.844@0.250 (dip banco) | banco casero | Citar con caveat; cota ±10% propuesta |
 | C-18 | bore სიტვ | 75×90 consenso | 89.4 carrera errata | agregadora | No promediar; OEM pendiente |
+| C-19 | trigger 24/4/1 | hondabase+rusEFI: 24/4/1 a ½ velocidad (95+) | TD-80U/98U no nombrados; 16° es era OBD1 | Fuerte candidato familiar; GENERIC_TRIGGER, prohibido OEM hasta scope+página |
+| C-20 | CKF | rusEFI: separado en bomba, 12 dientes, algunos OBD2 USA (serie B) | D16Y7-1997 sin confirmar | PENDING presencia; concepto registrado |
 
 Matriz CONFIRMED / DISPUTED / UNKNOWN: nada es CONFIRMED en S01
 (edición/página pendientes). DISPUTED = tabla arriba. UNKNOWN =

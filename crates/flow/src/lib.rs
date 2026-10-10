@@ -10,6 +10,6 @@ pub mod nodes;
 pub mod orifice;
 
 pub use cycle::{run_cycle, CycleAudit, ExhaustInit, GasExchangeInputs, TracePoint};
-pub use data::{exhaust_cd, intake_cd, EXHAUST_VALVE_DIA_MM, INTAKE_VALVE_DIA_MM};
+pub use data::{curtain_area_m2, exhaust_cd, intake_cd, EXHAUST_VALVE_DIA_MM, INTAKE_VALVE_DIA_MM};
 pub use nodes::Volume;
 pub use orifice::{mass_flow, FlowSide};

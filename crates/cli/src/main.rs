@@ -135,6 +135,13 @@ enum Command {
     },
     /// Suministro de combustible L1 (S13, hipótesis etiquetadas).
     FuelSupplyTest,
+    /// Motor integrado end-to-end (S16, sin clamp de RPM).
+    EngineRun {
+        #[arg(long, default_value = "healthy")]
+        scenario: String,
+        #[arg(long, default_value_t = 6.0)]
+        seconds: f64,
+    },
     /// Dinámica de cigüeñal con traza motored (S14, ilustrativo).
     CrankDynamics {
         #[arg(long, default_value_t = 750.0)]
@@ -270,6 +277,7 @@ fn run() -> Result<(), EngineError> {
             tailpipe_cm2,
         } => gas_exchange_cmd(rpm, plenum_l, exhaust_l, throttle_cm2, tailpipe_cm2),
         Command::FuelSupplyTest => fuel_supply_test_cmd(),
+        Command::EngineRun { scenario, seconds } => engine_run_cmd(&scenario, seconds),
         Command::CrankDynamics { rpm0, seconds } => crank_dynamics_cmd(rpm0, seconds),
         Command::ColdCrank => cold_crank_cmd(),
     }
@@ -1033,5 +1041,62 @@ fn cold_crank_cmd() -> Result<(), EngineError> {
         r.spark.energy_j * 1e3
     );
     println!("  mech_closure      : {:.3e}", r.mech_closure);
+    Ok(())
+}
+
+/// Comando S16: motor integrado end-to-end desde reposo. El régimen final
+/// se reporta tal cual (sin clamp, sin torque mágico, sin bootstrap).
+fn engine_run_cmd(scenario: &str, seconds: f64) -> Result<(), EngineError> {
+    use engine::{
+        healthy_inputs, high_friction_inputs, no_fuel_inputs, no_spark_inputs, run_engine,
+    };
+
+    let err = |e: String| EngineError::SchemaValidation(e);
+    let mut inputs = match scenario {
+        "healthy" => healthy_inputs(),
+        "no_spark" => no_spark_inputs(),
+        "no_fuel" => no_fuel_inputs(),
+        "high_friction" => high_friction_inputs(),
+        _ => return Err(err(format!("unknown scenario {scenario}"))),
+    };
+    if !(seconds.is_finite() && seconds > 0.0 && seconds <= 30.0) {
+        return Err(err("seconds in (0, 30]".to_owned()));
+    }
+    inputs.t_end_s = seconds;
+    if let Ok(dt) = std::env::var("D16SIM_DT") {
+        if let Ok(v) = dt.parse::<f64>() {
+            inputs.dt_s = v;
+        }
+    }
+    // Overrides de experimento (barridos documentados, no calibración).
+    if let Ok(v) = std::env::var("D16SIM_THR_CM2") {
+        if let Ok(x) = v.parse::<f64>() {
+            inputs.throttle_area_m2 = x * 1e-4;
+        }
+    }
+    if let Ok(v) = std::env::var("D16SIM_BYP_CM2") {
+        if let Ok(x) = v.parse::<f64>() {
+            inputs.idle_bypass_area_m2 = x * 1e-4;
+        }
+    }
+    let trace = run_engine(&inputs).map_err(|e| err(e.to_string()))?;
+    let a = trace.audit;
+    println!("engine-run scenario={scenario} (ILLUSTRATIVE all inputs; emergent rpm):");
+    println!("  final_rpm         : {:.1}", a.final_rpm);
+    println!("  W_ind_J           : {:.1}", a.w_ind_j);
+    println!("  W_fric_J          : {:.1}", a.w_fric_j);
+    println!("  W_starter_J       : {:.1}", a.w_starter_j);
+    println!("  W_load_J          : {:.1}", a.w_load_j);
+    println!("  fuel_inj_g        : {:.3}", a.fuel_injected_kg * 1e3);
+    println!("  fuel_burned_g     : {:.3}", a.fuel_burned_kg * 1e3);
+    println!("  Q_rel_J           : {:.1}", a.heat_released_j);
+    println!("  mass_closure      : {:.3e}", a.mass_closure);
+    println!("  energy_closure    : {:.3e}", a.energy_closure);
+    println!(
+        "  dU_J/KE_J/Hamb_J  : {:.1} / {:.1} / {:.1}",
+        a.delta_u_j, a.delta_ke_j, a.h_amb_net_j
+    );
+    println!("  Hfuel_J           : {:.1}", a.h_fuel_j);
+    println!("  samples           : {}", trace.samples.len());
     Ok(())
 }
