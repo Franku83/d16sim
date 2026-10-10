@@ -41,7 +41,12 @@ impl StarterMotor {
         }
     }
 
-    fn validated(&self) -> Result<(), StarterError> {
+    /// Valida el motor (magnitudes > 0 finitas y free < stall).
+    ///
+    /// # Errors
+    ///
+    /// `InvalidInput` si algún parámetro viola dominio.
+    pub fn validated(&self) -> Result<(), StarterError> {
         let bad = |reason: &str| StarterError::InvalidInput {
             reason: reason.to_owned(),
         };

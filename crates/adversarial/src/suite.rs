@@ -260,10 +260,11 @@ mod tests {
             Some(700.0),
             900.0,
             Some(35.0),
+            // R01-C2/C1-03: descomposición completa normalizada (Σ = 1).
             Some(LeakSplit {
                 to_crankcase_01: 0.8,
                 to_exhaust_01: 0.1,
-                to_coolant_01: 0.0,
+                to_coolant_01: 0.1,
             }),
         );
         let valve = diagnose_low_compression(
@@ -273,7 +274,7 @@ mod tests {
             Some(LeakSplit {
                 to_crankcase_01: 0.1,
                 to_exhaust_01: 0.8,
-                to_coolant_01: 0.0,
+                to_coolant_01: 0.1,
             }),
         );
         assert_ne!(rings, valve);

@@ -94,11 +94,30 @@ pub struct ThermalSnap {
 pub struct EngineSnapshot {
     pub state: EngineState,
     pub state_hash: String,
+    /// Identidad del modelo/convención que produjo el snapshot (R02-C2/C1-05).
+    /// `None` = formato pre-C2 (productor ambiguo entre R02 y C1): no se
+    /// declara continuación física exacta. `state_hash` **no** cubre este
+    /// campo (metadata, C1-G01).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub model: Option<ModelIdentity>,
     /// Procedencia de una migración legacy (R02-C1/RV04). `None` en
     /// snapshots nativos completos; presente cuando el estado provino de un
     /// esquema sin los inventarios de nodo o sin historia de presión.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub provenance: Option<MigrationProvenance>,
+}
+
+/// Convención de contabilidad química actual (consumo por paso, C1+).
+pub const COMBUSTION_ACCOUNTING_STEPWISE: u32 = 1;
+
+/// Identidad explícita del productor (R02-C2/C1-05): separa la versión del
+/// esquema de serialización de la convención de modelo/contabilidad química.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub struct ModelIdentity {
+    /// Versión del esquema de serialización (debe coincidir con el estado).
+    pub schema_version: u32,
+    /// Convención de contabilidad: `COMBUSTION_ACCOUNTING_STEPWISE`.
+    pub combustion_accounting: u32,
 }
 
 /// Registro de una migración de snapshot legacy (R02-C1/RV04): qué esquema se
@@ -127,6 +146,10 @@ impl EngineSnapshot {
         Self {
             state: state.clone(),
             state_hash: canonical_state_hash(state),
+            model: Some(ModelIdentity {
+                schema_version: state.schema_version,
+                combustion_accounting: COMBUSTION_ACCOUNTING_STEPWISE,
+            }),
             provenance: None,
         }
     }
@@ -137,6 +160,10 @@ impl EngineSnapshot {
         Self {
             state: state.clone(),
             state_hash: canonical_state_hash(state),
+            model: Some(ModelIdentity {
+                schema_version: state.schema_version,
+                combustion_accounting: COMBUSTION_ACCOUNTING_STEPWISE,
+            }),
             provenance,
         }
     }

@@ -145,6 +145,14 @@ impl ThermalState {
             + self.t_cool_c * p.c_cool
     }
 
+    /// Energía almacenada si es representable (finita); `None` si el
+    /// producto/suma derivado desborda (R02-C2/C1-04). No cambia `stored_j`.
+    #[must_use]
+    pub fn stored_j_checked(&self, p: &ThermalParams) -> Option<f64> {
+        let u = self.stored_j(p);
+        u.is_finite().then_some(u)
+    }
+
     /// Factor del termostato [0, 1] (0 cerrado bajo la banda).
     #[must_use]
     pub fn thermostat_factor(&self, p: &ThermalParams) -> f64 {
@@ -208,7 +216,8 @@ impl ThermalState {
         if !(ambient_c.is_finite() && ambient_c > ABS_ZERO_C) {
             return Err(bad);
         }
-        // Estado de entrada: temperaturas absolutas válidas antes de tocar nada.
+        // Estado de entrada: temperaturas absolutas válidas y energía
+        // almacenada representable antes de tocar nada (R02-C2/C1-04).
         for v in [
             self.t_wall_c,
             self.t_piston_c,
@@ -219,6 +228,9 @@ impl ThermalState {
             if !(v.is_finite() && v > ABS_ZERO_C) {
                 return Err(bad);
             }
+        }
+        if self.stored_j_checked(p).is_none() {
+            return Err(bad);
         }
         let tstat = self.thermostat_factor(p);
         // Calor neto a ambiente (frontera declarada, R01-F10): pared, aceite y
@@ -248,6 +260,13 @@ impl ThermalState {
             if !(v.is_finite() && v > ABS_ZERO_C) {
                 return Err(bad);
             }
+        }
+        // Energía almacenada del candidato (producto T·C y suma) finita: no
+        // basta con que cada temperatura y capacidad lo sean (C1-04).
+        let stored_candidate =
+            t_wall * p.c_wall + t_piston * p.c_piston + t_oil * p.c_oil + t_cool * p.c_cool;
+        if !stored_candidate.is_finite() {
+            return Err(bad);
         }
         // `q_amb` es energía (J), puede ser negativa (ambiente más caliente);
         // solo se exige finitud.
@@ -361,5 +380,14 @@ mod tests {
         let before2 = s2;
         assert!(s2.step(0.1, 100.0, 0.0, 20.0, &p2).is_err());
         assert_eq!(s2, before2);
+        // Capacidad enorme: la energía almacenada derivada (T·C) desborda y
+        // el candidato se rechaza sin mutar (R02-C2/C1-04).
+        let mut p3 = p;
+        p3.c_wall = f64::MAX;
+        let mut s3 = ThermalState::cold(20.0);
+        let before3 = s3;
+        assert!(s3.step(0.1, 10.0, 3.0, 20.0, &p3).is_err());
+        assert_eq!(s3, before3);
+        assert!(s3.stored_j_checked(&p3).is_none());
     }
 }

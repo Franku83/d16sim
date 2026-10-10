@@ -47,6 +47,37 @@ impl Battery {
         }
     }
 
+    /// Valida el estado/parámetros de la batería (R02-C2/C1-01).
+    ///
+    /// # Errors
+    ///
+    /// `InvalidInput` si `soc`/`temp` o los parámetros eléctricos no son
+    /// finitos o violan dominio.
+    pub fn validated(&self) -> Result<(), BatteryError> {
+        let bad = |reason: &str| BatteryError::InvalidInput {
+            reason: reason.to_owned(),
+        };
+        if !(self.soc.is_finite() && (0.0..=1.0).contains(&self.soc)) {
+            return Err(bad("soc must be in [0, 1]"));
+        }
+        for (v, name) in [
+            (self.temp_c, "temp"),
+            (self.v_full, "v_full"),
+            (self.v_slope, "v_slope"),
+            (self.v_temp_coeff, "v_temp_coeff"),
+            (self.r0_ohm, "r0"),
+            (self.r_ground_ohm, "r_ground"),
+        ] {
+            if !v.is_finite() {
+                return Err(bad(name));
+            }
+        }
+        if self.r0_ohm < 0.0 || self.r_ground_ohm < 0.0 {
+            return Err(bad("resistance must be >= 0"));
+        }
+        Ok(())
+    }
+
     /// Tensión de circuito abierto (V).
     ///
     /// # Errors
