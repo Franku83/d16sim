@@ -76,6 +76,25 @@ dependencies = [
 ]
 
 [[package]]
+name = "audit"
+version = "0.1.0"
+dependencies = [
+ "diagnostics",
+ "ecu",
+ "engine",
+ "engine-types",
+ "fastener",
+ "leak",
+ "serde",
+ "serde_json",
+ "thermal",
+ "thiserror",
+ "trigger",
+ "valvetrain",
+ "wear",
+]
+
+[[package]]
 name = "block-buffer"
 version = "0.10.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -202,6 +221,7 @@ version = "0.1.0"
 dependencies = [
  "adversarial",
  "assembly",
+ "audit",
  "calibration",
  "clap",
  "combustion",

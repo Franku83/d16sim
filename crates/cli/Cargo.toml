@@ -31,6 +31,7 @@ wear = { path = "../wear" }
 damage = { path = "../damage" }
 dyno = { path = "../dyno" }
 adversarial = { path = "../adversarial" }
+audit = { path = "../audit" }
 kinematics = { path = "../kinematics" }
 thermo = { path = "../thermo" }
 valvetrain = { path = "../valvetrain" }

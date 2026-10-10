@@ -49,7 +49,7 @@ Fuente normativa: `docs/foundation.md` §14–§16. Detalle por sprint:
 | S27 | S07–S08,S11,S22,S26 | Sin instante de fallo real sin material/geometría/calibración | **APROBADO** (2026-10-10; 3 tests; ver `docs/sprints/S27.md`) |
 | S28 | S14–S27 | HP desde torque integrado, no circular desde spec | **APROBADO** (2026-10-10; 4 tests; ver `docs/sprints/S28.md`) |
 | S29 | S23–S28 | Cada síntoma remonta a ecuaciones; sin `if fault_count>1` | **APROBADO** (2026-10-10; 4 tests; ver `docs/sprints/S29.md`) |
-| S30 | S00–S29 | Sin «predictivo» sin evidencia; incompleta pero honesta puede pasar | PENDIENTE |
+| S30 | S00–S29 | Sin «predictivo» sin evidencia; incompleta pero honesta puede pasar | **APROBADO** (2026-10-10 research-foundation; 3 tests; ver `docs/sprints/S30.md`) |
 
 ## FASE D — Taller 3D y expansión (S31–S37, tras base)
 
@@ -58,7 +58,5 @@ ecuaciones con animaciones. Ver foundation §16. Todos PENDIENTE.
 
 ## Regla de avance
 
-S00–S25 APROBADOS. Batch S21–S25 COMPLETO. Batch S26–S30 AUTORIZADO
-2026-10-10 (reconciliación Fase 0; la prohibición anterior queda
-supersedida). Gates universales §12.3 + `docs/definition-of-done.md`
+S00–S25 APROBADOS. Batch S21–S25 COMPLETO. Batch S26–S30 COMPLETO 2026-10-10. Gates universales §12.3 + `docs/definition-of-done.md`
 aplican. **S31 prohibido sin autorización.**

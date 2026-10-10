@@ -1,6 +1,6 @@
 # HANDOFF — punto de entrada al siguiente agente
 
-Fecha: 2026-10-10 · Sprints: **S00–S29 APROBADOS (batch S26–S30 en curso)**.
+Fecha: 2026-10-10 · Sprints: **S00–S30 APROBADOS — batch S26–S30 COMPLETO. Base congelada.**
 **S31 prohibido sin autorización explícita.**
 
 ## Estado científico/arquitectónico actual
@@ -222,7 +222,11 @@ Suite adversarial: pares de fallos, invariantes, no-linealidad compuesta,
 observabilidad, conmutatividad, Monte Carlo con seed fija. Gate: cada
 síntoma remonta a ecuaciones; sin `if fault_count>1`. Dep: S23–S28.
 
-## Brief S30 (AUTORIZADO, batch S26–S30)
+## Brief S30 (APROBADO 2026-10-10, research foundation)
+
+Crate `audit` + `release-check` + release report + ADR-037. Ver `docs/sprints/S30.md`.
+
+## Brief S30-histórico (reconciliación Fase 0, contenido vigente arriba)
 
 Auditoría científica y congelación: ModelCards, reproducibilidad en 2
 máquinas × 3 perfiles, 4 cadenas causales, benchmark CPU, versionado,

@@ -211,6 +211,8 @@ enum Command {
     DynoDemo,
     /// Suite adversarial de pares + Monte Carlo (S29, sin flags).
     AdversarialDemo,
+    /// Auditoría final S30: cadenas, perfiles, entorno, benchmark.
+    ReleaseCheck,
     /// Dinámica de cigüeñal con traza motored (S14, ilustrativo).
     CrankDynamics {
         #[arg(long, default_value_t = 750.0)]
@@ -365,6 +367,7 @@ fn run() -> Result<(), EngineError> {
         Command::DamageDemo { case } => damage_demo_cmd(&case),
         Command::DynoDemo => dyno_demo_cmd(),
         Command::AdversarialDemo => adversarial_demo_cmd(),
+        Command::ReleaseCheck => release_check_cmd(),
         Command::CrankDynamics { rpm0, seconds } => crank_dynamics_cmd(rpm0, seconds),
         Command::ColdCrank => cold_crank_cmd(),
     }
@@ -1997,5 +2000,39 @@ fn adversarial_demo_cmd() -> Result<(), EngineError> {
         );
     }
     println!("  catalog_hash : {hash}");
+    Ok(())
+}
+
+/// Comando S30: ejecuta la auditoría (cadenas + perfiles + entorno) y
+/// reporta PASS/FAIL por criterio. Lo verificado es numérico; la segunda
+/// máquina y el experto independiente quedan PENDING explícitos.
+fn release_check_cmd() -> Result<(), EngineError> {
+    use audit::{audit_chains, audit_env, audit_profiles};
+
+    let err = |e: String| EngineError::SchemaValidation(e);
+    println!("release-check (S30; NUMERICALLY_VERIFIED, never validated):");
+    for c in audit_chains().map_err(|e| err(e.to_string()))? {
+        println!("  chain {:18} PASS", c.name);
+        for l in &c.links {
+            println!("    - {l}");
+        }
+    }
+    for r in audit_profiles().map_err(|e| err(e.to_string()))? {
+        println!(
+            "  profile dt={:.0e} rpm={:.1} mass={:.1e} energy={:.1e}",
+            r.dt_s, r.rpm, r.mass_closure, r.energy_closure
+        );
+    }
+    let root = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../..");
+    let env = audit_env(&root).map_err(|e| err(e.to_string()))?;
+    println!(
+        "  env license={} third_party={} research={:?}",
+        env.license_present, env.third_party_present, env.research_intact
+    );
+    println!(
+        "  bench {:.0} ms per {:.0} sim-s (realtime ×{:.1})",
+        env.bench_wall_ms, env.bench_sim_s, env.realtime_factor
+    );
+    println!("  PENDING: 2nd machine, expert review, field data (P1)");
     Ok(())
 }

@@ -455,3 +455,16 @@ detención. Batch S26–S30 autorizado; S31 prohibido.
   chispa (no 0); hash canónico ordenado.
 - Gate S29: PASS — síntomas desde ecuaciones; cero gobierno de fallos.
 - Deuda: blow-by motor (par junta parcial), carga-8, N pequeños, C1.
+
+## 2026-10-10 · S30 · Auditoría final (APROBADO, research foundation)
+
+- Crate `audit` (4 cadenas + 3 perfiles + env + bench);
+  `d16sim release-check`; `FOUNDATION_RELEASE_REPORT.md`;
+  `capability_matrix.md`; `snapshot-contract.md`; `CHANGELOG.md`;
+  ADR-037; H-S30-01..05.
+- Tests: 3 passed (4 cadenas, perfiles+determinismo, env+bench).
+  Corrección: acoplo fill∝alzada descartado (el calado no entra en
+  `lift_at`); cadena leva→motor directa.
+- Gate S30: PASS honesto — predictivo denegado, PENDING numerados.
+- Batch S26–S30 COMPLETO. S31 prohibido. Base congelada pendiente de
+  C1–C6+M2 + experto + 2ª máquina.

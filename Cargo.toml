@@ -26,6 +26,7 @@ members = [
     "crates/damage",
     "crates/dyno",
     "crates/adversarial",
+    "crates/audit",
     "crates/physics",
     "crates/simulation",
     "crates/cli",

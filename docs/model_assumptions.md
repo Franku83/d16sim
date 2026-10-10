@@ -245,3 +245,13 @@ futuros: toda aproximación pasa por aquí + `ModelCard` (§11.4).
 | H-S29-03 | Interacciones emergentes ilustrativas, no predictivas | S29 | Resultados demo | Datos C1 |
 | H-S29-04 | MC xorshift documentado (no eventos sin justificar) | S29 | Diseño | RNG auditado |
 | H-S29-05 | Carga-8/S28 como inestabilidad candidata sin veredicto | S29 | Hallazgo | Investigación |
+
+## Registro S30 (auditoría final)
+
+| ID | Hipótesis | Dominio | Fuente | Invalida si |
+|---|---|---|---|---|
+| H-S30-01 | Cadenas auditadas con APIs reales, sin acoplos nuevos | S30 | Decisión ADR-037 | Revisión |
+| H-S30-02 | Perfiles spread 0.6 %; 2ª máquina PENDING | S30 | Medición + límite | 2ª máquina |
+| H-S30-03 | Benchmark 16× realtime local, objetivo sin certificar | S30 | Medición | HW objetivo |
+| H-S30-04 | PASS como fundación honesta; predictivo denegado | S30 | Gate literal | Evidencia P1 |
+| H-S30-05 | Reapertura solo con C1–C6+M2 + experto | S30 | Regla de cierre | Datos |
