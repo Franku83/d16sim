@@ -1,0 +1,57 @@
+[
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-verification/audit/remediation_review/baseline/Cargo.toml",
+      "--",
+      "engine"
+    ],
+    "exit": 0,
+    "elapsed_s": 21.38334163000036
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-verification/audit/remediation_review/baseline/Cargo.toml",
+      "--",
+      "subsystems"
+    ],
+    "exit": 0,
+    "elapsed_s": 0.0733583280007224
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-verification/audit/remediation_review/baseline/Cargo.toml",
+      "--",
+      "dyno"
+    ],
+    "exit": 0,
+    "elapsed_s": 1.574586181000086
+  },
+  {
+    "argv": [
+      "python3",
+      "/home/franku/projects/d16sim-verification/audit/remediation_review/check_contracts.py"
+    ],
+    "exit": 1,
+    "env": {
+      "D16_AUDIT_RESULTS": "/home/franku/projects/d16sim-verification/docs/remediation/review/results/original"
+    }
+  }
+]

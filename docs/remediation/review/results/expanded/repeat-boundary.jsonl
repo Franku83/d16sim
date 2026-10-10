@@ -1,0 +1,31 @@
+{"data":{"accepted":false,"bad":"NaN","state":"ThermalState { t_wall_c: NaN, t_piston_c: NaN, t_oil_c: NaN, t_cool_c: NaN, ect_filt_c: NaN }","unchanged":true},"probe":"thermal_invalid_state"}
+{"data":{"accepted":false,"bad":"Inf","state":"ThermalState { t_wall_c: NaN, t_piston_c: NaN, t_oil_c: NaN, t_cool_c: NaN, ect_filt_c: NaN }","unchanged":false},"probe":"thermal_invalid_state"}
+{"data":{"accepted":true,"bad":"below_absolute","state":"ThermalState { t_wall_c: -299.98545454545456, t_piston_c: -300.0, t_oil_c: -299.96179104477613, t_cool_c: -300.0, ect_filt_c: -300.0 }","unchanged":false},"probe":"thermal_invalid_state"}
+{"data":{"accepted":true,"state":"ThermalState { t_wall_c: 19.985454545454544, t_piston_c: 20.0, t_oil_c: 19.96179104477612, t_cool_c: 20.0, ect_filt_c: 20.0 }"},"probe":"thermal_invalid_ambient"}
+{"data":{"rejected":true,"state":"ThermalState { t_wall_c: inf, t_piston_c: 20.0, t_oil_c: 20.0, t_cool_c: 20.0, ect_filt_c: 20.0 }","unchanged":false},"probe":"thermal_overflow_atomic"}
+{"data":{"accepted":true,"error":null,"field":"thermal_abszero","verified":true},"probe":"restore_boundary"}
+{"data":{"accepted":true,"error":null,"field":"thermal_nan","verified":true},"probe":"restore_boundary"}
+{"data":{"accepted":true,"error":null,"field":"counter_nan","verified":true},"probe":"restore_boundary"}
+{"data":{"accepted":true,"error":null,"field":"counter_negative","verified":true},"probe":"restore_boundary"}
+{"data":{"accepted":true,"error":null,"field":"history_nan","verified":true},"probe":"restore_boundary"}
+{"data":{"accepted":true,"error":null,"field":"node_volume","verified":true},"probe":"restore_boundary"}
+{"data":{"accepted":true,"error":null,"field":"record_zero","verified":true},"probe":"restore_boundary"}
+{"data":{"accepted":false,"bad":"negative_area","error":"invalid engine input/state: tailpipe","panicked":false,"unchanged":false},"probe":"engine_boundary_atomic"}
+{"data":{"accepted":false,"bad":"bad_wiebe","error":"invalid engine input/state: wiebe","panicked":false,"unchanged":false},"probe":"engine_boundary_atomic"}
+{"data":{"accepted":true,"bad":"friction_nan","error":null,"panicked":false,"unchanged":false},"probe":"engine_boundary_atomic"}
+{"data":{"accepted":false,"bad":"bad_state","error":"invalid engine input/state: cylinder state","panicked":false,"unchanged":false},"probe":"engine_boundary_atomic"}
+{"data":{"accepted":true,"bad":"counter_nan","error":null,"panicked":false,"unchanged":false},"probe":"engine_boundary_atomic"}
+{"data":{"accepted":true,"finite":false},"probe":"dyno_overflow"}
+{"data":{"finite_phase":false,"nonfinite_estimate_time":true,"state":"Synced360"},"probe":"decoder_boundary"}
+{"data":{"field":"value_nan","rejected":true},"probe":"manifest_boundary"}
+{"data":{"field":"value_inf","rejected":true},"probe":"manifest_boundary"}
+{"data":{"field":"sigma_nan","rejected":true},"probe":"manifest_boundary"}
+{"data":{"field":"sigma_negative","rejected":true},"probe":"manifest_boundary"}
+{"data":{"field":"unit_missing","rejected":true},"probe":"manifest_boundary"}
+{"data":{"field":"campaign_missing","rejected":true},"probe":"manifest_boundary"}
+{"data":{"field":"provenance_missing","rejected":true},"probe":"manifest_boundary"}
+{"data":{"bad":"load_nan","finite_commands":false,"ignition_count":4,"injection_count":4,"state":"Running"},"probe":"ecu_boundary"}
+{"data":{"bad":"rpm_nan","finite_commands":false,"ignition_count":4,"injection_count":4,"state":"Running"},"probe":"ecu_boundary"}
+{"data":{"bad":"phase_nan","finite_commands":true,"ignition_count":4,"injection_count":4,"state":"Running"},"probe":"ecu_boundary"}
+{"data":{"panicked":true,"rejected":false},"probe":"calibration_dimension"}
+{"data":{"accepted":true},"probe":"calibration_negative_weight"}

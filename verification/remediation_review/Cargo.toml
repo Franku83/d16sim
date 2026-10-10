@@ -1,0 +1,32 @@
+[package]
+name = "d16sim-independent-probes"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[workspace]
+
+[dependencies]
+engine = { path = "../../crates/engine" }
+engine-types = { path = "../../crates/engine-types" }
+kinematics = { path = "../../crates/kinematics" }
+thermo = { path = "../../crates/thermo" }
+flow = { path = "../../crates/flow" }
+valvetrain = { path = "../../crates/valvetrain" }
+crank = { path = "../../crates/crank" }
+thermal = { path = "../../crates/thermal" }
+leak = { path = "../../crates/leak" }
+wear = { path = "../../crates/wear" }
+damage = { path = "../../crates/damage" }
+fastener = { path = "../../crates/fastener" }
+contacts = { path = "../../crates/contacts" }
+dyno = { path = "../../crates/dyno" }
+ecu = { path = "../../crates/ecu" }
+electrical = { path = "../../crates/electrical" }
+diagnostics = { path = "../../crates/diagnostics" }
+calibration = { path = "../../crates/calibration" }
+serde_json = "1.0"
+
+[[bin]]
+name = "remediation-adversarial"
+path = "src/adversarial.rs"

@@ -1,0 +1,28 @@
+{
+  "commits": {
+    "ff09a0d": "ff09a0dda82188e6bf27a80d17c902f8972a39d2 4624edf9ebf7615a2595eecda90da0ee1751442a S30: auditoria final y congelacion como research foundation",
+    "25d528e": "25d528e3ff5b31eaeab0c894c4227b3e7d3a574c ff09a0dda82188e6bf27a80d17c902f8972a39d2 audit: independent scientific and technical review of frozen S00-S30",
+    "2a42df6": "2a42df6e5ba494f24363e807c3c0afb14b745c58 ff09a0dda82188e6bf27a80d17c902f8972a39d2 remediation(R01): leak species advection, liquid density units, thermal ambient ledger, physical mech observation",
+    "f4dd610": "f4dd6102acdea912f2dd4386bd5499fda967bbe6 2a42df6e5ba494f24363e807c3c0afb14b745c58 remediation(R01-R02): engine fuel species transport, persisted pressure history, lossless JSON/v1 integrity, fail-closed boundaries",
+    "8a7e868": "8a7e8686e4e8831fb30d1a71b815e67e7d7139ef f4dd6102acdea912f2dd4386bd5499fda967bbe6 docs(remediation): R01-R02 batch report, ADR-038 and progress entry"
+  },
+  "worktrees": {
+    "/home/franku/projects/d16sim": {
+      "head": "ff09a0dda82188e6bf27a80d17c902f8972a39d2",
+      "status": "?? docs/remediation/D16SIM_REMEDIATION_R01_R05_SPEC_v1.0.md\n"
+    },
+    "/home/franku/projects/d16sim-audit": {
+      "head": "25d528e3ff5b31eaeab0c894c4227b3e7d3a574c",
+      "status": ""
+    },
+    "/home/franku/projects/d16sim-remediation": {
+      "head": "8a7e8686e4e8831fb30d1a71b815e67e7d7139ef",
+      "status": ""
+    },
+    "/home/franku/projects/d16sim-verification": {
+      "head": "8a7e8686e4e8831fb30d1a71b815e67e7d7139ef",
+      "status": "?? docs/remediation/review/results/harness-integrity.json\n"
+    }
+  },
+  "audit_not_parent_of_remediation": true
+}

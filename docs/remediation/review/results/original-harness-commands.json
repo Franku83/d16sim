@@ -1,0 +1,64 @@
+[
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "audit/remediation_review/Cargo.toml",
+      "--bin",
+      "d16sim-independent-probes",
+      "--",
+      "engine"
+    ],
+    "exit": 0,
+    "elapsed_s": 21.693931175000216
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "audit/remediation_review/Cargo.toml",
+      "--bin",
+      "d16sim-independent-probes",
+      "--",
+      "subsystems"
+    ],
+    "exit": 0,
+    "elapsed_s": 0.0675247280005351
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "audit/remediation_review/Cargo.toml",
+      "--bin",
+      "d16sim-independent-probes",
+      "--",
+      "dyno"
+    ],
+    "exit": 0,
+    "elapsed_s": 1.5656669420004619
+  },
+  {
+    "argv": [
+      "python3",
+      "audit/remediation_review/check_contracts.py"
+    ],
+    "exit": 1,
+    "env": {
+      "D16_AUDIT_RESULTS": "/home/franku/projects/d16sim-verification/docs/remediation/review/results"
+    },
+    "preliminary_execution": "Initial invocation used different filenames and produced FileNotFoundError; final invocation uses unchanged expected filenames."
+  }
+]

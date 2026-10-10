@@ -1,0 +1,313 @@
+test_01_closed_cylinder_independent_invariant (__main__.Contracts.test_01_closed_cylinder_independent_invariant) ... ok
+test_02_flow_scalings_and_bernoulli (__main__.Contracts.test_02_flow_scalings_and_bernoulli) ... ok
+test_03_integrated_mass_balance_in_3_to_30_seconds (__main__.Contracts.test_03_integrated_mass_balance_in_3_to_30_seconds) ... ok
+test_04_causal_cam_changes_both_signs (__main__.Contracts.test_04_causal_cam_changes_both_signs) ... ok
+test_05_negative_start_controls (__main__.Contracts.test_05_negative_start_controls) ... ok
+test_06_wear_film_temperature_and_subdivision (__main__.Contracts.test_06_wear_film_temperature_and_subdivision) ... ok
+test_07_damage_stays_within_declared_support (__main__.Contracts.test_07_damage_stays_within_declared_support) ... ok
+test_08_scheduler_inhibits_and_reports_latency (__main__.Contracts.test_08_scheduler_inhibits_and_reports_latency) ... ok
+test_09_hash_tamper_and_unknown_schema_reject (__main__.Contracts.test_09_hash_tamper_and_unknown_schema_reject) ... ok
+test_10_fuel_species_outflow_and_inventory (__main__.Contracts.test_10_fuel_species_outflow_and_inventory) ... FAIL
+test_11_replay_includes_pressure_history (__main__.Contracts.test_11_replay_includes_pressure_history) ... FAIL
+test_12_engine_json_roundtrip_preserves_hash (__main__.Contracts.test_12_engine_json_roundtrip_preserves_hash) ... FAIL
+test_13_wear_json_roundtrip_preserves_hash (__main__.Contracts.test_13_wear_json_roundtrip_preserves_hash) ... FAIL
+test_14_actual_v1_hash_can_migrate (__main__.Contracts.test_14_actual_v1_hash_can_migrate) ... FAIL
+test_15_leak_species_conserve (__main__.Contracts.test_15_leak_species_conserve) ... FAIL
+test_16_liquid_volume_converts_to_mass (__main__.Contracts.test_16_liquid_volume_converts_to_mass) ... FAIL
+test_17_dyno_sparse_tail_matches_resolved_quality (__main__.Contracts.test_17_dyno_sparse_tail_matches_resolved_quality) ... FAIL
+test_18_dyno_power_channels_share_window (__main__.Contracts.test_18_dyno_power_channels_share_window) ... FAIL
+test_19_unsupported_wear_must_not_produce_prediction (__main__.Contracts.test_19_unsupported_wear_must_not_produce_prediction) ... FAIL
+test_20_no_spontaneous_reversal_of_relaxation (__main__.Contracts.test_20_no_spontaneous_reversal_of_relaxation) ... FAIL
+test_21_decoder_reanchors_after_cyp (__main__.Contracts.test_21_decoder_reanchors_after_cyp) ... FAIL
+test_22_decoder_origin_is_not_physical_phase (__main__.Contracts.test_22_decoder_origin_is_not_physical_phase) ... FAIL
+test_23_wire_declared_seed_controls_realization (__main__.Contracts.test_23_wire_declared_seed_controls_realization) ... FAIL
+test_24_engine_invalid_config_fails_closed (__main__.Contracts.test_24_engine_invalid_config_fails_closed) ... FAIL
+test_25_thermal_positive_capacity (__main__.Contracts.test_25_thermal_positive_capacity) ... FAIL
+test_26_dyno_absolute_temperature (__main__.Contracts.test_26_dyno_absolute_temperature) ... FAIL
+test_27_dataset_finite_observations_and_uncertainty (__main__.Contracts.test_27_dataset_finite_observations_and_uncertainty) ... FAIL
+test_28_phase_periodicity_of_complete_engine (__main__.Contracts.test_28_phase_periodicity_of_complete_engine) ... FAIL
+test_29_snapshot_restore_validates_physical_state (__main__.Contracts.test_29_snapshot_restore_validates_physical_state) ... FAIL
+test_30_decoder_rejects_nonfinite_and_future_edges (__main__.Contracts.test_30_decoder_rejects_nonfinite_and_future_edges) ... FAIL
+test_31_covariance_is_in_reported_parameter_units (__main__.Contracts.test_31_covariance_is_in_reported_parameter_units) ... FAIL
+test_32_exact_initial_optimum_succeeds (__main__.Contracts.test_32_exact_initial_optimum_succeeds) ... FAIL
+
+======================================================================
+FAIL: test_10_fuel_species_outflow_and_inventory (__main__.Contracts.test_10_fuel_species_outflow_and_inventory)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/franku/projects/d16sim-verification/audit/remediation_review/check_contracts.py", line 94, in test_10_fuel_species_outflow_and_inventory
+    self.check(abs(r["fuel_after"]-r["expected_homogeneous_fuel_after"]) < 1e-15, str(r))
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/franku/projects/d16sim-verification/audit/remediation_review/check_contracts.py", line 37, in check
+    self.assertTrue(predicate, message)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : {'expected_homogeneous_fuel_after': 6.463520755036424e-05, 'fuel_after': 6.649390855354172e-05, 'fuel_before': 6.649390855354172e-05, 'mass_after': 0.0006463520755036424, 'mass_before': 0.0006649390855354171}
+
+======================================================================
+FAIL: test_11_replay_includes_pressure_history (__main__.Contracts.test_11_replay_includes_pressure_history)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/franku/projects/d16sim-verification/audit/remediation_review/check_contracts.py", line 99, in test_11_replay_includes_pressure_history
+    self.check(r["hash_match"], str(r))
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/franku/projects/d16sim-verification/audit/remediation_review/check_contracts.py", line 37, in check
+    self.assertTrue(predicate, message)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : {'c2': 0.05, 'hash_match': False, 'rpm_full': 175.60837764666582, 'rpm_split': 859.5356946378515, 'theta_diff': -88.92114363027775}
+
+======================================================================
+FAIL: test_12_engine_json_roundtrip_preserves_hash (__main__.Contracts.test_12_engine_json_roundtrip_preserves_hash)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/franku/projects/d16sim-verification/audit/remediation_review/check_contracts.py", line 102, in test_12_engine_json_roundtrip_preserves_hash
+    self.check(all(r["same_hash"] for r in rows("snapshot_json")), "engine JSON reload does not verify")
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/franku/projects/d16sim-verification/audit/remediation_review/check_contracts.py", line 37, in check
+    self.assertTrue(predicate, message)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : engine JSON reload does not verify
+
+======================================================================
+FAIL: test_13_wear_json_roundtrip_preserves_hash (__main__.Contracts.test_13_wear_json_roundtrip_preserves_hash)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/franku/projects/d16sim-verification/audit/remediation_review/check_contracts.py", line 105, in test_13_wear_json_roundtrip_preserves_hash
+    self.check(one("wear_roundtrip")["hash_match"], str(one("wear_roundtrip")))
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/franku/projects/d16sim-verification/audit/remediation_review/check_contracts.py", line 37, in check
+    self.assertTrue(predicate, message)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : {'after': '{"schema_version":1,"seed":42,"hours":1.0,"ring_gap_m":[0.00030004897799999997,0.00030004897799999997,0.00030004897799999997,0.00030004897799999997],"liner_wear_m":[4.8978e-8,4.8978e-8,4.8978e-8,4.8978e-8],"bearing_extra_m":[1.8e-8,1.8e-8,1.8e-8,1.8e-8,1.8e-8,1.8e-8,1.8e-8,1.8e-8,1.8e-8],"oil_oxidation_01":0.001138234036699599,"gasket_relax_01":0.00004066463459285012}', 'before': '{"schema_version":1,"seed":42,"hours":1.0,"ring_gap_m":[0.00030004897799999997,0.00030004897799999997,0.00030004897799999997,0.00030004897799999997],"liner_wear_m":[4.897799999999999e-8,4.897799999999999e-8,4.897799999999999e-8,4.897799999999999e-8],"bearing_extra_m":[1.8e-8,1.8e-8,1.8e-8,1.8e-8,1.8e-8,1.8e-8,1.8e-8,1.8e-8,1.8e-8],"oil_oxidation_01":0.001138234036699599,"gasket_relax_01":0.00004066463459285012}', 'exact': False, 'hash_match': False}
+
+======================================================================
+FAIL: test_14_actual_v1_hash_can_migrate (__main__.Contracts.test_14_actual_v1_hash_can_migrate)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/franku/projects/d16sim-verification/audit/remediation_review/check_contracts.py", line 108, in test_14_actual_v1_hash_can_migrate
+    self.check(one("v1_hash_migration")["accepted"], "valid historical v1 bytes rejected")
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/franku/projects/d16sim-verification/audit/remediation_review/check_contracts.py", line 37, in check
+    self.assertTrue(predicate, message)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : valid historical v1 bytes rejected
+
+======================================================================
+FAIL: test_15_leak_species_conserve (__main__.Contracts.test_15_leak_species_conserve)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/franku/projects/d16sim-verification/audit/remediation_review/check_contracts.py", line 112, in test_15_leak_species_conserve
+    self.check(abs(r["receiver_fresh"]-r["expected_receiver_fresh"]) < 1e-12, str(r))
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/franku/projects/d16sim-verification/audit/remediation_review/check_contracts.py", line 37, in check
+    self.assertTrue(predicate, message)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : {'expected_receiver_fresh': 0.004002307770341999, 'mass_transferred': 0.0004667120332508509, 'receiver_fresh': 0.0}
+
+======================================================================
+FAIL: test_16_liquid_volume_converts_to_mass (__main__.Contracts.test_16_liquid_volume_converts_to_mass)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/franku/projects/d16sim-verification/audit/remediation_review/check_contracts.py", line 116, in test_16_liquid_volume_converts_to_mass
+    self.check(abs(r["reported_mass_kg"]/r["expected_mass_kg_at_declared_870kg_m3"]-1) < 1e-9, str(r))
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/franku/projects/d16sim-verification/audit/remediation_review/check_contracts.py", line 37, in check
+    self.assertTrue(predicate, message)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : {'expected_mass_kg_at_declared_870kg_m3': 0.00087, 'reported_mass_kg': 1.0000000000001569e-06, 'volume_m3': 1e-06}
+
+======================================================================
+FAIL: test_17_dyno_sparse_tail_matches_resolved_quality (__main__.Contracts.test_17_dyno_sparse_tail_matches_resolved_quality)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/franku/projects/d16sim-verification/audit/remediation_review/check_contracts.py", line 121, in test_17_dyno_sparse_tail_matches_resolved_quality
+    self.check(r[0]["tail_torque_resid"] < 0.1, str(r[0]))
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/franku/projects/d16sim-verification/audit/remediation_review/check_contracts.py", line 37, in check
+    self.assertTrue(predicate, message)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : {'every': 400, 'global_mech_resid': 6.947806347623166e-16, 'load': 8.0, 'p_acc_global_w': 2752.508983112597, 'p_acc_tail_w': 143.51271796167242, 'p_fric_w': 12354.1372582935, 'p_ind_mean_product_w': 10513.872093422951, 'p_ind_tau_omega_w': 10516.545403596001, 'p_load_w': 4674.0210411122325, 'rpm_mean': 4463.361316851233, 'samples_tail': 61, 'tail_torque_resid': 0.6195871694696511}
+
+======================================================================
+FAIL: test_18_dyno_power_channels_share_window (__main__.Contracts.test_18_dyno_power_channels_share_window)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/franku/projects/d16sim-verification/audit/remediation_review/check_contracts.py", line 126, in test_18_dyno_power_channels_share_window
+    self.check(abs(residue)/r["p_ind_kw"] < 0.01, f"reported channels residual={residue}kW")
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/franku/projects/d16sim-verification/audit/remediation_review/check_contracts.py", line 37, in check
+    self.assertTrue(predicate, message)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : reported channels residual=-2.896433281573409kW
+
+======================================================================
+FAIL: test_19_unsupported_wear_must_not_produce_prediction (__main__.Contracts.test_19_unsupported_wear_must_not_produce_prediction)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/franku/projects/d16sim-verification/audit/remediation_review/check_contracts.py", line 129, in test_19_unsupported_wear_must_not_produce_prediction
+    self.check(not one("wear_unsupported")["accepted"], str(one("wear_unsupported")))
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/franku/projects/d16sim-verification/audit/remediation_review/check_contracts.py", line 37, in check
+    self.assertTrue(predicate, message)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : {'accepted': True, 'bearing': 0.0, 'oxidation': 1.0}
+
+======================================================================
+FAIL: test_20_no_spontaneous_reversal_of_relaxation (__main__.Contracts.test_20_no_spontaneous_reversal_of_relaxation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/franku/projects/d16sim-verification/audit/remediation_review/check_contracts.py", line 133, in test_20_no_spontaneous_reversal_of_relaxation
+    self.check(not r["accepted"] or r["after"] >= r["before"], str(r))
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/franku/projects/d16sim-verification/audit/remediation_review/check_contracts.py", line 37, in check
+    self.assertTrue(predicate, message)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : {'accepted': True, 'after': 0.09999075803759254, 'before': 0.1}
+
+======================================================================
+FAIL: test_21_decoder_reanchors_after_cyp (__main__.Contracts.test_21_decoder_reanchors_after_cyp)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/franku/projects/d16sim-verification/audit/remediation_review/check_contracts.py", line 137, in test_21_decoder_reanchors_after_cyp
+    self.check(r[0]["phase"] == r[1]["phase"], str(r))
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/franku/projects/d16sim-verification/audit/remediation_review/check_contracts.py", line 37, in check
+    self.assertTrue(predicate, message)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : [{'case': 'healthy', 'confidence': 1.0, 'phase': 690.0, 'sync': 'Synced720'}, {'case': 'recovered_after_cyp', 'confidence': 1.0, 'phase': 660.0, 'sync': 'Synced720'}]
+
+======================================================================
+FAIL: test_22_decoder_origin_is_not_physical_phase (__main__.Contracts.test_22_decoder_origin_is_not_physical_phase)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/franku/projects/d16sim-verification/audit/remediation_review/check_contracts.py", line 141, in test_22_decoder_origin_is_not_physical_phase
+    self.check(r[0]["phase"] == r[1]["phase"], str(r))
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/franku/projects/d16sim-verification/audit/remediation_review/check_contracts.py", line 37, in check
+    self.assertTrue(predicate, message)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : [{'phase': 690.0, 'rpm': 749.9999999999951, 'start': 0, 'sync': 'Synced720'}, {'phase': 540.0, 'rpm': 749.9999999999951, 'start': 5, 'sync': 'Synced720'}]
+
+======================================================================
+FAIL: test_23_wire_declared_seed_controls_realization (__main__.Contracts.test_23_wire_declared_seed_controls_realization)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/franku/projects/d16sim-verification/audit/remediation_review/check_contracts.py", line 145, in test_23_wire_declared_seed_controls_realization
+    self.check(r[0]["sequence"] != r[1]["sequence"], "both seeds use hardcoded 7193")
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/franku/projects/d16sim-verification/audit/remediation_review/check_contracts.py", line 37, in check
+    self.assertTrue(predicate, message)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : both seeds use hardcoded 7193
+
+======================================================================
+FAIL: test_24_engine_invalid_config_fails_closed (__main__.Contracts.test_24_engine_invalid_config_fails_closed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/franku/projects/d16sim-verification/audit/remediation_review/check_contracts.py", line 149, in test_24_engine_invalid_config_fails_closed
+    self.check(r["zero_record"]["returned_error"] and not r["zero_record"]["panic"], str(r))
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/franku/projects/d16sim-verification/audit/remediation_review/check_contracts.py", line 37, in check
+    self.assertTrue(predicate, message)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : {'negative_efficiency': {'case': 'negative_efficiency', 'panic': False, 'returned_error': False}, 'efficiency_above_one': {'case': 'efficiency_above_one', 'panic': False, 'returned_error': False}, 'negative_load': {'case': 'negative_load', 'panic': False, 'returned_error': False}, 'zero_record': {'case': 'zero_record', 'panic': True, 'returned_error': False}}
+
+======================================================================
+FAIL: test_25_thermal_positive_capacity (__main__.Contracts.test_25_thermal_positive_capacity)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/franku/projects/d16sim-verification/audit/remediation_review/check_contracts.py", line 152, in test_25_thermal_positive_capacity
+    self.check(not one("thermal_invalid")["zero_capacity_accepted"], str(one("thermal_invalid")))
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/franku/projects/d16sim-verification/audit/remediation_review/check_contracts.py", line 37, in check
+    self.assertTrue(predicate, message)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : {'wall_finite': False, 'zero_capacity_accepted': True}
+
+======================================================================
+FAIL: test_26_dyno_absolute_temperature (__main__.Contracts.test_26_dyno_absolute_temperature)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/franku/projects/d16sim-verification/audit/remediation_review/check_contracts.py", line 155, in test_26_dyno_absolute_temperature
+    self.check(not one("dyno_invalid")["below_absolute_zero_accepted"], str(one("dyno_invalid")))
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/franku/projects/d16sim-verification/audit/remediation_review/check_contracts.py", line 37, in check
+    self.assertTrue(predicate, message)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : {'below_absolute_zero_accepted': True, 'factor_finite': False}
+
+======================================================================
+FAIL: test_27_dataset_finite_observations_and_uncertainty (__main__.Contracts.test_27_dataset_finite_observations_and_uncertainty)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/franku/projects/d16sim-verification/audit/remediation_review/check_contracts.py", line 158, in test_27_dataset_finite_observations_and_uncertainty
+    self.check(not one("dataset_invalid")["invalid_observations_accepted"], str(one("dataset_invalid")))
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/franku/projects/d16sim-verification/audit/remediation_review/check_contracts.py", line 37, in check
+    self.assertTrue(predicate, message)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : {'invalid_observations_accepted': True}
+
+======================================================================
+FAIL: test_28_phase_periodicity_of_complete_engine (__main__.Contracts.test_28_phase_periodicity_of_complete_engine)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/franku/projects/d16sim-verification/audit/remediation_review/check_contracts.py", line 162, in test_28_phase_periodicity_of_complete_engine
+    self.check(abs(r[720]["rpm"]-r[0]["rpm"]) < 1e-6, str([r[0], r[720]]))
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/franku/projects/d16sim-verification/audit/remediation_review/check_contracts.py", line 37, in check
+    self.assertTrue(predicate, message)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : [{'cyl_masses_kg': [9.105727024223542e-05, 1.143222780910137e-05, 6.214631429975949e-05, 5.5896925237993665e-05], 'fuel_kg': 0.0010572186161669941, 'heat_j': 46373.12452045102, 'lift_at_70_mm': 6.371502836318263, 'ok': True, 'rpm': 1025.817725431902, 'shift_deg': 0.0, 'work_j': 13333.535451446565}, {'cyl_masses_kg': [6.143533679662302e-05, 6.145352884252416e-05, 4.61920170044106e-05, 4.1692102232102165e-05], 'fuel_kg': 0.0010379956123580786, 'heat_j': 45381.13468002272, 'lift_at_70_mm': 6.371502836318263, 'ok': True, 'rpm': 1059.8606174820432, 'shift_deg': 720.0, 'work_j': 13164.920882964489}]
+
+======================================================================
+FAIL: test_29_snapshot_restore_validates_physical_state (__main__.Contracts.test_29_snapshot_restore_validates_physical_state)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/franku/projects/d16sim-verification/audit/remediation_review/check_contracts.py", line 165, in test_29_snapshot_restore_validates_physical_state
+    self.check(not one("restore_invalid")["negative_mass_accepted"], str(one("restore_invalid")))
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/franku/projects/d16sim-verification/audit/remediation_review/check_contracts.py", line 37, in check
+    self.assertTrue(predicate, message)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : {'negative_mass_accepted': True}
+
+======================================================================
+FAIL: test_30_decoder_rejects_nonfinite_and_future_edges (__main__.Contracts.test_30_decoder_rejects_nonfinite_and_future_edges)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/franku/projects/d16sim-verification/audit/remediation_review/check_contracts.py", line 169, in test_30_decoder_rejects_nonfinite_and_future_edges
+    self.check(not r["nan_accepted"] and not r["future_accepted"], str(r))
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/franku/projects/d16sim-verification/audit/remediation_review/check_contracts.py", line 37, in check
+    self.assertTrue(predicate, message)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : {'future_accepted': True, 'nan_accepted': True}
+
+======================================================================
+FAIL: test_31_covariance_is_in_reported_parameter_units (__main__.Contracts.test_31_covariance_is_in_reported_parameter_units)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/franku/projects/d16sim-verification/audit/remediation_review/check_contracts.py", line 175, in test_31_covariance_is_in_reported_parameter_units
+    self.check(abs(r["std_reported"]/r["std_independent"]-1) < 1e-6, str(r))
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/franku/projects/d16sim-verification/audit/remediation_review/check_contracts.py", line 37, in check
+    self.assertTrue(predicate, message)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : {'ok': True, 'param': 2.0, 'residual': 0.0, 'start': 3.0, 'std_independent': 0.25, 'std_reported': 0.08333333332785307}
+
+======================================================================
+FAIL: test_32_exact_initial_optimum_succeeds (__main__.Contracts.test_32_exact_initial_optimum_succeeds)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/franku/projects/d16sim-verification/audit/remediation_review/check_contracts.py", line 179, in test_32_exact_initial_optimum_succeeds
+    self.check(r["ok"], str(r))
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/franku/projects/d16sim-verification/audit/remediation_review/check_contracts.py", line 37, in check
+    self.assertTrue(predicate, message)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : {'error': 'invalid fit: no descent', 'ok': False, 'start': 2.0}
+
+----------------------------------------------------------------------
+Ran 32 tests in 0.006s
+
+FAILED (failures=23)

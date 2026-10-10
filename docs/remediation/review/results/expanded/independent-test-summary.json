@@ -1,0 +1,9 @@
+{
+  "test_targets": 1,
+  "test_cases": 32,
+  "assertion_predicates_executed": 89,
+  "failures": 10,
+  "errors": 0,
+  "probe_rows": 138,
+  "purpose": "required contracts; expected failures remain red"
+}

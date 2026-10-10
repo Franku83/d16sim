@@ -1,0 +1,144 @@
+test_01_fuel_transport_budget_and_bounds (__main__.Contracts.test_01_fuel_transport_budget_and_bounds) ... ok
+test_02_chemical_energy_matches_consumed_fuel_during_burn (__main__.Contracts.test_02_chemical_energy_matches_consumed_fuel_during_burn) ... FAIL
+test_03_physical_exhaust_is_reported (__main__.Contracts.test_03_physical_exhaust_is_reported) ... FAIL
+test_04_missing_split_cannot_discriminate (__main__.Contracts.test_04_missing_split_cannot_discriminate) ... FAIL
+test_05_fresh_transport_closed_invariant (__main__.Contracts.test_05_fresh_transport_closed_invariant) ... ok
+test_06_liquid_mass_and_volume_two_densities (__main__.Contracts.test_06_liquid_mass_and_volume_two_densities) ... ok
+test_07_thermal_local_and_global_energy (__main__.Contracts.test_07_thermal_local_and_global_energy) ... ok
+test_08_thermal_analytic_refinement (__main__.Contracts.test_08_thermal_analytic_refinement) ... ok
+test_09_positive_float_roundtrip (__main__.Contracts.test_09_positive_float_roundtrip) ... ok
+test_10_signed_zero_preserves_promised_bits (__main__.Contracts.test_10_signed_zero_preserves_promised_bits) ... FAIL
+test_11_authentic_v1_integrity_and_continuation (__main__.Contracts.test_11_authentic_v1_integrity_and_continuation) ... ok
+test_12_native_replay_full_state_and_every_trace_sample (__main__.Contracts.test_12_native_replay_full_state_and_every_trace_sample) ... ok
+test_13_engine_invalid_inputs_reject_atomically (__main__.Contracts.test_13_engine_invalid_inputs_reject_atomically) ... FAIL
+test_14_restore_rejects_invalid_physics_and_configuration (__main__.Contracts.test_14_restore_rejects_invalid_physics_and_configuration) ... FAIL
+test_15_thermal_rejects_invalid_state_atomically (__main__.Contracts.test_15_thermal_rejects_invalid_state_atomically) ... FAIL
+test_16_dyno_never_returns_nonfinite_factor (__main__.Contracts.test_16_dyno_never_returns_nonfinite_factor) ... FAIL
+test_17_decoder_and_ecu_invalid_observations_inhibit (__main__.Contracts.test_17_decoder_and_ecu_invalid_observations_inhibit) ... FAIL
+test_18_calibration_malformed_model_returns_error (__main__.Contracts.test_18_calibration_malformed_model_returns_error) ... FAIL
+test_19_manifest_rejects_invalid_observations_metadata (__main__.Contracts.test_19_manifest_rejects_invalid_observations_metadata) ... ok
+
+======================================================================
+FAIL: test_02_chemical_energy_matches_consumed_fuel_during_burn (__main__.Contracts.test_02_chemical_energy_matches_consumed_fuel_during_burn)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/franku/projects/d16sim-verification/verification/remediation_review/check_adversarial.py", line 22, in test_02_chemical_energy_matches_consumed_fuel_during_burn
+    self.check(r['max_chemical_excess_j']<1.,str(r))
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/franku/projects/d16sim-verification/verification/remediation_review/check_adversarial.py", line 12, in check
+    self.assertTrue(p,msg)
+    ~~~~~~~~~~~~~~~^^^^^^^
+AssertionError: False is not true : {'closure_kg': 3.7523559563365505e-19, 'dt': 0.0001, 'emitted': 5.0827186793652535e-06, 'error': None, 'final_rpm': 3917.072092120296, 'final_stored': 9.819020382073305e-06, 'fuel': True, 'marked': False, 'max_chemical_excess_j': 1156.1520619384771, 'max_fuel_fraction': 0.05622871768784857, 'spark': True, 'witness': {'Q': 1156.1520619384771, 'burned': 0.0, 'emitted': 0.0, 'injected': 5.285173574809767e-05, 'stored': 5.285173574809767e-05}, 'witness_time': 0.3595999999999767}
+
+======================================================================
+FAIL: test_03_physical_exhaust_is_reported (__main__.Contracts.test_03_physical_exhaust_is_reported)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/franku/projects/d16sim-verification/verification/remediation_review/check_adversarial.py", line 26, in test_03_physical_exhaust_is_reported
+    e=r['expected'];self.check(r['exhaust_flag'] and all(abs(a-b)<1e-12 for a,b in zip(r['reported'],[e[0],e[2],e[1]])),str(r))
+                    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/franku/projects/d16sim-verification/verification/remediation_review/check_adversarial.py", line 12, in check
+    self.assertTrue(p,msg)
+    ~~~~~~~~~~~~~~~^^^^^^^
+AssertionError: False is not true : {'exhaust_flag': True, 'expected': [0.09999999538207065, 0.1999999947797314, 0.700000009838198], 'reported': [0.33333332887156636, 0.0, 0.6666666711284336], 'totals': [1.1667796675878245e-07, 2.3335593820287403e-07, 8.167458165072314e-07]}
+
+======================================================================
+FAIL: test_04_missing_split_cannot_discriminate (__main__.Contracts.test_04_missing_split_cannot_discriminate)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/franku/projects/d16sim-verification/verification/remediation_review/check_adversarial.py", line 29, in test_04_missing_split_cannot_discriminate
+    if sum(r['split'])==0:self.check('Inconclusive' in r['verdict'],str(r))
+                          ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/franku/projects/d16sim-verification/verification/remediation_review/check_adversarial.py", line 12, in check
+    self.assertTrue(p,msg)
+    ~~~~~~~~~~~~~~~^^^^^^^
+AssertionError: False is not true : {'exhaust_flag': False, 'exhaust_port': False, 'flows': [0.0, 0.0], 'split': [0.0, 0.0, 0.0], 'verdict': 'Discriminated { cause: Rings, by_measurements: "compression + leak-down to crankcase" }'}
+
+======================================================================
+FAIL: test_10_signed_zero_preserves_promised_bits (__main__.Contracts.test_10_signed_zero_preserves_promised_bits)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/franku/projects/d16sim-verification/verification/remediation_review/check_adversarial.py", line 52, in test_10_signed_zero_preserves_promised_bits
+    for r in rows('snapshot_signed_zero'):self.check(r['before_bits']==r['after_bits'],str(r))
+                                          ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/franku/projects/d16sim-verification/verification/remediation_review/check_adversarial.py", line 12, in check
+    self.assertTrue(p,msg)
+    ~~~~~~~~~~~~~~~^^^^^^^
+AssertionError: False is not true : {'after_bits': '0', 'before_bits': '9223372036854775808', 'field': 'plen_fuel_kg', 'hash_equal': True, 'restore_accepted': True}
+
+======================================================================
+FAIL: test_13_engine_invalid_inputs_reject_atomically (__main__.Contracts.test_13_engine_invalid_inputs_reject_atomically)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/franku/projects/d16sim-verification/verification/remediation_review/check_adversarial.py", line 61, in test_13_engine_invalid_inputs_reject_atomically
+    for r in rows('engine_boundary_atomic'):self.check(not r['panicked'] and not r['accepted'] and r['unchanged'],str(r))
+                                            ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/franku/projects/d16sim-verification/verification/remediation_review/check_adversarial.py", line 12, in check
+    self.assertTrue(p,msg)
+    ~~~~~~~~~~~~~~~^^^^^^^
+AssertionError: False is not true : {'accepted': False, 'bad': 'negative_area', 'error': 'invalid engine input/state: tailpipe', 'panicked': False, 'unchanged': False}
+
+======================================================================
+FAIL: test_14_restore_rejects_invalid_physics_and_configuration (__main__.Contracts.test_14_restore_rejects_invalid_physics_and_configuration)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/franku/projects/d16sim-verification/verification/remediation_review/check_adversarial.py", line 63, in test_14_restore_rejects_invalid_physics_and_configuration
+    for r in rows('restore_boundary'):self.check(not r['accepted'],str(r))
+                                      ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/franku/projects/d16sim-verification/verification/remediation_review/check_adversarial.py", line 12, in check
+    self.assertTrue(p,msg)
+    ~~~~~~~~~~~~~~~^^^^^^^
+AssertionError: False is not true : {'accepted': True, 'error': None, 'field': 'thermal_abszero', 'verified': True}
+
+======================================================================
+FAIL: test_15_thermal_rejects_invalid_state_atomically (__main__.Contracts.test_15_thermal_rejects_invalid_state_atomically)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/franku/projects/d16sim-verification/verification/remediation_review/check_adversarial.py", line 65, in test_15_thermal_rejects_invalid_state_atomically
+    for r in rows('thermal_invalid_state'):self.check(not r['accepted'] and r['unchanged'],str(r))
+                                           ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/franku/projects/d16sim-verification/verification/remediation_review/check_adversarial.py", line 12, in check
+    self.assertTrue(p,msg)
+    ~~~~~~~~~~~~~~~^^^^^^^
+AssertionError: False is not true : {'accepted': False, 'bad': 'Inf', 'state': 'ThermalState { t_wall_c: NaN, t_piston_c: NaN, t_oil_c: NaN, t_cool_c: NaN, ect_filt_c: NaN }', 'unchanged': False}
+
+======================================================================
+FAIL: test_16_dyno_never_returns_nonfinite_factor (__main__.Contracts.test_16_dyno_never_returns_nonfinite_factor)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/franku/projects/d16sim-verification/verification/remediation_review/check_adversarial.py", line 69, in test_16_dyno_never_returns_nonfinite_factor
+    for r in rows('dyno_overflow'):self.check(not r['accepted'] or r['finite'],str(r))
+                                   ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/franku/projects/d16sim-verification/verification/remediation_review/check_adversarial.py", line 12, in check
+    self.assertTrue(p,msg)
+    ~~~~~~~~~~~~~~~^^^^^^^
+AssertionError: False is not true : {'accepted': True, 'finite': False}
+
+======================================================================
+FAIL: test_17_decoder_and_ecu_invalid_observations_inhibit (__main__.Contracts.test_17_decoder_and_ecu_invalid_observations_inhibit)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/franku/projects/d16sim-verification/verification/remediation_review/check_adversarial.py", line 71, in test_17_decoder_and_ecu_invalid_observations_inhibit
+    for r in rows('decoder_boundary'):self.check(not r['nonfinite_estimate_time'] and r['finite_phase'],str(r))
+                                      ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/franku/projects/d16sim-verification/verification/remediation_review/check_adversarial.py", line 12, in check
+    self.assertTrue(p,msg)
+    ~~~~~~~~~~~~~~~^^^^^^^
+AssertionError: False is not true : {'finite_phase': False, 'nonfinite_estimate_time': True, 'state': 'Synced360'}
+
+======================================================================
+FAIL: test_18_calibration_malformed_model_returns_error (__main__.Contracts.test_18_calibration_malformed_model_returns_error)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/franku/projects/d16sim-verification/verification/remediation_review/check_adversarial.py", line 74, in test_18_calibration_malformed_model_returns_error
+    for r in rows('calibration_dimension'):self.check(not r['panicked'] and r['rejected'],str(r))
+                                           ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/franku/projects/d16sim-verification/verification/remediation_review/check_adversarial.py", line 12, in check
+    self.assertTrue(p,msg)
+    ~~~~~~~~~~~~~~~^^^^^^^
+AssertionError: False is not true : {'panicked': True, 'rejected': False}
+
+----------------------------------------------------------------------
+Ran 19 tests in 0.003s
+
+FAILED (failures=10)

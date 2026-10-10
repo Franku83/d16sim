@@ -1,0 +1,10 @@
+{
+  "source": "crates/cli/src/main.rs",
+  "commit": "8a7e8686e4e8831fb30d1a71b815e67e7d7139ef",
+  "lines": [
+    1658,
+    1697
+  ],
+  "sha256": "d49f14a45f4cbc1db098338b48e61007abe1e0365f7b61de3c0e7b204f900616",
+  "method": "exact function-body extraction; compiled in separate probe; source static inspection confirms production caller"
+}

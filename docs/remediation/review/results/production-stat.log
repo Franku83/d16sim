@@ -1,0 +1,21 @@
+ .gitignore                                         |   3 +
+ crates/calibration/src/dataset.rs                  |  44 ++
+ crates/cli/src/main.rs                             | 137 ++++--
+ crates/dyno/src/brake.rs                           |  32 +-
+ crates/ecu/src/decoder.rs                          |  33 +-
+ crates/engine-types/Cargo.toml                     |   5 +-
+ crates/engine/src/run.rs                           | 521 +++++++++++++++++++--
+ crates/engine/src/state.rs                         |  50 +-
+ crates/leak/src/network.rs                         | 158 ++++++-
+ crates/thermal/src/network.rs                      |  59 ++-
+ docs/PROGRESS.md                                   |  22 +
+ docs/adr/ADR-038-remediation-state-species.md      |  45 ++
+ docs/adr/README.md                                 |   9 +
+ docs/physics/diagnostic_tools.md                   |  10 +
+ docs/physics/integrated_engine.md                  |  24 +-
+ docs/physics/leaks.md                              |  12 +
+ docs/physics/thermal.md                            |  11 +
+ .../D16SIM_REMEDIATION_R01_R05_SPEC_v1.0.md        | 318 +++++++++++++
+ docs/remediation/R01_R02_BATCH_REPORT.md           | 216 +++++++++
+ docs/snapshot-contract.md                          |  35 +-
+ 20 files changed, 1654 insertions(+), 90 deletions(-)

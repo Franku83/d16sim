@@ -1,0 +1,8 @@
+{
+  "reviewed_commit": "8a7e8686e4e8831fb30d1a71b815e67e7d7139ef",
+  "deterministic_modes": 5,
+  "baseline_executed": true,
+  "original_contract_exit": 1,
+  "new_contract_exit": 1,
+  "gate": "REMEDIATION_REQUIRED_BEFORE_R03_R04"
+}

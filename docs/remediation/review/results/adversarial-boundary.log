@@ -1,0 +1,7 @@
+   Compiling d16sim-independent-probes v0.1.0 (/home/franku/projects/d16sim-verification/verification/remediation_review)
+    Finished `release` profile [optimized] target(s) in 1.25s
+     Running `verification/remediation_review/target/release/remediation-adversarial boundary`
+
+thread 'main' (64036) panicked at /home/franku/projects/d16sim-verification/crates/calibration/src/fit.rs:78:30:
+index out of bounds: the len is 0 but the index is 0
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

@@ -1,0 +1,40 @@
+[
+  {
+    "argv": [
+      "cargo",
+      "test",
+      "--locked",
+      "--workspace"
+    ],
+    "exit": 0,
+    "elapsed_s": 32.45630403499945,
+    "log": "workspace-test.log"
+  },
+  {
+    "argv": [
+      "cargo",
+      "fmt",
+      "--all",
+      "--",
+      "--check"
+    ],
+    "exit": 0,
+    "elapsed_s": 0.142085348999899,
+    "log": "format.log"
+  },
+  {
+    "argv": [
+      "cargo",
+      "clippy",
+      "--locked",
+      "--workspace",
+      "--all-targets",
+      "--",
+      "-D",
+      "clippy::unwrap_used"
+    ],
+    "exit": 0,
+    "elapsed_s": 2.8388726870007304,
+    "log": "clippy.log"
+  }
+]

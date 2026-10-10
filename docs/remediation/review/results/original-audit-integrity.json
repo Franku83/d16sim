@@ -1,0 +1,32 @@
+[
+  {
+    "path": "docs/audit/INDEPENDENT_AUDIT_REPORT.md",
+    "sha256": "20573430ec1468f1b31c1bf09b0a64a5db9b4d423214ee65a908f1edf9796a23",
+    "matches_git": true
+  },
+  {
+    "path": "docs/audit/FINDINGS.md",
+    "sha256": "8874fdeeee3995f27f7431780fbf25fd330bb86ce4cb7a2b9f32b990b8491189",
+    "matches_git": true
+  },
+  {
+    "path": "docs/audit/REPRODUCTION.md",
+    "sha256": "ca8ceffecfb1518586ddcc63d82ab58ceba390997819b5b72efe8bee4cdf607e",
+    "matches_git": true
+  },
+  {
+    "path": "docs/audit/DOCUMENTATION_CONSISTENCY.md",
+    "sha256": "a5d9dc8521538b9f57bd56c73d6585cf29f2a93206d11b686a1923568cf9e90a",
+    "matches_git": true
+  },
+  {
+    "path": "docs/audit/CAPABILITY_RISK_ASSESSMENT.md",
+    "sha256": "89f395d070f31928993ad01e8977303cdcd46c72d48cb65063974f8d01be5698",
+    "matches_git": true
+  },
+  {
+    "path": "docs/audit/S25_EVIDENCE_ACQUISITION_PLAN.md",
+    "sha256": "7506c941fbfa4d6716de2eb7394dea7cfc6d1ac946d66c8cd304e162d9d3d7cb",
+    "matches_git": true
+  }
+]

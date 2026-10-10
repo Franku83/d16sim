@@ -1,0 +1,3 @@
+   Compiling d16sim-independent-probes v0.1.0 (/home/franku/projects/d16sim-verification/audit/remediation_review)
+    Finished `release` profile [optimized] target(s) in 1.44s
+     Running `audit/remediation_review/target/release/remediation-adversarial snapshot`

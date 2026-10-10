@@ -1,0 +1,34 @@
+{
+  "Cargo.toml": {
+    "original_sha256": "cca5f40e85c2412dd2f697efa27c5cb3b12c2456972d33cd0fedcc220c9c49b9",
+    "implementer_exists": true,
+    "implementer_sha256": "cca5f40e85c2412dd2f697efa27c5cb3b12c2456972d33cd0fedcc220c9c49b9",
+    "byte_identical": true,
+    "diff": ""
+  },
+  "Cargo.lock": {
+    "original_sha256": "aacfab721d612142c4a75f184527eafae3a7d440577ff0e27a9a0d410144fc9c",
+    "implementer_exists": true,
+    "implementer_sha256": "aacfab721d612142c4a75f184527eafae3a7d440577ff0e27a9a0d410144fc9c",
+    "byte_identical": true,
+    "diff": ""
+  },
+  "check_contracts.py": {
+    "original_sha256": "b027d9e3ab697b1974e87980765b7b4872e24e3792153ec3e02b598bd0756b36",
+    "implementer_exists": true,
+    "implementer_sha256": "b027d9e3ab697b1974e87980765b7b4872e24e3792153ec3e02b598bd0756b36",
+    "byte_identical": true,
+    "diff": ""
+  },
+  "src/main.rs": {
+    "original_sha256": "360365edc0bf56b4d3395bfbe32e6adf0954d0f4cffa041ba8ee16cb7774b1a5",
+    "implementer_exists": true,
+    "implementer_sha256": "b1169be4fa26918a7c186271ec702de5a6fef91a400572cadd9ca63324b4e21f",
+    "byte_identical": false,
+    "diff": "--- original\n+++ implementer\n@@ -65,6 +65,12 @@\n             t_cool_c: 20.0,\n             ect_filt_c: 20.0,\n         }),\n+        // R01/R02: fixtures representan snapshots sin historia registrada\n+        // (valores neutros), no un estado nominal del motor.\n+        plen_fuel_kg: 0.0,\n+        exh_fuel_kg: 0.0,\n+        fuel_emitted_kg: 0.0,\n+        pmax_pa: None,\n     })\n }\n fn ws(i: &EngineInputs) -> WorkState {\n"
+  },
+  "review_adapter": {
+    "diff": "--- original\n+++ review\n@@ -58,6 +58,10 @@\n         work_fric_j: 0.0,\n         work_starter_j: 0.0,\n         work_load_j: 0.0,\n+        plen_fuel_kg: 0.0,\n+        exh_fuel_kg: 0.0,\n+        fuel_emitted_kg: 0.0,\n+        pmax_pa: None,\n         thermal: i.thermal.map(|_| engine::state::ThermalSnap {\n             t_wall_c: 20.0,\n             t_piston_c: 20.0,\n",
+    "physical_effect": "neutral new inventories for a cold fuel-free fixture; absent pmax reproduces initial pressure lower bound"
+  }
+}

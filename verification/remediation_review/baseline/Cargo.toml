@@ -1,0 +1,28 @@
+[package]
+name = "d16sim-independent-probes"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[workspace]
+
+[dependencies]
+engine = { path = "../../../target/remediation-review-s30/crates/engine" }
+engine-types = { path = "../../../target/remediation-review-s30/crates/engine-types" }
+kinematics = { path = "../../../target/remediation-review-s30/crates/kinematics" }
+thermo = { path = "../../../target/remediation-review-s30/crates/thermo" }
+flow = { path = "../../../target/remediation-review-s30/crates/flow" }
+valvetrain = { path = "../../../target/remediation-review-s30/crates/valvetrain" }
+crank = { path = "../../../target/remediation-review-s30/crates/crank" }
+thermal = { path = "../../../target/remediation-review-s30/crates/thermal" }
+leak = { path = "../../../target/remediation-review-s30/crates/leak" }
+wear = { path = "../../../target/remediation-review-s30/crates/wear" }
+damage = { path = "../../../target/remediation-review-s30/crates/damage" }
+fastener = { path = "../../../target/remediation-review-s30/crates/fastener" }
+contacts = { path = "../../../target/remediation-review-s30/crates/contacts" }
+dyno = { path = "../../../target/remediation-review-s30/crates/dyno" }
+ecu = { path = "../../../target/remediation-review-s30/crates/ecu" }
+electrical = { path = "../../../target/remediation-review-s30/crates/electrical" }
+diagnostics = { path = "../../../target/remediation-review-s30/crates/diagnostics" }
+calibration = { path = "../../../target/remediation-review-s30/crates/calibration" }
+serde_json = "1.0"

@@ -1,0 +1,22 @@
+{
+  "test_targets": 1,
+  "test_cases": 19,
+  "assertion_predicates_executed": 150,
+  "passed": 9,
+  "failures": 10,
+  "errors": 0,
+  "observation_rows": 174,
+  "families": 29,
+  "failure_names": [
+    "test_02_chemical_energy_matches_consumed_fuel_during_burn",
+    "test_03_physical_exhaust_is_reported",
+    "test_04_missing_split_cannot_discriminate",
+    "test_10_signed_zero_preserves_promised_bits",
+    "test_13_engine_invalid_inputs_reject_atomically",
+    "test_14_restore_rejects_invalid_physics_and_configuration",
+    "test_15_thermal_rejects_invalid_state_atomically",
+    "test_16_dyno_never_returns_nonfinite_factor",
+    "test_17_decoder_and_ecu_invalid_observations_inhibit",
+    "test_18_calibration_malformed_model_returns_error"
+  ]
+}

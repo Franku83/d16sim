@@ -1,0 +1,3 @@
+   Compiling d16sim-historical-v1-producer v0.1.0 (/home/franku/projects/d16sim-verification/verification/remediation_review/legacy)
+    Finished `release` profile [optimized] target(s) in 0.24s
+     Running `verification/remediation_review/legacy/target/release/d16sim-historical-v1-producer`

@@ -1,0 +1,50 @@
+{"data":{"dt":0.0005,"energy":9.766444347009549e-16,"mass":-2.409023080794529e-15,"pcyl_pa":500000.85255323455,"physical_chamber_split":[1.0,0.0,0.0],"scenario":"HealthyBaseline","steady_g_min":2.0653692256610143},"probe":"leak_scenario"}
+{"data":{"dt":0.00025,"energy":-1.3111936476681761e-15,"mass":-4.686463232476844e-15,"pcyl_pa":499999.9999999999,"physical_chamber_split":[1.0,0.0,0.0],"scenario":"HealthyBaseline","steady_g_min":2.065624720672945},"probe":"leak_scenario"}
+{"data":{"dt":0.0005,"energy":-1.0875281833891238e-15,"mass":-4.683507893962024e-15,"pcyl_pa":500000.0,"physical_chamber_split":[1.0,0.0,0.0],"scenario":"UnderclampedHead","steady_g_min":2163.4032154596393},"probe":"leak_scenario"}
+{"data":{"dt":0.00025,"energy":1.3751969286726986e-15,"mass":3.9629682179678664e-16,"pcyl_pa":499999.9999999999,"physical_chamber_split":[1.0,0.0,0.0],"scenario":"UnderclampedHead","steady_g_min":2125.2449806464565},"probe":"leak_scenario"}
+{"data":{"dt":0.0005,"energy":-1.964567040960998e-15,"mass":1.8734031575848095e-15,"pcyl_pa":510653.10213811725,"physical_chamber_split":[0.14020039973479922,0.0,0.8597996002652007],"scenario":"MissingHeadGasket","steady_g_min":16773.3423732215},"probe":"leak_scenario"}
+{"data":{"dt":0.00025,"energy":-3.216276898487577e-14,"mass":-2.1472082344625896e-14,"pcyl_pa":500000.00000000006,"physical_chamber_split":[0.1364138251422428,0.0,0.8635861748577572],"scenario":"MissingHeadGasket","steady_g_min":16506.62028896356},"probe":"leak_scenario"}
+{"data":{"dt":0.0005,"energy":3.1789917840550523e-16,"mass":-4.522793770918014e-15,"pcyl_pa":500001.86548563384,"physical_chamber_split":[1.0,0.0,0.0],"scenario":"RingLeakCyl3","steady_g_min":4.089561986447125},"probe":"leak_scenario"}
+{"data":{"dt":0.00025,"energy":-4.971028837253084e-16,"mass":5.4858119355328625e-15,"pcyl_pa":500000.0,"physical_chamber_split":[1.0,0.0,0.0],"scenario":"RingLeakCyl3","steady_g_min":4.090062637038551},"probe":"leak_scenario"}
+{"data":{"expected_receiver_fresh":0.004002307770341999,"mass_transferred":0.0004667120332508509,"receiver_fresh":0.004002307770341998},"probe":"leak_species"}
+{"data":{"expected_mass_kg_at_declared_870kg_m3":0.00087,"reported_mass_kg":0.0008699999999999324,"volume_m3":1e-6},"probe":"leak_liquid_units"}
+{"data":{"rings_plus_valve_no_coolant":"Discriminated { cause: HeadGasket, by_measurements: \"compression + leak-down to coolant/multiple\" }","zero_split":"Discriminated { cause: Rings, by_measurements: \"compression + leak-down to crankcase\" }"},"probe":"diagnosis_multicause"}
+{"data":{"bearing_m":4.5e-6,"film":0.0,"gap_m":0.000012244500000000021,"gap_subdivision_diff":2.9110828331235794e-17,"oxidation":0.00040686363819762857,"temp":40.0},"probe":"wear_grid"}
+{"data":{"bearing_m":4.5e-6,"film":0.0,"gap_m":0.000012244500000000021,"gap_subdivision_diff":2.9110828331235794e-17,"oxidation":0.056911701834979955,"temp":100.0},"probe":"wear_grid"}
+{"data":{"bearing_m":4.5e-6,"film":0.0,"gap_m":0.000012244500000000021,"gap_subdivision_diff":2.9110828331235794e-17,"oxidation":0.3877634680373855,"temp":130.0},"probe":"wear_grid"}
+{"data":{"bearing_m":9e-7,"film":0.8,"gap_m":2.4488999999999826e-6,"gap_subdivision_diff":1.142206988713479e-16,"oxidation":0.00040686363819762857,"temp":40.0},"probe":"wear_grid"}
+{"data":{"bearing_m":9e-7,"film":0.8,"gap_m":2.4488999999999826e-6,"gap_subdivision_diff":1.142206988713479e-16,"oxidation":0.056911701834979955,"temp":100.0},"probe":"wear_grid"}
+{"data":{"bearing_m":9e-7,"film":0.8,"gap_m":2.4488999999999826e-6,"gap_subdivision_diff":1.142206988713479e-16,"oxidation":0.3877634680373855,"temp":130.0},"probe":"wear_grid"}
+{"data":{"bearing_m":0.0,"film":1.0,"gap_m":0.0,"gap_subdivision_diff":0.0,"oxidation":0.00040686363819762857,"temp":40.0},"probe":"wear_grid"}
+{"data":{"bearing_m":0.0,"film":1.0,"gap_m":0.0,"gap_subdivision_diff":0.0,"oxidation":0.056911701834979955,"temp":100.0},"probe":"wear_grid"}
+{"data":{"bearing_m":0.0,"film":1.0,"gap_m":0.0,"gap_subdivision_diff":0.0,"oxidation":0.3877634680373855,"temp":130.0},"probe":"wear_grid"}
+{"data":{"accepted":true,"bearing":0.0,"oxidation":1.0},"probe":"wear_unsupported"}
+{"data":{"accepted":true,"after":0.09999075803759254,"before":0.1},"probe":"wear_irreversible"}
+{"data":{"after":"{\"schema_version\":1,\"seed\":42,\"hours\":1.0,\"ring_gap_m\":[0.00030004897799999997,0.00030004897799999997,0.00030004897799999997,0.00030004897799999997],\"liner_wear_m\":[4.897799999999999e-8,4.897799999999999e-8,4.897799999999999e-8,4.897799999999999e-8],\"bearing_extra_m\":[1.8e-8,1.8e-8,1.8e-8,1.8e-8,1.8e-8,1.8e-8,1.8e-8,1.8e-8,1.8e-8],\"oil_oxidation_01\":0.001138234036699599,\"gasket_relax_01\":0.00004066463459285012}","before":"{\"schema_version\":1,\"seed\":42,\"hours\":1.0,\"ring_gap_m\":[0.00030004897799999997,0.00030004897799999997,0.00030004897799999997,0.00030004897799999997],\"liner_wear_m\":[4.897799999999999e-8,4.897799999999999e-8,4.897799999999999e-8,4.897799999999999e-8],\"bearing_extra_m\":[1.8e-8,1.8e-8,1.8e-8,1.8e-8,1.8e-8,1.8e-8,1.8e-8,1.8e-8,1.8e-8],\"oil_oxidation_01\":0.001138234036699599,\"gasket_relax_01\":0.00004066463459285012}","exact":true,"hash_match":true},"probe":"wear_roundtrip"}
+{"data":{"domain":"axial preload vs Rp0.2 ISO 898-1 10.9 (GENERIC, not D16Y7 measured)","state":"Elastic","torque":60.0},"probe":"damage_bolt"}
+{"data":{"domain":"axial preload vs Rp0.2 ISO 898-1 10.9 (GENERIC, not D16Y7 measured)","state":"UncertainRange","torque":80.0},"probe":"damage_bolt"}
+{"data":{"domain":"axial preload vs Rp0.2 ISO 898-1 10.9 (GENERIC, not D16Y7 measured)","state":"PlasticOnsetGeneric","torque":400.0},"probe":"damage_bolt"}
+{"data":{"lift":0.001,"overlap":false,"state":"Clear { margin: \"clearance 2.500 mm\" }"},"probe":"damage_geometry"}
+{"data":{"lift":0.008,"overlap":true,"state":"Risk { margin: \"penetration 4.500 mm\", needs: \"valve material + seat geometry (PENDING); bending NOT inferred\" }"},"probe":"damage_geometry"}
+{"data":{"starved":"Risk { margin: \"film 0.20 under load 5.0 MPa\", needs: \"seizure criterion (UNSUPPORTED); wear trend via S26\" }","thread":"Unsupported"},"probe":"damage_support"}
+{"data":{"phase":690.0,"rpm":749.9999999999951,"start":0,"sync":"Synced720"},"probe":"decoder_origin"}
+{"data":{"phase":540.0,"rpm":749.9999999999951,"start":5,"sync":"Synced720"},"probe":"decoder_origin"}
+{"data":{"case":"healthy","confidence":1.0,"phase":690.0,"sync":"Synced720"},"probe":"decoder_recovery"}
+{"data":{"case":"recovered_after_cyp","confidence":1.0,"phase":660.0,"sync":"Synced720"},"probe":"decoder_recovery"}
+{"data":{"sync_after_three_cycles_no_cyp":"Synced720"},"probe":"decoder_cyp_dropout"}
+{"data":{"future_accepted":false,"nan_accepted":false},"probe":"decoder_invalid"}
+{"data":{"seed":1,"sequence":[2.0,2.0,0.0,0.0,2.0,0.0,0.0,0.0,2.0,2.0,2.0,0.0,0.0,2.0,2.0,0.0,2.0,0.0,0.0,2.0,0.0,2.0,0.0,0.0,0.0,0.0,2.0,2.0,2.0,0.0,2.0,2.0]},"probe":"wire_seed"}
+{"data":{"seed":2,"sequence":[2.0,2.0,0.0,0.0,2.0,0.0,0.0,0.0,2.0,2.0,2.0,0.0,0.0,2.0,2.0,0.0,2.0,0.0,0.0,2.0,0.0,2.0,0.0,0.0,0.0,0.0,2.0,2.0,2.0,0.0,2.0,2.0]},"probe":"wire_seed"}
+{"data":{"effective":11.49999999999995,"healthy_ignitions":4,"lost_ignitions":0,"requested":15.999999999999922},"probe":"scheduler"}
+{"data":{"invariant_relative_error":2.987083865813034e-7,"points":181,"step":2.0,"work_net_j":0.00003382815265240424},"probe":"analytic_cylinder"}
+{"data":{"invariant_relative_error":1.8778350541204247e-8,"points":361,"step":1.0,"work_net_j":2.167261101249096e-6},"probe":"analytic_cylinder"}
+{"data":{"invariant_relative_error":1.1776647435013388e-9,"points":721,"step":0.5,"work_net_j":1.3702546652893943e-7},"probe":"analytic_cylinder"}
+{"data":{"invariant_relative_error":7.355982489798407e-11,"points":1441,"step":0.25,"work_net_j":8.580940402680426e-9},"probe":"analytic_cylinder"}
+{"data":{"bernoulli_relative_error":5.287102956663681e-6,"pressure_area_scaling_ratio":4.0,"temperature_scaling_ratio":0.5},"probe":"flow_metamorphic"}
+{"data":{"wall_finite":true,"zero_capacity_accepted":false},"probe":"thermal_invalid"}
+{"data":{"balanced_j":0.0,"delta_u_j":-13064.0,"expected_loss_j":13064.0},"probe":"thermal_boundary"}
+{"data":{"below_absolute_zero_accepted":false,"factor_finite":true},"probe":"dyno_invalid"}
+{"data":{"invalid_observations_accepted":false},"probe":"dataset_invalid"}
+{"data":{"ok":true,"param":2.0,"residual":0.0,"start":3.0,"std_independent":0.25,"std_reported":0.08333333332785307},"probe":"fit_analytic"}
+{"data":{"ok":true,"param":2.0,"residual":0.0,"start":6.0,"std_independent":0.25,"std_reported":0.04166666666893796},"probe":"fit_analytic"}
+{"data":{"error":"invalid fit: no descent","ok":false,"start":2.0},"probe":"fit_analytic"}

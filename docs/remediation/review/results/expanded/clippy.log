@@ -1,0 +1,429 @@
+warning: enclosing `Ok` and `?` operator are unneeded
+   --> crates/kinematics/src/geometry.rs:120:9
+    |
+120 | /         Ok(Self::new(
+121 | |             Length::from_m(0.075).map_err(|e| KinematicsError::InvalidGeometry {
+122 | |                 reason: e.to_string(),
+123 | |             })?,
+...   |
+131 | |             "ILLUSTRATIVE preset: bore/stroke/CR are PENDING S01 candidates (FORUM-CLAIM), rod is MFR-TECH; not OEM nominal",
+132 | |         )?)
+    | |___________^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#needless_question_mark
+    = note: `#[warn(clippy::needless_question_mark)]` on by default
+help: remove the enclosing `Ok` and `?` operator
+    |
+120 ~         Self::new(
+121 |             Length::from_m(0.075).map_err(|e| KinematicsError::InvalidGeometry {
+...
+131 |             "ILLUSTRATIVE preset: bore/stroke/CR are PENDING S01 candidates (FORUM-CLAIM), rod is MFR-TECH; not OEM nominal",
+132 ~         )
+    |
+
+warning: this `map_or` can be simplified
+   --> crates/fuel/src/rail.rs:111:19
+    |
+111 |     let pump_ok = pump.max_flow_kg_s.map_or(true, |cap| demand_kg_s <= cap);
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#unnecessary_map_or
+    = note: `#[warn(clippy::unnecessary_map_or)]` on by default
+help: use `is_none_or` instead
+    |
+111 -     let pump_ok = pump.max_flow_kg_s.map_or(true, |cap| demand_kg_s <= cap);
+111 +     let pump_ok = pump.max_flow_kg_s.is_none_or(|cap| demand_kg_s <= cap);
+    |
+
+warning: the loop variable `cyl` is used to index `BASE`
+  --> crates/fuel/src/schedule.rs:55:24
+   |
+55 |             for cyl in 0..4 {
+   |                        ^^^^
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#needless_range_loop
+   = note: `#[warn(clippy::needless_range_loop)]` on by default
+help: consider using an iterator and enumerate()
+   |
+55 -             for cyl in 0..4 {
+55 +             for (cyl, <item>) in BASE.iter().enumerate() {
+   |
+
+warning: the use of negated comparison operators on partially ordered types produces code that is hard to read and refactor, please consider using the `partial_cmp` method instead, to make it clear that the two values could be incomparable
+   --> crates/trigger/src/channels.rs:178:12
+    |
+178 |         if !(rev_end > rev_start) {
+    |            ^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#neg_cmp_op_on_partial_ord
+    = note: `#[warn(clippy::neg_cmp_op_on_partial_ord)]` on by default
+
+warning: unneeded late initialization
+   --> crates/lube/src/gallery.rs:119:5
+    |
+119 |     let relief: f64;
+    |     ^^^^^^^^^^^^^^^^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#needless_late_init
+    = note: `#[warn(clippy::needless_late_init)]` on by default
+help: move the declaration `relief` here and remove the assignments from the branches
+    |
+119 ~     
+120 ~     let relief: f64 = if sum > q_pump && sum > 0.0 {
+121 |         let k = q_pump / sum;
+...
+124 |         }
+125 ~         0.0
+126 |     } else {
+127 ~         (q_pump - sum).max(0.0)
+128 ~     };
+    |
+
+warning: docs for function returning `Result` missing `# Errors` section
+  --> crates/assembly/src/ops.rs:68:1
+   |
+68 | / pub fn apply_operation(
+69 | |     graph: &mut EngineGraph,
+70 | |     op: Operation,
+71 | |     expected_version: u64,
+72 | | ) -> Result<OperationResult, AssemblyError> {
+   | |___________________________________________^
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#missing_errors_doc
+   = note: requested on the command line with `-W clippy::missing-errors-doc`
+
+warning: the loop variable `k` is only used to index `mtx`
+   --> crates/calibration/src/fit.rs:199:18
+    |
+199 |         for k in c..=m {
+    |                  ^^^^^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#needless_range_loop
+    = note: `#[warn(clippy::needless_range_loop)]` on by default
+help: consider using an iterator
+    |
+199 -         for k in c..=m {
+199 +         for <item> in mtx.iter_mut().take(m + 1).skip(c) {
+    |
+
+warning: the loop variable `k` is only used to index `mtx`
+   --> crates/calibration/src/fit.rs:205:26
+    |
+205 |                 for k in c..=m {
+    |                          ^^^^^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#needless_range_loop
+help: consider using an iterator
+    |
+205 -                 for k in c..=m {
+205 +                 for <item> in mtx.iter_mut().take(m + 1).skip(c) {
+    |
+
+warning: docs for function returning `Result` missing `# Errors` section
+  --> crates/physics/src/lib.rs:18:1
+   |
+18 | pub fn closed_cycle_placeholder() -> Result<(), EngineError> {
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#missing_errors_doc
+   = note: requested on the command line with `-W clippy::missing-errors-doc`
+
+warning: `kinematics` (lib) generated 1 warning (run `cargo clippy --fix --lib -p kinematics -- -D clippy::unwrap_used` to apply 1 suggestion)
+warning: `fuel` (lib) generated 2 warnings (run `cargo clippy --fix --lib -p fuel -- -D clippy::unwrap_used` to apply 1 suggestion)
+warning: `trigger` (lib) generated 1 warning
+warning: `lube` (lib) generated 1 warning (run `cargo clippy --fix --lib -p lube -- -D clippy::unwrap_used` to apply 1 suggestion)
+warning: `assembly` (lib) generated 1 warning
+warning: `calibration` (lib) generated 2 warnings
+warning: `physics` (lib) generated 1 warning
+warning: `fuel` (lib test) generated 2 warnings (2 duplicates)
+warning: `kinematics` (lib test) generated 1 warning (1 duplicate)
+warning: `trigger` (lib test) generated 1 warning (1 duplicate)
+warning: `calibration` (lib test) generated 2 warnings (2 duplicates)
+warning: `physics` (lib test) generated 1 warning (1 duplicate)
+warning: manual `!RangeInclusive::contains` implementation
+   --> crates/ecu/src/decoder.rs:142:20
+    |
+142 |                 if ckp_between > 30 || ckp_between < 18 {
+    |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: use: `!(18..=30).contains(&ckp_between)`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#manual_range_contains
+    = note: `#[warn(clippy::manual_range_contains)]` on by default
+
+warning: docs for function returning `Result` missing `# Errors` section
+  --> crates/simulation/src/runner.rs:27:1
+   |
+27 | / pub fn run_scenario(
+28 | |     manifest_path: &std::path::Path,
+29 | |     out_dir: &std::path::Path,
+30 | | ) -> Result<RunSummary, EngineError> {
+   | |____________________________________^
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#missing_errors_doc
+   = note: requested on the command line with `-W clippy::missing-errors-doc`
+
+warning: docs for function returning `Result` missing `# Errors` section
+   --> crates/simulation/src/runner.rs:110:1
+    |
+110 | / pub fn replay(
+111 | |     manifest_path: &std::path::Path,
+112 | |     run_dir: &std::path::Path,
+113 | | ) -> Result<RunSummary, EngineError> {
+    | |____________________________________^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#missing_errors_doc
+
+warning: docs for function returning `Result` missing `# Errors` section
+   --> crates/simulation/src/runner.rs:179:1
+    |
+179 | pub fn report_summary(run_dir: &std::path::Path) -> Result<RunSummary, EngineError> {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#missing_errors_doc
+
+warning: docs for function returning `Result` missing `# Errors` section
+ --> crates/simulation/src/validation.rs:8:1
+  |
+8 | pub fn validate_data_dir(data_dir: &std::path::Path) -> Result<Vec<String>, EngineError> {
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  |
+  = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#missing_errors_doc
+
+warning: manual `RangeInclusive::contains` implementation
+   --> crates/thermo/src/closed_cycle.rs:258:13
+    |
+258 |             order >= 3.0 && order <= 5.0,
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: use: `(3.0..=5.0).contains(&order)`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#manual_range_contains
+    = note: `#[warn(clippy::manual_range_contains)]` on by default
+
+warning: `ecu` (lib) generated 1 warning (run `cargo clippy --fix --lib -p ecu -- -D clippy::unwrap_used` to apply 1 suggestion)
+warning: `simulation` (lib) generated 4 warnings
+warning: `ecu` (lib test) generated 1 warning (1 duplicate)
+warning: `thermo` (lib test) generated 1 warning (run `cargo clippy --fix --lib -p thermo --tests -- -D clippy::unwrap_used` to apply 1 suggestion)
+warning: `simulation` (lib test) generated 4 warnings (4 duplicates)
+warning: `lube` (lib test) generated 1 warning (1 duplicate)
+warning: `assembly` (lib test) generated 1 warning (1 duplicate)
+warning: redundant field names in struct initialization
+   --> crates/valvetrain/src/cam.rs:125:13
+    |
+125 |             flank: flank,
+    |             ^^^^^^^^^^^^ help: replace it with: `flank`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#redundant_field_names
+    = note: `#[warn(clippy::redundant_field_names)]` on by default
+
+warning: float has excessive precision
+   --> crates/combustion/src/burn.rs:189:14
+    |
+189 |             -0.525_532_409_916_329_0,
+    |              ^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#excessive_precision
+    = note: `#[warn(clippy::excessive_precision)]` on by default
+help: consider changing the type or truncating it to
+    |
+189 -             -0.525_532_409_916_329_0,
+189 +             -0.525_532_409_916_329,
+    |
+
+warning: float has excessive precision
+   --> crates/combustion/src/burn.rs:190:13
+    |
+190 |             0.525_532_409_916_329_0,
+    |             ^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#excessive_precision
+help: consider changing the type or truncating it to
+    |
+190 -             0.525_532_409_916_329_0,
+190 +             0.525_532_409_916_329,
+    |
+
+warning: float has excessive precision
+   --> crates/combustion/src/burn.rs:197:13
+    |
+197 |             0.362_683_783_378_362_0,
+    |             ^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#excessive_precision
+help: consider changing the type or truncating it to
+    |
+197 -             0.362_683_783_378_362_0,
+197 +             0.362_683_783_378_362,
+    |
+
+warning: float has excessive precision
+   --> crates/combustion/src/burn.rs:198:13
+    |
+198 |             0.362_683_783_378_362_0,
+    |             ^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#excessive_precision
+help: consider changing the type or truncating it to
+    |
+198 -             0.362_683_783_378_362_0,
+198 +             0.362_683_783_378_362,
+    |
+
+warning: manual `RangeInclusive::contains` implementation
+   --> crates/electrical/src/starter.rs:170:21
+    |
+170 |             assert!(eta <= 1.0 + 1e-12 && eta >= 0.0, "eta={eta} at {w}");
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: use: `(0.0..=1.0 + 1e-12).contains(&eta)`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#manual_range_contains
+    = note: `#[warn(clippy::manual_range_contains)]` on by default
+
+warning: using `contains()` instead of `iter().any()` is more efficient
+   --> crates/electrical/src/wiring.rs:222:17
+    |
+222 |         assert!(sa.iter().any(|v| *v == 0.0) && sa.iter().any(|v| *v > 0.0));
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: try: `sa.contains(&0.0)`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#manual_contains
+    = note: `#[warn(clippy::manual_contains)]` on by default
+
+warning: `valvetrain` (lib) generated 1 warning (run `cargo clippy --fix --lib -p valvetrain -- -D clippy::unwrap_used` to apply 1 suggestion)
+warning: `combustion` (lib) generated 4 warnings (run `cargo clippy --fix --lib -p combustion -- -D clippy::unwrap_used` to apply 4 suggestions)
+warning: `electrical` (lib test) generated 2 warnings (run `cargo clippy --fix --lib -p electrical --tests -- -D clippy::unwrap_used` to apply 2 suggestions)
+warning: `valvetrain` (lib test) generated 1 warning (1 duplicate)
+warning: `combustion` (lib test) generated 4 warnings (4 duplicates)
+warning: doc list item without indentation
+ --> crates/flow/src/cycle.rs:3:5
+  |
+3 | //! MASA es exacta por construcción (lo que sale de un nodo entra en otro
+  |     ^
+  |
+  = help: if this is supposed to be its own paragraph, add a blank line
+  = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#doc_lazy_continuation
+  = note: `#[warn(clippy::doc_lazy_continuation)]` on by default
+help: indent this line
+  |
+3 | //!   MASA es exacta por construcción (lo que sale de un nodo entra en otro
+  |     ++
+
+warning: doc list item without indentation
+ --> crates/flow/src/cycle.rs:4:5
+  |
+4 | //! y la frontera se audita); la energía cierra a O(h) documentado.
+  |     ^
+  |
+  = help: if this is supposed to be its own paragraph, add a blank line
+  = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#doc_lazy_continuation
+help: indent this line
+  |
+4 | //!   y la frontera se audita); la energía cierra a O(h) documentado.
+  |     ++
+
+warning: doc list item without indentation
+ --> crates/diagnostics/src/mech.rs:9:5
+  |
+9 | //! Dirección exacta por construcción; magnitud pendiente.
+  |     ^
+  |
+  = help: if this is supposed to be its own paragraph, add a blank line
+  = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#doc_lazy_continuation
+  = note: `#[warn(clippy::doc_lazy_continuation)]` on by default
+help: indent this line
+  |
+9 | //!   Dirección exacta por construcción; magnitud pendiente.
+  |     ++
+
+warning: this function has too many arguments (8/7)
+   --> crates/diagnostics/src/mech.rs:144:1
+    |
+144 | / pub fn cranking_peak_kpa(
+145 | |     p_ideal_trapped_kpa: f64,
+146 | |     throttle_fill_01: f64,
+147 | |     cyl_vol_m3: f64,
+...   |
+152 | |     c_leak: f64,
+153 | | ) -> Result<f64, MechError> {
+    | |___________________________^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#too_many_arguments
+    = note: `#[warn(clippy::too_many_arguments)]` on by default
+
+warning: `flow` (lib) generated 2 warnings
+warning: `diagnostics` (lib) generated 2 warnings
+warning: `flow` (lib test) generated 2 warnings (2 duplicates)
+warning: `diagnostics` (lib test) generated 2 warnings (2 duplicates)
+warning: the use of negated comparison operators on partially ordered types produces code that is hard to read and refactor, please consider using the `partial_cmp` method instead, to make it clear that the two values could be incomparable
+   --> crates/leak/src/network.rs:257:16
+    |
+257 |             if !(a.m_kg - dm > 0.0) {
+    |                ^^^^^^^^^^^^^^^^^^^^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#neg_cmp_op_on_partial_ord
+    = note: `#[warn(clippy::neg_cmp_op_on_partial_ord)]` on by default
+
+warning: the use of negated comparison operators on partially ordered types produces code that is hard to read and refactor, please consider using the `partial_cmp` method instead, to make it clear that the two values could be incomparable
+   --> crates/engine/src/run.rs:349:12
+    |
+349 |         if !(self.m - dm > 0.0) {
+    |            ^^^^^^^^^^^^^^^^^^^^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#neg_cmp_op_on_partial_ord
+    = note: `#[warn(clippy::neg_cmp_op_on_partial_ord)]` on by default
+
+warning: the use of negated comparison operators on partially ordered types produces code that is hard to read and refactor, please consider using the `partial_cmp` method instead, to make it clear that the two values could be incomparable
+   --> crates/engine/src/run.rs:810:20
+    |
+810 |                 if !(c.m - dm > 0.0) {
+    |                    ^^^^^^^^^^^^^^^^^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#neg_cmp_op_on_partial_ord
+
+warning: the use of negated comparison operators on partially ordered types produces code that is hard to read and refactor, please consider using the `partial_cmp` method instead, to make it clear that the two values could be incomparable
+   --> crates/engine/src/run.rs:824:20
+    |
+824 |                 if !(c.m - dm > 0.0) {
+    |                    ^^^^^^^^^^^^^^^^^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#neg_cmp_op_on_partial_ord
+
+warning: manual implementation of `.is_multiple_of()`
+    --> crates/engine/src/run.rs:1041:12
+     |
+1041 |         if step % record_every == 0 {
+     |            ^^^^^^^^^^^^^^^^^^^^^^^^ help: replace with: `step.is_multiple_of(record_every)`
+     |
+     = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#manual_is_multiple_of
+     = note: `#[warn(clippy::manual_is_multiple_of)]` on by default
+
+warning: `leak` (lib) generated 1 warning
+warning: `engine` (lib) generated 4 warnings (run `cargo clippy --fix --lib -p engine -- -D clippy::unwrap_used` to apply 1 suggestion)
+warning: `engine` (lib test) generated 4 warnings (4 duplicates)
+warning: `leak` (lib test) generated 1 warning (1 duplicate)
+warning: manual `RangeInclusive::contains` implementation
+  --> crates/dyno/src/sweep.rs:71:34
+   |
+71 |     if !(rpm_mean.is_finite() && rpm_mean >= 400.0 && rpm_mean <= 5500.0) {
+   |                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: use: `(400.0..=5500.0).contains(&rpm_mean)`
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#manual_range_contains
+   = note: `#[warn(clippy::manual_range_contains)]` on by default
+
+warning: `dyno` (lib) generated 1 warning (run `cargo clippy --fix --lib -p dyno -- -D clippy::unwrap_used` to apply 1 suggestion)
+warning: `dyno` (lib test) generated 1 warning (1 duplicate)
+warning: the use of negated comparison operators on partially ordered types produces code that is hard to read and refactor, please consider using the `partial_cmp` method instead, to make it clear that the two values could be incomparable
+   --> crates/audit/src/chains.rs:109:8
+    |
+109 |     if !((r1 - r0).abs() > 1.0) {
+    |        ^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#neg_cmp_op_on_partial_ord
+    = note: `#[warn(clippy::neg_cmp_op_on_partial_ord)]` on by default
+
+warning: the use of negated comparison operators on partially ordered types produces code that is hard to read and refactor, please consider using the `partial_cmp` method instead, to make it clear that the two values could be incomparable
+   --> crates/audit/src/chains.rs:202:8
+    |
+202 |     if !(a1 > a0) {
+    |        ^^^^^^^^^^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#neg_cmp_op_on_partial_ord
+
+warning: `audit` (lib) generated 2 warnings
+warning: `audit` (lib test) generated 2 warnings (2 duplicates)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.05s

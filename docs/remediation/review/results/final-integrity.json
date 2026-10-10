@@ -1,0 +1,52 @@
+{
+  "reviewed_commit": "8a7e8686e4e8831fb30d1a71b815e67e7d7139ef",
+  "worktrees": {
+    "/home/franku/projects/d16sim": {
+      "head": "ff09a0dda82188e6bf27a80d17c902f8972a39d2",
+      "status": "?? docs/remediation/D16SIM_REMEDIATION_R01_R05_SPEC_v1.0.md\n",
+      "head_unchanged": true,
+      "status_unchanged": true
+    },
+    "/home/franku/projects/d16sim-audit": {
+      "head": "25d528e3ff5b31eaeab0c894c4227b3e7d3a574c",
+      "status": "",
+      "head_unchanged": true,
+      "status_unchanged": true
+    },
+    "/home/franku/projects/d16sim-remediation": {
+      "head": "8a7e8686e4e8831fb30d1a71b815e67e7d7139ef",
+      "status": "",
+      "head_unchanged": true,
+      "status_unchanged": true
+    }
+  },
+  "sources": {
+    "verification/remediation_review/Cargo.toml": "37a717ffc64f054812c68619c0edd9e6a8f08702f887a443f5eebb0c7d4105c1",
+    "verification/remediation_review/Cargo.lock": "aacfab721d612142c4a75f184527eafae3a7d440577ff0e27a9a0d410144fc9c",
+    "verification/remediation_review/check_contracts.py": "b027d9e3ab697b1974e87980765b7b4872e24e3792153ec3e02b598bd0756b36",
+    "verification/remediation_review/.gitignore": "1141064ed2630abfb4a4b52385d7e6c5676a9a51c3c01a4884a7cdaf05609a74",
+    "verification/remediation_review/check_adversarial.py": "d67f74f3c560a4bee17d703734a2b48ac5e88d0624351e51dfef5356e59f5b9b",
+    "verification/remediation_review/reproduce.py": "f74a72077abb03621e6378786f692044865cd30eb22a7be68cf35232a69c1871",
+    "verification/remediation_review/src/main.rs": "b28adcc0b93950aadf73c950e47b4679f6b90f746dba688ad4cad09c37607982",
+    "verification/remediation_review/src/observed_cli.rs": "233c59a2877306e3d97680dbd7f7c08240c12bd03fddfbb210aac582202f7746",
+    "verification/remediation_review/src/common.rs": "62ed1b2a9391e22854e642dd01819fe8e7460c493faccb702cb34abe131ce20d",
+    "verification/remediation_review/src/adversarial.rs": "66ffdbc62a866e67d7f819f05e2f920fbbf0de8ce3f1c677b613d13a7a14afa7",
+    "verification/remediation_review/reference/original_main.rs": "360365edc0bf56b4d3395bfbe32e6adf0954d0f4cffa041ba8ee16cb7774b1a5",
+    "verification/remediation_review/legacy/Cargo.toml": "cd5b1f3c7d0e7db104e42879af06015db3afe5a5bcedd6a134f1f2941ba63cfc",
+    "verification/remediation_review/legacy/Cargo.lock": "c98b93598b321da08fe8f62081858401c90c3ab89b011263d14ab39407b7bce2",
+    "verification/remediation_review/baseline/Cargo.toml": "13233af17d6ad903ae155dc2635acac48d19590ec9095ee2e3dbc586f39b5090",
+    "verification/remediation_review/baseline/Cargo.lock": "aacfab721d612142c4a75f184527eafae3a7d440577ff0e27a9a0d410144fc9c",
+    "verification/remediation_review/baseline/src/main.rs": "360365edc0bf56b4d3395bfbe32e6adf0954d0f4cffa041ba8ee16cb7774b1a5",
+    "verification/remediation_review/legacy/src/main.rs": "bbd477af198da1d3ecc69317235ff02757efe670719fbb8e6de205136bcde8e8"
+  },
+  "raw_capture_whitespace_preserved": true,
+  "production_diff_against_reviewed_commit": "",
+  "historical_fixture": {
+    "source_commit": "254126618fb17b5e09c398078b2f1efd1963de25",
+    "fixture_sha256": "4fe30e32e971d2ea024e958cf6800b28e68ecaebb5d90cc0e1321db2e2547ef0",
+    "state_hash": "7a6fe8a4f580e2e11c08ddfd380a3c7f7bb9c72e08c07f14b306d22687481fd7",
+    "producer": "verification/remediation_review/legacy",
+    "dependency_lockfile": "verification/remediation_review/legacy/Cargo.lock",
+    "original_type_source_blob": "3114a112d339ba8d80ae2f18059826dad24286d8"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "commit": "ff09a0dda82188e6bf27a80d17c902f8972a39d2",
+  "materialization": "git archive in verification target; never writes original worktrees",
+  "argv": [
+    "cargo",
+    "test",
+    "--locked",
+    "--offline",
+    "--workspace"
+  ],
+  "exit": 0,
+  "elapsed_s": 31.451060556999437
+}
