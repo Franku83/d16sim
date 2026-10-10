@@ -1,7 +1,7 @@
 # HANDOFF — punto de entrada al siguiente agente
 
-Fecha: 2026-10-10 · Sprints: **S00–S17 APROBADOS (batch S16–S20)**.
-Siguiente: **S18**. **S21 prohibido sin autorización.**
+Fecha: 2026-10-10 · Sprints: **S00–S18 APROBADOS (batch S16–S20)**.
+Siguiente: **S19**. **S21 prohibido sin autorización.**
 
 ## Estado científico/arquitectónico actual
 
@@ -32,9 +32,9 @@ Siguiente: **S18**. **S21 prohibido sin autorización.**
    2026-10-10.
 2. ~~Licencia sin decidir~~ — resuelto: Apache-2.0 solo código propio
    (propietario 2026-10-10); `LICENSE` + `THIRD_PARTY_NOTICES.md` creados.
-3. S01–S17 APROBADOS 2026-10-10 (S16: ~1026 rpm; S17: 24/4/1
-   GENERIC_TRIGGER con TRIG-2026-10-10). Deuda: mapas P2E, scope OEM,
-   scheduler en S18.
+3. S01–S18 APROBADOS 2026-10-10 (S17: GENERIC_TRIGGER; S18: req
+   14.0/eff 9.5 + DTC por persistencia). Deuda: sensores analógicos y
+   cableado en S19; estrategia OEM.
 
 ## Roles y reglas de cambio (S00)
 
@@ -135,11 +135,14 @@ Crate `engine` + `engine-run` + ADR-023. Ver `docs/sprints/S16.md`.
 Crate `trigger` + `trigger-waveform` + ADR-024 + raw TRIG-2026-10-10.
 Ver `docs/sprints/S17.md`.
 
-## Brief S18 (siguiente en batch autorizado)
+## Brief S18 (APROBADO 2026-10-10)
 
-ECU de referencia: decoder de flancos con sync 360°/720°, FSM
-(power_off/booting/cranking unsynced-synced/running/sync_lost/fallback),
-mapas de referencia propios (nunca OEM), scheduler θ/t de inyección e
-ignición con latencias, monitores/DTC por lectura temporal (nunca por
-fault_id). Gate: señales erróneas alteran sync/timing causalmente;
-solicitado vs efectivo visibles.
+Crate `ecu` + `ecu-demo` + ADR-025. Ver `docs/sprints/S18.md`.
+
+## Brief S19 (siguiente en batch autorizado)
+
+Sensores analógicos y cableado: `SensorChannel` con transferencia,
+referencia, retardo, ruido, offset, deriva y saturación (MAP/IAT/ECT/
+TPS/O2/IACV según variante); conectores con R/abierto/corto/intermitente;
+ADC + filtros; discrepancia real vs estimado. Gate: ECT falso cambia ECU
+sin cambiar T física; MAP falso no cambia p real.

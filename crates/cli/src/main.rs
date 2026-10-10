@@ -149,6 +149,13 @@ enum Command {
         #[arg(long, default_value_t = 0)]
         fault: u8,
     },
+    /// ECU de referencia: sync + comandos + DTC (S18, P2E-like no OEM).
+    EcuDemo {
+        #[arg(long, default_value_t = 750.0)]
+        rpm: f64,
+        #[arg(long, default_value_t = 0)]
+        fault: u8,
+    },
     /// Dinámica de cigüeñal con traza motored (S14, ilustrativo).
     CrankDynamics {
         #[arg(long, default_value_t = 750.0)]
@@ -286,6 +293,7 @@ fn run() -> Result<(), EngineError> {
         Command::FuelSupplyTest => fuel_supply_test_cmd(),
         Command::EngineRun { scenario, seconds } => engine_run_cmd(&scenario, seconds),
         Command::TriggerWaveform { rpm, fault } => trigger_waveform_cmd(rpm, fault),
+        Command::EcuDemo { rpm, fault } => ecu_demo_cmd(rpm, fault),
         Command::CrankDynamics { rpm0, seconds } => crank_dynamics_cmd(rpm0, seconds),
         Command::ColdCrank => cold_crank_cmd(),
     }
@@ -1140,6 +1148,70 @@ fn trigger_waveform_cmd(rpm: f64, fault: u8) -> Result<(), EngineError> {
             "  {name}: {} edges/rev-cycle, first@{first:.6}s",
             edges.len()
         );
+    }
+    Ok(())
+}
+
+/// Comando S18: bordes del trigger (S17) → decoder + scheduler + DTC.
+/// Fallos: 0 sano, 1 borde CKP menos, 2 CYP ausente (degradado 360°),
+/// 3 silencio total (pérdida + DTC tras persistencia).
+fn ecu_demo_cmd(rpm: f64, fault: u8) -> Result<(), EngineError> {
+    use ecu::{CkpLossMonitor, Decoder, DtcSet, Ecu, ReferenceMaps};
+    use trigger::{DistributorTrigger, TriggerConfig, TriggerFault};
+
+    let err = |e: String| EngineError::SchemaValidation(e);
+    let mut cfg = TriggerConfig::generic_family();
+    cfg.fault = match fault {
+        0 => TriggerFault::None,
+        1 => TriggerFault::MissingCkpEdge { tooth_index: 5 },
+        2 => TriggerFault::OpenChannel { channel: 2 },
+        3 => TriggerFault::OpenChannel { channel: 0 },
+        _ => return Err(err(format!("unknown fault {fault}"))),
+    };
+    let trig = DistributorTrigger::new(cfg).map_err(|e| err(e.to_string()))?;
+    let ckp = trig
+        .channel_edges(0, rpm, 0.0, 3.0, 200_000.0, 7)
+        .map_err(|e| err(e.to_string()))?;
+    let cyp = trig
+        .channel_edges(2, rpm, 0.0, 3.0, 200_000.0, 8)
+        .map_err(|e| err(e.to_string()))?;
+    let now = ckp.last().copied().unwrap_or(1.0).max(0.01);
+    let dec = Decoder::new(ckp, cyp, now).map_err(|e| err(e.to_string()))?;
+    let est = dec.estimate(now);
+    let ecu = Ecu::new(
+        ReferenceMaps::illustrative().map_err(|e| err(e.to_string()))?,
+        1e-3,
+        13.5,
+        300_000.0,
+    )
+    .map_err(|e| err(e.to_string()))?;
+    let mut set = DtcSet::default();
+    let mut mon = CkpLossMonitor::new(3, 2, 0.5).map_err(|e| err(e.to_string()))?;
+    // Tres ciclos de evaluación del monitor (persistencia temporal).
+    for _ in 0..3 {
+        mon.evaluate(&mut set, est.confidence, false);
+    }
+    let plan = ecu.schedule(&est, 0.4, &set);
+    println!("ecu-demo (P2E-like reference, maps+codes NOT Honda OEM):");
+    println!("  state             : {:?}", plan.ecu_state);
+    println!(
+        "  rpm_est/conf      : {:.0} / {:.2}",
+        est.rpm, est.confidence
+    );
+    println!("  injections        : {}", plan.injections.len());
+    println!("  ignitions         : {}", plan.ignitions.len());
+    if let Some(ig) = plan.ignitions.first() {
+        println!(
+            "  timing req/eff    : {:.2} / {:.2} BTDC",
+            ig.requested_btdc_deg, ig.effective_btdc_deg
+        );
+    }
+    println!(
+        "  dtcs              : {:?}",
+        set.active.iter().map(|d| &d.code).collect::<Vec<_>>()
+    );
+    for line in plan.log.iter().take(4) {
+        println!("  log: {line}");
     }
     Ok(())
 }

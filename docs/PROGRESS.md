@@ -286,3 +286,14 @@ Solo hechos constatables; sin cifras improvisadas.
 - Gate S17: PASS — trazado a fuente + GENERIC_TRIGGER imposible de
   etiquetar OEM por construcción.
 - Deuda: geometría/fase/pines OEM (scope + manual), CKF, transitorios.
+
+## 2026-10-10 · S18 · ECU P2E-like con decoder y scheduler (APROBADO)
+
+- Crate `ecu` (decoder 24+1/4+1 + FSM + mapas propios + scheduler con
+  latencia visible + DTC REF-* por persistencia); `d16sim ecu-demo`
+  (Running 14.0/9.5° + 7.70 mg; Fallback batch; inhibido + REF-CKP-LOSS);
+  ADR-025; `docs/physics/ecu_ref.md`; H-S18-01..04.
+- Tests: 7 passed (sync/RPM, borde→confianza, timeout/360°, nodos/clamp,
+  inhibición/degradado, req vs eff, persistencia/curación).
+- Gate S18: PASS — causalidad señal→actuación; solicitado vs efectivo.
+- Deuda: estrategia OEM, closed-loop/trims, IACV/PWM, P0xxx, transitorios.

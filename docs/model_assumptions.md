@@ -130,3 +130,12 @@ futuros: toda aproximación pasa por aquí + `ModelCard` (§11.4).
 | H-S17-02 | VR L1 (amplitud∝ω, ruido seed, histéresis) ilustrativo | S17 | Supuesto declarado | Medición VR |
 | H-S17-03 | Fases TDC/CYP ilustrativas + offset de carcasa | S17 | Supuesto declarado | Diagrama OEM |
 | H-S17-04 | CKF concepto aparte, presencia PENDING, no modelado | S17 | rusEFI serie B | Variante confirma |
+
+## Registro S18 (ECU P2E-like, no OEM)
+
+| ID | Hipótesis | Dominio | Fuente | Invalida si |
+|---|---|---|---|---|
+| H-S18-01 | Mapas/códigos propios, nunca OEM ni aftermarket | S18 | Decisión (MISSING P2E) | Dumps/estrategia OEM |
+| H-S18-02 | Sinc CYP-gated 24+1 con respaldo 4+1 | S18 | TRIG + diseño | Diagrama OEM |
+| H-S18-03 | Latencia fija 1 ms ilustrativa; 400 rpm clasifica | S18 | Supuesto declarado | Medición ECU |
+| H-S18-04 | Dead-reckoning entre flancos a rpm constante | S18 | Supuesto declarado | Transitorios medidos |

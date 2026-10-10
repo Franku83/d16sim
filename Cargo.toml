@@ -16,6 +16,7 @@ members = [
     "crates/electrical",
     "crates/engine",
     "crates/trigger",
+    "crates/ecu",
     "crates/physics",
     "crates/simulation",
     "crates/cli",
