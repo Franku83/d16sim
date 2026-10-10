@@ -22,3 +22,12 @@ Nuevas decisiones: un archivo por ADR + entrada en `docs/PROGRESS.md`.
 | ADR-015 | `ADR-015-fastener-l1.md` | ACEPTADO (S08) |
 | ADR-016 | `ADR-016-rk4-audit.md` | ACEPTADO (S09) |
 | ADR-017 | `ADR-017-wiebe-burn.md` | ACEPTADO (S10) |
+
+## ADR de remediación (R*, índice separado)
+
+Los ADR de la remediación R01–R05 se indexan aparte para no reescribir el
+índice histórico S00–S10 (ver `DOCUMENTATION_CONSISTENCY.md`, D10).
+
+| ID | Archivo | Estado |
+|---|---|---|
+| ADR-038 | `ADR-038-remediation-state-species.md` | ACEPTADO (R01–R02) |

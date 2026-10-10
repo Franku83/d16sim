@@ -468,3 +468,25 @@ detención. Batch S26–S30 autorizado; S31 prohibido.
 - Gate S30: PASS honesto — predictivo denegado, PENDING numerados.
 - Batch S26–S30 COMPLETO. S31 prohibido. Base congelada pendiente de
   C1–C6+M2 + experto + 2ª máquina.
+
+## 2026-10-10 · Remediación R01–R02 (IMPLEMENTED_PENDING_INDEPENDENT_REVIEW)
+
+- Rama `remediation/r01-r05` desde S30 (`ff09a0d`). Auditoría independiente
+  (`25d528e`) preservada intacta en su worktree. Reporte:
+  `docs/remediation/R01_R02_BATCH_REPORT.md`; ADR-038.
+- **R01**: F01 transporte de especies (cilindros + nodos, frontera emitida,
+  `inyectado = almacenado + quemado + emitido`); F02 observación diagnóstica
+  desde flujos físicos (no la etiqueta del escenario); F08 advección de
+  especie fresca en la red de fugas; F09 conversión volumen→masa con densidad
+  de líquido; F10 calor al ambiente en el ledger térmico integrado.
+- **R02**: F05 parseo f64 lossless (`serde_json/float_roundtrip`); F06
+  verificación de hash v1 **antes** de migrar; F07 `pmax_pa` persistido
+  (replay dividido = continuo con `c2 ≠ 0`); F15 fronteras fail-closed por API
+  (engine/thermal/dyno/decoder/calibration) y validación física en `restore`.
+- Tests: `cargo test --locked --workspace` 183 passed / 0 failed (163 previos +
+  20 nuevos de regresión R01/R02); fmt OK; clippy exit 0 bajo
+  `-D clippy::unwrap_used`. Harness independiente: **23 → 10 fallos**, y los
+  10 restantes son de R03/R04 (fuera del batch autorizado).
+- Cambios numéricos: las cifras nominales de RPM/trabajo cambian (especies +
+  presión de fricción); no se reajustaron parámetros para conservarlas.
+- **STOP**: no se inicia R03 hasta autorización explícita. S31 prohibido.
