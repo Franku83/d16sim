@@ -186,3 +186,18 @@ Solo hechos constatables; sin cifras improvisadas.
   (crates/código/hipótesis), `BACKLOG.md` (estados S00–S10), índice ADR
   (014–017). Intactos: historial PROGRESS, gates, ADRs, research,
   `docs/sprints/S00.md`.
+
+## 2026-10-10 · S11 · Distribución SOHC (APROBADO)
+
+- Crate `valvetrain` (proxy A6 etiquetado + sen² ilustrativa + correa 2:1
+  + eventos por fase desde árbol único); `d16sim valvetrain` (Cyl1: IO
+  719, IC 221, EO 498, EC 2; Vtr 410.40 cm³ idéntico; min 5.99 mm; con 5
+  dientes: Vtr 322.69 cm³ + solape −2.04 mm informado, sin daño);
+  ADR-018; `docs/physics/valvetrain.md`; H-S11-01..05.
+- Tests: 6 passed (aritmética donantes 3°/−25°, autoconsistencia de forma,
+  fases/compañeras, desfase causal). 1 bug real corregido: doble conteo
+  del centro (IC 331→221), detectado por V atrapado inverosímil.
+- Gate S11: PASS — 4 cilindros de cam+crank compartidos; daño jamás
+  decretado.
+- Deuda: tabla lift-vs-CA medida, dinámica de muelle/flotación, holgura
+  térmica, VTEC (otra arquitectura); perfil Y7 sigue MISSING-DATA.

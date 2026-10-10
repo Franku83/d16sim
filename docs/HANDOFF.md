@@ -1,7 +1,7 @@
 # HANDOFF — punto de entrada al siguiente agente
 
-Fecha: 2026-10-10 · Sprints: **S00–S10 APROBADOS; batch S11–S15
-AUTORIZADO por el propietario**. Siguiente: **S11 (EN_CURSO)**.
+Fecha: 2026-10-10 · Sprints: **S00–S11 APROBADOS (batch S11–S15)**.
+Siguiente: **S12**. **S16 prohibido sin autorización.**
 
 ## Estado científico/arquitectónico actual
 
@@ -32,10 +32,9 @@ AUTORIZADO por el propietario**. Siguiente: **S11 (EN_CURSO)**.
    2026-10-10.
 2. ~~Licencia sin decidir~~ — resuelto: Apache-2.0 solo código propio
    (propietario 2026-10-10); `LICENSE` + `THIRD_PARTY_NOTICES.md` creados.
-3. S01–S10 APROBADOS 2026-10-10 (S09: err 7e−11, orden 3.9; S10:
-   barrido W monótono 562→478 J, Q audit 5.5e−8). Deuda: CI Windows sin
-   ejecutar; γ(T)/residuales/pared/knock pendientes; gas exchange S12;
-   p(θ) medida S25.
+3. S01–S11 APROBADOS 2026-10-10 (S10: Q audit 5.5e−8; S11: IO cada
+   180°, Vtr 410.40 cm³, solape informado sin daño). Deuda: CI Windows sin
+   ejecutar; perfil Y7 medido pendiente; gas exchange en S12.
 
 ## Roles y reglas de cambio (S00)
 
@@ -105,10 +104,14 @@ Crate `thermo` + `closed-cycle` + ADR-016. Ver `docs/sprints/S09.md`.
 Crate `combustion` + `closed-cycle-burn` + ADR-017. Ver
 `docs/sprints/S10.md`.
 
-## Brief S11 (EN_CURSO — batch S11–S15 autorizado 2026-10-10)
+## Brief S11 (APROBADO 2026-10-10)
 
-Distribución SOHC: `CamProfile` lift-vs-θ, cinemática 2:1 + offset de
-correa, valvetrain cuasiestático, clearance/volumen efectivo, detección
-de contacto (daño pospuesto a material). Dep: S06–S07, S09. Gate: los
-cuatro cilindros derivan eventos de un cam+crank compartidos; sin daños
-automáticos.
+Crate `valvetrain` + `valvetrain` CLI + ADR-018. Ver `docs/sprints/S11.md`.
+
+## Brief S12 (siguiente en batch autorizado)
+
+Flujos de admisión/escape 0D: nodos m/U/p/T/composición, flujo
+compresible por válvulas y mariposa con área/descarga documentados,
+conservación entre nodos, residuales, integración de eventos sin
+discontinuidades falsas. Gate: el efecto válvula viaja por caudal
+calculado; faltantes 1D declarados.

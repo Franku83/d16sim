@@ -111,6 +111,15 @@ enum Command {
         #[arg(long, default_value_t = 1.35)]
         gamma: f64,
     },
+    /// Distribución SOHC: eventos y huelgos (S11, proxy A6, sin daño).
+    Valvetrain {
+        #[arg(long, default_value_t = 100.0)]
+        belt_teeth: f64,
+        #[arg(long, default_value_t = 0.0)]
+        belt_offset_teeth: f64,
+        #[arg(long, default_value_t = 6.0)]
+        closed_gap_mm: f64,
+    },
 }
 
 fn run() -> Result<(), EngineError> {
@@ -224,6 +233,11 @@ fn run() -> Result<(), EngineError> {
             fuel_mg,
             gamma,
         } => closed_cycle_burn_cmd(start_deg, duration_deg, fuel_mg, gamma),
+        Command::Valvetrain {
+            belt_teeth,
+            belt_offset_teeth,
+            closed_gap_mm,
+        } => valvetrain_cmd(belt_teeth, belt_offset_teeth, closed_gap_mm),
     }
 }
 
@@ -673,5 +687,49 @@ fn closed_cycle_burn_cmd(
     println!("  Q_integrated_J    : {:.2}", audit.q_integrated_j);
     println!("  Q_rel_err         : {:.3e}", audit.q_rel_err);
     println!("  W_motored_J       : {:.4e}", audit.w_motored_j);
+    Ok(())
+}
+
+/// Comando S11: eventos IO/IC/EO/EC, volumen atrapado y huelgo mínimo por
+/// cilindro desde un árbol y un cigüeñal compartidos. Proxy A6 (no Y7 OEM).
+fn valvetrain_cmd(
+    belt_teeth: f64,
+    belt_offset_teeth: f64,
+    closed_gap_mm: f64,
+) -> Result<(), EngineError> {
+    use kinematics::GeometryPack;
+    use valvetrain::{cylinder_valve_events, BeltDrive, CamSpec};
+
+    let err = |e: String| EngineError::SchemaValidation(e);
+    let geom = GeometryPack::illustrative_d16_like().map_err(|e| err(e.to_string()))?;
+    let intake = CamSpec::proxy_d16a6_intake().map_err(|e| err(e.to_string()))?;
+    let exhaust = CamSpec::proxy_d16a6_exhaust().map_err(|e| err(e.to_string()))?;
+    let belt = BeltDrive::new(belt_teeth, belt_offset_teeth).map_err(|e| err(e.to_string()))?;
+    let ev = cylinder_valve_events(
+        &geom,
+        &intake,
+        &exhaust,
+        &belt,
+        closed_gap_mm / 1_000.0,
+        0.5,
+    )
+    .map_err(|e| err(e.to_string()))?;
+    println!("valvetrain (proxy D16A6 ADAPTED_PROXY, illustrative gap; shared cam+crank):");
+    println!("  belt_shift_crank_deg: {:.3}", belt.cam_shift_crank_deg());
+    println!("# cyl,IO,IC,EO,EC,Vtrapped_cm3,min_clear_mm@deg,overlap");
+    for c in &ev {
+        println!(
+            "  {:?},{:.1},{:.1},{:.1},{:.1},{:.2},{:.3}@{:.1},{}",
+            c.cyl,
+            c.io_deg,
+            c.ic_deg,
+            c.eo_deg,
+            c.ec_deg,
+            c.trapped_volume_m3 * 1e6,
+            c.min_clearance_m * 1_000.0,
+            c.min_clearance_at_deg,
+            c.overlap,
+        );
+    }
     Ok(())
 }

@@ -17,6 +17,7 @@ engine-types = { path = "../engine-types" }
 fastener = { path = "../fastener" }
 kinematics = { path = "../kinematics" }
 thermo = { path = "../thermo" }
+valvetrain = { path = "../valvetrain" }
 math = { path = "../math" }
 units = { path = "../units" }
 physics = { path = "../physics" }

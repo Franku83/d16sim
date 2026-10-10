@@ -63,3 +63,13 @@ futuros: toda aproximación pasa por aquí + `ModelCard` (§11.4).
 | H-S10-02 | Zona única, γ const, Q_pared=0, eff=1, sin residuales | Ciclo S10 | Supuesto declarado | S12/S21, γ(T) |
 | H-S10-03 | Combustible 25 mg y LHV44 ilustrativos (no P2A-000) | Demo S10 | Supuesto declarado | Banco P2A-000 |
 | H-S10-04 | IMEP ilustrativo ≠ validación (overshoot esperado) | Reporte S10 | ADR-017 | Calibración S25 |
+
+## Registro S11 (distribución proxy A6)
+
+| ID | Hipótesis | Dominio | Fuente | Invalida si |
+|---|---|---|---|---|
+| H-S11-01 | Sin perfil Y7 stock (MISSING-DATA); solo proxy A6 | S11 | Research donantes | Medición lift-vs-CA |
+| H-S11-02 | ICL 110° straight-up asumido y declarado | Fases S11 | Supuesto (donantes) | Medición centerline |
+| H-S11-03 | Ley sen² simétrica ilustrativa (050 subestimado) | Alzada S11 | Supuesto declarado | Tabla medida |
+| H-S11-04 | Correa 2:1, dientes ilustrativos, solo desfasa eventos | S11 | Supuesto declarado | Conteo OEM + patrón |
+| H-S11-05 | Contacto informado, daño pospuesto a material | S11 | Decisión (gate S27) | Modelo S27 |
