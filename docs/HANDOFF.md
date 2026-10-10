@@ -26,11 +26,10 @@ propietario** (ver abajo). Prohibido adelantar física/UI sin licencia.
 ## Blockers
 
 1. ~~Gate S00 sin verificación~~ — resuelto: S00 APROBADO por propietario
-   2026-10-10 (sujeto a consistencia; verificada en S01 sin hallazgos).
-2. **Licencia sin decidir (`docs/LICENSE_STATUS.md`) — BLOQUEA S02.**
-   S02 crea código (workspace Rust + CLI). No se creará ningún crate ni
-   `LICENSE` sin decisión explícita del propietario.
-3. S01 APROBADO 2026-10-10 (gate en `docs/sprints/S01.md`).
+   2026-10-10.
+2. ~~Licencia sin decidir~~ — resuelto: Apache-2.0 solo código propio
+   (propietario 2026-10-10); `LICENSE` + `THIRD_PARTY_NOTICES.md` creados.
+3. S01 APROBADO 2026-10-10. S02 EN_CURSO (clon fresco tras commit).
 
 ## Roles y reglas de cambio (S00)
 
@@ -59,10 +58,7 @@ cat docs/sprints/S00.md
 S01 APROBADO 2026-10-10. Ficha en `docs/variants/`, catálogos en
 `data/d16y7/`. Todo número sigue PENDING/DISPUTED/IDENTITY_ONLY.
 
-## Brief S02 (BLOQUEADO — requiere decisión del propietario)
+## Brief S02 (EN_CURSO — licencia resuelta)
 
-S02 crea el primer código (workspace Rust, `rust-toolchain.toml`, CLI
-`init/validate-data/run-scenario/replay/report`, manifiestos, CI
-Linux/Windows). **No iniciar sin licencia decidida.** Opciones en
-`docs/LICENSE_STATUS.md`. Tras la decisión: pin de toolchain, lockfile,
-lints, `THIRD_PARTY_NOTICES.md`, sin física.
+Licencia Apache-2.0 aprobada. Workspace y CLI implementados
+(`docs/sprints/S02.md`). Resta: clon fresco + PASS formal del gate.

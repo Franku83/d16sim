@@ -18,3 +18,4 @@ ADR + entrada en `docs/PROGRESS.md`.
 | ADR-010 | `ADR-010-sin-popups-montaje.md` | ACEPTADO |
 | ADR-011 | `ADR-011-licencias.md` | ACEPTADO |
 | ADR-012 | `ADR-012-no-certificacion.md` | ACEPTADO |
+| ADR-013 | `ADR-013-trazas-jsonl.md` | ACEPTADO (S02) |

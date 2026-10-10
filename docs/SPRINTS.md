@@ -10,7 +10,7 @@ Ningún sprint S01+ está iniciado.
 |---|---|---|---|---|
 | S00 | — | Charter, alcance, reglas repo | Colaborador explica verificado/calibrado/validado, localiza fuente, explica control contrafactual; sin código física | **APROBADO** (2026-10-10, propietario) |
 | S01 | S00 | Variante + manual OEM + ficha maestra | Cero numéricos esenciales sin fuente o `PENDING`; ECU/sensores ligados a variante | **APROBADO** (2026-10-10, gate verificado; ver `docs/sprints/S01.md`) |
-| S02 | S00 | Toolchain, CI, runner headless | Segundo equipo clona y obtiene mismo hash bajo entorno documentado | PENDIENTE |
+| S02 | S00 | Toolchain, CI, runner headless | Segundo equipo clona y obtiene mismo hash bajo entorno documentado | **EN_CURSO** (código+CI listos; clon fresco tras commit) |
 | S03 | S02 | Unidades, constantes, álgebra | Compilador/validadores impiden mezclas dimensionales | PENDIENTE |
 | S04 | S01–S03 | Catálogo estructural e instancias | Grafos persistentes y operaciones trazables; sin simular física | PENDIENTE |
 | S05 | S02–S04 | Eventos, snapshots, replay | 100 secuencias controladas sin divergencia estructural | PENDIENTE |
@@ -57,7 +57,6 @@ ecuaciones con animaciones. Ver foundation §16. Todos PENDIENTE.
 
 ## Regla de avance
 
-S00 APROBADO. S01 APROBADO. Siguiente autorizado en este batch: S02
-(requiere decisión de licencia del propietario antes del primer código;
-ver `docs/LICENSE_STATUS.md` y `docs/HANDOFF.md`). Gates universales §12.3
+S00 APROBADO. S01 APROBADO. S02 EN_CURSO (licencia Apache-2.0 decidida
+por propietario 2026-10-10; `LICENSE` creado). Gates universales §12.3
 + `docs/definition-of-done.md` aplican a todo sprint físico.

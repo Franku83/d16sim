@@ -1,0 +1,17 @@
+[workspace]
+members = [
+    "crates/engine-types",
+    "crates/physics",
+    "crates/simulation",
+    "crates/cli",
+]
+resolver = "2"
+
+[workspace.package]
+edition = "2021"
+license = "Apache-2.0"
+rust-version = "1.99.0"
+
+[workspace.lints.clippy]
+unwrap_used = "deny"
+missing_errors_doc = "warn"
