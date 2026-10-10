@@ -92,3 +92,12 @@ futuros: toda aproximación pasa por aquí + `ModelCard` (§11.4).
 | H-S13-02 | Deadtime analógico CBR600RR ±0.3 ms (no P2A-000) | Inyector S13 | Analogía | Deadtime P2A medido |
 | H-S13-03 | Regulador ideal ΔP cte; bomba off ⇒ rail 0 | Rail S13 | Supuesto declarado | Curva regulador/bomba |
 | H-S13-04 | Gasolina ilustrativa (740 kg/m³, LHV44, 14.7) | S13 | Orden comercial | Lote medido |
+
+## Registro S14 (dinámica de cigüeñal)
+
+| ID | Hipótesis | Dominio | Fuente | Invalida si |
+|---|---|---|---|---|
+| H-S14-01 | Indicado = ciclo completo (bombeo dentro); fricción aparte | S14 | Decisión ADR-021 | Esquema alternativo doc. |
+| H-S14-02 | J constante por media energética; J(θ) deuda | S14 | Supuesto declarado | J(θ) medido/modelado |
+| H-S14-03 | Chen–Flynn c2=0, coeficientes ilustrativos del llamante | S14 | Pipitone + supuesto | FMEP medido |
+| H-S14-04 | Traza S12 replicada en 4 cilindros idénticos | Demo S14 | Supuesto declarado | Diferenciación S16 |

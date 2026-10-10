@@ -135,6 +135,13 @@ enum Command {
     },
     /// Suministro de combustible L1 (S13, hipótesis etiquetadas).
     FuelSupplyTest,
+    /// Dinámica de cigüeñal con traza motored (S14, ilustrativo).
+    CrankDynamics {
+        #[arg(long, default_value_t = 750.0)]
+        rpm0: f64,
+        #[arg(long, default_value_t = 2.0)]
+        seconds: f64,
+    },
 }
 
 fn run() -> Result<(), EngineError> {
@@ -261,6 +268,7 @@ fn run() -> Result<(), EngineError> {
             tailpipe_cm2,
         } => gas_exchange_cmd(rpm, plenum_l, exhaust_l, throttle_cm2, tailpipe_cm2),
         Command::FuelSupplyTest => fuel_supply_test_cmd(),
+        Command::CrankDynamics { rpm0, seconds } => crank_dynamics_cmd(rpm0, seconds),
     }
 }
 
@@ -874,5 +882,95 @@ fn fuel_supply_test_cmd() -> Result<(), EngineError> {
     println!("  pump-off: status={st_off:?} (state, no DTC)");
     println!("  weak-pump: status={st_sat:?} (partial delivery, no DTC)");
     let _ = PulseCommand { width_s: 0.0 };
+    Ok(())
+}
+
+/// Comando S14: giro con traza motored S12 + fricción ilustrativa.
+/// Sin combustión: demuestra desaceleración y auditoría energética.
+fn crank_dynamics_cmd(rpm0: f64, seconds: f64) -> Result<(), EngineError> {
+    let err = |e: String| EngineError::SchemaValidation(e);
+    // Traza motored real del simulador (acoplamiento S12→S14).
+    let (trace, _) = motored_trace_for_crank().map_err(err)?;
+    let th: Vec<f64> = trace.iter().map(|p| p.theta_deg).collect();
+    let pp: Vec<f64> = trace.iter().map(|p| p.p_cyl_pa).collect();
+    run_crank_with_trace(&th, &pp, rpm0, seconds).map_err(err)
+}
+
+/// Traza motored S12 (720°, primer ciclo, preset ilustrativo).
+fn motored_trace_for_crank() -> Result<(Vec<flow::TracePoint>, flow::CycleAudit), String> {
+    use flow::{run_cycle, GasExchangeInputs};
+    use kinematics::GeometryPack;
+    use thermo::Mixture;
+    use valvetrain::{BeltDrive, CamSpec};
+
+    let geom = GeometryPack::illustrative_d16_like().map_err(|e| e.to_string())?;
+    let mix = Mixture::new(287.0, 1.4).map_err(|e| e.to_string())?;
+    let intake = CamSpec::proxy_d16a6_intake().map_err(|e| e.to_string())?;
+    let exhaust = CamSpec::proxy_d16a6_exhaust().map_err(|e| e.to_string())?;
+    let belt = BeltDrive::new(100.0, 0.0).map_err(|e| e.to_string())?;
+    run_cycle(
+        &geom,
+        mix,
+        &intake,
+        &exhaust,
+        &belt,
+        GasExchangeInputs {
+            rpm: 750.0,
+            p_amb_pa: 101_325.0,
+            t_amb_k: 293.15,
+            plenum_v_m3: 2.0e-3,
+            exhaust_v_m3: 1.5e-3,
+            throttle_area_m2: 8.0e-4,
+            tailpipe_area_m2: 8.0e-4,
+            step_deg: 0.5,
+            exhaust_init: None,
+        },
+    )
+    .map_err(|e| e.to_string())
+}
+
+/// Integra el giro con la traza dada e imprime la auditoría.
+fn run_crank_with_trace(th: &[f64], pp: &[f64], rpm0: f64, seconds: f64) -> Result<(), String> {
+    use crank::{
+        effective_inertia_mean, spin_down, DynoLaw, FrictionModel, IndicatedTorque, InertiaParams,
+    };
+    use kinematics::GeometryPack;
+
+    let geom = GeometryPack::illustrative_d16_like().map_err(|e| e.to_string())?;
+    let ind = IndicatedTorque::from_trace(th, pp, geom.clone()).map_err(|e| e.to_string())?;
+    let params = InertiaParams::new(0.15, 0.5).map_err(|e| e.to_string())?;
+    let j = effective_inertia_mean(&geom, params);
+    let fric = FrictionModel::ChenFlynn {
+        coeffs: crank::ChenFlynnCoeffs {
+            c1_pa: 30_000.0,
+            c2_dlless: 0.0,
+            c3_pa_s_m: 8_000.0,
+            c4_pa_s2_m2: 400.0,
+        },
+    };
+    let omega0 = rpm0 * 2.0 * std::f64::consts::PI / 60.0;
+    let r = spin_down(
+        &ind,
+        &geom,
+        fric,
+        DynoLaw::Free,
+        j,
+        0.0,
+        omega0,
+        seconds,
+        1e-4,
+    )
+    .map_err(|e| e.to_string())?;
+    let om_end = r.states.last().map(|s| s.omega_rad_s).unwrap_or(f64::NAN);
+    println!("crank-dynamics (ILLUSTRATIVE J/friction; S12 motored trace):");
+    println!("  J_eff_kg_m2       : {j:.5}");
+    println!(
+        "  rpm0 -> rpm_end   : {rpm0:.1} -> {:.1}",
+        om_end * 60.0 / (2.0 * std::f64::consts::PI)
+    );
+    println!("  W_ind_J           : {:.3}", r.w_ind_j);
+    println!("  W_fric_J          : {:.3}", r.w_fric_j);
+    println!("  dKE_J             : {:.3}", r.delta_ke_j);
+    println!("  energy_closure    : {:.3e}", r.energy_closure);
     Ok(())
 }

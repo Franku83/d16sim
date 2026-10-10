@@ -17,6 +17,7 @@ engine-types = { path = "../engine-types" }
 fastener = { path = "../fastener" }
 flow = { path = "../flow" }
 fuel = { path = "../fuel" }
+crank = { path = "../crank" }
 kinematics = { path = "../kinematics" }
 thermo = { path = "../thermo" }
 valvetrain = { path = "../valvetrain" }

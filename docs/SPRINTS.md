@@ -27,7 +27,7 @@ Fuente normativa: `docs/foundation.md` §14–§16. Detalle por sprint:
 
 | Sprint | Dep. | Objetivo | Gate | Estado |
 |---|---|---|---|---|
-| S14 | S06,S10–S13 | Dinámica cigüeñal + pérdidas | Sin energía gratis; aceleración = torques/inercia en error numérico | PENDIENTE |
+| S14 | S06,S10–S13 | Dinámica cigüeñal + pérdidas | Sin energía gratis; aceleración = torques/inercia en error numérico | **APROBADO** (2026-10-10; 6 tests; ver `docs/sprints/S14.md`) |
 | S15 | S13–S14 | Starter, batería, encendido | Crank sin fuel/spark no arranca; trazas eléctricas inspeccionables | PENDIENTE |
 | S16 | S10–S15 | Arranque + ralentí end-to-end | Ralentí sin clamp ni torque mágico; puede no coincidir con Honda | PENDIENTE |
 | S17 | S01,S05–S06,S15–S16 | CKP/TDC/CYP exactos | Patrón trazado a fuente; si no, `GENERIC_TRIGGER`, prohibido OEM | PENDIENTE |
@@ -57,6 +57,6 @@ ecuaciones con animaciones. Ver foundation §16. Todos PENDIENTE.
 
 ## Regla de avance
 
-S00–S13 APROBADOS. Batch S11–S15 autorizado, siguiente: S14.
+S00–S14 APROBADOS. Batch S11–S15 autorizado, siguiente: S15.
 **S16 prohibido sin autorización.** Gates universales §12.3 +
 `docs/definition-of-done.md` aplican.

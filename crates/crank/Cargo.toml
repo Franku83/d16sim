@@ -1,0 +1,16 @@
+[package]
+name = "crank"
+version = "0.1.0"
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+engine-types = { path = "../engine-types" }
+kinematics = { path = "../kinematics" }
+math = { path = "../math" }
+units = { path = "../units" }
+thiserror = "2.0"
+
+[lints]
+workspace = true

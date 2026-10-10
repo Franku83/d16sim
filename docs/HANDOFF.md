@@ -1,7 +1,7 @@
 # HANDOFF — punto de entrada al siguiente agente
 
-Fecha: 2026-10-10 · Sprints: **S00–S13 APROBADOS (batch S11–S15)**.
-Siguiente: **S14**. **S16 prohibido sin autorización.**
+Fecha: 2026-10-10 · Sprints: **S00–S14 APROBADOS (batch S11–S15)**.
+Siguiente: **S15**. **S16 prohibido sin autorización.**
 
 ## Estado científico/arquitectónico actual
 
@@ -32,9 +32,9 @@ Siguiente: **S14**. **S16 prohibido sin autorización.**
    2026-10-10.
 2. ~~Licencia sin decidir~~ — resuelto: Apache-2.0 solo código propio
    (propietario 2026-10-10); `LICENSE` + `THIRD_PARTY_NOTICES.md` creados.
-3. S01–S13 APROBADOS 2026-10-10 (S12: cierre ~1e−15; S13: 3.37 ms
-   exactos al research). Deuda: CI Windows sin ejecutar; banco P2A-000;
-   dinámica de cigüeñal en S14.
+3. S01–S14 APROBADOS 2026-10-10 (S13: 3.37 ms; S14: cierre 2.7e−8,
+   750→0 rpm). Deuda: CI Windows sin ejecutar; arranque/batería en S15;
+   FMEP medido.
 
 ## Roles y reglas de cambio (S00)
 
@@ -118,10 +118,14 @@ Crate `flow` + `gas-exchange` CLI + ADR-019. Ver `docs/sprints/S12.md`.
 
 Crate `fuel` + `fuel-supply-test` + ADR-020. Ver `docs/sprints/S13.md`.
 
-## Brief S14 (siguiente en batch autorizado)
+## Brief S14 (APROBADO 2026-10-10)
 
-Dinámica de cigüeñal y pérdidas: inercia efectiva J(θ) coherente, torques
-de ciclo completo con pumping/fricción definidos una sola vez, fricción
-reducida RPM/T/carga con curvas calibrables, carga de freno/inercia,
-reposo y rotación impuesta. Gate: sin energía gratis; aceleración =
-torques/inercia en error numérico.
+Crate `crank` + `crank-dynamics` + ADR-021. Ver `docs/sprints/S14.md`.
+
+## Brief S15 (siguiente en batch autorizado)
+
+Arranque: batería (Voc/Rint/SOC/T) + starter (torque vs ω) + compresión
+resistiva + fricción de arranque + bobina/dwell simplificada con evento
+de chispa disponible. Fallas: batería descargada, masa abierta, starter
+ausente, chispa nula. Gate: crank sin fuel/chispa no arranca; trazas
+eléctricas inspeccionables.

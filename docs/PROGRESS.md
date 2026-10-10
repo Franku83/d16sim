@@ -228,3 +228,15 @@ Solo hechos constatables; sin cifras improvisadas.
 - Gate S13: PASS — sin AFR→rendimiento; sin DTC por bomba.
 - Deuda: banco P2A-000, atomización/wall-wetting, curva de rail,
   scheduler S18.
+
+## 2026-10-10 · S14 · Dinámica de cigüeñal (APROBADO)
+
+- Crate `crank` (J media + Chen–Flynn c2=0 + torque de traza S12 real +
+  RK4 temporal); `d16sim crank-dynamics` (J 0.15052; 750→0 rpm;
+  W_ind 0.44 J vs W_fric 464.7 J; cierre 2.7e−8); ADR-021;
+  `docs/physics/crank_dynamics.md`; H-S14-01..04.
+- Tests: 6 passed (giro, auditoría+convergencia, rotor bloqueado,
+  forma FMEP, J, trabajo nulo). 1 corrección honesta: monotonía
+  estricta ⇒ neto + auditoría (rizo = volante).
+- Gate S14: PASS — sin energía gratis; torques/inercia en error numérico.
+- Deuda: J(θ), FMEP medido, accesorios/arranque S15, combustión S16.
