@@ -1,0 +1,62 @@
+# SPRINTS — dependencias, estado y gates
+
+Fuente normativa: `docs/foundation.md` §14–§16. Detalle de S00:
+`docs/sprints/S00.md`. Estados: `PENDIENTE` · `EN_CURSO` · `APROBADO`.
+Ningún sprint S01+ está iniciado.
+
+## FASE A — FOUNDATION-KERNEL (S00–S13)
+
+| Sprint | Dep. | Objetivo | Gate (resumen) | Estado |
+|---|---|---|---|---|
+| S00 | — | Charter, alcance, reglas repo | Colaborador explica verificado/calibrado/validado, localiza fuente, explica control contrafactual; sin código física | **EN_CURSO** |
+| S01 | S00 | Variante + manual OEM + ficha maestra | Cero numéricos esenciales sin fuente o `PENDING`; ECU/sensores ligados a variante | PENDIENTE |
+| S02 | S00 | Toolchain, CI, runner headless | Segundo equipo clona y obtiene mismo hash bajo entorno documentado | PENDIENTE |
+| S03 | S02 | Unidades, constantes, álgebra | Compilador/validadores impiden mezclas dimensionales | PENDIENTE |
+| S04 | S01–S03 | Catálogo estructural e instancias | Grafos persistentes y operaciones trazables; sin simular física | PENDIENTE |
+| S05 | S02–S04 | Eventos, snapshots, replay | 100 secuencias controladas sin divergencia estructural | PENDIENTE |
+| S06 | S03–S05 | Cinemática cigüeñal/pistón/biela | Conservación geométrica + tests analíticos; sin RPM simuladas | PENDIENTE |
+| S07 | S04,S06 | Herramientas y contactos | Sin daño sin material/criterio; errores detectables por estado | PENDIENTE |
+| S08 | S01,S03–S05,S07 | Pernos, precarga, junta | Torque→precarga bajo hipótesis; lubricante cambia precarga; calibración pendiente declarada | PENDIENTE |
+| S09 | S03,S06 | Gas ideal / cilindro sellado | Coincide con ideal en tolerancia justificada; no «D16 validado» | PENDIENTE |
+| S10 | S09 | Combustión reducida | Retrasar heat release desplaza p/trabajo explicablemente; sin dyno al freno | PENDIENTE |
+| S11 | S06–S07,S09 | Distribución SOHC | 4 cilindros derivan de cam+crank compartidos; sin daños automáticos | PENDIENTE |
+| S12 | S09,S11 | Flujos adm/esc 0D | Efecto válvula por caudal calculado; declarar faltantes 1D | PENDIENTE |
+| S13 | S03,S10,S12 | Combustible rail/inyector | Sin rendimiento desde AFR sin entrega real; sin DTC por bomba sin presión | PENDIENTE |
+
+## FASE B — RUNNABLE-ENGINE (S14–S22)
+
+| Sprint | Dep. | Objetivo | Gate | Estado |
+|---|---|---|---|---|
+| S14 | S06,S10–S13 | Dinámica cigüeñal + pérdidas | Sin energía gratis; aceleración = torques/inercia en error numérico | PENDIENTE |
+| S15 | S13–S14 | Starter, batería, encendido | Crank sin fuel/spark no arranca; trazas eléctricas inspeccionables | PENDIENTE |
+| S16 | S10–S15 | Arranque + ralentí end-to-end | Ralentí sin clamp ni torque mágico; puede no coincidir con Honda | PENDIENTE |
+| S17 | S01,S05–S06,S15–S16 | CKP/TDC/CYP exactos | Patrón trazado a fuente; si no, `GENERIC_TRIGGER`, prohibido OEM | PENDIENTE |
+| S18 | S13,S15–S17 | ECU trigger decoder + scheduler | Señales erróneas alteran sync/timing causalmente; visible solicitado vs efectivo | PENDIENTE |
+| S19 | S12–S13,S15,S18 | Sensores, cableado | ECT falso cambia ECU sin cambiar T física; MAP falso no cambia p real | PENDIENTE |
+| S20 | S05,S07,S17–S19 | Herramientas diagnósticas | Sin panel secreto; tests conocen causa solo para evaluación | PENDIENTE |
+| S21 | S09–S16,S19 | Térmico L1 | Todo calor tiene fuente/sumidero; T no cambia por comando de sensor | PENDIENTE |
+| S22 | S14,S21 | Aceite/galerías/cojinetes | Fallo aceite por ruta presión/film/fricción, nunca bandera | PENDIENTE |
+
+## FASE C — CAUSAL-DIAGNOSTIC-BASE (S23–S30)
+
+| Sprint | Dep. | Gate | Estado |
+|---|---|---|---|
+| S23 | S08–S12,S21–S22 | Sin multiplicador de potencia ni rutina de síntomas; fidelidad etiquetada | PENDIENTE |
+| S24 | S20,S23 | Diagnóstico con ≥2 mediciones independientes, no flag de daño | PENDIENTE |
+| S25 | S14–S24 | Real vs simulado + train vs holdout; no inventar dyno | PENDIENTE |
+| S26 | S21–S25 | Desgaste por leyes/provenance, no FPS; sin evidencia solo tendencias | PENDIENTE |
+| S27 | S07–S08,S11,S22,S26 | Sin instante de fallo real sin material/geometría/calibración | PENDIENTE |
+| S28 | S14–S27 | HP desde torque integrado, no circular desde spec | PENDIENTE |
+| S29 | S23–S28 | Cada síntoma remonta a ecuaciones; sin `if fault_count>1` | PENDIENTE |
+| S30 | S00–S29 | Sin «predictivo» sin evidencia; incompleta pero honesta puede pasar | PENDIENTE |
+
+## FASE D — Taller 3D y expansión (S31–S37, tras base)
+
+Prototipado CAD/UI en paralelo permitido, sin bloquear ni «validar»
+ecuaciones con animaciones. Ver foundation §16. Todos PENDIENTE.
+
+## Regla de avance
+
+Solo S00 está autorizado. S01 requiere gate S00 aprobado. Gates
+universales §12.3 + `docs/definition-of-done.md` aplican a todo sprint
+físico.

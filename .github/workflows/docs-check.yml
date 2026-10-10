@@ -1,0 +1,36 @@
+name: docs-check
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Required S00 files exist
+        run: |
+          test -f README.md
+          test -f docs/foundation.md
+          test -f docs/SPRINTS.md
+          test -f docs/PROGRESS.md
+          test -f docs/HANDOFF.md
+          test -f docs/charter.md
+          test -f docs/definition-of-done.md
+          test -f docs/EVIDENCE_POLICY.md
+          test -f docs/limitations.md
+          test -f docs/model_assumptions.md
+          test -f data/provenance_registry.yaml
+          test -f docs/sprints/S00.md
+          ls docs/adr/ADR-*.md | wc -l | grep -q 12
+          echo DOCS_OK
+      - name: No physics code in S00
+        run: |
+          # S00 prohibe solver/UI: falla si aparecen crates/ o ui/
+          test ! -d crates && test ! -d ui && echo NO_PHYSICS_OK
+      - name: Research files intact
+        run: |
+          test -f D16Y7_RESEARCH_v0.1.md
+          test -f D16Y7_RESEARCH_DONANTES_v0.1.md
+          echo RESEARCH_OK

@@ -1,0 +1,50 @@
+# Provenance registry — índice de fuentes (S00, sin valores)
+
+Este archivo es **catálogo**, no dataset. Los valores numéricos viven en
+S01+ con página/edición/condiciones. `status` global S00: todo número
+PENDING. Clases y reglas: `docs/EVIDENCE_POLICY.md`.
+
+schema_version: 1
+updated: 2026-10-10
+foundation: {file: docs/foundation.md, edition: Research/Foundation v0.2, date: 2026-10-09}
+research_primary:
+  - {id: D16Y7_RESEARCH_v0.1, file: ../D16Y7_RESEARCH_v0.1.md, role: datos propios Y7, literatura y casos}
+  - {id: D16Y7_RESEARCH_DONANTES_v0.1, file: ../D16Y7_RESEARCH_DONANTES_v0.1.md, role: donantes, transferencias y límites}
+
+sources:
+  # Marco R01–R20 (Foundation §21). URLs completas en docs/foundation.md.
+  - {id: R01, kind: manual, desc: Honda Civic 1996-2000 Service Manual, class: OEM-TEXT-candidate, verification: REQUIRES_VERIFICATION_edition_page_variant}
+  - {id: R02, kind: manual, desc: Honda PGM-FI CKP/TDC/CYP y CKF 1996-2000, class: OEM-TEXT-candidate, verification: REQUIRES_VERIFICATION_year_transmission}
+  - {id: R03, kind: software, desc: Engine-Sim AngeTheGreat (no científico, MIT), class: MFR-TECH-analogy}
+  - {id: R04, kind: software, desc: Speeduino (referencia conceptual, GPL-2.0, no copiar), class: MFR-TECH-reference}
+  - {id: R05, kind: software, desc: Ardu-Stim (patrones trigger para pruebas ECU), class: MFR-TECH-reference}
+  - {id: R06, kind: software, desc: Cantera ejemplo ICE diesel ilustrativo (BSD-3), class: MFR-TECH-method}
+  - {id: R07, kind: software, desc: OpenWAM CMT-UPV 1D gases (licencia por auditar, release 2016), class: MFR-TECH-pending-license}
+  - {id: R08, kind: docs, desc: Haltech Trigger System (aftermarket, no OEM Honda), class: MFR-TECH-general}
+  - {id: R09, kind: standard, desc: ASME VVUQ, class: method}
+  - {id: R10, kind: standard, desc: NASA-STD-7009B, class: method}
+  - {id: R11, kind: mfr, desc: ARP torque (no trasladar a Honda OEM), class: MFR-TECH-general}
+  - {id: R12, kind: mfr, desc: Fel-Pro sellado/carga desigual, class: MFR-TECH-general}
+  - {id: R13, kind: software, desc: Tauri (shell UI futura, no física), class: method}
+  - {id: R14, kind: docs, desc: NASA Glenn thermodynamic analysis, class: method}
+  - {id: R15, kind: mfr, desc: Garrett compressor maps (etapa turbo, no base stock), class: MFR-TECH-future}
+  - {id: R16, kind: docs, desc: NASA Glenn Otto cycle ideal vs real, class: method}
+  - {id: R17, kind: standard, desc: SAE J1349 potencia neta (texto bajo licencia, consultar), class: method}
+  - {id: R18, kind: paper, desc: JSAE Livengood-Wu knock (limitaciones), class: method}
+  - {id: R19, kind: paper, desc: Ng et al 2020 fault diagnosis turbo SI (no Honda), class: ANALOGIA}
+  - {id: R20, kind: handbook, desc: NASA SWE-070 modelos/simulaciones, class: method}
+  # Adenda CF01–CF62: índice agrupado (URLs en foundation §23.14). Ninguno transcrito como nominal en S00.
+  - {id: CF01-CF08, kind: workshop-manual-mirror, desc: compresion 1270/930/200kPa@250rpmWOT, aceite 70/340kPa@80C, clearances, lash, rail, cam-holder, class: OEM-TEXT-candidate, verification: REQUIRES_VERIFICATION_edition_page_variant}
+  - {id: CF09-CF14, kind: forum, desc: compresiones campo 148-197psi, protocolo WOT, fuel pressure, claim inyectores 180/240 sin dP, class: FORUM-MEASURED/CLAIM, use: adversarial-only}
+  - {id: CF15-CF20, kind: epc, desc: PNs 1997 DX 5MT (culata/junta/tornillos/pistones/inyectores/bombas/distribuidores), class: OEM-EPC-identity-only}
+  - {id: CF21-CF35, kind: forum+mfr, desc: casos montaje M01-M13 + Motorservice/King/Fel-Pro/ARP generales, class: FORUM-CASE/MEASURED + MFR-TECH-general}
+  - {id: CF36-CF52, kind: forum, desc: casos electronica E01-E12 (CKP/TDC/CYP, timing 12BTDC, IACV 3 hilos, P2E/OBD2a-b, P06/P28), class: FORUM-CASE/MEASURED/CLAIM}
+  - {id: CF53-CF62, kind: forum+mfr, desc: casos turbo/dyno T01-T08 + fabricantes, class: FORUM-CASE/CLAIM, note: no-curva-stock-CF59-CF07}
+
+conflicts_open:
+  - {parameter: compression_nominal_vs_min, a: 184psi-nominal, b: 135psi-minimo, resolution: campos-distintos-no-promediar}
+  - {parameter: injector_flow_Y7, a: 180cc/min, b: 240cc/min-Y8, dP: null, resolution: PENDING-banco}
+  - {parameter: rail_pressure, a: forum-34-36psi-vac, b: manual-28-36psi-vac, resolution: priorizar-OEM-curva-regulador}
+  - {parameter: distributor, a: TD-80U, b: TD-98U, resolution: congelar-mercado-sufijo-S01}
+  - {parameter: ecu, a: P2E-generico, b: sufijos-mercado-transmision, resolution: ID-completo-S01}
+  - {parameter: oil_pressure_hot_idle, a: forum-5-10psi, b: manual-min-10psi@80C, resolution: caso-limite-no-normal-OEM}
