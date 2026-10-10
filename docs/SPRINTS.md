@@ -21,7 +21,7 @@ Fuente normativa: `docs/foundation.md` §14–§16. Detalle por sprint:
 | S10 | S09 | Combustión reducida | Retraso desplaza p/trabajo explicablemente; sin dyno al freno | **APROBADO** (2026-10-10; barrido monótono; ver `docs/sprints/S10.md`) |
 | S11 | S06–S07,S09 | Distribución SOHC | 4 cilindros derivan de cam+crank compartidos; sin daños automáticos | **APROBADO** (2026-10-10; 6 tests; ver `docs/sprints/S11.md`) |
 | S12 | S09,S11 | Flujos adm/esc 0D | Efecto válvula por caudal calculado; declarar faltantes 1D | **APROBADO** (2026-10-10; 8 tests; ver `docs/sprints/S12.md`) |
-| S13 | S03,S10,S12 | Combustible rail/inyector | Sin rendimiento desde AFR sin entrega real; sin DTC por bomba sin presión | PENDIENTE |
+| S13 | S03,S10,S12 | Combustible rail/inyector | Sin rendimiento desde AFR sin entrega real; sin DTC por bomba sin presión | **APROBADO** (2026-10-10; 5 tests; ver `docs/sprints/S13.md`) |
 
 ## FASE B — RUNNABLE-ENGINE (S14–S22)
 
@@ -57,6 +57,6 @@ ecuaciones con animaciones. Ver foundation §16. Todos PENDIENTE.
 
 ## Regla de avance
 
-S00–S12 APROBADOS. Batch S11–S15 autorizado, siguiente: S13.
+S00–S13 APROBADOS. Batch S11–S15 autorizado, siguiente: S14.
 **S16 prohibido sin autorización.** Gates universales §12.3 +
 `docs/definition-of-done.md` aplican.

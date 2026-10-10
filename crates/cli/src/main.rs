@@ -133,6 +133,8 @@ enum Command {
         #[arg(long, default_value_t = 8.0)]
         tailpipe_cm2: f64,
     },
+    /// Suministro de combustible L1 (S13, hipótesis etiquetadas).
+    FuelSupplyTest,
 }
 
 fn run() -> Result<(), EngineError> {
@@ -258,6 +260,7 @@ fn run() -> Result<(), EngineError> {
             throttle_cm2,
             tailpipe_cm2,
         } => gas_exchange_cmd(rpm, plenum_l, exhaust_l, throttle_cm2, tailpipe_cm2),
+        Command::FuelSupplyTest => fuel_supply_test_cmd(),
     }
 }
 
@@ -804,5 +807,72 @@ fn gas_exchange_cmd(
         audit.p_max_pa / 1_000.0
     );
     println!("  trace_points      : {}", trace.len());
+    Ok(())
+}
+
+/// Comando S13: cadena ralentí (contraste research) + plena carga +
+/// sensibilidad a tensión + casos de fallo. Sin AFR→rendimiento sin entrega.
+fn fuel_supply_test_cmd() -> Result<(), EngineError> {
+    use fuel::{resolve_rail, Fuel, Injector, PulseCommand, PumpState, Regulator};
+
+    let err = |e: String| EngineError::SchemaValidation(e);
+    let fuel = Fuel::illustrative_gasoline();
+    let inj = Injector::p2a_working_hypothesis();
+    let reg = Regulator::new(300_000.0).map_err(|e| err(e.to_string()))?;
+    let pump = PumpState {
+        on: true,
+        max_flow_kg_s: None,
+    };
+    println!("fuel-supply-test (HYPOTHESIS 185cc/min@3bar + ANALOG deadtime; not P2A-000):");
+    // Ralentí ilustrativo (research v0.1 §3.2): 0.113 g aire ⇒ AFR 14.7.
+    let rail = resolve_rail(reg, pump, 35_000.0, 0.002).map_err(|e| err(e.to_string()))?;
+    let m_idle = 0.113e-3 / 14.7;
+    let (cmd, t_eff) = inj
+        .pulse_for_mass(fuel, m_idle, rail.delta_p_pa, 14.0)
+        .map_err(|e| err(e.to_string()))?;
+    let (d, st) = inj.deliver(fuel, cmd, rail.delta_p_pa, 14.0, None);
+    println!(
+        "  idle: PW_eff={:.2}ms PW_tot={:.2}ms delivered={:.2}mg status={:?}",
+        t_eff * 1e3,
+        cmd.width_s * 1e3,
+        d.mass_kg * 1e6,
+        st
+    );
+    // Sensibilidad a tensión: mismo comandado a 12 V entrega menos.
+    let (d12, _) = inj.deliver(fuel, cmd, rail.delta_p_pa, 12.0, None);
+    println!(
+        "  idle@12V (same cmd): delivered={:.2}mg ({:.1}% lean)",
+        d12.mass_kg * 1e6,
+        100.0 * (1.0 - d12.mass_kg / d.mass_kg)
+    );
+    // Plena carga ilustrativa: 25 mg con ΔP 3 bar.
+    let rail_wot = resolve_rail(reg, pump, 100_000.0, 0.02).map_err(|e| err(e.to_string()))?;
+    let (cmd_wot, _) = inj
+        .pulse_for_mass(fuel, 25e-6, rail_wot.delta_p_pa, 14.0)
+        .map_err(|e| err(e.to_string()))?;
+    let (dw, stw) = inj.deliver(fuel, cmd_wot, rail_wot.delta_p_pa, 14.0, None);
+    println!(
+        "  wot: PW_tot={:.2}ms delivered={:.2}mg status={:?} nonlinear={}",
+        cmd_wot.width_s * 1e3,
+        dw.mass_kg * 1e6,
+        stw,
+        dw.nonlinear_region
+    );
+    // Fallos: bomba apagada, pulso nulo, capacidad insuficiente.
+    let rail_off = resolve_rail(
+        reg,
+        PumpState {
+            on: false,
+            max_flow_kg_s: None,
+        },
+        100_000.0,
+        0.02,
+    )
+    .map_err(|e| err(e.to_string()))?;
+    let (_, st_off) = inj.deliver(fuel, cmd_wot, rail_off.delta_p_pa, 14.0, None);
+    let (_, st_sat) = inj.deliver(fuel, cmd_wot, rail_wot.delta_p_pa, 14.0, Some(0.5e-3));
+    println!("  pump-off: status={st_off:?} (state, no DTC)");
+    println!("  weak-pump: status={st_sat:?} (partial delivery, no DTC)");
+    let _ = PulseCommand { width_s: 0.0 };
     Ok(())
 }

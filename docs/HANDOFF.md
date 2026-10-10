@@ -1,7 +1,7 @@
 # HANDOFF — punto de entrada al siguiente agente
 
-Fecha: 2026-10-10 · Sprints: **S00–S12 APROBADOS (batch S11–S15)**.
-Siguiente: **S13**. **S16 prohibido sin autorización.**
+Fecha: 2026-10-10 · Sprints: **S00–S13 APROBADOS (batch S11–S15)**.
+Siguiente: **S14**. **S16 prohibido sin autorización.**
 
 ## Estado científico/arquitectónico actual
 
@@ -32,9 +32,9 @@ Siguiente: **S13**. **S16 prohibido sin autorización.**
    2026-10-10.
 2. ~~Licencia sin decidir~~ — resuelto: Apache-2.0 solo código propio
    (propietario 2026-10-10); `LICENSE` + `THIRD_PARTY_NOTICES.md` creados.
-3. S01–S12 APROBADOS 2026-10-10 (S11: Vtr 410.40 cm³; S12: cierre
-   masa ~1e−15, reflujo medido). Deuda: CI Windows sin ejecutar; perfil
-   Y7 y puertos medidos pendientes; inyección en S13.
+3. S01–S13 APROBADOS 2026-10-10 (S12: cierre ~1e−15; S13: 3.37 ms
+   exactos al research). Deuda: CI Windows sin ejecutar; banco P2A-000;
+   dinámica de cigüeñal en S14.
 
 ## Roles y reglas de cambio (S00)
 
@@ -114,10 +114,14 @@ re-verificado).
 
 Crate `flow` + `gas-exchange` CLI + ADR-019. Ver `docs/sprints/S12.md`.
 
-## Brief S13 (siguiente en batch autorizado)
+## Brief S13 (APROBADO 2026-10-10)
 
-Combustible: depósito/rail/bomba/inyector reducido con propiedades
-identificadas, presión de rail y regulador referenciado, inyector
-masa vs Δp/duración/deadtime/tensión, eventos por cilindro según
-estrategia futura, comandado vs entregado, casos de fallo. Gate: sin
-rendimiento desde AFR sin entrega real; sin DTC por bomba sin presión.
+Crate `fuel` + `fuel-supply-test` + ADR-020. Ver `docs/sprints/S13.md`.
+
+## Brief S14 (siguiente en batch autorizado)
+
+Dinámica de cigüeñal y pérdidas: inercia efectiva J(θ) coherente, torques
+de ciclo completo con pumping/fricción definidos una sola vez, fricción
+reducida RPM/T/carga con curvas calibrables, carga de freno/inercia,
+reposo y rotación impuesta. Gate: sin energía gratis; aceleración =
+torques/inercia en error numérico.

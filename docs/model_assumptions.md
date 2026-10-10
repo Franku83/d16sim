@@ -83,3 +83,12 @@ futuros: toda aproximación pasa por aquí + `ModelCard` (§11.4).
 | H-S12-03 | Volúmenes/áreas ilustrativos; mariposa = área efectiva | Demo S12 | Supuesto declarado | Geometría medida |
 | H-S12-04 | Primer ciclo transitorio; periódico en S16 | Ciclo S12 | Supuesto declarado | Operación continua |
 | H-S12-05 | Euler explícito; masa exacta contable, energía auditada | S12 | ADR-019 | Acoplamiento implícito |
+
+## Registro S13 (inyección L1)
+
+| ID | Hipótesis | Dominio | Fuente | Invalida si |
+|---|---|---|---|---|
+| H-S13-01 | Q_ref 185 cc/min @3 bar = hipótesis, no medición | Inyector S13 | Claim sin ΔP | Banco P2A-000 |
+| H-S13-02 | Deadtime analógico CBR600RR ±0.3 ms (no P2A-000) | Inyector S13 | Analogía | Deadtime P2A medido |
+| H-S13-03 | Regulador ideal ΔP cte; bomba off ⇒ rail 0 | Rail S13 | Supuesto declarado | Curva regulador/bomba |
+| H-S13-04 | Gasolina ilustrativa (740 kg/m³, LHV44, 14.7) | S13 | Orden comercial | Lote medido |

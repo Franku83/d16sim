@@ -16,6 +16,7 @@ contacts = { path = "../contacts" }
 engine-types = { path = "../engine-types" }
 fastener = { path = "../fastener" }
 flow = { path = "../flow" }
+fuel = { path = "../fuel" }
 kinematics = { path = "../kinematics" }
 thermo = { path = "../thermo" }
 valvetrain = { path = "../valvetrain" }

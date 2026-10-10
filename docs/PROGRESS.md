@@ -215,3 +215,16 @@ Solo hechos constatables; sin cifras improvisadas.
 - Gate S12: PASS — caudal calculado, sin VE; faltantes 1D declarados.
 - Deuda: garganta explícita, puertos/colector medidos, red 1D,
   multicilindro y periódico en S16, γ(T), lift medido.
+
+## 2026-10-10 · S13 · Inyección L1 comandado vs entregado (APROBADO)
+
+- Crate `fuel` (rail/regulador/bomba + inyector Q√ΔP/deadtime/tensión +
+  agenda por estrategia); `d16sim fuel-supply-test` (ralentí 3.37+0.62
+  ms = 7.69 mg exacto al research; 12 V −9%; WOT 11.58 ms; NoPressure y
+  Saturated como estados); ADR-020; `docs/physics/fuel_supply.md`;
+  H-S13-01..04.
+- Tests: 5 passed (cadena ralentí, ley √ΔP + tensión, comandado vs
+  entregado con 4 casos, rail/vacío, agenda). Sin tipo DTC en el crate.
+- Gate S13: PASS — sin AFR→rendimiento; sin DTC por bomba.
+- Deuda: banco P2A-000, atomización/wall-wetting, curva de rail,
+  scheduler S18.

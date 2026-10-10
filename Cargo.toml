@@ -11,6 +11,7 @@ members = [
     "crates/combustion",
     "crates/valvetrain",
     "crates/flow",
+    "crates/fuel",
     "crates/physics",
     "crates/simulation",
     "crates/cli",

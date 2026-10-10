@@ -175,6 +175,7 @@ dependencies = [
  "engine-types",
  "fastener",
  "flow",
+ "fuel",
  "kinematics",
  "math",
  "physics",
@@ -225,6 +226,15 @@ dependencies = [
  "thiserror",
  "units",
  "valvetrain",
+]
+
+[[package]]
+name = "fuel"
+version = "0.1.0"
+dependencies = [
+ "engine-types",
+ "thiserror",
+ "units",
 ]
 
 [[package]]
