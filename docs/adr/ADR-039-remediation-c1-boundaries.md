@@ -43,3 +43,12 @@
   de combustión/fricción o migración de esquema incompatible.
 - **Referencias:** FINDINGS RV01–RV09; `BATCH_GATE_DECISION.md`;
   `docs/remediation/R01_R02_C1_BATCH_REPORT.md`; ADR-038.
+
+## Nota C2 (2026-10-10) — restricción del claim de validación
+
+El punto 5 («las APIs públicas validan dominio y finitud antes de mutar»)
+queda **acotado** por la matriz `docs/remediation/R01_R02_C2_BOUNDARY_MATRIX.md`:
+en C1 faltaban control/combustible/eléctrico/arranque/inercia, estado de nodos
+(v/cv), coherencia térmica y validación de energía derivada; C2 los cierra
+(ADR-040). La generalización anterior era más amplia que la evidencia
+(C1-D01); no se reescribe la historia, se restringe el alcance vigente.

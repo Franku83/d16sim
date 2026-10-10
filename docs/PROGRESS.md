@@ -509,3 +509,26 @@ detención. Batch S26–S30 autorizado; S31 prohibido.
   Harness adversarial **19/19** (196 predicados; antes 9/19). Harness original
   **22/32** con los mismos 10 fallos de R03/R04. F07/F08/F09/F10 conservados.
 - **STOP**: no se inicia R03/R04/R05 ni S31 sin autorización explícita.
+
+## 2026-10-10 · Remediación R01–R02-C2 (IMPLEMENTED_PENDING_INDEPENDENT_REVIEW)
+
+- Rama `remediation/r01-r02-c2` desde `caad1cb` (C1 verificado con
+  `C1_REMEDIATION_REQUIRED`). Matriz de fronteras:
+  `docs/remediation/R01_R02_C2_BOUNDARY_MATRIX.md`; ADR-040; reporte:
+  `docs/remediation/R01_R02_C2_BATCH_REPORT.md`.
+- **C1-01/F15**: validación integral de EngineInputs (control, combustible,
+  eléctrico/arranque, inercia, Wiebe, térmico), nodos (v/cv), ledgers,
+  coherencia térmica y confirmación del candidato; errores de starter
+  propagados; auditoría finita obligatoria.
+- **C1-02/C1-04/F15**: energía térmica derivada (T·C) validada en
+  `stored_j_checked`, `step`, `restore`, `initial_state` y `run_engine`.
+- **C1-03/F02**: `LeakSplit` como descomposición completa normalizada;
+  observaciones inválidas/parciales ⇒ `Inconclusive`.
+- **C1-05/F06**: identidad semántica `model` (esquema + contabilidad);
+  snapshots pre-C2 migran como aproximados, nunca nativos exactos;
+  metadata de procedencia documentada como no autenticada (C1-G01).
+- Tests: workspace **204 passed / 0 failed** (199 + 5 C2); fmt/clippy OK.
+  Controles C2 **15/15** (150 predicados; antes 10/15). Harness adversarial
+  **19/19**; harness original **22/32** con los mismos 10 fallos de R03/R04.
+  Ralentí nominal idéntico a C1 (1047.3038737 rpm): solo validación.
+- **STOP**: no se inicia R03/R04/R05 ni S31; no se fusiona a `r01-r05`.

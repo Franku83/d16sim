@@ -28,6 +28,20 @@
   historia) o `approximate_hot` (había combustible/movimiento: la trayectoria
   histórica no se reconstruye). Los snapshots nativos completos no llevan
   procedencia y mantienen continuidad exacta.
+- **Identidad semántica de modelo (R02-C2/C1-05):** `model` (en el wrapper)
+  separa la versión del esquema de serialización de la **convención de
+  contabilidad química** (`combustion_accounting`). Un snapshot sin `model`
+  (formato pre-C2) es ambiguo entre R02 (consumo diferido) y C1 (por paso): se
+  migra con procedencia `approximate_hot`/`exact_neutral` y **nunca** se
+  declara nativo exacto. Un `model` con convención desconocida o incoherente
+  con el esquema se rechaza (fail-closed). Los snapshots nativos C2 (con
+  `model`) continúan bit-exactos.
+- **Alcance de integridad (C1-G01):** `state_hash` autentica **solo el estado
+  canónico**. `model` y `provenance` son metadata **no autenticada** por el
+  hash: un consumidor que necesite confiar en la procedencia debe verificarla
+  contra una fuente externa fiable; reserializar no convierte la metadata en
+  autenticada. No se firma criptográficamente el archivo ni se reescriben
+  hashes históricos.
 - **Validez física fail-closed (R02-F15, R02-C1/RV05–RV06):** un hash válido no
   implica estado válido. `restore` rechaza masas/temperaturas no positivas o no
   finitas, fracciones fuera de [0,1], combustible fuera de [0, m], historia de
