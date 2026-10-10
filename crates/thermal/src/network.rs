@@ -78,11 +78,19 @@ impl ThermalParams {
         if !(self.wall_frac.is_finite() && (0.0..=1.0).contains(&self.wall_frac)) {
             return Err(bad("wall_frac"));
         }
+        // Capacidades estrictamente positivas: una capacidad nula divide por
+        // cero en `step` y produciría estado no finito (R02-F15).
         for (v, name) in [
             (self.c_wall, "c_wall"),
             (self.c_piston, "c_piston"),
             (self.c_oil, "c_oil"),
             (self.c_cool, "c_cool"),
+        ] {
+            if !(v.is_finite() && v > 0.0) {
+                return Err(bad(name));
+            }
+        }
+        for (v, name) in [
             (self.ha_piston_wall, "ha_pw"),
             (self.ha_wall_cool, "ha_wc"),
             (self.ha_wall_oil, "ha_wo"),
@@ -161,6 +169,10 @@ impl ThermalState {
     /// Avanza `dt` con calor de quemado a paredes, potencia de fricción al
     /// aceite y ambiente dados. Euler explícito; fail-closed.
     ///
+    /// Devuelve el calor NETO cedido al ambiente en el paso (J, positivo si
+    /// sale de la red), para que el ledger energético del motor pueda
+    /// contabilizar esa frontera (R01-F10).
+    ///
     /// # Errors
     ///
     /// `Invalid` si entradas no finitas/negativas donde no corresponde.
@@ -171,7 +183,7 @@ impl ThermalState {
         p_fric_w: f64,
         ambient_c: f64,
         p: &ThermalParams,
-    ) -> Result<(), ThermalError> {
+    ) -> Result<f64, ThermalError> {
         p.validated()?;
         let bad = ThermalError::Invalid {
             reason: "thermal step".to_owned(),
@@ -188,6 +200,12 @@ impl ThermalState {
             return Err(bad);
         }
         let tstat = self.thermostat_factor(p);
+        // Calor neto a ambiente (frontera declarada, R01-F10): pared, aceite y
+        // radiador (según termostato), con las temperaturas del inicio del paso.
+        let q_amb = (p.ha_wall_amb * (self.t_wall_c - ambient_c)
+            + p.ha_oil_amb * (self.t_oil_c - ambient_c)
+            + (p.ha_rad_full * tstat) * (self.t_cool_c - ambient_c))
+            * dt_s;
         let d_wall = q_burn_to_wall_j + p.ha_piston_wall * (self.t_piston_c - self.t_wall_c) * dt_s
             - p.ha_wall_cool * (self.t_wall_c - self.t_cool_c) * dt_s
             - p.ha_wall_oil * (self.t_wall_c - self.t_oil_c) * dt_s
@@ -204,7 +222,16 @@ impl ThermalState {
         // ECT con lag de primer orden hacia el refrigerante.
         let a = dt_s / (p.ect_tau_s + dt_s);
         self.ect_filt_c += a * (self.t_cool_c - self.ect_filt_c);
-        Ok(())
+        if !(self.t_wall_c.is_finite()
+            && self.t_piston_c.is_finite()
+            && self.t_oil_c.is_finite()
+            && self.t_cool_c.is_finite()
+            && self.ect_filt_c.is_finite()
+            && q_amb.is_finite())
+        {
+            return Err(bad);
+        }
+        Ok(q_amb)
     }
 }
 
@@ -254,5 +281,33 @@ mod tests {
         let mut tstat = ThermalState::cold(20.0);
         tstat.t_cool_c = 84.0;
         assert!((tstat.thermostat_factor(&pi) - 0.5).abs() < 1e-12);
+    }
+
+    #[test]
+    fn returned_ambient_heat_closes_standalone_ledger() {
+        // R01-F10: el calor cedido al ambiente es exactamente el que baja el
+        // almacén de la red cuando no hay fuentes internas.
+        let p = ThermalParams::illustrative();
+        let mut s = ThermalState::cold(100.0);
+        let u0 = s.stored_j(&p);
+        let mut q_amb = 0.0;
+        for _ in 0..100 {
+            q_amb += s.step(0.1, 0.0, 0.0, 20.0, &p).unwrap();
+        }
+        let resid = (s.stored_j(&p) - u0) + q_amb;
+        assert!(resid.abs() < 1e-6, "resid={resid}");
+        assert!(q_amb > 0.0);
+    }
+
+    #[test]
+    fn zero_capacity_is_rejected_before_mutation() {
+        // R02-F15: capacidad nula ⇒ error tipado, sin estado no finito.
+        let mut p = ThermalParams::illustrative();
+        p.c_wall = 0.0;
+        assert!(p.validated().is_err());
+        let mut s = ThermalState::cold(20.0);
+        let before = s;
+        assert!(s.step(1.0, 1.0, 0.0, 20.0, &p).is_err());
+        assert_eq!(s, before);
     }
 }

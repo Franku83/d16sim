@@ -42,6 +42,20 @@ impl Fluid {
     pub fn is_gas(&self) -> bool {
         matches!(*self, Fluid::Gas { .. })
     }
+
+    /// Densidad (kg/m³) de líquidos para convertir caudal volumétrico a
+    /// masa (R01-F09). `None` en gas: la rama compresible ya devuelve masa
+    /// directamente y no debe aplicar densidad dos veces.
+    #[must_use]
+    pub fn liquid_density_kg_m3(&self) -> Option<f64> {
+        match *self {
+            Fluid::Gas { .. } => None,
+            // Valores ilustrativos declarados (aceite 870, refrigerante 1060);
+            // S25 los medirá contra banco. No se usan como calibración.
+            Fluid::Oil => Some(870.0),
+            Fluid::Coolant => Some(1060.0),
+        }
+    }
 }
 
 /// Dominio de fluido (volumen + estado homogéneo).
@@ -111,6 +125,9 @@ pub struct LeakAudit {
     pub mass_closure: f64,
     /// Cierre de energía relativo (con frontera contabilizada).
     pub energy_closure: f64,
+    /// Cierre de la especie fresca relativo (advección por puertos,
+    /// suministro fresco y venteo) — R01-F08.
+    pub fresh_closure: f64,
 }
 
 /// Integra la red `duration_s` con suministro regulado que mantiene la
@@ -179,11 +196,14 @@ pub fn run_leakdown(
     };
     let m0: f64 = d.iter().map(|x| x.m_kg).sum();
     let u0: f64 = d.iter().map(|x| x.m_kg * cv_of(x.fluid) * x.t_k).sum();
+    let fresh0: f64 = d.iter().map(|x| x.m_kg * x.fresh_frac).sum();
     let mut port_totals = vec![0.0; net.ports.len()];
     let mut supply_mass_kg = 0.0;
     let mut supply_enth_j = 0.0;
+    let mut supply_fresh_kg = 0.0;
     let mut vent_mass_kg = 0.0;
     let mut vent_enth_j = 0.0;
+    let mut vent_fresh_kg = 0.0;
     // Serie del suministro para el estacionario (último 20%).
     let mut supply_series: Vec<f64> = Vec::new();
     let mut t = 0.0;
@@ -211,7 +231,12 @@ pub fn run_leakdown(
                 (m * h, m * h * cp * fa.t_k)
             } else {
                 let fa = &d[port.from];
-                let m = port.conductance * (pa - pb) / net.mu_liquid_pa_s * h;
+                // Caudal volumétrico laminar Q = k·Δp/μ (m³/s) → masa con
+                // la densidad del líquido (R01-F09). No aplicar dos veces en
+                // gas: la rama compresible ya devuelve kg/s.
+                let rho = fa.fluid.liquid_density_kg_m3().ok_or_else(|| bad.clone())?;
+                let vol = port.conductance * (pa - pb) / net.mu_liquid_pa_s * h;
+                let m = vol * rho;
                 (m, m * fa.fluid.cp() * fa.t_k)
             };
             if !(dm.is_finite() && h_flow.is_finite() && dm >= 0.0) {
@@ -232,12 +257,18 @@ pub fn run_leakdown(
             if !(a.m_kg - dm > 0.0) {
                 return Err(bad);
             }
+            // Advección de especie fresca (R01-F08): el gas que sale lleva la
+            // fracción fresca del dominio donante y se mezcla físicamente con
+            // el receptor. Los líquidos usan la convención fresca = 1.
+            let fresh_out = a.fresh_frac;
+            let mb = b.m_kg;
             // U' = U − h·dm con la T del nodo (outflow homogéneo).
             let cva = cv_of(a.fluid);
             a.m_kg -= dm;
             a.t_k = (a.t_k * (a.m_kg + dm) * cva - h_flow) / (a.m_kg * cva);
             let ub = b.m_kg * cv_of(b.fluid) * b.t_k + h_flow;
             b.m_kg += dm;
+            b.fresh_frac = (b.fresh_frac * mb + fresh_out * dm) / b.m_kg;
             b.t_k = ub / (b.m_kg * cv_of(b.fluid));
             if !(a.t_k.is_finite() && a.t_k > 0.0 && b.t_k.is_finite() && b.t_k > 0.0) {
                 return Err(bad);
@@ -252,18 +283,25 @@ pub fn run_leakdown(
             let dm_sup = m_target - s.m_kg;
             if dm_sup > 0.0 {
                 let h_sup = dm_sup * cp_src * net.supply_t_k;
+                let m_old = s.m_kg;
                 s.m_kg += dm_sup;
-                s.t_k = (s.t_k * (s.m_kg - dm_sup) * cv_of(s.fluid) + h_sup)
-                    / (s.m_kg * cv_of(s.fluid));
+                s.t_k = (s.t_k * m_old * cv_of(s.fluid) + h_sup) / (s.m_kg * cv_of(s.fluid));
+                // El aire de suministro entra fresco (fracción 1).
+                s.fresh_frac = (s.fresh_frac * m_old + dm_sup) / s.m_kg;
                 supply_mass_kg += dm_sup;
                 supply_enth_j += h_sup;
+                supply_fresh_kg += dm_sup;
             } else if dm_sup < 0.0 {
                 // Sobrepresión: ventea al banco. En términos de U sale
-                // dm·cv·T (la T no cambia al extraer masa homogénea).
+                // dm·cv·T (la T no cambia al extraer masa homogénea); la
+                // fracción fresca tampoco cambia con el venteo (outflow
+                // homogéneo).
                 let cvs = cv_of(s.fluid);
+                let fresh_vent = -dm_sup * s.fresh_frac;
                 s.m_kg += dm_sup;
                 vent_mass_kg += -dm_sup;
                 vent_enth_j += -dm_sup * cvs * s.t_k;
+                vent_fresh_kg += fresh_vent;
             }
             if !(s.m_kg.is_finite() && s.m_kg > 0.0 && s.t_k.is_finite() && s.t_k > 0.0) {
                 return Err(bad);
@@ -274,6 +312,7 @@ pub fn run_leakdown(
     }
     let m1: f64 = d.iter().map(|x| x.m_kg).sum();
     let u1: f64 = d.iter().map(|x| x.m_kg * cv_of(x.fluid) * x.t_k).sum();
+    let fresh1: f64 = d.iter().map(|x| x.m_kg * x.fresh_frac).sum();
     // Fuga estacionaria: media del suministro en el último 20%.
     let tail = &supply_series[supply_series.len() * 4 / 5..];
     let steady_leak_kg_s = if tail.len() >= 2 {
@@ -294,6 +333,7 @@ pub fn run_leakdown(
             // Frontera contabilizada (suministro menos venteo inicial).
             mass_closure: ((m1 - m0) - (supply_mass_kg - vent_mass_kg)) / m0.max(1e-30),
             energy_closure: ((u1 - u0) - (supply_enth_j - vent_enth_j)) / u0.abs().max(1e-30),
+            fresh_closure: ((fresh1 - fresh0) - (supply_fresh_kg - vent_fresh_kg)) / m0.max(1e-30),
         },
         port_totals,
     ))
@@ -387,5 +427,115 @@ mod tests {
         let mut bad = net.clone();
         bad.domains[1].fluid = Fluid::Oil;
         assert!(run_leakdown(&bad, 0, 5.0, 0.02).is_err());
+    }
+
+    #[test]
+    fn fresh_species_advects_and_closes() {
+        // R01-F08: donante fresco = 1, receptor = 0 ⇒ la fracción fresca
+        // receptora debe ser la masa fresca recibida / nueva masa; el cierre
+        // de especie fresca es exacto (frontera = suministro regulado).
+        let gas = Fluid::Gas {
+            r_gas: 287.0,
+            cp: 1005.0,
+        };
+        let net = LeakNetwork {
+            domains: vec![
+                LeakDomain {
+                    v_m3: 0.1,
+                    m_kg: 200000.0 * 0.1 / (287.0 * 300.0),
+                    t_k: 300.0,
+                    fluid: gas,
+                    fresh_frac: 1.0,
+                },
+                LeakDomain {
+                    v_m3: 0.1,
+                    m_kg: 100000.0 * 0.1 / (287.0 * 300.0),
+                    t_k: 300.0,
+                    fluid: gas,
+                    fresh_frac: 0.0,
+                },
+            ],
+            p_set_pa: vec![0.0, 0.0],
+            ports: vec![LeakPort {
+                from: 0,
+                to: 1,
+                conductance: 1e-5,
+                compressible: true,
+            }],
+            mu_liquid_pa_s: 0.1,
+            supply_t_k: 300.0,
+        };
+        let (d, audit, tot) = run_leakdown(&net, 0, 0.1, 1e-4).unwrap();
+        assert!(tot[0] > 0.0);
+        assert!((d[1].fresh_frac - tot[0] / d[1].m_kg).abs() < 1e-12);
+        assert!(d[1].fresh_frac > 0.0 && d[1].fresh_frac < 1.0);
+        assert!(audit.fresh_closure.abs() < 1e-9, "{}", audit.fresh_closure);
+    }
+
+    #[test]
+    fn liquid_volume_converts_to_mass_by_density() {
+        // R01-F09: k·Δp/μ·dt es volumen; multiplicar por ρ (870 kg/m³).
+        let gas = Fluid::Gas {
+            r_gas: 287.0,
+            cp: 1005.0,
+        };
+        let net = LeakNetwork {
+            domains: vec![
+                LeakDomain {
+                    v_m3: 0.1,
+                    m_kg: 1.0,
+                    t_k: 300.0,
+                    fluid: gas,
+                    fresh_frac: 1.0,
+                },
+                LeakDomain {
+                    v_m3: 1e-3,
+                    m_kg: 0.87,
+                    t_k: 300.0,
+                    fluid: Fluid::Oil,
+                    fresh_frac: 1.0,
+                },
+                LeakDomain {
+                    v_m3: 1e-3,
+                    m_kg: 0.87,
+                    t_k: 300.0,
+                    fluid: Fluid::Oil,
+                    fresh_frac: 1.0,
+                },
+            ],
+            p_set_pa: vec![0.0, 200000.0, 100000.0],
+            ports: vec![LeakPort {
+                from: 1,
+                to: 2,
+                conductance: 1e-12,
+                compressible: false,
+            }],
+            mu_liquid_pa_s: 0.1,
+            supply_t_k: 300.0,
+        };
+        let (_, _, tot) = run_leakdown(&net, 0, 1.0, 1e-4).unwrap();
+        let volume_m3 = 1e-12 * 100000.0 / 0.1;
+        assert!(
+            (tot[0] / (870.0 * volume_m3) - 1.0).abs() < 1e-9,
+            "reported {} kg vs {} kg",
+            tot[0],
+            870.0 * volume_m3
+        );
+    }
+
+    #[test]
+    fn liquid_and_gas_use_distinct_unit_paths() {
+        // Dos densidades con el mismo volumen ⇒ masas en proporción exacta;
+        // el gas no aplica densidad dos veces (ya devuelve kg).
+        assert_eq!(Fluid::Oil.liquid_density_kg_m3(), Some(870.0));
+        assert_eq!(Fluid::Coolant.liquid_density_kg_m3(), Some(1060.0));
+        assert_eq!(
+            Fluid::Gas {
+                r_gas: 287.0,
+                cp: 1005.0
+            }
+            .liquid_density_kg_m3(),
+            None
+        );
     }
 }

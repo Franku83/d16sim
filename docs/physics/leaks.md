@@ -21,3 +21,15 @@ falta de respiradero; más rediseño a suministro regulado.
 Leyes NO calibradas (magnitudes no predictivas); sin dinámica de anillo,
 sin fretting térmico, sin aceite→exterior (retén S26), sin acople al
 motor vivo (S24/S29), primer ciclo estático (sin compresímetro aún).
+
+## Remediación R01 (2026-10-10)
+
+- **Especies frescas (R01-F08):** el gas que cruza un puerto lleva la
+  fracción fresca del dominio donante y se mezcla con el receptor
+  (`fresh` receptora = masa fresca recibida / nueva masa). El suministro
+  regulado entra fresco y el venteo sale con la fracción del nodo; se añade
+  `fresh_closure` al ledger (≈0). Marca pasiva 1→0 verificada.
+- **Unidades de líquidos (R01-F09):** el caudal laminar `k·Δp/μ` es
+  volumétrico (m³/s); se convierte a masa con la densidad del fluido
+  (`Fluid::liquid_density_kg_m3`: aceite 870, refrigerante 1060 kg/m³,
+  ilustrativos). El gas no aplica densidad dos veces (su rama ya da kg/s).

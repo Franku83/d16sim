@@ -1648,13 +1648,61 @@ fn leak_test_cmd(scenario: &str) -> Result<(), EngineError> {
     Ok(())
 }
 
+/// Reparto observable de la cámara a partir de la red física y de los
+/// caudales integrados por puerto (R01-F02). No consulta el identificador de
+/// escenario: renombrar/reordenar escenarios con los mismos inputs físicos
+/// produce la misma observación. Los destinos convencionales de la cámara
+/// son cárter (nodo 1) y refrigerante (nodo 2); una ruta a otro nodo de gas
+/// se reporta como canal de escape instrumentado; si no existe, la fracción
+/// de escape se declara 0 como frontera (no como porcentaje heurístico).
+fn observable_chamber_split(
+    net: &leak::LeakNetwork,
+    totals: &[f64],
+) -> (diagnostics::LeakSplit, bool) {
+    let mut to_crankcase = 0.0f64;
+    let mut to_coolant = 0.0f64;
+    for (p, m) in net.ports.iter().zip(totals) {
+        if p.from == 0 {
+            match p.to {
+                1 => to_crankcase += *m,
+                2 => to_coolant += *m,
+                _ => {}
+            }
+        }
+    }
+    let obs_total = to_crankcase + to_coolant;
+    let split = if obs_total > 0.0 {
+        diagnostics::LeakSplit {
+            to_crankcase_01: to_crankcase / obs_total,
+            to_exhaust_01: 0.0,
+            to_coolant_01: to_coolant / obs_total,
+        }
+    } else {
+        diagnostics::LeakSplit {
+            to_crankcase_01: 0.0,
+            to_exhaust_01: 0.0,
+            to_coolant_01: 0.0,
+        }
+    };
+    let exhaust_channel = net.ports.iter().any(|p| {
+        p.from == 0
+            && p.to != 1
+            && p.to != 2
+            && matches!(
+                net.domains.get(p.to).map(|d| d.fluid),
+                Some(leak::Fluid::Gas { .. })
+            )
+    });
+    (split, exhaust_channel)
+}
+
 /// Comando S24: protocolo `diagnose_low_compression` cableado a los
 /// escenarios S23. El compresímetro usa el área efectiva del escenario +
 /// modelo de cranking L1; el leak-down usa su reparto. Sin GUI, sin flags.
 fn mech_demo_cmd(scenario: &str) -> Result<(), EngineError> {
     use diagnostics::{
-        cranking_peak_kpa, diagnose_low_compression, CompressionGauge, LeakDownTester, LeakSplit,
-        Provenance, C_CRANK_ILLUSTRATIVE,
+        cranking_peak_kpa, diagnose_low_compression, CompressionGauge, LeakDownTester, Provenance,
+        C_CRANK_ILLUSTRATIVE,
     };
     use leak::{leak_scenario, run_leakdown, LeakScenario};
 
@@ -1678,31 +1726,9 @@ fn mech_demo_cmd(scenario: &str) -> Result<(), EngineError> {
         .filter(|p| p.from == 0)
         .map(|p| p.conductance)
         .sum();
-    // Reparto = OBSERVACIÓN del técnico (dónde se escucha/ve escapar el
-    // aire: tapón de aceite / cola de escape / vaso de expansión), provista
-    // por el harness como en S20 (los instrumentos nunca ven el ground
-    // truth). Camino dominante físico por escenario, documentado.
-    let split = match s {
-        LeakScenario::HealthyBaseline | LeakScenario::RingLeakCyl3 => LeakSplit {
-            to_crankcase_01: 1.0,
-            to_exhaust_01: 0.0,
-            to_coolant_01: 0.0,
-        },
-        // Subapretada a 500 kPa estáticos: silba por el tapón de aceite
-        // (misma firma que anillos → ambigüedad documentada, exige 3er
-        // test: reapriete + retest o química del refrigerante).
-        LeakScenario::UnderclampedHead => LeakSplit {
-            to_crankcase_01: 1.0,
-            to_exhaust_01: 0.0,
-            to_coolant_01: 0.0,
-        },
-        // Sin junta: paso abierto cámara→agua, burbujeo violento en vaso.
-        LeakScenario::MissingHeadGasket => LeakSplit {
-            to_crankcase_01: 0.30,
-            to_exhaust_01: 0.10,
-            to_coolant_01: 0.60,
-        },
-    };
+    // Reparto = OBSERVACIÓN derivada de la RED FÍSICA y de los caudales
+    // integrados (R01-F02): nunca del identificador de escenario.
+    let (split, exhaust_channel) = observable_chamber_split(&net, &totals);
     let peak_true = cranking_peak_kpa(
         1500.0,
         1.0,
@@ -1748,8 +1774,15 @@ fn mech_demo_cmd(scenario: &str) -> Result<(), EngineError> {
     println!("  compression_kPa     : {:.0}", comp.value);
     println!("  leak_pct            : {:.1}", leak_pct.value);
     println!(
-        "  split crank/exh/cool: {:.2}/{:.2}/{:.2}",
-        split.to_crankcase_01, split.to_exhaust_01, split.to_coolant_01
+        "  split crank/exh/cool: {:.2}/{:.2}/{:.2} (exh: {})",
+        split.to_crankcase_01,
+        split.to_exhaust_01,
+        split.to_coolant_01,
+        if exhaust_channel {
+            "instrumented"
+        } else {
+            "no port -> not instrumented"
+        }
     );
     println!("  verdict             : {verdict:?}");
     let _ = tot;
@@ -2035,4 +2068,50 @@ fn release_check_cmd() -> Result<(), EngineError> {
     );
     println!("  PENDING: 2nd machine, expert review, field data (P1)");
     Ok(())
+}
+
+#[cfg(test)]
+mod r01_f02_tests {
+    #![allow(clippy::unwrap_used)]
+
+    use super::observable_chamber_split;
+    use leak::{leak_scenario, run_leakdown, LeakScenario};
+
+    fn observed(scenario: LeakScenario) -> (diagnostics::LeakSplit, bool) {
+        let net = leak_scenario(scenario).unwrap();
+        let (_, _, totals) = run_leakdown(&net, 0, 10.0, 5e-4).unwrap();
+        observable_chamber_split(&net, &totals)
+    }
+
+    #[test]
+    fn split_comes_from_physical_flow_not_scenario_label() {
+        // R01-F02: la observación se deriva de los caudales; para la junta
+        // ausente el reparto físico NO es el 0.30/0.10/0.60 heurístico.
+        let (split, exhaust) = observed(LeakScenario::MissingHeadGasket);
+        assert!(!exhaust, "no hay puerto de escape en la red");
+        assert!(split.to_exhaust_01 == 0.0);
+        assert!(
+            (split.to_coolant_01 - 0.86).abs() < 0.05,
+            "coolant={}",
+            split.to_coolant_01
+        );
+        assert!(
+            (split.to_crankcase_01 - 0.14).abs() < 0.05,
+            "crank={}",
+            split.to_crankcase_01
+        );
+    }
+
+    #[test]
+    fn renaming_scenario_preserves_observation() {
+        // La misma red física (mismo LeakScenario) da la misma observación;
+        // la derivación no consulta la identidad del escenario.
+        let a = observed(LeakScenario::UnderclampedHead);
+        let b = observed(LeakScenario::UnderclampedHead);
+        assert_eq!(a, b);
+        // Anillos y subapretada comparten firma física ⇒ ambigüedad explícita.
+        let ring = observed(LeakScenario::RingLeakCyl3);
+        assert!(ring.0.to_crankcase_01 > 0.99);
+        assert!(a.0.to_crankcase_01 > 0.99);
+    }
 }

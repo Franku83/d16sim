@@ -20,3 +20,14 @@ enriquecido inyecta más; masa 4e−10, energía 3.7e−4; S16 intacto.
 Sin hA/C medidos, sin curva real de termostato/bomba, sin ECT con S19
 completo, sin viscosidad (S22), calentamiento real en minutos (fuera de
 horizonte de test: se verifica inicio + lógica + auditoría).
+
+## Remediación R01 (2026-10-10)
+
+- **Frontera ambiente en el ledger (R01-F10):** `ThermalState::step`
+  devuelve el calor neto cedido al ambiente (pared + aceite + radiador con
+  termostato) y el motor lo acumula (`th_q_amb_j`) como sumidero declarado
+  del balance energético integrado. El residuo que persistía con
+  refinamiento (≈−0.0039 a 120 s) ya no es un término omitido.
+- **Fail-closed (R02-F15):** las capacidades deben ser estrictamente
+  positivas; una capacidad nula produce error tipado antes de mutar, no un
+  estado no finito.
