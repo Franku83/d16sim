@@ -1,0 +1,73 @@
+# Variante de referencia D16Y7 — S01 (congelada, no validada)
+
+> Congelar ≠ confirmar. Esta ficha fija UNA configuración para no mezclar
+> años/mercados/ECU. Todo número asociado sigue `PENDING_VERIFICATION` o
+> `REQUIRES_VERIFICATION` hasta auditoría OEM con edición/página en S01.
+> Fuente normativa: Foundation §2.1, §22 P0, §23.3.
+
+schema_version: 1
+variant_id: US_1997_CIVIC_DX_2DR_5MT_OBD2A_P2E_FAMILY
+status: FROZEN_FOR_S01_PENDING_OEM_AUDIT
+frozen_date: 2026-10-10
+frozen_by_sprint: S01
+
+vehicle:
+  make: Honda
+  model: Civic DX 2-door
+  year: 1997
+  market: US
+  trim_candidates:
+    - "DX hatchback/coupe 1997 (reproducciones taller citan DX hatchback L4-1590cc SOHC MFI)"
+  transmission: 5MT manual
+  obd_generation: OBD2a  # 1996-1998; OBD2b (1999-2000) NO intercambiable
+  catalog_suffix_examples: [KA, KR, KW]  # sufijos comerciales; NO mezclar vistas sin equivalencia
+  catalog_views_used_as_index_only:
+    - "1997 DX 5MT (hondapartsnow): vistas发动机 cylinder_head_sohc / crankshaft_piston / intake_manifold_sohc / oil_pump / distributor_tec_westec / water_pump_thermostat_sohc"
+
+engine:
+  code: D16Y7
+  family: D16 SOHC 16-valve non-VTEC
+  aspiration: naturally_aspirated  # [F] estructura; sin turbo de fabrica
+  firing_order_candidate: "1-3-4-2"  # [P] confirmar contra manual aplicable
+  bore_x_stroke_candidates: "75x90 mm (FORUM-CLAIM; OEM pendiente)"  # valor NO confirmado
+  displacement_candidate_cm3: 1590.4  # [D] solo valida si bore/stroke confirmados
+  compression_ratio_candidate: "9.4:1 (FORUM-CLAIM; OEM pendiente)"
+  power_candidate: "106 hp @ 6200 rpm (FORUM-CLAIM consenso agregadores; OEM pendiente; NO objetivo de calibracion)"
+  torque_candidate: "103 lb-ft @ 4600 rpm (FORUM-CLAIM; OEM pendiente)"
+
+ecu:
+  family: P2E  # Y7 CX/DX/LX non-VTEC OBD2 (FORUM-CASE)
+  full_id: null  # REQUIRES_VERIFICATION: sufijo completo (ej. 37820-P2E-L02 citado) pendiente
+  obd_variant: OBD2a
+  firmware_maps: null  # MISSING-DATA confirmado: no hay dumps/XDF/mapas P2E en comunidad
+  implementation_policy: P2E-like-propia-no-OEM  # nunca atribuir basemaps aftermarket (P06/P28/Crome/Hondata) a Honda
+  pinout: null  # PENDING
+
+distributor:
+  candidates_disputed:
+    - {pn: 30100-P2E-A02, label: TD-80U, catalog_view: 1997_DX_variant_A}
+    - {pn: 30100-P2F-A01, label: TD-98U, catalog_view: 1997_DX_variant_B}
+  resolution: REQUIRES_VERIFICATION_market_suffix  # prueba de por que S01 exige mercado/aplicacion
+  trigger_pattern: null  # PENDING: dientes/umbral/fase/polaridad/estrategia exacta
+  ckf_present: null  # PENDING: distinguir anos/configuraciones; no inferir presente en todas
+
+sensors_actuators_tied_to_variant:
+  # Existencia documentada en manual aplicable [F existencia]; forma/parametros [P].
+  # Ninguno operativo sin hardware confirmado (ej. no inventar knock sensor si variante no lo trae).
+  - {channel: CKP_TDC_CYP, status: PRESENT_PER_MANUAL_UNCONFIRMED_EDITION, detail: null}
+  - {channel: MAP, status: PENDING}
+  - {channel: TPS, status: PENDING}
+  - {channel: IAT, status: PENDING}
+  - {channel: ECT, status: PENDING}
+  - {channel: O2_narrowband, status: PENDING}
+  - {channel: IACV_3wire, status: CANDIDATE_PER_FORUM_CASE, note: 2-vs-3-cables-segun-variante}
+  - {channel: injector_set_06164-P2A-000_x4, status: IDENTITY_PER_EPC, flow: null, deadtime: null}
+  - {channel: fuel_pressure_regulator_16740-P2E-A01, status: IDENTITY_PER_EPC, curve: null}
+  - {channel: CKF, status: PENDING_PRESENCE_BY_YEAR}
+  - {channel: knock_sensor, status: DO_NOT_CREATE_WITHOUT_HARDWARE_EVIDENCE}
+  - {channel: EGR_VSS, status: ONLY_IF_VARIANT_HAS_EACH}
+
+provenance_policy:
+  edition_page_required_before_F: true
+  service_limits_are_not_manufacturing_tolerances: true
+  nominal_serviceLimit_measurement_distribution_unknown_are_distinct_channels: true

@@ -1,0 +1,21 @@
+parameter_id,candidate_display,unit,channel,evidence_class,status,source_id,conditions,variant,notes
+d16y7.service.compression_nominal,1270 kPa / 184 psi,kPa,nominal-instrument,OEM-TEXT-candidate,PENDING_VERIFICATION,CF01,250 rpm WOT,US_1997_DX_5MT,"fixture instrumento, no p combustion"
+d16y7.service.compression_min,930 kPa / 135 psi,kPa,service_limit,OEM-TEXT-candidate,PENDING_VERIFICATION,CF01,250 rpm WOT,US_1997_DX_5MT,"limite servicio, no umbral binario"
+d16y7.service.compression_spread_max,200 kPa / 28 psi,kPa,service_limit,OEM-TEXT-candidate,PENDING_VERIFICATION,CF01,same-test,US_1997_DX_5MT,depende protocolo
+d16y7.service.oil_p_idle,69 kPa / 10 psi min,kPa,service_limit,OEM-TEXT-candidate,PENDING_VERIFICATION,CF02_CF03,oil 80C idle,US_1997_DX_5MT,galeria no pelicula
+d16y7.service.oil_p_3000,340 kPa / 50 psi min,kPa,service_limit,OEM-TEXT-candidate,PENDING_VERIFICATION,CF02_CF03,oil 80C 3000rpm,US_1997_DX_5MT,depende rpm/viscosidad/holguras
+d16y7.service.main_clearance_J1J5,0.018-0.036 nuevo / 0.05 limite,mm,nominal+limit,OEM-TEXT-candidate,PENDING_VERIFICATION,CF04,por bancada,US_1997_DX_5MT,asignacion por color/medicion
+d16y7.service.main_clearance_J2J3J4,0.024-0.042 nuevo / 0.05 limite,mm,nominal+limit,OEM-TEXT-candidate,PENDING_VERIFICATION,CF04,por bancada,US_1997_DX_5MT,asignacion por color/medicion
+d16y7.service.rod_clearance,0.020-0.038 nuevo / 0.05 limite,mm,nominal+limit,OEM-TEXT-candidate,PENDING_VERIFICATION,CF05,por muneca,US_1997_DX_5MT,medir por muneca/casquillo
+d16y7.service.lash_intake_cold,0.18-0.22,mm,nominal,OEM-TEXT-candidate,PENDING_VERIFICATION,CF06,motor frio,US_1997_DX_5MT,afecta apertura efectiva
+d16y7.service.lash_exhaust_cold,0.23-0.27,mm,nominal,OEM-TEXT-candidate,PENDING_VERIFICATION,CF06,motor frio,US_1997_DX_5MT,distinguir fria/termica
+d16y7.service.fuel_p_vac_off,260-310 kPa / 38-46 psi (base 270-320),kPa,nominal-range,OEM-TEXT-candidate,REQUIRES_VERIFICATION,CF07,ralenti vacio desconectado,US_1997_DX_5MT,"tipar abs/manometrica; rango taller vs doc"
+d16y7.service.fuel_p_vac_on,200-250 kPa / 28-36 psi,kPa,nominal-range,OEM-TEXT-candidate,PENDING_VERIFICATION,CF07,ralenti vacio conectado,US_1997_DX_5MT,regulador referenciado a multiple
+d16y7.service.cam_holder_clearance,0.050-0.089 nuevo,mm,nominal,OEM-TEXT-candidate,PENDING_VERIFICATION,CF08,DX 1999,US_1997_DX_5MT,separar de perfil leva
+d16y7.service.idle_mt_hot,670+-50,rpm,nominal,OEM-TEXT-candidate,PENDING_VERIFICATION,research-v0.1-3.3,caliente sin carga M/T,US_1997_DX_5MT,no IACV 3-cables como rpm fija
+d16y7.service.base_timing,12 BTDC,deg,nominal,FORUM-MEASURED+CLAIM,PENDING_VERIFICATION,research-v0.1-3.3,jumper SCS caliente,US_1997_DX_5MT,base no avance dinamico
+d16y7.geometry.bore,75,mm,nominal,FORUM-CLAIM,PENDING_VERIFICATION,research-v0.1-5.1,—,US_1997_DX_5MT,cotejar tabla OEM
+d16y7.geometry.stroke,90,mm,nominal,FORUM-CLAIM,PENDING_VERIFICATION,research-v0.1-5.1,—,US_1997_DX_5MT,cotejar tabla OEM
+d16y7.geometry.compression_ratio,9.4,—,nominal,FORUM-CLAIM,PENDING_VERIFICATION,research-v0.1-5.1,—,US_1997_DX_5MT,confirmar variante
+d16y7.catalog.power,106 hp @ 6200,rpm-hp,nominal,FORUM-CLAIM,PENDING_VERIFICATION,research-v0.1-5.1,catalogo,US_1997_DX_5MT,no objetivo unico calibracion
+d16y7.catalog.torque,103 lb-ft @ 4600,rpm-lbft,nominal,FORUM-CLAIM,PENDING_VERIFICATION,research-v0.1-5.1,catalogo,US_1997_DX_5MT,no objetivo unico calibracion

@@ -21,3 +21,20 @@ Solo hechos constatables; sin cifras improvisadas.
   sin tests numéricos (sin física en S00, por diseño).
 - Deuda: licencia por decidir; toolchain sin pin (S02); raw vacío (S01).
 - Commits: ver `git log --oneline`.
+
+## 2026-10-10 · S01 · Variante y ficha maestra (APROBADO)
+
+- Variante congelada `US_1997_CIVIC_DX_2DR_5MT_OBD2A_P2E_FAMILY`
+  (`data/d16y7/reference_variant.yaml`); distribuidor/ECU-sufijo en
+  DISPUTED/REQUIRES_VERIFICATION, política P2E-like-no-OEM.
+- Creados: `docs/variants/D16Y7_DATA_DICTIONARY.md`,
+  `data/d16y7/D16Y7_OEM_SPECS.csv`,
+  `data/d16y7/OEM_CATALOG_1997_DX_5MT.csv`,
+  `data/d16y7/parts_inventory.csv`, `data/d16y7/unverified_values.csv`,
+  `docs/variants/bibliography.md`, `docs/variants/discrepancies.md`,
+  `docs/variants/acquisition_protocol.md`, `docs/sprints/S01.md`.
+- Gate S01: PASS — 20 filas OEM_SPECS con PENDING/REQUIRES, 18 PN con
+  IDENTITY/DISPUTED, 0 numéricos sin fuente; sin proxies como nominal;
+  ECU/sensores ligados a variante; sin física añadida.
+- Deuda: edición/página OEM exactas pendientes; torque/ángulos de apriete
+  PENDING; licencia sigue por decidir (bloquea S02).

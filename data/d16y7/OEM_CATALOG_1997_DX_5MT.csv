@@ -1,0 +1,19 @@
+system,part_number,qty,catalog_view,evidence_class,status,notes
+head,12100-P2A-000,1,1997_DX_5MT_cylinder_head_sohc,OEM-EPC,IDENTITY_ONLY,ensamble jerarquico
+head_gasket,12251-P2J-004,1,1997_DX_5MT,OEM-EPC,IDENTITY_ONLY,"existencia/compatibilidad, no espesor/calidad termica"
+head_bolt_washer,90008-PZ1-003,10,1997_DX_5MT,OEM-EPC,IDENTITY_ONLY,10x120.5 por vista; historial apriete por instancia en S04/S08
+piston_std,13010-P2E-000,1 set,1997_DX_crankshaft_piston,OEM-EPC,IDENTITY_ONLY,no aleacion/peso inferidos
+piston_os025,13020-P2E-000,1 set,1997_DX_crankshaft_piston,OEM-EPC,IDENTITY_ONLY,+0.25mm reacondicionamiento
+piston_os050,13030-P2E-000,1 set,1997_DX_crankshaft_piston,OEM-EPC,IDENTITY_ONLY,+0.50mm reacondicionamiento
+ring_set,13011-P07-004,1 set,1997_DX_crankshaft_piston,OEM-EPC,IDENTITY_ONLY,RIKEN STD; proveedor/mercado parte de entidad
+injector_set,06164-P2A-000,4,1997_DX_intake_manifold_sohc,OEM-EPC,IDENTITY_ONLY,"identidad si; caudal/deadtime NO inferibles"
+fuel_regulator,16740-P2E-A01,1,1997_DX_intake_manifold_sohc,OEM-EPC,IDENTITY_ONLY,presion base/referencia multiple pendiente
+intake_manifold,17100-P2F-A00,1,1997_DX_intake_manifold_sohc,OEM-EPC,IDENTITY_ONLY,"geometria/volumenes/caidas pendientes"
+oil_pump,15100-P7A-013,1,1997_DX_oil_pump_sohc,OEM-EPC,IDENTITY_ONLY,curva Q-dP pendiente
+oil_relief_valve,15231-PM3-000,1,1997_DX_oil_pump_sohc,OEM-EPC,IDENTITY_ONLY,estado bypass no presion inventada
+oil_relief_spring,15232-PM3-000,1,1997_DX_oil_pump_sohc,OEM-EPC,IDENTITY_ONLY,muelle separado
+distributor_A,30100-P2E-A02,1,1997_DX_TD-80U,OEM-EPC,DISPUTED_VS_B,no convertir ID en patron trigger
+distributor_B,30100-P2F-A01,1,1997_DX_TD-98U,OEM-EPC,DISPUTED_VS_A,otra variante misma DX; congelar mercado/sufijo
+water_pump,19200-P2A-A01,1,1997_DX_water_pump_sohc,OEM-EPC,IDENTITY_ONLY,curva caudal pendiente
+thermostat,19301-P08-316,1,1997_DX_water_pump_sohc,OEM-EPC,IDENTITY_ONLY,umbral/curva histeresis pendientes
+thermostat_repl,19301-PAA-306,1,1997_DX_water_pump_sohc,OEM-EPC,IDENTITY_ONLY,sustitucion catalogada

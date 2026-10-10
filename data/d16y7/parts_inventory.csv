@@ -1,0 +1,26 @@
+system,assembly_level,instances_notes,ports_interfaces,data_status
+block_crankcase,bare_block_replaceable,"block-001 (serial persistente); deck/head-bolt-bores-1..10; main-journals-J1..J5 por bancada/color","mech mounts; oil galleries; coolant passages; crankcase volume",PENDING_S04_topology
+crankshaft,instance,"crank-001; fase 720 continua; inercia separada de topologia (S06/S14)",main-journals; rod-pins-1..4; pulley; flywheel,TOPOLOGY_PENDING_S04
+connecting_rods_4,instances x4,"rod-001..004; big/small-end clearance por muneca; orientacion",crank-pin; piston-pin; bolts,TOPOLOGY_PENDING_S04
+pistons_pins_4,instances x4,"piston-001..004 STD 13010-P2E-000 (o OS con matching); skirt clearance; crown/deck",ring-grooves; pin-bore; crown-gas-face,Segun catalogo identidad OK; geometria termica PENDING
+rings_sets_4,instances x4 sets,"gap/tension/seating/desgaste por anillo; RIKEN STD vs proveedor",gas-path chamber-crankcase; oil-control-path,LEAKAGE_MODEL_S23
+cylinders_bores_4,features of block,"bore(z phi) reducido top/mid/bottom + ovalidad/conicidad/rayas; rugosidad/honing",gas-face; coolant-wall; oil-film,RESOLUTION_COMPATIBLE_SOLVER_S23
+bearings_main_rod,instances per journal,"clearance individual J1..J5 y por biela; superficie/T/film",oil-feed-branch per clearance,PRESSURE_LOCAL_NOT_GLOBAL_S22
+head_assembly,instance,"head-001 12100-P2A-000; planitud/deformacion/T; puertos/camara 34.6cc candidato",combustion-faces-x4; oil/coolant-passages; cam-supports,FLOW_GEOMETRY_PENDING_S12
+head_gasket,instance,"gasket-001 12251-P2J-004; espesor comprimido PENDING; mapa sellado por regiones (fuego/aceite/refrigerante)",seal-pairs chamber-oil-coolant-atmosphere,SEAL_CONDUCTANCE_S08_S23
+head_bolts_10,instances x10,"bolt-0001..0010 90008-PZ1-003; torque/angulo/lubricante/rosca/historia/ciclos por perno",block-thread; head-bearing-surface; joint-1..10,PRELOAD_MODEL_S08
+camshaft_rockers,instance,"cam-001; perfil lift-vs-CA PENDING (proxy A6 EXTRAPOLATED prohibido como OEM); lash frio candidato; rocker 1.60/1.80 candidato",belt-pulley; lobes-x8; rocker-pivots,PROFILE_PENDING_S11
+timing_belt_tensioner,instances,"belt-001 dientes/fase/tension/desgaste; tensioner-001",crank-pulley; cam-pulley 2:1; covers,MISTIMING_STATE_S11
+valves_guides_seats_16,instances x16,"valve-001..016 30/26 candidato; lift/lash/sellado/T por valvula; stem-seal-leakage separado",port-runner; seat; stem-guide; combustion-face,SEAT_LEAKAGE_S23
+intake_system,assembly,"filter/throttle/plenum/runners; V p T perdidas/ondas PENDING",ambient-in; valve-ports-x8; IACV-bypass; MAP-port,VOLUMES_PENDING_S12
+exhaust_system,assembly,"manifold/downpipe; p T backpressure/residuales",exhaust-valve-ports-x8; atmosphere-out; EGT-port,BACKPRESSURE_BC_S12
+fuel_system,assembly,"tank/pump/rail/regulator-16740-P2E-A01/injectors-x4 P2A-000; rail-p + MAP => dP real",battery-in; ECU-pulse-x4; spray-per-cylinder,SUPPLY_TEST_S13
+ignition_system,assembly,"battery/starter-wiring; coil/igniter/distributor-TD80U-vs-TD98U; plugs-cables-orden",ECU-dwell-trigger; HV-per-cylinder,SCHEDULER_S18
+ecu_P2E-like,controller,"P2E-like propia no-OEM; sync/boot/crank-synced/running/sync-lost/fallback; mapas referencia etiquetados",sensor-ins-xN; injector-out-x4; ignition-out; DTC-monitor-out,DECODER_S18
+sensors_wiring,channels,"MAP/TPS/IAT/ECT/O2/IACV/CKP-TDC-CYP/CKF?/VSS?/battery; R/corto/masa/intermitente por canal",physical-tap; wire; ECU-ADC-pin,SIGNAL_CHAIN_S19
+oil_system,network,"sump/pump-15100-P7A-013/relief/filter/galleries/branches-per-clearance; mu(T) nivel degradacion",crank-load; head-load; cooler?,GALLERIES_S22
+cooling_system,network,"jacket/pump-19200-P2A-A01/thermostat/radiator/fan; capacidades T separadas",combustion-heat-in; ambient-out; ECT-tap,THERMAL_NODES_S21
+pcv_crankcase,volume,"volumen/presion/ventilacion; blow-by in",ring-leak-in; oil-carry-out; intake-out,PCV_S23
+dyno_supports,fixture,"inercia/carga/freno; rampas; ambiente/aceite/coolant estabilizados",crank-coupling; torque-meter,DYNO_S28
+instruments,tools,"compresimetro/leak-down/bore-gauge/multimetro/scope/scan (S20/S24); lectura != ground-truth",probe-ports (no global omnisciente),PROBE_API_S20
+operations,history,"install/remove/connect/disconnect/torque/measure/pressurize; operacion atomica + hash prev/post",actor-tool-target-params-units-result-provenance,TRACE_S04_S05

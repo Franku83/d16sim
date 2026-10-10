@@ -1,0 +1,24 @@
+parameter_id,why_unknown,cheapest_acquisition,blocks_sprint
+d16y7.ecu.full_id_suffix,numero completo P2E + pinout + firmware por sufijo/mercado/transmision,servicio OEM + captura diagnostica + diagrama harness,S18/S19
+d16y7.ecu.maps_fuel_spark,ROM/dumps/XDF P2E inexistentes en comunidad,banco + reimplementacion observable P2E-like + pruebas,S18/S25
+d16y7.trigger.pattern_CKP_TDC_CYP,dientes/umbral/fase/polaridad/estrategia por ano exacto,osciloscopio 2 canales en motor stock + seccion manual,S17/S18
+d16y7.trigger.CKF_presence,presencia segun ano/configuracion,manual + inspeccion variante,S17
+d16y7.cam.profile_stock_Y7,duracion/alzada/LSA/centerline/lift-vs-CA,comparador + rueda graduada en arbol real (una tarde coste ~0),S11
+d16y7.head.flow_intake_OEM,CFM vs lift dP T con protocolo y estado asientos/valvulas,flow bench culata identificada,S12
+d16y7.head.flow_exhaust_OEM,sin dataset OEM; proxy comunitario P2A-06 no OEM,banco propio + medir gargantas adm/esc,S12
+d16y7.head.port_geometry,puertos/colector/plenum completos,escaneo/despiece/CAD propio + volumenes,S12
+d16y7.injector.Q_dP_P2A,Q(dP) + combustible referencia,banco inyectores P2A-000,S13
+d16y7.injector.deadtime_V_dP_P2A,deadtime vs V y dP (domina incertidumbre ralenti),banco + barriodo V/dP,S13
+d16y7.injector.R_coil_P2A,resistencia bobina P2A-000,medicion + spec,S13/S19
+d16y7.sensors.curves_MAP_IAT_ECT_TPS_O2,tablas R(T)/transferencia/wiring/condiciones closed-loop,datalog + diagramas OEM,S19
+d16y7.actuators.IACV_curve,curva duty-caudal + PWM 2/3 cables,banco + datalog,S19
+d16y7.lube.pump_map_Q_dP_T,mapa bomba + alivio,banco bomba o identificacion parametrica,S22
+d16y7.cooling.pump_thermostat_map,caudal/dP/T + apertura/histeresis,caracterizacion,S21
+d16y7.friction.FMEP_vs_RPM_T_load,FMEP D16Y7,motoring dyno o identificacion inversa amplia,S14/S25
+d16y7.combustion.p_theta,presion indicada por angulo,transductor in-cylinder + encoder,S10/S25
+d16y7.combustion.burn_model_coeffs,Wiebe/Woschni/Chen-Flynn propios,p(theta) + campana adquisicion,S10/S25
+d16y7.dyno.stock_curve_completa,torque vs RPM con condiciones/correcciones,dyno OEM sano sin swaps + CSV bruto,S25/S28
+d16y7.masses.inertias, piston/biela/ciguenal/volante/poleas,pesaje + pendulo/inercia + CAD,S06/S14
+d16y7.fastener.torque_sequence_oem,torque/secuencia/angulos por perno + condiciones,pagina manual exacta + herramienta/rosca,S08
+d16y7.materials.fatigue_wear,desgaste aros/honing/fatiga bielas/pernos,ensayos durabilidad/materiales,S26/S27
+d16y7.sealing.clamp_distribution,clamp/contact pressure culata-junta-bloque,FE offline + metrologia,S08/S23

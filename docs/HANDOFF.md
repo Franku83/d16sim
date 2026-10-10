@@ -1,8 +1,8 @@
 # HANDOFF — punto de entrada al siguiente agente
 
-Fecha: 2026-10-10 · Sprint activo: **S00 (EN_CURSO, pendiente gate)**.
-Siguiente autorizado: **S01 solo tras aprobar S00**. Prohibido adelantar
-física/UI.
+Fecha: 2026-10-10 · Sprints: **S00 APROBADO, S01 APROBADO**.
+Siguiente en batch: **S02 BLOQUEADO por decisión de licencia del
+propietario** (ver abajo). Prohibido adelantar física/UI sin licencia.
 
 ## Estado científico/arquitectónico actual
 
@@ -25,9 +25,12 @@ física/UI.
 
 ## Blockers
 
-1. Gate S00 sin verificación por colaborador independiente.
-2. Licencia sin decidir (`docs/LICENSE_STATUS.md`).
-3. S01 bloqueado hasta gate S00.
+1. ~~Gate S00 sin verificación~~ — resuelto: S00 APROBADO por propietario
+   2026-10-10 (sujeto a consistencia; verificada en S01 sin hallazgos).
+2. **Licencia sin decidir (`docs/LICENSE_STATUS.md`) — BLOQUEA S02.**
+   S02 crea código (workspace Rust + CLI). No se creará ningún crate ni
+   `LICENSE` sin decisión explícita del propietario.
+3. S01 APROBADO 2026-10-10 (gate en `docs/sprints/S01.md`).
 
 ## Roles y reglas de cambio (S00)
 
@@ -51,9 +54,15 @@ ls docs/foundation.md docs/SPRINTS.md docs/PROGRESS.md docs/HANDOFF.md
 cat docs/sprints/S00.md
 ```
 
-## Brief S01 (NO iniciar hasta gate S00)
+## Brief S01 (COMPLETADO)
 
-Trabajar **solo** en S01 tras aprobación: fijar única configuración D16Y7
-(año/mercado/modelo/transmisión/ECU), auditar OEM por sección, diccionario
-tipado con página/edición/estado/incertidumbre, matriz
-`CONFIRMED / DISPUTED / UNKNOWN`, protocolo de adquisición. Sin física.
+S01 APROBADO 2026-10-10. Ficha en `docs/variants/`, catálogos en
+`data/d16y7/`. Todo número sigue PENDING/DISPUTED/IDENTITY_ONLY.
+
+## Brief S02 (BLOQUEADO — requiere decisión del propietario)
+
+S02 crea el primer código (workspace Rust, `rust-toolchain.toml`, CLI
+`init/validate-data/run-scenario/replay/report`, manifiestos, CI
+Linux/Windows). **No iniciar sin licencia decidida.** Opciones en
+`docs/LICENSE_STATUS.md`. Tras la decisión: pin de toolchain, lockfile,
+lints, `THIRD_PARTY_NOTICES.md`, sin física.
