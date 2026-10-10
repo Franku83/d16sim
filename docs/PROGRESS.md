@@ -94,3 +94,18 @@ Solo hechos constatables; sin cifras improvisadas.
   lints (`traces=dd830da7…`).
 - Gate S04: PASS — persistencia + trazabilidad verificadas; sin física.
 - Deuda: compatibilidad fina en S07; `mates_with` sin chequeo cruzado.
+
+## 2026-10-10 · S05 · Eventos, snapshots y replay (APROBADO)
+
+- `simulation::history` (`HistoryEvent` + orden total + `SnapshotFile`
+  inmutable/versionado + `replay_history` + generador LCG); `d16sim
+  history-demo` (100 secuencias, 0 divergencias; first `b2141ef5…`,
+  last `af7eb4c1…`; `events.jsonl` idéntico entre invocaciones
+  `d600541e…`).
+- Tests: 3 passed historia (100×40 ops por dos caminos con save/load
+  intermedio) + resto workspace OK (13 objetivos ok, 0 fallos). Sin
+  `std::time`/rng en `src/` (grep). `fmt` OK; clippy 0 errores.
+- Gate S05: PASS — 0 divergencias estructurales; tolerancias numéricas N/A
+  (sin física) documentado.
+- Deuda: migraciones de esquema futuras (stub fail-closed, sin migrador
+  v0→v1 porque v0 no existe); CI Windows sin ejecutar.

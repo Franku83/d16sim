@@ -57,6 +57,13 @@ enum Command {
         #[arg(long)]
         out: PathBuf,
     },
+    /// Demostración reproducible de historia determinista (S05).
+    HistoryDemo {
+        #[arg(long)]
+        out: PathBuf,
+        #[arg(long, default_value_t = 100)]
+        sequences: u64,
+    },
 }
 
 fn run() -> Result<(), EngineError> {
@@ -144,6 +151,7 @@ fn run() -> Result<(), EngineError> {
         }
         Command::UnitsDemo => units_demo(),
         Command::AssemblyDemo { out } => assembly_demo(&out),
+        Command::HistoryDemo { out, sequences } => history_demo(&out, sequences),
     }
 }
 
@@ -288,5 +296,68 @@ fn units_demo() -> Result<(), EngineError> {
         lambda.as_value()
     );
     println!("  table(1.5) = {mid:.3}");
+    Ok(())
+}
+
+/// Demostración S05: N secuencias controladas por dos caminos
+/// (directo vs snapshot+recarga a mitad) sin divergencia estructural.
+/// Escribe `events.jsonl` + un snapshot de ejemplo. Sin reloj del sistema.
+fn history_demo(out: &std::path::Path, sequences: u64) -> Result<(), EngineError> {
+    use simulation::{generate_sequence, replay_history, SnapshotFile};
+
+    std::fs::create_dir_all(out).map_err(|e| EngineError::Io {
+        path: out.display().to_string(),
+        source: e,
+    })?;
+    let mut divergences = 0u64;
+    let mut first_hash = String::new();
+    let mut last_hash = String::new();
+    let n = sequences.min(10_000);
+    for seed in 0..n {
+        let events = generate_sequence(seed, 40, 0.01);
+        let mid = events.len() / 2;
+        let mut direct = assembly::d16y7::bare_block_with_catalog("history-demo");
+        let outcome = replay_history(&mut direct, &events)
+            .map_err(|e| EngineError::SchemaValidation(format!("seed {seed} direct: {e}")))?;
+        let mut via = assembly::d16y7::bare_block_with_catalog("history-demo");
+        replay_history(&mut via, &events[..mid])
+            .map_err(|e| EngineError::SchemaValidation(format!("seed {seed} head: {e}")))?;
+        let snap = SnapshotFile::capture(&via);
+        let restored = snap
+            .restore_graph()
+            .map_err(|e| EngineError::SchemaValidation(format!("seed {seed} restore: {e}")))?;
+        let mut restored = restored;
+        let tail = replay_history(&mut restored, &events[mid..])
+            .map_err(|e| EngineError::SchemaValidation(format!("seed {seed} tail: {e}")))?;
+        if direct.state_hash() != tail.final_hash {
+            divergences += 1;
+        }
+        if seed == 0 {
+            first_hash = outcome.final_hash.clone();
+            // Artefactos de ejemplo de la seed 0.
+            let mut jsonl = String::new();
+            for e in &events {
+                jsonl.push_str(&canonical_json(e));
+                jsonl.push('\n');
+            }
+            std::fs::write(out.join("events.jsonl"), jsonl).map_err(|e| EngineError::Io {
+                path: out.join("events.jsonl").display().to_string(),
+                source: e,
+            })?;
+            snap.save_new(&out.join("snapshot-example.json"))?;
+        }
+        last_hash = outcome.final_hash;
+    }
+    println!("history-demo:");
+    println!("  sequences     : {n}");
+    println!("  divergences   : {divergences}");
+    println!("  first hash    : {first_hash}");
+    println!("  last hash     : {last_hash}");
+    if divergences != 0 {
+        return Err(EngineError::ReplayMismatch {
+            expected: "zero divergences".to_owned(),
+            actual: divergences.to_string(),
+        });
+    }
     Ok(())
 }

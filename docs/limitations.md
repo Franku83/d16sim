@@ -20,6 +20,15 @@ hay código de física.
   dyno stock completo, mapas P2E, deadtime P2A-000, FMEP D16Y7).
 - Toda UI/3D (Tauri/Three.js/WASM). Prohibida en S00 por brief.
 
+## Estado tras S01–S05 (sin cambios físicos: sigue vigente lo anterior)
+
+- S01 fijó variante y ficha con todo número en PENDING/DISPUTED.
+- S02–S05 añaden infraestructura (toolchain, runner, unidades, grafo,
+  historia) sin ningún solver: `physics::closed_cycle_placeholder`
+  retorna `PhysicsNotImplemented(S09)` y `d16sim physics-status` lo
+  demuestra. Las trazas/demos marcadas `runner_plumbing_only` no son
+  resultados de motor.
+
 ## Dominios de extrapolación (recordatorio, no autorización)
 
 - Proxy de leva D16A6, ratio I/E, Q(ΔP), deadtime analógico CBR600RR,

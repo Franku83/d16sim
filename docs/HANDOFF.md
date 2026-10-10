@@ -1,7 +1,7 @@
 # HANDOFF — punto de entrada al siguiente agente
 
-Fecha: 2026-10-10 · Sprints: **S00–S04 APROBADOS**.
-Siguiente en batch: **S05** (eventos, snapshots, replay, determinismo).
+Fecha: 2026-10-10 · Sprints: **S00–S05 APROBADOS (batch completo)**.
+**S06 NO iniciado: requiere aprobación explícita del propietario.**
 
 ## Estado científico/arquitectónico actual
 
@@ -28,9 +28,10 @@ Siguiente en batch: **S05** (eventos, snapshots, replay, determinismo).
    2026-10-10.
 2. ~~Licencia sin decidir~~ — resuelto: Apache-2.0 solo código propio
    (propietario 2026-10-10); `LICENSE` + `THIRD_PARTY_NOTICES.md` creados.
-3. S01–S04 APROBADOS 2026-10-10 (S02: clon fresco + replay MATCH;
-   S03: 27 tests; S04: reload match + log trazable). Deuda: CI Windows sin
-   ejecutar; `trybuild` diferido; compatibilidad fina en S07.
+3. S01–S05 APROBADOS 2026-10-10 (S02: clon fresco + replay MATCH;
+   S03: 27 tests; S04: reload match + log trazable; S05: 0 divergencias).
+   Deuda: CI Windows sin ejecutar; `trybuild` diferido; compatibilidad
+   fina en S07; migrador de esquemas futuro.
 
 ## Roles y reglas de cambio (S00)
 
@@ -73,10 +74,13 @@ Tipos SI + `Table1` + `dimensions.md` + `units-demo`. Ver
 Crate `assembly` + catálogo semilla + `assembly-demo`. Ver
 `docs/sprints/S04.md`.
 
-## Brief S05 (EN_CURSO en batch)
+## Brief S05 (APROBADO 2026-10-10)
 
-Evento de tiempo físico con orden total determinístico; savefiles
-inmutables/versionados con `EngineState` migrable; log append-only +
-snapshots periódicos; replay sin reloj/aleatoriedad del sistema;
-hash/checksum canónico; property tests de operaciones + recarga. Gate:
-100 secuencias controladas sin divergencia estructural.
+`simulation::history` + `history-demo` (0 divergencias). Ver
+`docs/sprints/S05.md`.
+
+## Brief S06 (NO iniciar sin aprobación explícita)
+
+Cinemática biela-manivela (S03–S05 como base): posiciones exactas en el
+modelo geométrico declarado, PMS/PMI, 720°, masas/inercia separadas de
+topología, CLI `kinematics`, tests analíticos. Sin RPM simuladas.

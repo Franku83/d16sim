@@ -312,6 +312,7 @@ dependencies = [
 name = "simulation"
 version = "0.1.0"
 dependencies = [
+ "assembly",
  "engine-types",
  "serde",
  "serde_json",

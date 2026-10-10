@@ -13,7 +13,7 @@ Ningún sprint S01+ está iniciado.
 | S02 | S00 | Toolchain, CI, runner headless | Segundo equipo clona y obtiene mismo hash bajo entorno documentado | **APROBADO** (2026-10-10; clon fresco + replay MATCH; ver `docs/sprints/S02.md`) |
 | S03 | S02 | Unidades, constantes, álgebra | Compilador/validadores impiden mezclas dimensionales | **APROBADO** (2026-10-10; 27 tests; ver `docs/sprints/S03.md`) |
 | S04 | S01–S03 | Catálogo estructural e instancias | Grafos persistentes y operaciones trazables; sin simular física | **APROBADO** (2026-10-10; reload match; ver `docs/sprints/S04.md`) |
-| S05 | S02–S04 | Eventos, snapshots, replay | 100 secuencias controladas sin divergencia estructural | **EN_CURSO** |
+| S05 | S02–S04 | Eventos, snapshots, replay | 100 secuencias controladas sin divergencia estructural | **APROBADO** (2026-10-10; 0 divergencias; ver `docs/sprints/S05.md`) |
 | S06 | S03–S05 | Cinemática cigüeñal/pistón/biela | Conservación geométrica + tests analíticos; sin RPM simuladas | PENDIENTE |
 | S07 | S04,S06 | Herramientas y contactos | Sin daño sin material/criterio; errores detectables por estado | PENDIENTE |
 | S08 | S01,S03–S05,S07 | Pernos, precarga, junta | Torque→precarga bajo hipótesis; lubricante cambia precarga; calibración pendiente declarada | PENDIENTE |
@@ -57,5 +57,6 @@ ecuaciones con animaciones. Ver foundation §16. Todos PENDIENTE.
 
 ## Regla de avance
 
-S00–S04 APROBADOS. Siguiente en batch: S05. Gates universales §12.3 +
+S00–S05 APROBADOS. Batch S01–S05 completo. S06 requiere aprobación
+explícita del propietario (no iniciar). Gates universales §12.3 +
 `docs/definition-of-done.md` aplican.
