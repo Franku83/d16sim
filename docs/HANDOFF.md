@@ -1,7 +1,7 @@
 # HANDOFF — punto de entrada al siguiente agente
 
-Fecha: 2026-10-10 · Sprints: **S00–S05 APROBADOS (batch completo)**.
-**S06 NO iniciado: requiere aprobación explícita del propietario.**
+Fecha: 2026-10-10 · Sprints: **S00–S06 APROBADOS (batch S06–S10)**.
+Siguiente: **S07**. **S11 prohibido sin autorización.**
 
 ## Estado científico/arquitectónico actual
 
@@ -28,10 +28,9 @@ Fecha: 2026-10-10 · Sprints: **S00–S05 APROBADOS (batch completo)**.
    2026-10-10.
 2. ~~Licencia sin decidir~~ — resuelto: Apache-2.0 solo código propio
    (propietario 2026-10-10); `LICENSE` + `THIRD_PARTY_NOTICES.md` creados.
-3. S01–S05 APROBADOS 2026-10-10 (S02: clon fresco + replay MATCH;
-   S03: 27 tests; S04: reload match + log trazable; S05: 0 divergencias).
-   Deuda: CI Windows sin ejecutar; `trybuild` diferido; compatibilidad
-   fina en S07; migrador de esquemas futuro.
+3. S01–S06 APROBADOS 2026-10-10 (S05: 0 divergencias; S06: 8 tests
+   analíticos). Deuda: CI Windows sin ejecutar; `trybuild` diferido;
+   compatibilidad fina en S07; offset de bulón; masas/inercia en S14.
 
 ## Roles y reglas de cambio (S00)
 
@@ -79,8 +78,14 @@ Crate `assembly` + catálogo semilla + `assembly-demo`. Ver
 `simulation::history` + `history-demo` (0 divergencias). Ver
 `docs/sprints/S05.md`.
 
-## Brief S06 (NO iniciar sin aprobación explícita)
+## Brief S06 (APROBADO 2026-10-10)
 
-Cinemática biela-manivela (S03–S05 como base): posiciones exactas en el
-modelo geométrico declarado, PMS/PMI, 720°, masas/inercia separadas de
-topología, CLI `kinematics`, tests analíticos. Sin RPM simuladas.
+Crate `kinematics` + CLI + ADR-014. Ver `docs/sprints/S06.md`.
+
+## Brief S07 (siguiente en batch autorizado)
+
+Herramientas y contactos geométricos: tipos herramienta/operación,
+superficies de interferencia simplificadas (pistón-válvula con lift
+impuesto, biela-bloque, pernos), imposible vs destructivo, reporte con
+penetración y `needs_material_model` sin daño inventado. Gate: ningún
+daño sin material/criterio activo.

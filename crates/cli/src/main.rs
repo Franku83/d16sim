@@ -64,6 +64,15 @@ enum Command {
         #[arg(long, default_value_t = 100)]
         sequences: u64,
     },
+    /// Cinemática biela-manivela por cilindro (S06, preset ilustrativo).
+    Kinematics {
+        #[arg(long, default_value_t = 360.0)]
+        theta720_deg: f64,
+        #[arg(long, default_value_t = 750.0)]
+        rpm: f64,
+        #[arg(long, default_value_t = 0)]
+        sweep: u32,
+    },
 }
 
 fn run() -> Result<(), EngineError> {
@@ -152,6 +161,11 @@ fn run() -> Result<(), EngineError> {
         Command::UnitsDemo => units_demo(),
         Command::AssemblyDemo { out } => assembly_demo(&out),
         Command::HistoryDemo { out, sequences } => history_demo(&out, sequences),
+        Command::Kinematics {
+            theta720_deg,
+            rpm,
+            sweep,
+        } => kinematics_cmd(theta720_deg, rpm, sweep),
     }
 }
 
@@ -358,6 +372,56 @@ fn history_demo(out: &std::path::Path, sequences: u64) -> Result<(), EngineError
             expected: "zero divergences".to_owned(),
             actual: divergences.to_string(),
         });
+    }
+    Ok(())
+}
+
+/// Comando S06: serie cinemática `x,v,a,V,dVdθ` por cilindro.
+/// `--sweep N` imprime N filas sobre 720°; si es 0, una fila al ángulo dado.
+/// Preset ilustrativo (no OEM): ver `GeometryPack::illustrative_d16_like`.
+fn kinematics_cmd(theta720_deg: f64, rpm: f64, sweep: u32) -> Result<(), EngineError> {
+    use kinematics::{cylinder_local_angle, phases::CylinderId, GeometryPack};
+    use units::mechanics::Rpm;
+
+    let geom = GeometryPack::illustrative_d16_like()
+        .map_err(|e| EngineError::SchemaValidation(e.to_string()))?;
+    let rpm_v = Rpm::from_rpm(rpm).map_err(|e| EngineError::SchemaValidation(e.to_string()))?;
+    let omega = rpm_v.to_rad_per_s().as_rad_per_s();
+    if !(0.0..=720.0).contains(&theta720_deg) {
+        return Err(EngineError::SchemaValidation(format!(
+            "theta720_deg {theta720_deg} outside [0, 720]"
+        )));
+    }
+    let cyls = [
+        CylinderId::Cyl1,
+        CylinderId::Cyl2,
+        CylinderId::Cyl3,
+        CylinderId::Cyl4,
+    ];
+    println!("# illustrative preset ({})", geom.source_note());
+    println!("# global_deg,cyl,local_deg,stroke,x_mm,v_m_s,a_m_s2,V_cm3,dVdtheta_cm3_per_deg");
+    let rows: Vec<f64> = if sweep == 0 {
+        vec![theta720_deg]
+    } else {
+        (0..sweep)
+            .map(|i| f64::from(i) * 720.0 / f64::from(sweep))
+            .collect()
+    };
+    for g in rows {
+        for cyl in cyls {
+            let local = cylinder_local_angle(g, cyl);
+            let crank = kinematics::phases::crank_angle_for_piston(local);
+            let st = geom.state(crank.to_radians(), omega);
+            let stroke = kinematics::phases::stroke_at(local);
+            println!(
+                "{g:.3},{cyl:?},{local:.3},{stroke:?},{:.6},{:.6},{:.3},{:.4},{:.6}",
+                st.x_m * 1_000.0,
+                st.v_m_s,
+                st.a_m_s2,
+                st.v_m3 * 1e6,
+                st.dvdtheta_m3_per_rad * 1e6 * std::f64::consts::PI / 180.0,
+            );
+        }
     }
     Ok(())
 }

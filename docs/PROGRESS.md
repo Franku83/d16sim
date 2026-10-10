@@ -109,3 +109,15 @@ Solo hechos constatables; sin cifras improvisadas.
   (sin física) documentado.
 - Deuda: migraciones de esquema futuras (stub fail-closed, sin migrador
   v0→v1 porque v0 no existe); CI Windows sin ejecutar.
+
+## 2026-10-10 · S06 · Cinemática biela-manivela (APROBADO)
+
+- Crate `kinematics` (geometría analítica + fases 720° + preset
+  ilustrativo); `d16sim kinematics` (Cyl1 TDC: V=47.3343 cm³=Vc;
+  BDC: 444.9421 cm³; v=0 en puntos muertos); ADR-014;
+  `docs/physics/kinematics.md`; H-S06-01..04.
+- Tests: 8 passed (posiciones, simetría, FD4, límites λ/CR, fases,
+  compañeras, escalado ω). 1 error de tipos en test corregido.
+- Gate S06: PASS — verificación matemática, no validación; ω es
+  parámetro, sin RPM simuladas.
+- Deuda: offset de bulón, masas/inercia (S14), contacto (S07/S11).
