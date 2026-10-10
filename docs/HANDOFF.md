@@ -1,7 +1,7 @@
 # HANDOFF — punto de entrada al siguiente agente
 
-Fecha: 2026-10-10 · Sprints: **S00–S18 APROBADOS (batch S16–S20)**.
-Siguiente: **S19**. **S21 prohibido sin autorización.**
+Fecha: 2026-10-10 · Sprints: **S00–S19 APROBADOS (batch S16–S20)**.
+Siguiente: **S20**. **S21 prohibido sin autorización.**
 
 ## Estado científico/arquitectónico actual
 
@@ -32,9 +32,9 @@ Siguiente: **S19**. **S21 prohibido sin autorización.**
    2026-10-10.
 2. ~~Licencia sin decidir~~ — resuelto: Apache-2.0 solo código propio
    (propietario 2026-10-10); `LICENSE` + `THIRD_PARTY_NOTICES.md` creados.
-3. S01–S18 APROBADOS 2026-10-10 (S17: GENERIC_TRIGGER; S18: req
-   14.0/eff 9.5 + DTC por persistencia). Deuda: sensores analógicos y
-   cableado en S19; estrategia OEM.
+3. S01–S19 APROBADOS 2026-10-10 (S18: DTC por persistencia; S19:
+   ECT/MAP falsos cambian acción sin tocar físico). Deuda: instrumentos
+   de taller en S20; curvas OEM; closed-loop.
 
 ## Roles y reglas de cambio (S00)
 
@@ -139,10 +139,14 @@ Ver `docs/sprints/S17.md`.
 
 Crate `ecu` + `ecu-demo` + ADR-025. Ver `docs/sprints/S18.md`.
 
-## Brief S19 (siguiente en batch autorizado)
+## Brief S19 (APROBADO 2026-10-10)
 
-Sensores analógicos y cableado: `SensorChannel` con transferencia,
-referencia, retardo, ruido, offset, deriva y saturación (MAP/IAT/ECT/
-TPS/O2/IACV según variante); conectores con R/abierto/corto/intermitente;
-ADC + filtros; discrepancia real vs estimado. Gate: ECT falso cambia ECU
-sin cambiar T física; MAP falso no cambia p real.
+Cadena sensorial + `sensor-demo` + ADR-026. Ver `docs/sprints/S19.md`.
+
+## Brief S20 (siguiente en batch autorizado)
+
+Herramientas diagnósticas sin pistas automáticas: sondas con acceso
+físico/polaridad/masa, multímetro con impedancia, osciloscopio con
+timebase/muestreo/trigger, scanner solo con lo que la ECU genera,
+manual indexado. Gate: sin panel secreto; dos causas, una lectura:
+prueba complementaria obligatoria.

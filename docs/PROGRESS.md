@@ -297,3 +297,15 @@ Solo hechos constatables; sin cifras improvisadas.
   inhibición/degradado, req vs eff, persistencia/curación).
 - Gate S18: PASS — causalidad señal→actuación; solicitado vs efectivo.
 - Deuda: estrategia OEM, closed-loop/trims, IACV/PWM, P0xxx, transitorios.
+
+## 2026-10-10 · S19 · Sensores y cableado (APROBADO)
+
+- `electrical::{sensors,wiring}` (canal + transductores + cable con
+  fallos + ADC/filtro + monitor REF-* + acción ECU testeable);
+  `d16sim sensor-demo` (sano/falso-frío/abierto/corto con físicos
+  fijos); ADR-026; `docs/physics/sensors_wiring.md`; H-S19-01..04.
+- Tests: 12 passed (escalón 63%, ruido seed, NTC/O2, cable, monitor,
+  2 de gate: ECT y MAP falsos cambian acción sin tocar físico).
+- Gate S19: PASS — separación por construcción + demos + tests.
+- Deuda: curvas OEM, heater/retardo O2, PWM IACV, closed-loop, Bode
+  completo, corrosión/diafonía.

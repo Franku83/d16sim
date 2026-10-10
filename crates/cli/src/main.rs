@@ -156,6 +156,11 @@ enum Command {
         #[arg(long, default_value_t = 0)]
         fault: u8,
     },
+    /// Cadena sensorial: señal/lectura/acción ECU (S19, sin termodinámica).
+    SensorDemo {
+        #[arg(long, default_value = "ect_false_cold")]
+        case: String,
+    },
     /// Dinámica de cigüeñal con traza motored (S14, ilustrativo).
     CrankDynamics {
         #[arg(long, default_value_t = 750.0)]
@@ -294,6 +299,7 @@ fn run() -> Result<(), EngineError> {
         Command::EngineRun { scenario, seconds } => engine_run_cmd(&scenario, seconds),
         Command::TriggerWaveform { rpm, fault } => trigger_waveform_cmd(rpm, fault),
         Command::EcuDemo { rpm, fault } => ecu_demo_cmd(rpm, fault),
+        Command::SensorDemo { case } => sensor_demo_cmd(&case),
         Command::CrankDynamics { rpm0, seconds } => crank_dynamics_cmd(rpm0, seconds),
         Command::ColdCrank => cold_crank_cmd(),
     }
@@ -1213,5 +1219,114 @@ fn ecu_demo_cmd(rpm: f64, fault: u8) -> Result<(), EngineError> {
     for line in plan.log.iter().take(4) {
         println!("  log: {line}");
     }
+    Ok(())
+}
+
+/// Transductor ECT puro NTC (duplica la transferencia del canal para poder
+/// inyectar el cable en medio de la cadena: documentado).
+fn ect_transducer_v(celsius: f64) -> f64 {
+    let t_k = celsius + 273.15;
+    let r = 2000.0 * (3435.0 * (1.0 / t_k - 1.0 / 298.15)).exp();
+    5.0 * r / (2000.0 + r)
+}
+
+/// Transductor MAP puro (20–250 kPa → 0.2–4.8 V, ilustrativo).
+fn map_transducer_v(kpa: f64) -> f64 {
+    0.2 + (kpa - 20.0) * (4.8 - 0.2) / (250.0 - 20.0)
+}
+
+/// Comando S19: cadena sensorial con casos de fallo. La columna de acción
+/// ECU (enriquecimiento por ECT, carga por MAP) cambia SIN tocar ningún
+/// estado termodinámico (físicos fijos en el comando): el gate se demuestra
+/// por construcción + tests.
+fn sensor_demo_cmd(case: &str) -> Result<(), EngineError> {
+    use electrical::{RangeMonitor, SensorChannel, Transfer, Wire, WireFault};
+
+    let err = |e: String| EngineError::SchemaValidation(e);
+    // Físicos reales (fijos, termodinámicos, NO tocados por este comando).
+    let ect_real_c = 90.0;
+    let map_real_kpa = 35.0;
+
+    let mut ect = SensorChannel::new(
+        "ECT",
+        Transfer::Ntc {
+            r25_ohm: 2000.0,
+            beta_k: 3435.0,
+            pullup_ohm: 2000.0,
+        },
+        5.0,
+        0.5,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        5.0,
+        10,
+        11,
+    )
+    .map_err(|e| err(e.to_string()))?;
+    let mut map = SensorChannel::new(
+        "MAP",
+        Transfer::Linear {
+            a_v_per_unit: (4.8 - 0.2) / (250.0 - 20.0),
+            b_v: 0.2 - 20.0 * (4.8 - 0.2) / (250.0 - 20.0),
+        },
+        5.0,
+        0.005,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        5.0,
+        10,
+        12,
+    )
+    .map_err(|e| err(e.to_string()))?;
+    // Fallo por estado del cable/transductor según el caso.
+    let mut ect_bias_c = 0.0;
+    let mut wire_ect = Wire::new(100.0, 1e6, 5.0, WireFault::Ok).map_err(|e| err(e.to_string()))?;
+    let mut wire_map = Wire::new(100.0, 1e6, 5.0, WireFault::Ok).map_err(|e| err(e.to_string()))?;
+    match case {
+        "healthy" => {}
+        // ECT miente frío: sesgo del transductor (−130 °C equivalentes).
+        "ect_false_cold" => {
+            ect_bias_c = -130.0;
+        }
+        "map_open" => {
+            wire_map =
+                Wire::new(100.0, 1e6, 5.0, WireFault::Open).map_err(|e| err(e.to_string()))?;
+        }
+        "map_shorted" => {
+            wire_map = Wire::new(100.0, 1e6, 5.0, WireFault::ShortToSupply)
+                .map_err(|e| err(e.to_string()))?;
+        }
+        _ => return Err(err(format!("unknown case {case}"))),
+    }
+
+    // Cadena completa por paso: físico → transductor → cable → ADC/filtro.
+    let mut ect_r = 0.0;
+    let mut map_r = 0.0;
+    for _ in 0..100 {
+        let v_ect = wire_ect.voltage_at_adc(ect_transducer_v(ect_real_c + ect_bias_c));
+        ect_r = ect.step(0.01, 0.0, Some(v_ect));
+        let v_map = wire_map.voltage_at_adc(map_transducer_v(map_real_kpa));
+        map_r = map.step(0.01, 0.0, Some(v_map));
+    }
+    // Acción ECU ilustrativa (NO toca termodinámica): enriquecimiento por
+    // ECT leída + carga por MAP leído (funciones del crate, testeadas).
+    use electrical::{load_from_map, warmup_enrich_from_ect};
+    let enrich = warmup_enrich_from_ect(ect_r);
+    let load_est = load_from_map(map_r);
+    let mut mon =
+        RangeMonitor::new("REF-MAP-RANGE", 0.2, 4.8, 3, 2).map_err(|e| err(e.to_string()))?;
+    for _ in 0..3 {
+        mon.evaluate(map_r);
+    }
+    println!("sensor-demo case={case} (thermo untouched: ECT=90C MAP=35kPa):");
+    println!("  ect_reading_V       : {ect_r:.3}");
+    println!("  map_reading_V       : {map_r:.3}");
+    println!("  ecu_enrich_factor   : {enrich:.2} (from ECT reading only)");
+    println!("  ecu_load_est        : {load_est:.3} (from MAP reading only)");
+    println!("  map_monitor_active  : {} (REF-MAP-RANGE)", mon.active);
     Ok(())
 }

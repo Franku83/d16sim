@@ -139,3 +139,12 @@ futuros: toda aproximación pasa por aquí + `ModelCard` (§11.4).
 | H-S18-02 | Sinc CYP-gated 24+1 con respaldo 4+1 | S18 | TRIG + diseño | Diagrama OEM |
 | H-S18-03 | Latencia fija 1 ms ilustrativa; 400 rpm clasifica | S18 | Supuesto declarado | Medición ECU |
 | H-S18-04 | Dead-reckoning entre flancos a rpm constante | S18 | Supuesto declarado | Transitorios medidos |
+
+## Registro S19 (sensores y cableado)
+
+| ID | Hipótesis | Dominio | Fuente | Invalida si |
+|---|---|---|---|---|
+| H-S19-01 | Transferencias ilustrativas, no curvas OEM | S19 | Supuesto declarado | Tablas OEM/banco |
+| H-S19-02 | NTC con pull-up 2k/2k y B=3435 ilustrativos | ECT S19 | Orden típico | Curva ECT OEM |
+| H-S19-03 | O2 narrowband como conmutador con histéresis futura | S19 | Física de sensor | Dinámica con heater |
+| H-S19-04 | Acción ECU sin camino a termodinámica (tipos) | S19 | Decisión ADR-026 | — |
