@@ -1,6 +1,6 @@
 # HANDOFF — punto de entrada al siguiente agente
 
-Fecha: 2026-10-10 · Sprints: **S00–S28 APROBADOS (batch S26–S30 en curso)**.
+Fecha: 2026-10-10 · Sprints: **S00–S29 APROBADOS (batch S26–S30 en curso)**.
 **S31 prohibido sin autorización explícita.**
 
 ## Estado científico/arquitectónico actual
@@ -212,7 +212,11 @@ Dyno auditable: freno con inercia/carga, rampas, pérdidas, ambiente,
 potencia al freno vs indicada vs pérdidas. Gate: HP desde torque
 integrado, nunca circular desde spec. Dep: S14–S27.
 
-## Brief S29 (AUTORIZADO, batch S26–S30)
+## Brief S29 (APROBADO 2026-10-10)
+
+Crate `adversarial` + `adversarial-demo` + ADR-036. Ver `docs/sprints/S29.md`.
+
+## Brief S29-histórico (reconciliación Fase 0, contenido vigente arriba)
 
 Suite adversarial: pares de fallos, invariantes, no-linealidad compuesta,
 observabilidad, conmutatividad, Monte Carlo con seed fija. Gate: cada

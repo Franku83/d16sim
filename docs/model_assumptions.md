@@ -235,3 +235,13 @@ futuros: toda aproximación pasa por aquí + `ModelCard` (§11.4).
 | H-S28-03 | Covered exige residuo ≤10 % y deriva ≤2 % | S28 | Decisión ADR-035 | Banco real |
 | H-S28-04 | Punto carga-8 no estabiliza (rechazado, no ajustado) | S28 | Hallazgo + S29 | Investigación S29 |
 | H-S28-05 | Mapa válido 400–5500 rpm; resto extrapolado | S28 | Proxy S11 + fricción | Datos C1 |
+
+## Registro S29 (suite adversarial)
+
+| ID | Hipótesis | Dominio | Fuente | Invalida si |
+|---|---|---|---|---|
+| H-S29-01 | Fallos como deltas; sin fault_count estructural | S29 | Diseño ADR-036 | Revisión |
+| H-S29-02 | Mapeo restrict≈baja compresión, rich≈inyector (proxy) | S29 | Supuesto declarado | Blow-by S30+ |
+| H-S29-03 | Interacciones emergentes ilustrativas, no predictivas | S29 | Resultados demo | Datos C1 |
+| H-S29-04 | MC xorshift documentado (no eventos sin justificar) | S29 | Diseño | RNG auditado |
+| H-S29-05 | Carga-8/S28 como inestabilidad candidata sin veredicto | S29 | Hallazgo | Investigación |

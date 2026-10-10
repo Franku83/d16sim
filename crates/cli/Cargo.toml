@@ -30,6 +30,7 @@ calibration = { path = "../calibration" }
 wear = { path = "../wear" }
 damage = { path = "../damage" }
 dyno = { path = "../dyno" }
+adversarial = { path = "../adversarial" }
 kinematics = { path = "../kinematics" }
 thermo = { path = "../thermo" }
 valvetrain = { path = "../valvetrain" }

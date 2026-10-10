@@ -444,3 +444,14 @@ detención. Batch S26–S30 autorizado; S31 prohibido.
   cierre 1e-5 (muestreo/ inestabilidad) → rechazado, no ajustado.
 - Gate S28: PASS — potencia desde τ integrado; cero spec circular.
 - Deuda: dyno real C1, corrección certificada, inestabilidad (S29).
+
+## 2026-10-10 · S29 · Suite adversarial (APROBADO, ilustrativo)
+
+- Crate `adversarial` (10 deltas + 4 pares + MC con seed + top);
+  `adversarial-demo` (interacciones +0/+132/−0/−71, top-5 con hash);
+  ADR-036; `docs/physics/adversarial.md`; H-S29-01..05.
+- Tests: 4 passed (cierres bajo pares, enmascaramiento + conmuta,
+  observabilidad, MC reproducible). Correcciones: starter motora sin
+  chispa (no 0); hash canónico ordenado.
+- Gate S29: PASS — síntomas desde ecuaciones; cero gobierno de fallos.
+- Deuda: blow-by motor (par junta parcial), carga-8, N pequeños, C1.

@@ -48,7 +48,7 @@ Fuente normativa: `docs/foundation.md` §14–§16. Detalle por sprint:
 | S26 | S21–S25 | Desgaste por leyes/provenance, no FPS; sin evidencia solo tendencias | **APROBADO** (2026-10-10 TREND_CONDITIONED; 4 tests; ver `docs/sprints/S26.md`) |
 | S27 | S07–S08,S11,S22,S26 | Sin instante de fallo real sin material/geometría/calibración | **APROBADO** (2026-10-10; 3 tests; ver `docs/sprints/S27.md`) |
 | S28 | S14–S27 | HP desde torque integrado, no circular desde spec | **APROBADO** (2026-10-10; 4 tests; ver `docs/sprints/S28.md`) |
-| S29 | S23–S28 | Cada síntoma remonta a ecuaciones; sin `if fault_count>1` | PENDIENTE |
+| S29 | S23–S28 | Cada síntoma remonta a ecuaciones; sin `if fault_count>1` | **APROBADO** (2026-10-10; 4 tests; ver `docs/sprints/S29.md`) |
 | S30 | S00–S29 | Sin «predictivo» sin evidencia; incompleta pero honesta puede pasar | PENDIENTE |
 
 ## FASE D — Taller 3D y expansión (S31–S37, tras base)

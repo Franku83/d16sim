@@ -209,6 +209,8 @@ enum Command {
     },
     /// Barrido de freno auditable (S28, potencia desde torque).
     DynoDemo,
+    /// Suite adversarial de pares + Monte Carlo (S29, sin flags).
+    AdversarialDemo,
     /// Dinámica de cigüeñal con traza motored (S14, ilustrativo).
     CrankDynamics {
         #[arg(long, default_value_t = 750.0)]
@@ -362,6 +364,7 @@ fn run() -> Result<(), EngineError> {
         Command::WearDemo { hours } => wear_demo_cmd(hours),
         Command::DamageDemo { case } => damage_demo_cmd(&case),
         Command::DynoDemo => dyno_demo_cmd(),
+        Command::AdversarialDemo => adversarial_demo_cmd(),
         Command::CrankDynamics { rpm0, seconds } => crank_dynamics_cmd(rpm0, seconds),
         Command::ColdCrank => cold_crank_cmd(),
     }
@@ -1943,5 +1946,56 @@ fn dyno_demo_cmd() -> Result<(), EngineError> {
         );
     }
     println!("  manifest_hash       : {}", man.hash);
+    Ok(())
+}
+
+/// Comando S29: 4 pares Foundation + Monte Carlo N=32 con seed fija.
+/// Sin `fault_count`: los fallos son deltas de entradas, la física intacta.
+fn adversarial_demo_cmd() -> Result<(), EngineError> {
+    use adversarial::{run_pair, Fault, MonteCarlo};
+
+    let err = |e: String| EngineError::SchemaValidation(e);
+    let pairs = [
+        (
+            Fault::CoolingRestricted { factor: 0.3 },
+            Fault::ExtraLoad { tau_n_m: 6.0 },
+        ),
+        (
+            Fault::RestrictIntake { factor: 0.5 },
+            Fault::LeanAfr { afr: 16.5 },
+        ),
+        (
+            Fault::RetardSpark { deg: 10.0 },
+            Fault::LowVoltage { volts: 9.0 },
+        ),
+        (
+            Fault::RichAfr { afr: 12.0 },
+            Fault::RestrictIntake { factor: 0.6 },
+        ),
+    ];
+    println!("adversarial-demo (physical deltas only; interaction emerges):");
+    for (a, b) in &pairs {
+        let r = run_pair(a, b, 3.0).map_err(|e| err(e.to_string()))?;
+        println!(
+            "  {:22} + {:20} rpm {} -> {} (interact {:+.0})",
+            r.pair.0, r.pair.1, r.rpm_healthy as i64, r.rpm_ab as i64, r.interaction_rpm
+        );
+    }
+    let mc = MonteCarlo {
+        seed: 2026,
+        n: 32,
+        t_end_s: 2.0,
+    };
+    let (disc, hash) = mc.run().map_err(|e| err(e.to_string()))?;
+    println!("  top-5 discrepancies (seed 2026, N=32):");
+    for d in disc.iter().take(5) {
+        println!(
+            "    #{:<2} {:+.0} rpm {}",
+            d.rank,
+            d.delta_rpm,
+            d.faults.join(" ")
+        );
+    }
+    println!("  catalog_hash : {hash}");
     Ok(())
 }
