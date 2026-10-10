@@ -177,3 +177,12 @@ futuros: toda aproximación pasa por aquí + `ModelCard` (§11.4).
 | H-S22-03 | Fuga lateral L1 por holgura; resto de fugas no | S22 | Supuesto + límite | Inventario S25 |
 | H-S22-04 | Película μ·N/p con k=1e5 + inanición (no HD) | S22 | Supuesto declarado | Calibración S26 |
 | H-S22-05 | Pinneo en alivio declarado (sin factor cobertura) | S22 | Decisión ADR-029 | Consumidores S25 |
+
+## Registro S23 (fugas con ley explícita)
+
+| ID | Hipótesis | Dominio | Fuente | Invalida si |
+|---|---|---|---|---|
+| H-S23-01 | Junta cuadrática con p_ref de clamp completo | S23 | Forma ilustrativa + ancla | Medición S25 |
+| H-S23-02 | Anillo geométrico × Cd 0.03 (no calibrado) | S23 | Supuesto declarado | Banco S25 |
+| H-S23-03 | Suministro regulado + PCV + tapón 110 kPa | S23 | Protocolo declarado | Tester S24 |
+| H-S23-04 | Magnitudes no predictivas; direcciones robustas | S23 | Decisión ADR-030 | Calibración |

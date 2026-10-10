@@ -185,6 +185,11 @@ enum Command {
         #[arg(long, default_value = "healthy")]
         case: String,
     },
+    /// Banco de fugas con tres escenarios (S23, ley explícita).
+    LeakTest {
+        #[arg(long, default_value = "underclamped_head")]
+        scenario: String,
+    },
     /// Dinámica de cigüeñal con traza motored (S14, ilustrativo).
     CrankDynamics {
         #[arg(long, default_value_t = 750.0)]
@@ -332,6 +337,7 @@ fn run() -> Result<(), EngineError> {
             out,
         } => export_trace_cmd(&scenario, seconds, &out),
         Command::LubricationTest { case } => lubrication_test_cmd(&case),
+        Command::LeakTest { scenario } => leak_test_cmd(&scenario),
         Command::CrankDynamics { rpm0, seconds } => crank_dynamics_cmd(rpm0, seconds),
         Command::ColdCrank => cold_crank_cmd(),
     }
@@ -1535,7 +1541,7 @@ fn lubrication_test_cmd(case: &str) -> Result<(), EngineError> {
     };
     let mut temp_c = 80.0;
     let mut main_clear = 0.030e-3;
-    let mut rpm = 3000.0;
+    let rpm = 3000.0;
     match case {
         "healthy" => {}
         // Aceite insuficiente: nivel bajo ⇒ aireación.
@@ -1574,5 +1580,40 @@ fn lubrication_test_cmd(case: &str) -> Result<(), EngineError> {
         "  friction_multiplier   : {:.3} (route, never a damage flag)",
         link.multiplier(worst_film)
     );
+    Ok(())
+}
+
+/// Comando S23: banco de leak-down estático por escenario. Sin
+/// multiplicadores de potencia: solo caudales, reparto y auditoría.
+fn leak_test_cmd(scenario: &str) -> Result<(), EngineError> {
+    use leak::{leak_scenario, pseal_sensitivity, run_leakdown, LeakScenario};
+
+    let err = |e: String| EngineError::SchemaValidation(e);
+    let s = match scenario {
+        "missing_head_gasket" => LeakScenario::MissingHeadGasket,
+        "underclamped_head" => LeakScenario::UnderclampedHead,
+        "ring_leak_cyl3" => LeakScenario::RingLeakCyl3,
+        _ => return Err(err(format!("unknown scenario {scenario}"))),
+    };
+    let net = leak_scenario(s).map_err(|e| err(e.to_string()))?;
+    // Paso fino: las fugas grandes exigen dt pequeño (fail-closed si no).
+    let (_, audit, totals) = run_leakdown(&net, 0, 10.0, 5e-4).map_err(|e| err(e.to_string()))?;
+    let tot: f64 = totals.iter().sum();
+    println!("leak-test scenario={scenario} (UNCALIBRATED law, NOT a prediction):");
+    println!(
+        "  steady_leak_g_min   : {:.3}",
+        audit.steady_leak_g_s * 60.0
+    );
+    println!(
+        "  path_split          : {}",
+        totals
+            .iter()
+            .map(|t| format!("{:.2}", t / tot.max(1e-30)))
+            .collect::<Vec<_>>()
+            .join(" ")
+    );
+    println!("  mass_closure        : {:.3e}", audit.mass_closure);
+    println!("  energy_closure      : {:.3e}", audit.energy_closure);
+    println!("  pseal_sensitivity   : {:?}", pseal_sensitivity());
     Ok(())
 }

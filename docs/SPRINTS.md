@@ -41,7 +41,7 @@ Fuente normativa: `docs/foundation.md` §14–§16. Detalle por sprint:
 
 | Sprint | Dep. | Gate | Estado |
 |---|---|---|---|
-| S23 | S08–S12,S21–S22 | Sin multiplicador de potencia ni rutina de síntomas; fidelidad etiquetada | PENDIENTE |
+| S23 | S08–S12,S21–S22 | Sin multiplicador de potencia ni rutina de síntomas; fidelidad etiquetada | **APROBADO** (2026-10-10; 4 tests; ver `docs/sprints/S23.md`) |
 | S24 | S20,S23 | Diagnóstico con ≥2 mediciones independientes, no flag de daño | PENDIENTE |
 | S25 | S14–S24 | Real vs simulado + train vs holdout; no inventar dyno | PENDIENTE |
 | S26 | S21–S25 | Desgaste por leyes/provenance, no FPS; sin evidencia solo tendencias | PENDIENTE |
@@ -57,6 +57,6 @@ ecuaciones con animaciones. Ver foundation §16. Todos PENDIENTE.
 
 ## Regla de avance
 
-S00–S22 APROBADOS. Batch S21–S25 autorizado, siguiente: S23.
+S00–S23 APROBADOS. Batch S21–S25 autorizado, siguiente: S24.
 **S26 prohibido sin autorización.** Gates universales §12.3 +
 `docs/definition-of-done.md` aplican.

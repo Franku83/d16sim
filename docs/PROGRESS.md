@@ -348,3 +348,18 @@ Solo hechos constatables; sin cifras improvisadas.
 - Gate S22: PASS — ruta causal sin banderas; película hacia S26.
 - Deuda: mapa de bomba, consumidores distribuidos (pinneo declarado),
   caída de línea, HD completa, k calibrada.
+
+## 2026-10-10 · S23 · Rutas de fuga generales (APROBADO)
+
+- Crate `leak` (dominios gas/aceite/refrigerante + orificio/laminar +
+  suministro regulado + PCV); junta desde SealContactState con p_ref de
+  clamp completo (ancla autoconsistente); anillo gap×prof×Cd 0.03;
+  4 escenarios (sano/subapretada/ausente/anillo×2); `d16sim leak-test`;
+  ADR-030; `docs/physics/leaks.md`; H-S23-01..04.
+- Tests: 4 passed (ley junta/anillo, suministro+reparto 1:3, órdenes
+  robustos, sensibilidades reportadas). Bugs reales: desigualdad
+  invertida, Pa-como-kg, falta de respiradero; rediseño a suministro
+  regulado (vaciado saturaba).
+- Gate S23: PASS — cero referencias a potencia; todo UNCALIBRATED.
+- Deuda: p_ref y Cd sin calibrar (S25), sin dinámica de anillo, sin
+  aceite→exterior (retén S26), sin acople al motor vivo.

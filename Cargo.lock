@@ -193,6 +193,7 @@ dependencies = [
  "flow",
  "fuel",
  "kinematics",
+ "leak",
  "lube",
  "math",
  "physics",
@@ -342,6 +343,17 @@ name = "kinematics"
 version = "0.1.0"
 dependencies = [
  "engine-types",
+ "thiserror",
+ "units",
+]
+
+[[package]]
+name = "leak"
+version = "0.1.0"
+dependencies = [
+ "engine-types",
+ "fastener",
+ "flow",
  "thiserror",
  "units",
 ]

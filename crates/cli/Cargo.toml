@@ -25,6 +25,7 @@ ecu = { path = "../ecu" }
 diagnostics = { path = "../diagnostics" }
 thermal = { path = "../thermal" }
 lube = { path = "../lube" }
+leak = { path = "../leak" }
 kinematics = { path = "../kinematics" }
 thermo = { path = "../thermo" }
 valvetrain = { path = "../valvetrain" }
