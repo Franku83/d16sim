@@ -1,6 +1,6 @@
 # HANDOFF — punto de entrada al siguiente agente
 
-Fecha: 2026-10-10 · Sprints: **S00–S27 APROBADOS (batch S26–S30 en curso)**.
+Fecha: 2026-10-10 · Sprints: **S00–S28 APROBADOS (batch S26–S30 en curso)**.
 **S31 prohibido sin autorización explícita.**
 
 ## Estado científico/arquitectónico actual
@@ -202,7 +202,11 @@ irreversible solo por criterio físico; pruebas negativas. Gate: sin
 instante de fallo real sin material/geometría/calibración. Dep:
 S07–S08, S11, S22, S26.
 
-## Brief S28 (AUTORIZADO, batch S26–S30)
+## Brief S28 (APROBADO 2026-10-10)
+
+Crate `dyno` + `dyno-demo` + ADR-035. Ver `docs/sprints/S28.md`.
+
+## Brief S28-histórico (reconciliación Fase 0, contenido vigente arriba)
 
 Dyno auditable: freno con inercia/carga, rampas, pérdidas, ambiente,
 potencia al freno vs indicada vs pérdidas. Gate: HP desde torque

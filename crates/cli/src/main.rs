@@ -207,6 +207,8 @@ enum Command {
         #[arg(long, default_value = "pv_clear")]
         case: String,
     },
+    /// Barrido de freno auditable (S28, potencia desde torque).
+    DynoDemo,
     /// Dinámica de cigüeñal con traza motored (S14, ilustrativo).
     CrankDynamics {
         #[arg(long, default_value_t = 750.0)]
@@ -359,6 +361,7 @@ fn run() -> Result<(), EngineError> {
         Command::CalibrationDemo => calibration_demo_cmd(),
         Command::WearDemo { hours } => wear_demo_cmd(hours),
         Command::DamageDemo { case } => damage_demo_cmd(&case),
+        Command::DynoDemo => dyno_demo_cmd(),
         Command::CrankDynamics { rpm0, seconds } => crank_dynamics_cmd(rpm0, seconds),
         Command::ColdCrank => cold_crank_cmd(),
     }
@@ -1898,5 +1901,47 @@ fn damage_demo_cmd(case: &str) -> Result<(), EngineError> {
         _ => return Err(err(format!("unknown case {case}"))),
     };
     println!("damage-demo case={case}: {out}");
+    Ok(())
+}
+
+/// Comando S28: barrido 3 puntos con manifiesto. Potencia desde τ×ω;
+/// puntos no estabilizados se rechazan (Unsettled), nunca se publican.
+fn dyno_demo_cmd() -> Result<(), EngineError> {
+    use dyno::{run_sweep, Ambient, DynoConfig, SweepPoint};
+
+    let err = |e: String| EngineError::SchemaValidation(e);
+    let cfg = DynoConfig {
+        aux_tau_n_m: 2.0,
+        ambient: Ambient::standard(),
+        apply_correction: false,
+    };
+    let pts = [
+        ("part25", 0.15e-4, 4.0),
+        ("part50", 0.30e-4, 4.0),
+        ("part50-load", 0.30e-4, 6.0),
+    ]
+    .map(|(label, thr, load)| SweepPoint {
+        label: label.to_owned(),
+        throttle_area_m2: thr,
+        brake_tau_n_m: load,
+        t_end_s: 6.0,
+    });
+    let man = run_sweep(&cfg, &pts, "dyno-demo ILLUSTRATIVE (not D16Y7)")
+        .map_err(|e| err(e.to_string()))?;
+    println!("dyno-demo (ILLUSTRATIVE params; power from integrated torque):");
+    for r in &man.results {
+        println!(
+            "  {:10} {:5.0} rpm P_ind={:5.2} P_fric={:5.2} P_aux={:4.2} P_brake={:5.2} kW resid={:.3} {:?}",
+            r.label,
+            r.rpm_mean,
+            r.p_ind_kw,
+            r.p_fric_kw,
+            r.p_aux_kw,
+            r.p_brake_kw_observed,
+            r.tail_resid_01,
+            r.validity
+        );
+    }
+    println!("  manifest_hash       : {}", man.hash);
     Ok(())
 }

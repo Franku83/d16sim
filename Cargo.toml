@@ -24,6 +24,7 @@ members = [
     "crates/calibration",
     "crates/wear",
     "crates/damage",
+    "crates/dyno",
     "crates/physics",
     "crates/simulation",
     "crates/cli",

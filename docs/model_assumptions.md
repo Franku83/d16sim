@@ -225,3 +225,13 @@ futuros: toda aproximación pasa por aquí + `ModelCard` (§11.4).
 | H-S27-03 | Ruptura solo si todo el rango K supera; si cruza, nada | S27 | Decisión ADR-034 | K medido |
 | H-S27-04 | Gripado/rosca UNSUPPORTED o riesgo sin criterio | S27 | Sin ley | Criterio medido |
 | H-S27-05 | Chequeos puros: diagnosticar no altera trayectoria | S27 | Diseño | Acople S29 |
+
+## Registro S28 (dyno auditable)
+
+| ID | Hipótesis | Dominio | Fuente | Invalida si |
+|---|---|---|---|---|
+| H-S28-01 | Freno = carga declarada × ω; nada impuesto | S28 | Diseño gate | Dyno real C1 |
+| H-S28-02 | Corrección L1 explícita, observado+corregido | S28 | Supuesto declarado | Norma certificada |
+| H-S28-03 | Covered exige residuo ≤10 % y deriva ≤2 % | S28 | Decisión ADR-035 | Banco real |
+| H-S28-04 | Punto carga-8 no estabiliza (rechazado, no ajustado) | S28 | Hallazgo + S29 | Investigación S29 |
+| H-S28-05 | Mapa válido 400–5500 rpm; resto extrapolado | S28 | Proxy S11 + fricción | Datos C1 |

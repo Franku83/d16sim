@@ -433,3 +433,14 @@ detención. Batch S26–S30 autorizado; S31 prohibido.
   genérica declarada, resto riesgo/no soportado.
 - Deuda: material válvula/asiento, criterio gripado, rosca medida,
   acople dinámico (S29).
+
+## 2026-10-10 · S28 · Dyno auditable (APROBADO, ilustrativo)
+
+- Crate `dyno` (freno declarado + corrección explícita + validez con
+  Unsettled + manifiesto); `dyno-demo` (3 Covered, 1.67–2.88 kW);
+  ADR-035; `docs/physics/dyno.md`; H-S28-01..05.
+- Tests: 4 passed (corrección, identidad global <1 %, causalidad carga,
+  rechazo Unsettled). Hallazgo: cola carga-8 con residuo 60 % pese a
+  cierre 1e-5 (muestreo/ inestabilidad) → rechazado, no ajustado.
+- Gate S28: PASS — potencia desde τ integrado; cero spec circular.
+- Deuda: dyno real C1, corrección certificada, inestabilidad (S29).
