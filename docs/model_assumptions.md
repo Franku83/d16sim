@@ -215,3 +215,13 @@ futuros: toda aproximación pasa por aquí + `ModelCard` (§11.4).
 | H-S26-03 | Creep logarítmico integrado en forma cerrada | S26 | Decisión ADR-033 | Modelo de junta |
 | H-S26-04 | Fatiga/scuffing/fretting UNSUPPORTED | S26 | Sin ley | Ley constitutiva |
 | H-S26-05 | Salidas TREND_CONDITIONED, nunca vida útil | S26 | Regla S26 | Evidencia S30 |
+
+## Registro S27 (daño por mecanismos)
+
+| ID | Hipótesis | Dominio | Fuente | Invalida si |
+|---|---|---|---|---|
+| H-S27-01 | Solape PV geométrico; doblado exige material PENDING | S27 | S07 + límite | Material válvula |
+| H-S27-02 | Rp0.2 940 MPa clase 10.9 GENÉRICO (no D16Y7) | S27 | ISO 898-1 clase | Perno medido |
+| H-S27-03 | Ruptura solo si todo el rango K supera; si cruza, nada | S27 | Decisión ADR-034 | K medido |
+| H-S27-04 | Gripado/rosca UNSUPPORTED o riesgo sin criterio | S27 | Sin ley | Criterio medido |
+| H-S27-05 | Chequeos puros: diagnosticar no altera trayectoria | S27 | Diseño | Acople S29 |

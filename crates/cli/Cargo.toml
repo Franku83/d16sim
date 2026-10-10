@@ -28,6 +28,7 @@ lube = { path = "../lube" }
 leak = { path = "../leak" }
 calibration = { path = "../calibration" }
 wear = { path = "../wear" }
+damage = { path = "../damage" }
 kinematics = { path = "../kinematics" }
 thermo = { path = "../thermo" }
 valvetrain = { path = "../valvetrain" }

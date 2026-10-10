@@ -420,3 +420,16 @@ detención. Batch S26–S30 autorizado; S31 prohibido.
 - Gate S26: PASS — leyes/provenance, escala libre, cero vidas útiles.
 - Deuda: tribología P1, fatiga/scuffing/fretting UNSUPPORTED, acople
   motor vivo (S29), K efectivo pendiente de mapa de película.
+
+## 2026-10-10 · S27 · Daños por montaje con dominio (APROBADO)
+
+- Crate `damage` (PV contacto/riesgo + perno con Rp0.2 genérico +
+  inanición riesgo + rosca UNSUPPORTED, todo puro); `damage-demo`
+  (6 casos); ADR-034; `docs/physics/damage.md`; H-S27-01..05.
+- Tests: 3 passed (negativa PV + pureza, perno elástico/incierto/
+  plástico, inanición riesgo + rosca). Corrección: 100 Nm sí fluye
+  M10 aceitado (física corrigió al test); 80 Nm = incertidumbre.
+- Gate S27: PASS — sin instantes de fallo sin material; 1 ruptura
+  genérica declarada, resto riesgo/no soportado.
+- Deuda: material válvula/asiento, criterio gripado, rosca medida,
+  acople dinámico (S29).

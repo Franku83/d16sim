@@ -23,6 +23,7 @@ members = [
     "crates/leak",
     "crates/calibration",
     "crates/wear",
+    "crates/damage",
     "crates/physics",
     "crates/simulation",
     "crates/cli",

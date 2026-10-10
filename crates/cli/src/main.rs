@@ -202,6 +202,11 @@ enum Command {
         #[arg(long, default_value_t = 50.0)]
         hours: f64,
     },
+    /// Mecanismos de daño con dominio (S27, riesgo vs ruptura).
+    DamageDemo {
+        #[arg(long, default_value = "pv_clear")]
+        case: String,
+    },
     /// Dinámica de cigüeñal con traza motored (S14, ilustrativo).
     CrankDynamics {
         #[arg(long, default_value_t = 750.0)]
@@ -353,6 +358,7 @@ fn run() -> Result<(), EngineError> {
         Command::MechDemo { scenario } => mech_demo_cmd(&scenario),
         Command::CalibrationDemo => calibration_demo_cmd(),
         Command::WearDemo { hours } => wear_demo_cmd(hours),
+        Command::DamageDemo { case } => damage_demo_cmd(&case),
         Command::CrankDynamics { rpm0, seconds } => crank_dynamics_cmd(rpm0, seconds),
         Command::ColdCrank => cold_crank_cmd(),
     }
@@ -1838,5 +1844,59 @@ fn wear_demo_cmd(hours: f64) -> Result<(), EngineError> {
         s.oil_oxidation_01
     );
     println!("  UNSUPPORTED         : scuffing, contact fatigue, thermal fretting (no law)");
+    Ok(())
+}
+
+/// Comando S27: mecanismos con dominio. Riesgo ≠ ruptura; la trayectoria
+/// nunca cambia (chequeos puros).
+fn damage_demo_cmd(case: &str) -> Result<(), EngineError> {
+    use damage::{bearing_starvation_risk, bolt_yield_state, piston_valve_state, thread_state};
+    use fastener::preload::LubricantCondition;
+
+    let err = |e: String| EngineError::SchemaValidation(e);
+    let out = match case {
+        "pv_clear" => {
+            let (_, s) = piston_valve_state(contacts::interference::PistonValveInput {
+                closed_gap_m: 3e-3,
+                lift_m: 8e-3,
+                cant_rad: 0.0,
+                valve_dia_m: 30e-3,
+                piston_x_m: 6e-3,
+            })
+            .map_err(|e| err(e.to_string()))?;
+            format!("{s:?}")
+        }
+        "pv_contact" => {
+            let (c, s) = piston_valve_state(contacts::interference::PistonValveInput {
+                closed_gap_m: 3e-3,
+                lift_m: 8e-3,
+                cant_rad: 0.0,
+                valve_dia_m: 30e-3,
+                piston_x_m: 0.5e-3,
+            })
+            .map_err(|e| err(e.to_string()))?;
+            format!("overlap={} {s:?}", c.overlap)
+        }
+        "bolt_ok" => {
+            let (st, _) = bolt_yield_state(60.0, 10e-3, 58e-6, LubricantCondition::OiledGeneric)
+                .map_err(|e| err(e.to_string()))?;
+            format!("{st:?}")
+        }
+        "bolt_plastic" => {
+            let (st, _) = bolt_yield_state(400.0, 10e-3, 58e-6, LubricantCondition::OiledGeneric)
+                .map_err(|e| err(e.to_string()))?;
+            format!("{st:?} (GENERIC material, not D16Y7)")
+        }
+        "bearing_risk" => format!(
+            "{:?}",
+            bearing_starvation_risk(0.2, 8e6).map_err(|e| err(e.to_string()))?
+        ),
+        "thread" => {
+            let (m, s) = thread_state();
+            format!("{:?} {s:?}", m.support)
+        }
+        _ => return Err(err(format!("unknown case {case}"))),
+    };
+    println!("damage-demo case={case}: {out}");
     Ok(())
 }

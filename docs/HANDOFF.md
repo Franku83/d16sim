@@ -1,6 +1,6 @@
 # HANDOFF — punto de entrada al siguiente agente
 
-Fecha: 2026-10-10 · Sprints: **S00–S26 APROBADOS (batch S26–S30 en curso)**.
+Fecha: 2026-10-10 · Sprints: **S00–S27 APROBADOS (batch S26–S30 en curso)**.
 **S31 prohibido sin autorización explícita.**
 
 ## Estado científico/arquitectónico actual
@@ -190,7 +190,11 @@ eventos de servicio, aceleración de tiempo sin dependencia de FPS,
 replay desde snapshot/seed. Gate: leyes/provenance, sin evidencia solo
 tendencias condicionadas. Dep: S21–S25.
 
-## Brief S27 (AUTORIZADO, batch S26–S30)
+## Brief S27 (APROBADO 2026-10-10)
+
+Crate `damage` + `damage-demo` + ADR-034. Ver `docs/sprints/S27.md`.
+
+## Brief S27-histórico (reconciliación Fase 0, contenido vigente arriba)
 
 Contactos, plasticidad/fatiga y daños por montaje: pistón-válvula, rosca,
 over-stretch, pérdida de película; `DamageMechanism` con dominio;

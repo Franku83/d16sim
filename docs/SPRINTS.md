@@ -46,7 +46,7 @@ Fuente normativa: `docs/foundation.md` §14–§16. Detalle por sprint:
 | S24 | S20,S23 | Diagnóstico con ≥2 mediciones independientes, no flag de daño | **APROBADO** (2026-10-10; 4 tests; ver `docs/sprints/S24.md`) |
 | S25 | S14–S24 | Real vs simulado + train vs holdout; no inventar dyno | **APROBADO** (2026-10-10 NUMERICALLY_VERIFIED_ONLY; 4 tests; ver `docs/sprints/S25.md`) |
 | S26 | S21–S25 | Desgaste por leyes/provenance, no FPS; sin evidencia solo tendencias | **APROBADO** (2026-10-10 TREND_CONDITIONED; 4 tests; ver `docs/sprints/S26.md`) |
-| S27 | S07–S08,S11,S22,S26 | Sin instante de fallo real sin material/geometría/calibración | PENDIENTE |
+| S27 | S07–S08,S11,S22,S26 | Sin instante de fallo real sin material/geometría/calibración | **APROBADO** (2026-10-10; 3 tests; ver `docs/sprints/S27.md`) |
 | S28 | S14–S27 | HP desde torque integrado, no circular desde spec | PENDIENTE |
 | S29 | S23–S28 | Cada síntoma remonta a ecuaciones; sin `if fault_count>1` | PENDIENTE |
 | S30 | S00–S29 | Sin «predictivo» sin evidencia; incompleta pero honesta puede pasar | PENDIENTE |

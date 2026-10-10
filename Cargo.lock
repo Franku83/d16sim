@@ -193,6 +193,7 @@ dependencies = [
  "combustion",
  "contacts",
  "crank",
+ "damage",
  "diagnostics",
  "ecu",
  "electrical",
@@ -213,6 +214,17 @@ dependencies = [
  "trigger",
  "units",
  "valvetrain",
+ "wear",
+]
+
+[[package]]
+name = "damage"
+version = "0.1.0"
+dependencies = [
+ "contacts",
+ "engine-types",
+ "fastener",
+ "thiserror",
  "wear",
 ]
 
