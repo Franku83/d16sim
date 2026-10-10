@@ -30,7 +30,7 @@ Fuente normativa: `docs/foundation.md` §14–§16. Detalle por sprint:
 | S14 | S06,S10–S13 | Dinámica cigüeñal + pérdidas | Sin energía gratis; aceleración = torques/inercia en error numérico | **APROBADO** (2026-10-10; 6 tests; ver `docs/sprints/S14.md`) |
 | S15 | S13–S14 | Starter, batería, encendido | Crank sin fuel/spark no arranca; trazas eléctricas inspeccionables | **APROBADO** (2026-10-10; 5 tests; ver `docs/sprints/S15.md`) |
 | S16 | S10–S15 | Arranque + ralentí end-to-end | Ralentí sin clamp ni torque mágico; puede no coincidir con Honda | **APROBADO** (2026-10-10; 7 tests; ver `docs/sprints/S16.md`) |
-| S17 | S01,S05–S06,S15–S16 | CKP/TDC/CYP exactos | Patrón trazado a fuente; si no, `GENERIC_TRIGGER`, prohibido OEM | PENDIENTE |
+| S17 | S01,S05–S06,S15–S16 | CKP/TDC/CYP exactos | Patrón trazado a fuente; si no, `GENERIC_TRIGGER`, prohibido OEM | **APROBADO** (2026-10-10; 7 tests + TRIG-2026-10-10; ver `docs/sprints/S17.md`) |
 | S18 | S13,S15–S17 | ECU trigger decoder + scheduler | Señales erróneas alteran sync/timing causalmente; visible solicitado vs efectivo | PENDIENTE |
 | S19 | S12–S13,S15,S18 | Sensores, cableado | ECT falso cambia ECU sin cambiar T física; MAP falso no cambia p real | PENDIENTE |
 | S20 | S05,S07,S17–S19 | Herramientas diagnósticas | Sin panel secreto; tests conocen causa solo para evaluación | PENDIENTE |
@@ -57,6 +57,6 @@ ecuaciones con animaciones. Ver foundation §16. Todos PENDIENTE.
 
 ## Regla de avance
 
-S00–S16 APROBADOS. Batch S16–S20 autorizado, siguiente: S17.
+S00–S17 APROBADOS. Batch S16–S20 autorizado, siguiente: S18.
 **S21 prohibido sin autorización.** Gates universales §12.3 +
 `docs/definition-of-done.md` aplican.

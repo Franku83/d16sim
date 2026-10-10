@@ -121,3 +121,12 @@ futuros: toda aproximación pasa por aquí + `ModelCard` (§11.4).
 | H-S16-03 | AFR→quemado sin acoplar; eff=1, γ const | S16 | Limitación declarada | Modelo S12+quemado |
 | H-S16-04 | Punto ralentí = posición de mariposa (experimento) | S16 | Supuesto declarado | Control S19 |
 | H-S16-05 | Régimen emergente reportado tal cual, no stock | S16 | Gate S16 | Validación S25 |
+
+## Registro S17 (triggers GENERIC_TRIGGER)
+
+| ID | Hipótesis | Dominio | Fuente | Invalida si |
+|---|---|---|---|---|
+| H-S17-01 | Patrón 24/4/1 familiar, prohibido OEM | S17 | TRIG-2026-10-10 | Scope + página OEM |
+| H-S17-02 | VR L1 (amplitud∝ω, ruido seed, histéresis) ilustrativo | S17 | Supuesto declarado | Medición VR |
+| H-S17-03 | Fases TDC/CYP ilustrativas + offset de carcasa | S17 | Supuesto declarado | Diagrama OEM |
+| H-S17-04 | CKF concepto aparte, presencia PENDING, no modelado | S17 | rusEFI serie B | Variante confirma |

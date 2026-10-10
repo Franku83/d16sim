@@ -196,6 +196,7 @@ dependencies = [
  "serde_json",
  "simulation",
  "thermo",
+ "trigger",
  "units",
  "valvetrain",
 ]
@@ -477,6 +478,15 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn",
+]
+
+[[package]]
+name = "trigger"
+version = "0.1.0"
+dependencies = [
+ "engine-types",
+ "thiserror",
+ "units",
 ]
 
 [[package]]

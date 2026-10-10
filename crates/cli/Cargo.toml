@@ -20,6 +20,7 @@ fuel = { path = "../fuel" }
 crank = { path = "../crank" }
 electrical = { path = "../electrical" }
 engine = { path = "../engine" }
+trigger = { path = "../trigger" }
 kinematics = { path = "../kinematics" }
 thermo = { path = "../thermo" }
 valvetrain = { path = "../valvetrain" }

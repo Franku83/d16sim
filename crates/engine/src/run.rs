@@ -899,11 +899,6 @@ mod tests {
 
     use super::*;
 
-    fn short(mut inp: EngineInputs, t_end: f64) -> EngineInputs {
-        inp.t_end_s = t_end;
-        inp
-    }
-
     fn idle_point(mut inp: EngineInputs) -> EngineInputs {
         inp.throttle_area_m2 = 0.05e-4;
         inp.idle_bypass_area_m2 = 0.02e-4;

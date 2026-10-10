@@ -1,8 +1,7 @@
 # HANDOFF — punto de entrada al siguiente agente
 
-Fecha: 2026-10-10 · Sprints: **S00–S16 APROBADOS (batch S16–S20)**.
-Siguiente: **S17** (triggers con TRIG-2026-10-10 como GENERIC_TRIGGER).
-**S21 prohibido sin autorización.**
+Fecha: 2026-10-10 · Sprints: **S00–S17 APROBADOS (batch S16–S20)**.
+Siguiente: **S18**. **S21 prohibido sin autorización.**
 
 ## Estado científico/arquitectónico actual
 
@@ -33,10 +32,9 @@ Siguiente: **S17** (triggers con TRIG-2026-10-10 como GENERIC_TRIGGER).
    2026-10-10.
 2. ~~Licencia sin decidir~~ — resuelto: Apache-2.0 solo código propio
    (propietario 2026-10-10); `LICENSE` + `THIRD_PARTY_NOTICES.md` creados.
-3. S01–S16 APROBADOS 2026-10-10 (S15: sin arranque por diseño; S16:
-   ~1026 rpm emergentes, snapshot bit-idéntico). Trigger 24/4/1 archivado
-   como GENERIC_TRIGGER (TRIG-2026-10-10, CKF pendiente). Deuda: lazo
-   cerrado, gas exchange vivo, CKP scope + página OEM.
+3. S01–S17 APROBADOS 2026-10-10 (S16: ~1026 rpm; S17: 24/4/1
+   GENERIC_TRIGGER con TRIG-2026-10-10). Deuda: mapas P2E, scope OEM,
+   scheduler en S18.
 
 ## Roles y reglas de cambio (S00)
 
@@ -132,15 +130,16 @@ Crate `electrical` + `cold-crank` + ADR-022. Ver `docs/sprints/S15.md`.
 
 Crate `engine` + `engine-run` + ADR-023. Ver `docs/sprints/S16.md`.
 
-## Brief S17 (siguiente en batch autorizado)
+## Brief S17 (APROBADO 2026-10-10)
 
-Hardware CKP/TDC/CYP + transductores: geometría de rotores GENERIC_TRIGGER
-(TRIG-2026-10-10, prohibido OEM), forma de onda VR vs tiempo, cableado,
-muestreo para scope, niveles vs RPM, escenarios de fallo. Gate: patrón
-trazado a fuente o GENERIC_TRIGGER.
+Crate `trigger` + `trigger-waveform` + ADR-024 + raw TRIG-2026-10-10.
+Ver `docs/sprints/S17.md`.
 
-Arranque: batería (Voc/Rint/SOC/T) + starter (torque vs ω) + compresión
-resistiva + fricción de arranque + bobina/dwell simplificada con evento
-de chispa disponible. Fallas: batería descargada, masa abierta, starter
-ausente, chispa nula. Gate: crank sin fuel/chispa no arranca; trazas
-eléctricas inspeccionables.
+## Brief S18 (siguiente en batch autorizado)
+
+ECU de referencia: decoder de flancos con sync 360°/720°, FSM
+(power_off/booting/cranking unsynced-synced/running/sync_lost/fallback),
+mapas de referencia propios (nunca OEM), scheduler θ/t de inyección e
+ignición con latencias, monitores/DTC por lectura temporal (nunca por
+fault_id). Gate: señales erróneas alteran sync/timing causalmente;
+solicitado vs efectivo visibles.

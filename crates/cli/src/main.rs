@@ -142,6 +142,13 @@ enum Command {
         #[arg(long, default_value_t = 6.0)]
         seconds: f64,
     },
+    /// Forma de onda CKP/TDC/CYP + flancos (S17, GENERIC_TRIGGER).
+    TriggerWaveform {
+        #[arg(long, default_value_t = 750.0)]
+        rpm: f64,
+        #[arg(long, default_value_t = 0)]
+        fault: u8,
+    },
     /// Dinámica de cigüeñal con traza motored (S14, ilustrativo).
     CrankDynamics {
         #[arg(long, default_value_t = 750.0)]
@@ -278,6 +285,7 @@ fn run() -> Result<(), EngineError> {
         } => gas_exchange_cmd(rpm, plenum_l, exhaust_l, throttle_cm2, tailpipe_cm2),
         Command::FuelSupplyTest => fuel_supply_test_cmd(),
         Command::EngineRun { scenario, seconds } => engine_run_cmd(&scenario, seconds),
+        Command::TriggerWaveform { rpm, fault } => trigger_waveform_cmd(rpm, fault),
         Command::CrankDynamics { rpm0, seconds } => crank_dynamics_cmd(rpm0, seconds),
         Command::ColdCrank => cold_crank_cmd(),
     }
@@ -1098,5 +1106,40 @@ fn engine_run_cmd(scenario: &str, seconds: f64) -> Result<(), EngineError> {
     );
     println!("  Hfuel_J           : {:.1}", a.h_fuel_j);
     println!("  samples           : {}", trace.samples.len());
+    Ok(())
+}
+
+/// Comando S17: forma de onda + conteo de flancos por canal, con fallo
+/// opcional (0 sano, 1 borde CKP menos, 2 TDC abierto, 3 desfase 10°).
+/// Patrón GENERIC_TRIGGER (TRIG-2026-10-10), nunca OEM.
+fn trigger_waveform_cmd(rpm: f64, fault: u8) -> Result<(), EngineError> {
+    use trigger::{DistributorTrigger, TriggerConfig, TriggerFault};
+
+    let err = |e: String| EngineError::SchemaValidation(e);
+    let mut cfg = TriggerConfig::generic_family();
+    cfg.fault = match fault {
+        0 => TriggerFault::None,
+        1 => TriggerFault::MissingCkpEdge { tooth_index: 5 },
+        2 => TriggerFault::OpenChannel { channel: 1 },
+        3 => TriggerFault::DistributorOffset {
+            offset_crank_deg: 10.0,
+        },
+        _ => return Err(err(format!("unknown fault {fault}"))),
+    };
+    let trig = DistributorTrigger::new(cfg).map_err(|e| err(e.to_string()))?;
+    println!(
+        "trigger-waveform ({}):",
+        trigger::TriggerProvenance::generic_family().label()
+    );
+    for (ch, name) in [(0u8, "CKP"), (1, "TDC"), (2, "CYP")] {
+        let edges = trig
+            .channel_edges(ch, rpm, 0.0, 1.0, 200_000.0, 100 + u64::from(ch))
+            .map_err(|e| err(e.to_string()))?;
+        let first = edges.first().copied().unwrap_or(f64::NAN);
+        println!(
+            "  {name}: {} edges/rev-cycle, first@{first:.6}s",
+            edges.len()
+        );
+    }
     Ok(())
 }

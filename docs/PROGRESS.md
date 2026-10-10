@@ -269,3 +269,20 @@ Solo hechos constatables; sin cifras improvisadas.
 - Gate S16: PASS — ralentí emergente reportado tal cual; sin magia.
 - Deuda: lazo cerrado, AFR→quemado, multicilindro diferenciado,
   periódico largo, control S19, arranque parametrizado.
+
+## 2026-10-10 · S17 · Triggers CKP/TDC/CYP GENERIC_TRIGGER (APROBADO)
+
+- Pre-S17: `research/raw/trigger-distributor-2026-10-10.md` (hondabase +
+  rusEFI leídos; carmanualsonline 403; sin corroboración TD-80U) +
+  TRIG-2026-10-10 en provenance + C-19/C-20 en discrepancias:
+  correspondencia con la variante NO verificable ⇒ GENERIC_TRIGGER.
+- Crate `trigger` (reluctores 24/4/1 + VR/noise/histéresis + 3 canales
+  con fallos + muestreo); `d16sim trigger-waveform` (24/4/1; 23 con
+  borde menos; 0 con TDC abierto); ADR-024; `docs/physics/trigger_hw.md`;
+  H-S17-01..04.
+- Tests: 7 passed (conteos, espaciado 30°, fallos, offset 10°,
+  alineación TDC/CYP, amplitud∝ω). 1 corrección: sensibilidad ×20
+  (ruido ahogaba umbral).
+- Gate S17: PASS — trazado a fuente + GENERIC_TRIGGER imposible de
+  etiquetar OEM por construcción.
+- Deuda: geometría/fase/pines OEM (scope + manual), CKF, transitorios.
