@@ -180,6 +180,11 @@ enum Command {
         #[arg(long, default_value = "trace-bundle.json")]
         out: String,
     },
+    /// Red de lubricación L1 (S22, sin bandera de daño).
+    LubricationTest {
+        #[arg(long, default_value = "healthy")]
+        case: String,
+    },
     /// Dinámica de cigüeñal con traza motored (S14, ilustrativo).
     CrankDynamics {
         #[arg(long, default_value_t = 750.0)]
@@ -326,6 +331,7 @@ fn run() -> Result<(), EngineError> {
             seconds,
             out,
         } => export_trace_cmd(&scenario, seconds, &out),
+        Command::LubricationTest { case } => lubrication_test_cmd(&case),
         Command::CrankDynamics { rpm0, seconds } => crank_dynamics_cmd(rpm0, seconds),
         Command::ColdCrank => cold_crank_cmd(),
     }
@@ -1510,6 +1516,63 @@ fn export_trace_cmd(scenario: &str, seconds: f64, out: &str) -> Result<(), Engin
         "export-trace: schema=1 points={} sha256={} -> {out}",
         t_s.len(),
         sha256_hex(text.as_bytes())
+    );
+    Ok(())
+}
+
+/// Comando S22: red de galerías con casos de fallo por ruta física.
+/// Sin bandera de daño: el riesgo vive en película/presión, no en veredicto.
+fn lubrication_test_cmd(case: &str) -> Result<(), EngineError> {
+    use lube::{solve_gallery, BearingGeom, FrictionLink, LubePumpState, OilGrade, Pump};
+
+    let err = |e: String| EngineError::SchemaValidation(e);
+    let walther = OilGrade::illustrative_10w30()
+        .walther()
+        .map_err(|e| err(e.to_string()))?;
+    let mut pump = LubePumpState {
+        pump: Pump::illustrative(),
+        oil_level_01: 1.0,
+    };
+    let mut temp_c = 80.0;
+    let mut main_clear = 0.030e-3;
+    let mut rpm = 3000.0;
+    match case {
+        "healthy" => {}
+        // Aceite insuficiente: nivel bajo ⇒ aireación.
+        "low_oil" => pump.oil_level_01 = 0.15,
+        // Viscosidad baja en caliente.
+        "hot_thin" => temp_c = 130.0,
+        // Holgura excesiva en bancada 1.
+        "excess_clearance" => main_clear = 0.060e-3,
+        // Bomba defectuosa: eficiencia al 50%.
+        "weak_pump" => pump.pump.efficiency = 0.5,
+        _ => return Err(err(format!("unknown case {case}"))),
+    }
+    let mu = walther.mu_pa_s(temp_c);
+    let mains = BearingGeom::new(0.055, 0.020, main_clear).map_err(|e| err(e.to_string()))?;
+    let rods = BearingGeom::new(0.045, 0.018, 0.029e-3).map_err(|e| err(e.to_string()))?;
+    let mut bearings = Vec::new();
+    for _ in 0..5 {
+        bearings.push((mains, 5e6, rpm));
+    }
+    for _ in 0..4 {
+        bearings.push((rods, 8e6, rpm));
+    }
+    let r = solve_gallery(&pump, rpm, mu, 101_325.0, &bearings, 1e5, 300e3)
+        .map_err(|e| err(e.to_string()))?;
+    let link = FrictionLink { k_starve: 2.0 };
+    let worst_film = r.branches.iter().map(|b| b.film_0_1).fold(1.0f64, f64::min);
+    println!("lubrication-test case={case} (ILLUSTRATIVE oil/pump/bearings):");
+    println!(
+        "  gallery_kPa_abs       : {:.1}",
+        r.gallery_p_pa_abs / 1_000.0
+    );
+    println!("  relief_L_min          : {:.3}", r.relief_m3_s * 60_000.0);
+    println!("  pump_heat_W           : {:.1}", r.pump_heat_w);
+    println!("  worst_film_0_1        : {:.3}", worst_film);
+    println!(
+        "  friction_multiplier   : {:.3} (route, never a damage flag)",
+        link.multiplier(worst_film)
     );
     Ok(())
 }

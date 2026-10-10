@@ -19,6 +19,7 @@ members = [
     "crates/ecu",
     "crates/diagnostics",
     "crates/thermal",
+    "crates/lube",
     "crates/physics",
     "crates/simulation",
     "crates/cli",

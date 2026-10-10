@@ -336,3 +336,15 @@ Solo hechos constatables; sin cifras improvisadas.
 - Gate S21: PASS — todo calor con fuente/sumidero; ECT emerge de la red.
 - Deuda: hA/C medidos, termostato/bomba reales, viscosidad S22, S19
   completo, calentamiento largo fuera de horizonte de test.
+
+## 2026-10-10 · S22 · Lubricación por red (APROBADO)
+
+- Crate `lube` (Walther + bomba/alivio + 9 ramas por holgura + película
+  con inanición + enlace a fricción); `d16sim lubrication-test` (sano
+  525 kPa/film 0.56; caliente film 0.19/mult 2.62; casos por ruta);
+  ADR-029; `docs/physics/lubrication.md`; H-S22-01..05.
+- Tests: 3 passed (Walther, película/enlace, continuidad + respuesta +
+  inanición no vacua). k_ref corregido 1e-9→1e5 (absurdo detectado).
+- Gate S22: PASS — ruta causal sin banderas; película hacia S26.
+- Deuda: mapa de bomba, consumidores distribuidos (pinneo declarado),
+  caída de línea, HD completa, k calibrada.

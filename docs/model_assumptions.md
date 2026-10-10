@@ -167,3 +167,13 @@ futuros: toda aproximación pasa por aquí + `ModelCard` (§11.4).
 | H-S21-03 | hA/C ilustrativos de orden de magnitud | S21 | Supuesto declarado | Caracterización |
 | H-S21-04 | Termostato 80–88 genérico; ECT lag 5 s | S21 | Supuesto declarado | Curvas OEM |
 | H-S21-05 | Enriquecimiento ECT 1.25/1.05/1.0 (cadena L1) | S21 | S19 + supuesto | Closed-loop |
+
+## Registro S22 (lubricación por red)
+
+| ID | Hipótesis | Dominio | Fuente | Invalida si |
+|---|---|---|---|---|
+| H-S22-01 | Walther con 70/10.5 cSt ilustrativos | S22 | Orden comercial | Curvas de aceite |
+| H-S22-02 | Bomba 8cc/rev + alivio 500 kPa ilustrativos | S22 | Supuesto declarado | Mapa de bomba |
+| H-S22-03 | Fuga lateral L1 por holgura; resto de fugas no | S22 | Supuesto + límite | Inventario S25 |
+| H-S22-04 | Película μ·N/p con k=1e5 + inanición (no HD) | S22 | Supuesto declarado | Calibración S26 |
+| H-S22-05 | Pinneo en alivio declarado (sin factor cobertura) | S22 | Decisión ADR-029 | Consumidores S25 |

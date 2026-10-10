@@ -1,7 +1,7 @@
 # HANDOFF — punto de entrada al siguiente agente
 
-Fecha: 2026-10-10 · Sprints: **S00–S21 APROBADOS (batch S21–S25)**.
-Siguiente: **S22**. **S26 prohibido sin autorización.**
+Fecha: 2026-10-10 · Sprints: **S00–S22 APROBADOS (batch S21–S25)**.
+Siguiente: **S23**. **S26 prohibido sin autorización.**
 
 ## Estado científico/arquitectónico actual
 
@@ -32,9 +32,9 @@ Siguiente: **S22**. **S26 prohibido sin autorización.**
    2026-10-10.
 2. ~~Licencia sin decidir~~ — resuelto: Apache-2.0 solo código propio
    (propietario 2026-10-10); `LICENSE` + `THIRD_PARTY_NOTICES.md` creados.
-3. S01–S21 APROBADOS 2026-10-10 (S20: veredicto por complementaria;
-   S21: ECT 20→20.33 °C, auditoría ramificada). Deuda: viscosidad y
-   galerías en S22; mapas/banco pendientes.
+3. S01–S22 APROBADOS 2026-10-10 (S21: ECT emergente; S22: film
+   0.56→0.19 en caliente, sin banderas). Deuda: fugas generales en S23
+   (ley explícita); banco/medidas.
 
 ## Roles y reglas de cambio (S00)
 
@@ -152,9 +152,15 @@ Crate `diagnostics` + `diagnose-demo` + ADR-027. Ver `docs/sprints/S20.md`.
 Crate `thermal` + acople + `warmup`/`export-trace` + ADR-028. Ver
 `docs/sprints/S21.md`.
 
-## Brief S22 (siguiente en batch autorizado)
+## Brief S22 (APROBADO 2026-10-10)
 
-Aceite y cojinetes: bomba/alivio, viscosidad vs T, nivel y galerías por
-holgura, presión local (no solo global), fricción con lubricación
-dependiente del régimen, `film_quality` hacia desgaste futuro. Gate:
-fallo de aceite por ruta presión/film/fricción, nunca bandera.
+Crate `lube` + `lubrication-test` + ADR-029. Ver `docs/sprints/S22.md`.
+
+## Brief S23 (siguiente en batch autorizado)
+
+Rutas de fuga generales con ley EXPLÍCITA y evidencia: dominios de
+fluido/puertos de fuga cámara→cárter/refrigerante/exterior y
+aceite→exterior, conductancia de junta desde `SealContactState` (no de
+daño booleano), conductancia de anillo desde holgura L1, entalpía por
+especie, instrumentos asociados. Gate: sin multiplicador de potencia ni
+rutina de síntomas; fidelidad etiquetada.
