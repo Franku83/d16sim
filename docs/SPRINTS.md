@@ -1,8 +1,9 @@
 # SPRINTS — dependencias, estado y gates
 
 Fuente normativa: `docs/foundation.md` §14–§16. Detalle por sprint:
-`docs/sprints/S00.md`–`S10.md`. Estados: `PENDIENTE` · `EN_CURSO` ·
-`APROBADO`. S00–S10 APROBADOS; S11+ pendientes.
+`docs/sprints/S00.md`–`S25.md` (uno por sprint aprobado). Estados:
+`PENDIENTE` · `EN_CURSO` · `APROBADO`. S00–S25 APROBADOS (reconciliado
+2026-10-10: el encabezado anterior decía S00–S10 por desactualización).
 
 ## FASE A — FOUNDATION-KERNEL (S00–S13)
 
@@ -57,6 +58,7 @@ ecuaciones con animaciones. Ver foundation §16. Todos PENDIENTE.
 
 ## Regla de avance
 
-S00–S25 APROBADOS. Batch S21–S25 COMPLETO. **S26 prohibido sin autorización.**
-**S26 prohibido sin autorización.** Gates universales §12.3 +
-`docs/definition-of-done.md` aplican.
+S00–S25 APROBADOS. Batch S21–S25 COMPLETO. Batch S26–S30 AUTORIZADO
+2026-10-10 (reconciliación Fase 0; la prohibición anterior queda
+supersedida). Gates universales §12.3 + `docs/definition-of-done.md`
+aplican. **S31 prohibido sin autorización.**

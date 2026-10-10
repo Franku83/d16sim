@@ -1,17 +1,22 @@
 # HANDOFF — punto de entrada al siguiente agente
 
-Fecha: 2026-10-10 · Sprints: **S00–S25 APROBADOS — batch S21–S25 COMPLETO**.
-**S26 PROHIBIDO sin autorización explícita. Trabajo detenido.** **S26 prohibido sin autorización.**
+Fecha: 2026-10-10 · Sprints: **S00–S25 APROBADOS — batch S21–S25
+COMPLETO; batch S26–S30 AUTORIZADO** (reconciliación Fase 0).
+**S31 prohibido sin autorización explícita.**
 
 ## Estado científico/arquitectónico actual
 
 - Spec normativa: `docs/foundation.md` (v0.2). Research intactos en raíz.
-- 12 crates en workspace (`crates/`): tipos, runner, unidades, grafo de
-  montaje, cinemática, contactos, pernos, termo, combustión, `physics`
-  aún stub, simulación, CLI. Sin UI. Numéricos con etiqueta de
-  verificación (`VERIFIED_NUMERICALLY`), nunca validación.
-- `model_assumptions.md` con H-S06..H-S10 registradas. Números OEM D16Y7
-  siguen `PENDING` / `MISSING-DATA`; presets ilustrativos etiquetados.
+- 25 crates en workspace (`crates/`, reconciliado 2026-10-10; antes
+  decía 12 por desactualización): assembly, calibration, cli, combustion,
+  contacts, crank, diagnostics, ecu, electrical, engine, engine-types,
+  fastener, flow, fuel, kinematics, leak, lube, math, physics,
+  simulation, thermal, thermo, trigger, units, valvetrain. Sin UI.
+  Numéricos con etiqueta de verificación (`VERIFIED_NUMERICALLY`),
+  nunca validación.
+- `model_assumptions.md` con H-S00 y H-S06–H-S25 registradas (antes
+  decía solo H-S06–H-S10 por desactualización). Números OEM D16Y7 siguen
+  `PENDING` / `MISSING-DATA`; presets ilustrativos etiquetados.
 - Evidencia: `docs/EVIDENCE_POLICY.md`. Riesgos: `docs/RISK_MATRIX.md`.
 - DoD y rechazo: `docs/definition-of-done.md`. Gate S00:
   `docs/sprints/S00.md`.
@@ -32,9 +37,12 @@ Fecha: 2026-10-10 · Sprints: **S00–S25 APROBADOS — batch S21–S25 COMPLETO
    2026-10-10.
 2. ~~Licencia sin decidir~~ — resuelto: Apache-2.0 solo código propio
    (propietario 2026-10-10); `LICENSE` + `THIRD_PARTY_NOTICES.md` creados.
-3. S01–S22 APROBADOS 2026-10-10 (S21: ECT emergente; S22: film
-   0.56→0.19 en caliente, sin banderas). Deuda: fugas generales en S23
-   (ley explícita); banco/medidas.
+3. S01–S25 APROBADOS 2026-10-10 (reconciliado; antes decía S01–S22
+   por desactualización). S23: suministro regulado + leyes explícitas.
+   S24: protocolo de 2 mediciones. S25: cierre NUMERICALLY_VERIFIED_ONLY
+   con 8 vacíos P1 (sin dyno inventado). Deuda: desgaste (S26), daños
+   por montaje (S27), dyno auditable (S28), suite adversarial (S29),
+   auditoría final (S30).
 
 ## Roles y reglas de cambio (S00)
 
@@ -168,10 +176,42 @@ Crate `leak` + `leak-test` + ADR-030. Ver `docs/sprints/S23.md`.
 
 Crate `calibration` + `calibration-demo` + `docs/calibration/` + ADR-032. Ver `docs/sprints/S25.md`.
 
-## Brief S26 (PROHIBIDO sin autorización explícita del propietario)
+## Brief S26 (AUTORIZADO 2026-10-10, batch S26–S30)
 
-Calibración stock con datos reales o cierre NUMERICALLY_VERIFIED_ONLY:
-campañas, parámetros identificables con priors, train/holdout sin
-leakage, covarianzas, sensibilidad, intervalos por régimen. Gate: todo
-gráfico distingue real/simulado y train/holdout; prohibido inventar
-dyno o validar con sintéticos.
+**Reconciliación explícita (no sustitución silenciosa):** este brief
+decía «calibración stock…» por un copia-pega de S25. La fuente normativa
+(Foundation §15, S26 «Motor persistente: desgaste y mantenimiento bajo
+incertidumbre») y `SPRINTS.md` (S26 = desgaste) concuerdan: **S26 es
+desgaste**, y la calibración queda en S25 donde pertenece. Contenido
+correcto: slow-state persistente por pieza, leyes de desgaste solo con
+parámetros defendibles (resto `UNSUPPORTED`), acople T/contacto/fricción,
+eventos de servicio, aceleración de tiempo sin dependencia de FPS,
+replay desde snapshot/seed. Gate: leyes/provenance, sin evidencia solo
+tendencias condicionadas. Dep: S21–S25.
+
+## Brief S27 (AUTORIZADO, batch S26–S30)
+
+Contactos, plasticidad/fatiga y daños por montaje: pistón-válvula, rosca,
+over-stretch, pérdida de película; `DamageMechanism` con dominio;
+irreversible solo por criterio físico; pruebas negativas. Gate: sin
+instante de fallo real sin material/geometría/calibración. Dep:
+S07–S08, S11, S22, S26.
+
+## Brief S28 (AUTORIZADO, batch S26–S30)
+
+Dyno auditable: freno con inercia/carga, rampas, pérdidas, ambiente,
+potencia al freno vs indicada vs pérdidas. Gate: HP desde torque
+integrado, nunca circular desde spec. Dep: S14–S27.
+
+## Brief S29 (AUTORIZADO, batch S26–S30)
+
+Suite adversarial: pares de fallos, invariantes, no-linealidad compuesta,
+observabilidad, conmutatividad, Monte Carlo con seed fija. Gate: cada
+síntoma remonta a ecuaciones; sin `if fault_count>1`. Dep: S23–S28.
+
+## Brief S30 (AUTORIZADO, batch S26–S30)
+
+Auditoría científica y congelación: ModelCards, reproducibilidad en 2
+máquinas × 3 perfiles, 4 cadenas causales, benchmark CPU, versionado,
+revisión experta. Gate: sin «predictivo» sin evidencia; incompleta pero
+honesta puede pasar. Dep: S00–S29.

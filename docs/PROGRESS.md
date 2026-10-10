@@ -391,3 +391,20 @@ Solo hechos constatables; sin cifras improvisadas.
   validación con sintéticos. 8 vacíos numerados; reapertura con C1–C6+M2.
 - DETENCIÓN honesta: sin evidencia externa indispensable (P1), el batch
   termina aquí como ordenó el propietario.
+
+## 2026-10-10 · Fase 0 · Reconciliación documental (sin cambios de física/gates)
+
+Auditoría previa a S26 contra repo real (25 crates, 32 ADRs, H-S00–H-S25,
+`docs/sprints/S00–S25.md`, 1 commit/sprint S00–S25 + extras conocidos:
+`84d3390`orius S02, `98d95cf` revisión pre-S11; historia intacta).
+Inconsistencias corregidas: (1) HANDOFF decía 12 crates → 25;
+(2) HANDOFF citaba solo H-S06–H-S10 → H-S00–H-S25; (3) SPRINTS encabezado
+S00–S10/S11+ pendientes → S00–S25; (4) CONFLICTO S26: HANDOFF Brief S26
+describía calibración (copia de S25); Foundation §15 + SPRINTS asignan
+S26 a desgaste — se adopta desgaste como definición correcta y la
+calibración permanece en S25 (corrección explícita, no sustitución);
+(5) duplicaciones eliminadas (doble prohibición S26, estados S23
+heredados, tabla BACKLOG congelada en S00 → actualizada con puntero
+autoritativo a SPRINTS); (6) HANDOFF extendido con Briefs S27–S30
+ausentes. Sin contradicciones materiales irresolubles: no se requirió
+detención. Batch S26–S30 autorizado; S31 prohibido.
