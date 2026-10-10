@@ -313,6 +313,9 @@ pub enum MechVerdict {
 /// - compresión baja + fuga a cárter ⇒ anillos;
 /// - compresión baja + fuga a escape ⇒ válvula;
 /// - compresión baja + fuga a refrigerante (o múltiple) ⇒ junta.
+///
+/// R01-C1/RV02: un reparto sin ninguna fracción observada (todas cero) no es
+/// una medición; no cuenta como segunda medición ni permite discriminar.
 #[must_use]
 pub fn diagnose_low_compression(
     compression_kpa: Option<f64>,
@@ -320,11 +323,13 @@ pub fn diagnose_low_compression(
     leak_pct: Option<f64>,
     split: Option<LeakSplit>,
 ) -> MechVerdict {
+    let split_observed =
+        split.filter(|s| s.to_crankcase_01 + s.to_exhaust_01 + s.to_coolant_01 > 1e-12);
     let mut n = 0;
     if compression_kpa.is_some() {
         n += 1;
     }
-    if leak_pct.is_some() && split.is_some() {
+    if leak_pct.is_some() && split_observed.is_some() {
         n += 1;
     }
     if n < 2 {
@@ -335,7 +340,7 @@ pub fn diagnose_low_compression(
     }
     let comp = compression_kpa.unwrap_or(f64::MAX);
     let pct = leak_pct.unwrap_or(0.0);
-    let s = split.unwrap_or(LeakSplit {
+    let s = split_observed.unwrap_or(LeakSplit {
         to_crankcase_01: 0.0,
         to_exhaust_01: 0.0,
         to_coolant_01: 0.0,
@@ -510,6 +515,38 @@ mod tests {
             MechVerdict::Discriminated {
                 cause: MechCause::HeadGasket,
                 by_measurements: "compression + leak-down to coolant/multiple".to_owned(),
+            }
+        );
+    }
+
+    #[test]
+    fn zero_split_is_not_a_measurement() {
+        // R01-C1/RV02: un reparto todo-cero no es una observación; no puede
+        // producir una causa específica.
+        let v = diagnose_low_compression(
+            Some(500.0),
+            900.0,
+            Some(30.0),
+            Some(LeakSplit {
+                to_crankcase_01: 0.0,
+                to_exhaust_01: 0.0,
+                to_coolant_01: 0.0,
+            }),
+        );
+        assert_eq!(
+            v,
+            MechVerdict::Inconclusive {
+                have_n: 1,
+                need_n: 2
+            }
+        );
+        // Sin split también inconcluso (ya cubierto, control explícito).
+        let v2 = diagnose_low_compression(Some(500.0), 900.0, Some(30.0), None);
+        assert_eq!(
+            v2,
+            MechVerdict::Inconclusive {
+                have_n: 1,
+                need_n: 2
             }
         );
     }

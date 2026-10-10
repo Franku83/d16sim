@@ -1651,30 +1651,45 @@ fn leak_test_cmd(scenario: &str) -> Result<(), EngineError> {
 /// Reparto observable de la cámara a partir de la red física y de los
 /// caudales integrados por puerto (R01-F02). No consulta el identificador de
 /// escenario: renombrar/reordenar escenarios con los mismos inputs físicos
-/// produce la misma observación. Los destinos convencionales de la cámara
-/// son cárter (nodo 1) y refrigerante (nodo 2); una ruta a otro nodo de gas
-/// se reporta como canal de escape instrumentado; si no existe, la fracción
-/// de escape se declara 0 como frontera (no como porcentaje heurístico).
+/// produce la misma observación.
+///
+/// R01-C1/RV02: TODA ruta de gas instrumentada desde la cámara entra en el
+/// denominador físico. Cárter (nodo 1) y refrigerante (nodo 2) tienen nombre
+/// convencional; cualquier otro destino de gas (escape/admisión) se reporta
+/// como escape y no se descarta. Si no hay ninguna ruta con caudal, el
+/// reparto queda a cero y el protocolo debe declararlo no observado (no una
+/// causa específica). Los destinos líquidos (p. ej. aceite) no son rutas de
+/// fuga de la cámara y no entran.
 fn observable_chamber_split(
     net: &leak::LeakNetwork,
     totals: &[f64],
 ) -> (diagnostics::LeakSplit, bool) {
     let mut to_crankcase = 0.0f64;
+    let mut to_exhaust = 0.0f64;
     let mut to_coolant = 0.0f64;
+    let mut exhaust_channel = false;
     for (p, m) in net.ports.iter().zip(totals) {
         if p.from == 0 {
             match p.to {
                 1 => to_crankcase += *m,
                 2 => to_coolant += *m,
-                _ => {}
+                _ => {
+                    if matches!(
+                        net.domains.get(p.to).map(|d| d.fluid),
+                        Some(leak::Fluid::Gas { .. })
+                    ) {
+                        to_exhaust += *m;
+                        exhaust_channel = true;
+                    }
+                }
             }
         }
     }
-    let obs_total = to_crankcase + to_coolant;
+    let obs_total = to_crankcase + to_exhaust + to_coolant;
     let split = if obs_total > 0.0 {
         diagnostics::LeakSplit {
             to_crankcase_01: to_crankcase / obs_total,
-            to_exhaust_01: 0.0,
+            to_exhaust_01: to_exhaust / obs_total,
             to_coolant_01: to_coolant / obs_total,
         }
     } else {
@@ -1684,15 +1699,6 @@ fn observable_chamber_split(
             to_coolant_01: 0.0,
         }
     };
-    let exhaust_channel = net.ports.iter().any(|p| {
-        p.from == 0
-            && p.to != 1
-            && p.to != 2
-            && matches!(
-                net.domains.get(p.to).map(|d| d.fluid),
-                Some(leak::Fluid::Gas { .. })
-            )
-    });
     (split, exhaust_channel)
 }
 
@@ -2113,5 +2119,59 @@ mod r01_f02_tests {
         let ring = observed(LeakScenario::RingLeakCyl3);
         assert!(ring.0.to_crankcase_01 > 0.99);
         assert!(a.0.to_crankcase_01 > 0.99);
+    }
+
+    #[test]
+    fn instrumented_exhaust_route_enters_denominator() {
+        // R01-C1/RV02: una ruta cámara→escape de gas instrumentada cuenta en
+        // el denominador físico y se reporta; un reparto nulo no discrimina.
+        use leak::{Fluid, LeakDomain, LeakNetwork, LeakPort};
+        let gas = Fluid::Gas {
+            r_gas: 287.0,
+            cp: 1005.0,
+        };
+        let dom = |p: f64| LeakDomain {
+            v_m3: 0.01,
+            m_kg: p * 0.01 / (287.0 * 300.0),
+            t_k: 300.0,
+            fluid: gas,
+            fresh_frac: 1.0,
+        };
+        let net = LeakNetwork {
+            domains: vec![dom(500000.0), dom(100000.0), dom(100000.0), dom(100000.0)],
+            p_set_pa: vec![0.0; 4],
+            ports: vec![
+                LeakPort {
+                    from: 0,
+                    to: 1,
+                    conductance: 1e-8,
+                    compressible: true,
+                },
+                LeakPort {
+                    from: 0,
+                    to: 2,
+                    conductance: 2e-8,
+                    compressible: true,
+                },
+                LeakPort {
+                    from: 0,
+                    to: 3,
+                    conductance: 7e-8,
+                    compressible: true,
+                },
+            ],
+            mu_liquid_pa_s: 0.02,
+            supply_t_k: 300.0,
+        };
+        let (_, _, totals) = run_leakdown(&net, 0, 0.01, 5e-4).unwrap();
+        let (split, exhaust) = observable_chamber_split(&net, &totals);
+        assert!(exhaust);
+        assert!((split.to_crankcase_01 - 0.1).abs() < 1e-6, "{split:?}");
+        assert!((split.to_exhaust_01 - 0.7).abs() < 1e-6, "{split:?}");
+        assert!((split.to_coolant_01 - 0.2).abs() < 1e-6, "{split:?}");
+        // Reparto nulo ⇒ no observado ⇒ inconcluso (nunca Rings por 0≥0).
+        let (zero, _) = observable_chamber_split(&net, &[0.0, 0.0, 0.0]);
+        let v = diagnostics::diagnose_low_compression(Some(500.0), 900.0, Some(30.0), Some(zero));
+        assert!(format!("{v:?}").contains("Inconclusive"), "{v:?}");
     }
 }

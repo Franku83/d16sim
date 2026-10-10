@@ -9,7 +9,7 @@
 //! bit-idéntico).
 
 use crate::control::OpenLoopControl;
-use crate::state::{CylState, EngineSnapshot, EngineState};
+use crate::state::{CylState, EngineSnapshot, EngineState, MigrationProvenance};
 use crank::{FrictionModel, InertiaParams};
 use electrical::{Battery, Coil, StarterDrive, StarterMotor};
 use flow::{curtain_area_m2, exhaust_cd, intake_cd, EXHAUST_VALVE_DIA_MM, INTAKE_VALVE_DIA_MM};
@@ -261,6 +261,8 @@ pub struct WorkState {
     pub th_q_amb_j: f64,
     /// Combustible acumulado cruzado a la frontera ambiente (kg, R01-F01).
     pub fuel_emitted_kg: f64,
+    /// Procedencia de migración legacy (R02-C1/RV04); `None` si nativo.
+    pub provenance: Option<MigrationProvenance>,
 }
 
 /// Cámara de trabajo (conserva átomos: lo quemado sigue en `m`).
@@ -368,46 +370,49 @@ impl WorkState {
     /// Convierte a snapshot verificable (hash canónico, esquema 2).
     #[must_use]
     pub fn snapshot(&self) -> EngineSnapshot {
-        EngineSnapshot::capture(&EngineState {
-            schema_version: 2,
-            time_s: self.time_s,
-            theta_global_rad: self.theta_rad,
-            omega_rad_s: self.omega_rad_s,
-            prev_local_deg: self.prev_local_deg,
-            cyls: [
-                ws_cyl(&self.cyls[0]),
-                ws_cyl(&self.cyls[1]),
-                ws_cyl(&self.cyls[2]),
-                ws_cyl(&self.cyls[3]),
-            ],
-            plen_m_kg: self.plen.m,
-            plen_t_k: self.plen.t,
-            plen_fresh: self.plen.fresh,
-            exh_m_kg: self.exh.m,
-            exh_t_k: self.exh.t,
-            exh_fresh: self.exh.fresh,
-            fuel_injected_kg: self.fuel_injected_kg,
-            fuel_burned_kg: self.fuel_burned_kg,
-            heat_released_j: self.heat_released_j,
-            work_ind_j: self.w_ind_j,
-            work_fric_j: self.w_fric_j,
-            work_starter_j: self.w_starter_j,
-            work_load_j: self.w_load_j,
-            thermal: self
-                .therm
-                .as_ref()
-                .map(|(st, _)| crate::state::ThermalSnap {
-                    t_wall_c: st.t_wall_c,
-                    t_piston_c: st.t_piston_c,
-                    t_oil_c: st.t_oil_c,
-                    t_cool_c: st.t_cool_c,
-                    ect_filt_c: st.ect_filt_c,
-                }),
-            plen_fuel_kg: self.plen.fuel,
-            exh_fuel_kg: self.exh.fuel,
-            fuel_emitted_kg: self.fuel_emitted_kg,
-            pmax_pa: Some(self.pmax_pa),
-        })
+        EngineSnapshot::capture_with(
+            &EngineState {
+                schema_version: 2,
+                time_s: self.time_s,
+                theta_global_rad: self.theta_rad,
+                omega_rad_s: self.omega_rad_s,
+                prev_local_deg: self.prev_local_deg,
+                cyls: [
+                    ws_cyl(&self.cyls[0]),
+                    ws_cyl(&self.cyls[1]),
+                    ws_cyl(&self.cyls[2]),
+                    ws_cyl(&self.cyls[3]),
+                ],
+                plen_m_kg: self.plen.m,
+                plen_t_k: self.plen.t,
+                plen_fresh: self.plen.fresh,
+                exh_m_kg: self.exh.m,
+                exh_t_k: self.exh.t,
+                exh_fresh: self.exh.fresh,
+                fuel_injected_kg: self.fuel_injected_kg,
+                fuel_burned_kg: self.fuel_burned_kg,
+                heat_released_j: self.heat_released_j,
+                work_ind_j: self.w_ind_j,
+                work_fric_j: self.w_fric_j,
+                work_starter_j: self.w_starter_j,
+                work_load_j: self.w_load_j,
+                thermal: self
+                    .therm
+                    .as_ref()
+                    .map(|(st, _)| crate::state::ThermalSnap {
+                        t_wall_c: st.t_wall_c,
+                        t_piston_c: st.t_piston_c,
+                        t_oil_c: st.t_oil_c,
+                        t_cool_c: st.t_cool_c,
+                        ect_filt_c: st.ect_filt_c,
+                    }),
+                plen_fuel_kg: self.plen.fuel,
+                exh_fuel_kg: self.exh.fuel,
+                fuel_emitted_kg: self.fuel_emitted_kg,
+                pmax_pa: Some(self.pmax_pa),
+            },
+            self.provenance.clone(),
+        )
     }
 
     /// Restaura desde snapshot verificado (acepta esquema 1 migrando la
@@ -428,6 +433,9 @@ impl WorkState {
                 reason: "unsupported snapshot schema".to_owned(),
             });
         }
+        // Contrato de frontera: los inputs también se validan al restaurar
+        // (R02-C1/RV05: volúmenes/capacidades/record_every etc.).
+        validate_inputs(inputs)?;
         let s = &snap.state;
         // v1 histórico no tenía campo térmico: su presencia es inconsistente.
         if s.schema_version == 1 && s.thermal.is_some() {
@@ -482,6 +490,7 @@ impl WorkState {
             pmax_pa: 0.0,
             th_q_amb_j: 0.0,
             fuel_emitted_kg: s.fuel_emitted_kg,
+            provenance: None,
         };
         // Red térmica: nativa en v2; en v1 migra a frío si las entradas la
         // piden, o ausente si no (error si difiere de las entradas).
@@ -531,6 +540,50 @@ impl WorkState {
             })
             .fold(p_amb, f64::max);
         ws.pmax_pa = s.pmax_pa.unwrap_or(p_cyl_max);
+        // Procedencia de migración legacy (R02-C1/RV04): separa integridad de
+        // lectura de equivalencia de continuación física. Un snapshot nativo
+        // completo conserva su procedencia (None = sin migración); un legacy
+        // registra esquema/hash de origen, transformación, campos ausentes y
+        // si la continuación es exacta (estado inicial neutro) o aproximada
+        // (había combustible/movimiento: la historia no se puede reconstruir).
+        ws.provenance = snap.provenance.clone();
+        let legacy = s.schema_version == 1 || s.pmax_pa.is_none();
+        if ws.provenance.is_none() && legacy {
+            let mut missing = vec![
+                "plen_fuel_kg".to_owned(),
+                "exh_fuel_kg".to_owned(),
+                "fuel_emitted_kg".to_owned(),
+            ];
+            if s.pmax_pa.is_none() {
+                missing.push("pmax_pa".to_owned());
+            }
+            if s.schema_version == 1 {
+                missing.push("thermal".to_owned());
+            }
+            let neutral = s.time_s == 0.0
+                && s.omega_rad_s == 0.0
+                && s.fuel_injected_kg == 0.0
+                && s.fuel_burned_kg == 0.0
+                && s.heat_released_j == 0.0
+                && s.cyls.iter().all(|c| c.fuel_kg == 0.0)
+                && s.plen_fuel_kg == 0.0
+                && s.exh_fuel_kg == 0.0;
+            ws.provenance = Some(MigrationProvenance {
+                from_schema: s.schema_version,
+                original_hash: snap.state_hash.clone(),
+                transformation: format!(
+                    "schema {} -> 2: node fuel inventories absent -> 0; pmax_pa -> max(current cylinder pressure, ambient); thermal per inputs",
+                    s.schema_version
+                ),
+                missing_fields: missing,
+                continuation: if neutral {
+                    "exact_neutral"
+                } else {
+                    "approximate_hot"
+                }
+                .to_owned(),
+            });
+        }
         ws.m_sys_0_kg = ws.plen.m + ws.exh.m + ws.cyls.iter().map(|c| c.m).sum::<f64>();
         ws.u_sys_0_j = ws.plen.u() + ws.exh.u() + ws.cyls.iter().map(|c| c.u).sum::<f64>();
         // Fail-closed: hash válido no implica estado físico válido (R02-F15).
@@ -583,6 +636,59 @@ fn validate_physical_state(ws: &WorkState, ctx: &str) -> Result<(), EngineError>
             && n.fuel <= n.m * (1.0 + 1e-9))
         {
             return Err(bad("node state"));
+        }
+    }
+    // Historia de eventos y contadores/ledgers (R02-C1/RV05): un hash válido
+    // o un estado con masa positiva no autoriza NaN/Inf ni contadores
+    // negativos imposibles.
+    if !ws.prev_local_deg.iter().all(|v| v.is_finite()) {
+        return Err(bad("event history"));
+    }
+    for (v, name) in [
+        (ws.heat_released_j, "heat_released"),
+        (ws.fuel_injected_kg, "fuel_injected"),
+        (ws.fuel_burned_kg, "fuel_burned"),
+        (ws.fuel_emitted_kg, "fuel_emitted"),
+        (ws.m_in_amb_kg, "m_in_amb"),
+        (ws.m_out_amb_kg, "m_out_amb"),
+        (ws.h_in_amb_j, "h_in_amb"),
+        (ws.h_out_amb_j, "h_out_amb"),
+        (ws.h_fuel_in_j, "h_fuel_in"),
+        (ws.w_ind_j, "w_ind"),
+        (ws.w_fric_j, "w_fric"),
+        (ws.w_starter_j, "w_starter"),
+        (ws.w_load_j, "w_load"),
+        (ws.th_q_amb_j, "th_q_amb"),
+        (ws.m_sys_0_kg, "m_sys_0"),
+        (ws.u_sys_0_j, "u_sys_0"),
+    ] {
+        if !v.is_finite() {
+            return Err(bad(name));
+        }
+    }
+    for (v, name) in [
+        (ws.heat_released_j, "heat_released"),
+        (ws.fuel_injected_kg, "fuel_injected"),
+        (ws.fuel_burned_kg, "fuel_burned"),
+        (ws.fuel_emitted_kg, "fuel_emitted"),
+        (ws.m_in_amb_kg, "m_in_amb"),
+        (ws.m_out_amb_kg, "m_out_amb"),
+    ] {
+        if v < 0.0 {
+            return Err(bad(name));
+        }
+    }
+    if let Some((st, _)) = &ws.therm {
+        for v in [
+            st.t_wall_c,
+            st.t_piston_c,
+            st.t_oil_c,
+            st.t_cool_c,
+            st.ect_filt_c,
+        ] {
+            if !(v.is_finite() && v > -273.15) {
+                return Err(bad("thermal state"));
+            }
         }
     }
     Ok(())
@@ -703,6 +809,7 @@ fn initial_state(inputs: &EngineInputs) -> Result<WorkState, EngineError> {
         pmax_pa: p_amb,
         th_q_amb_j: 0.0,
         fuel_emitted_kg: 0.0,
+        provenance: None,
     })
 }
 
@@ -733,14 +840,6 @@ fn drive(
     )
     .map_err(|_| bad("wiebe"))?;
     let _ = wiebe;
-    let completeness = combustion::Wiebe::new(
-        inputs.wiebe_a,
-        inputs.wiebe_m,
-        0.0,
-        inputs.wiebe_duration_deg.to_radians(),
-    )
-    .map_err(|_| bad("wiebe"))?;
-    let completeness = completeness.burned_fraction(completeness.end_rad() + 1.0);
     let dt = inputs.dt_s;
     let coil = Coil {
         inductance_h: 5e-3,
@@ -916,6 +1015,14 @@ fn drive(
             // Wiebe con reloj local (solo válvulas cerradas). Con red
             // térmica, una fracción fw va a paredes (el gas conserva 1−fw):
             // sin red, fw = 0 (comportamiento S16 exacto).
+            //
+            // R01-C1/RV01: la energía liberada en el paso consume el
+            // inventario químico EN LA MISMA CONVENCIÓN TEMPORAL. La masa
+            // quemada del paso es la que corresponde a dQ/(LHV·η); no se
+            // difiere la contabilidad al final de la ventana (eso permitía
+            // sumar calor liberado y combustible aún intacto como energías
+            // independientes). El remanente no quemado (completitud < 1)
+            // permanece en `c.fuel` y se transporta como especie.
             if c.burn_latched > 0.0 && !c.burn_accounted && li < 0.05 && le < 0.05 {
                 let w = combustion::Wiebe::new(
                     inputs.wiebe_a,
@@ -925,20 +1032,17 @@ fn drive(
                 )
                 .map_err(|_| bad("wiebe"))?;
                 let rate = w.burned_rate(local.to_radians());
-                let dq = c.burn_latched
-                    * inputs.fuel.lhv_j_per_kg
-                    * inputs.combustion_efficiency
-                    * rate
-                    * ws.omega_rad_s
-                    * dt;
+                let dm_burn = (c.burn_latched * rate * ws.omega_rad_s * dt)
+                    .max(0.0)
+                    .min(c.fuel);
+                let dq = dm_burn * inputs.fuel.lhv_j_per_kg * inputs.combustion_efficiency;
                 let fw = ws.therm.as_ref().map(|(_, p)| p.wall_frac).unwrap_or(0.0);
                 c.u += dq * (1.0 - fw);
                 ws.heat_released_j += dq;
                 dq_wall_step += dq * fw;
+                c.fuel -= dm_burn;
+                ws.fuel_burned_kg += dm_burn;
                 if local > fire_local + inputs.wiebe_duration_deg {
-                    let b = (c.burn_latched * completeness).min(c.fuel);
-                    ws.fuel_burned_kg += b;
-                    c.fuel -= b;
                     c.burn_accounted = true;
                 }
             }
@@ -1013,10 +1117,12 @@ fn drive(
             0.0
         };
         let sp = 2.0 * inputs.geom.stroke().as_m() * rpm_now.max(0.0) / 60.0;
+        // R02-C1/RV05: un error de fricción no se convierte en torque cero
+        // silencioso; se propaga como error tipado.
         let tau_fric = inputs
             .friction
             .torque_mag(sp, ws.pmax_pa, vd_cyl * 4.0, ws.omega_rad_s)
-            .unwrap_or(0.0);
+            .map_err(|_| bad("friction torque"))?;
         let acc = (tau_ind - tau_fric - inputs.accessory_tau_n_m + tau_starter) / j_eff;
         let om_new = (ws.omega_rad_s + acc * dt).max(0.0);
         let om_avg = (ws.omega_rad_s + om_new) / 2.0;
@@ -1162,17 +1268,50 @@ fn validate_inputs(inputs: &EngineInputs) -> Result<(), EngineError> {
         (inputs.throttle_area_m2, "throttle_area"),
         (inputs.idle_bypass_area_m2, "idle_bypass_area"),
         (inputs.tailpipe_area_m2, "tailpipe_area"),
-        (inputs.accessory_tau_n_m, "accessory_tau"),
     ] {
-        if !v.is_finite() {
+        // Área negativa no es una sección física (R02-C1/RV05).
+        if !(v.is_finite() && v >= 0.0) {
             return Err(bad(name));
         }
+    }
+    if !inputs.accessory_tau_n_m.is_finite() {
+        return Err(bad("accessory_tau"));
     }
     if !(inputs.plenum_v_m3.is_finite() && inputs.plenum_v_m3 > 0.0) {
         return Err(bad("plenum volume"));
     }
     if !(inputs.exhaust_v_m3.is_finite() && inputs.exhaust_v_m3 > 0.0) {
         return Err(bad("exhaust volume"));
+    }
+    // Wiebe y fricción: dominio declarado antes de construir/avanzar.
+    if !(inputs.wiebe_a.is_finite() && inputs.wiebe_a > 0.0) {
+        return Err(bad("wiebe_a"));
+    }
+    if !(inputs.wiebe_m.is_finite() && inputs.wiebe_m >= 0.0) {
+        return Err(bad("wiebe_m"));
+    }
+    if !(inputs.wiebe_duration_deg.is_finite() && inputs.wiebe_duration_deg > 0.0) {
+        return Err(bad("wiebe_duration"));
+    }
+    match inputs.friction {
+        FrictionModel::None => {}
+        FrictionModel::Viscous { c_n_m_s } => {
+            if !(c_n_m_s.is_finite() && c_n_m_s >= 0.0) {
+                return Err(bad("friction c"));
+            }
+        }
+        FrictionModel::ChenFlynn { coeffs } => {
+            for (v, name) in [
+                (coeffs.c1_pa, "c1"),
+                (coeffs.c2_dlless, "c2"),
+                (coeffs.c3_pa_s_m, "c3"),
+                (coeffs.c4_pa_s2_m2, "c4"),
+            ] {
+                if !(v.is_finite() && v >= 0.0) {
+                    return Err(bad(name));
+                }
+            }
+        }
     }
     Ok(())
 }
@@ -1193,18 +1332,26 @@ pub fn resume(
             reason: "t_end must be >= state time".to_owned(),
         });
     }
+    // Atomicidad (R02-C1/RV05): se valida el estado de entrada y se avanza
+    // sobre una COPIA; la copia solo se confirma si `drive` termina bien. Un
+    // error no deja el WorkState ni los ledgers parcialmente mutados.
+    validate_physical_state(ws, "resume input")?;
+    let mut candidate = ws.clone();
     // Rebase de auditoría para el tramo (el cierre total se verifica en
     // corridas completas; aquí el contrato es bit-identidad del estado).
-    let m0 = ws.plen.m + ws.exh.m + ws.cyls.iter().map(|c| c.m).sum::<f64>();
-    let u0 = ws.plen.u() + ws.exh.u() + ws.cyls.iter().map(|c| c.u).sum::<f64>();
-    ws.m_sys_0_kg = m0;
-    ws.u_sys_0_j = u0;
-    ws.m_in_amb_kg = 0.0;
-    ws.m_out_amb_kg = 0.0;
-    ws.h_in_amb_j = 0.0;
-    ws.h_out_amb_j = 0.0;
-    ws.h_fuel_in_j = 0.0;
-    drive(ws, inputs, t_end, inputs.record_every, 0)
+    let m0 = candidate.plen.m + candidate.exh.m + candidate.cyls.iter().map(|c| c.m).sum::<f64>();
+    let u0 =
+        candidate.plen.u() + candidate.exh.u() + candidate.cyls.iter().map(|c| c.u).sum::<f64>();
+    candidate.m_sys_0_kg = m0;
+    candidate.u_sys_0_j = u0;
+    candidate.m_in_amb_kg = 0.0;
+    candidate.m_out_amb_kg = 0.0;
+    candidate.h_in_amb_j = 0.0;
+    candidate.h_out_amb_j = 0.0;
+    candidate.h_fuel_in_j = 0.0;
+    let samples = drive(&mut candidate, inputs, t_end, inputs.record_every, 0)?;
+    *ws = candidate;
+    Ok(samples)
 }
 
 #[cfg(test)]
@@ -1675,5 +1822,212 @@ mod r01_r02_tests {
         let snap = w.snapshot();
         assert!(snap.verified());
         assert!(WorkState::restore(&snap, &inp).is_err());
+    }
+
+    // ---- R01-C1/RV01: presupuesto químico durante la combustión ----------
+
+    #[test]
+    fn chemical_energy_matches_consumed_fuel_during_burn() {
+        // El calor liberado en cada paso no puede superar la energía del
+        // combustible efectivamente consumido en ese mismo paso.
+        let inp = idle_point(healthy_inputs());
+        let mut w = initial_state(&inp).unwrap();
+        let mut max_excess = 0.0f64;
+        let mut saw_burn = false;
+        for n in 1..=200 {
+            drive(&mut w, &inp, n as f64 * 0.005, inp.record_every, 0).unwrap();
+            let excess = w.heat_released_j
+                - w.fuel_burned_kg * inp.fuel.lhv_j_per_kg * inp.combustion_efficiency;
+            max_excess = max_excess.max(excess);
+            if w.fuel_burned_kg > 0.0 {
+                saw_burn = true;
+            }
+        }
+        assert!(saw_burn, "el fixture debe quemar");
+        assert!(max_excess < 1.0, "max chemical excess {max_excess} J");
+    }
+
+    #[test]
+    fn burn_snapshot_cut_midwindow_resumes_coherently() {
+        // Un corte dentro de la ventana de combustión conserva el presupuesto:
+        // la continuación reproduce el estado continuo y el calor sigue
+        // correspondiendo a la masa consumida.
+        let mut inp = idle_point(healthy_inputs());
+        inp.t_end_s = 2.0;
+        let mut full = initial_state(&inp).unwrap();
+        drive(&mut full, &inp, 2.0, inp.record_every, 0).unwrap();
+        let mut found = false;
+        for cut_ms in (500..1500).step_by(25) {
+            let cut = cut_ms as f64 / 1000.0;
+            let mut a = initial_state(&inp).unwrap();
+            drive(&mut a, &inp, cut, inp.record_every, 0).unwrap();
+            if a.fuel_burned_kg > 0.0 && a.fuel_burned_kg < a.fuel_injected_kg {
+                let mut b = WorkState::restore(&a.snapshot(), &inp).unwrap();
+                drive(&mut b, &inp, 2.0, inp.record_every, 0).unwrap();
+                assert_eq!(
+                    full.snapshot().state_hash,
+                    b.snapshot().state_hash,
+                    "cut={cut}"
+                );
+                let excess = b.heat_released_j
+                    - b.fuel_burned_kg * inp.fuel.lhv_j_per_kg * inp.combustion_efficiency;
+                assert!(excess.abs() < 1.0, "excess {excess}");
+                found = true;
+                break;
+            }
+        }
+        assert!(found, "no mid-burn cut found");
+    }
+
+    #[test]
+    fn insufficient_fuel_burns_no_more_than_available() {
+        // Corte de combustible con inventario marcado: se consume como máximo
+        // hasta agotarse y nada se vuelve negativo.
+        let mut inp = idle_point(healthy_inputs());
+        inp.control.fuel_enabled = false;
+        let mut w = initial_state(&inp).unwrap();
+        for c in &mut w.cyls {
+            c.fuel = 0.001 * c.m;
+        }
+        let f0: f64 = w.cyls.iter().map(|c| c.fuel).sum::<f64>() + w.plen.fuel + w.exh.fuel;
+        drive(&mut w, &inp, 1.0, inp.record_every, 0).unwrap();
+        for c in &w.cyls {
+            assert!(c.fuel >= 0.0 && c.fuel <= c.m);
+        }
+        let stored: f64 = w.cyls.iter().map(|c| c.fuel).sum::<f64>() + w.plen.fuel + w.exh.fuel;
+        let closure = f0 + w.fuel_injected_kg - (stored + w.fuel_burned_kg + w.fuel_emitted_kg);
+        assert!(closure.abs() < 1e-9, "fuel closure {closure}");
+    }
+
+    // ---- R02-C1/RV03: cero firmado ---------------------------------------
+
+    #[test]
+    fn signed_zero_bits_roundtrip() {
+        let inp = idle_point(healthy_inputs());
+        let w = initial_state(&inp).unwrap();
+        for field in 0..3 {
+            let mut st = w.snapshot().state;
+            match field {
+                0 => st.plen_fuel_kg = -0.0,
+                1 => st.exh_fuel_kg = -0.0,
+                _ => st.fuel_emitted_kg = -0.0,
+            }
+            let snap = EngineSnapshot::capture(&st);
+            let parsed: EngineSnapshot =
+                serde_json::from_str(&serde_json::to_string(&snap).unwrap()).unwrap();
+            let after = match field {
+                0 => parsed.state.plen_fuel_kg,
+                1 => parsed.state.exh_fuel_kg,
+                _ => parsed.state.fuel_emitted_kg,
+            };
+            assert_eq!(after.to_bits(), (-0.0f64).to_bits());
+            assert!(parsed.verified());
+            assert!(WorkState::restore(&parsed, &inp).is_ok());
+        }
+    }
+
+    // ---- R02-C1/RV04: procedencia de migración ---------------------------
+
+    #[test]
+    fn legacy_migration_records_provenance() {
+        let cyl = serde_json::json!({
+            "m_kg": 4e-4, "u_j": 90.0, "fresh_frac": 1.0, "fuel_kg": 0.0,
+            "burn_latched_kg": 0.0, "burn_accounted": true
+        });
+        let v1 = serde_json::json!({
+            "schema_version": 1,
+            "time_s": 0.0, "theta_global_rad": 0.0, "omega_rad_s": 0.0,
+            "prev_local_deg": [0.0, 180.0, 540.0, 0.0],
+            "cyls": [cyl.clone(), cyl.clone(), cyl.clone(), cyl.clone()],
+            "plen_m_kg": 2e-3, "plen_t_k": 293.0, "plen_fresh": 1.0,
+            "exh_m_kg": 1e-3, "exh_t_k": 293.0, "exh_fresh": 0.0,
+            "fuel_injected_kg": 0.0, "fuel_burned_kg": 0.0, "heat_released_j": 0.0,
+            "work_ind_j": 0.0, "work_fric_j": 0.0, "work_starter_j": 0.0, "work_load_j": 0.0
+        });
+        let state: EngineState = serde_json::from_value(v1).unwrap();
+        let snap = EngineSnapshot::capture(&state);
+        let inp = idle_point(healthy_inputs());
+        let w = WorkState::restore(&snap, &inp).unwrap();
+        let prov = w.snapshot().provenance.clone().unwrap();
+        assert_eq!(prov.from_schema, 1);
+        assert_eq!(prov.original_hash, snap.state_hash);
+        assert!(prov.missing_fields.iter().any(|f| f == "pmax_pa"));
+        assert!(prov.missing_fields.iter().any(|f| f == "thermal"));
+        assert_eq!(prov.continuation, "exact_neutral");
+        // Estado en marcha con historia ausente ⇒ continuación aproximada.
+        let mut hot = initial_state(&inp).unwrap();
+        hot.provenance = None;
+        let mut st = hot.snapshot().state;
+        st.pmax_pa = None;
+        st.time_s = 1.0;
+        st.omega_rad_s = 50.0;
+        let snap2 = EngineSnapshot::capture(&st);
+        let w2 = WorkState::restore(&snap2, &inp).unwrap();
+        let prov2 = w2.snapshot().provenance.unwrap();
+        assert_eq!(prov2.continuation, "approximate_hot");
+        assert_eq!(prov2.from_schema, 2);
+    }
+
+    #[test]
+    fn native_snapshot_has_no_migration_provenance() {
+        let inp = idle_point(healthy_inputs());
+        let w = initial_state(&inp).unwrap();
+        assert!(w.snapshot().provenance.is_none());
+    }
+
+    // ---- R02-C1/RV05: atomicidad de frontera engine ----------------------
+
+    #[test]
+    fn resume_error_leaves_state_untouched() {
+        let inp = idle_point(healthy_inputs());
+        let mut w = initial_state(&inp).unwrap();
+        w.m_in_amb_kg = 0.12; // marcador de ledger preexistente
+        let before = format!("{w:?}");
+        let mut bad = inp.clone();
+        bad.tailpipe_area_m2 = -1.0;
+        assert!(resume(&mut w, &bad, 0.001).is_err());
+        assert_eq!(before, format!("{w:?}"));
+        // Estado imposible: rechazo antes de mutar.
+        let mut w2 = initial_state(&inp).unwrap();
+        w2.cyls[0].m = -1.0;
+        let before2 = format!("{w2:?}");
+        assert!(resume(&mut w2, &inp, 0.001).is_err());
+        assert_eq!(before2, format!("{w2:?}"));
+        // Fricción no finita: error, no torque cero silencioso.
+        let mut w3 = initial_state(&inp).unwrap();
+        let before3 = format!("{w3:?}");
+        let mut bad3 = inp.clone();
+        bad3.friction = crank::FrictionModel::Viscous { c_n_m_s: f64::NAN };
+        assert!(resume(&mut w3, &bad3, 0.001).is_err());
+        assert_eq!(before3, format!("{w3:?}"));
+    }
+
+    #[test]
+    fn restore_rejects_invalid_history_counters_and_thermal() {
+        let inp = idle_point(healthy_inputs());
+        let base = initial_state(&inp).unwrap().snapshot().state;
+        let mut s = base.clone();
+        s.prev_local_deg[0] = f64::NAN;
+        assert!(WorkState::restore(&EngineSnapshot::capture(&s), &inp).is_err());
+        let mut s = base.clone();
+        s.fuel_emitted_kg = -1.0;
+        assert!(WorkState::restore(&EngineSnapshot::capture(&s), &inp).is_err());
+        let mut s = base.clone();
+        s.heat_released_j = f64::NAN;
+        assert!(WorkState::restore(&EngineSnapshot::capture(&s), &inp).is_err());
+        let mut tinp = idle_point(healthy_inputs());
+        tinp.thermal = Some(thermal::ThermalParams::illustrative());
+        let mut s = base.clone();
+        s.thermal = Some(crate::state::ThermalSnap {
+            t_wall_c: -300.0,
+            t_piston_c: 20.0,
+            t_oil_c: 20.0,
+            t_cool_c: 20.0,
+            ect_filt_c: 20.0,
+        });
+        assert!(WorkState::restore(&EngineSnapshot::capture(&s), &tinp).is_err());
+        let mut bad = idle_point(healthy_inputs());
+        bad.plenum_v_m3 = 0.0;
+        assert!(WorkState::restore(&EngineSnapshot::capture(&base), &bad).is_err());
     }
 }
