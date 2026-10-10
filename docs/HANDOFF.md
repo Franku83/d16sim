@@ -1,7 +1,7 @@
 # HANDOFF — punto de entrada al siguiente agente
 
-Fecha: 2026-10-10 · Sprints: **S00–S03 APROBADOS**.
-Siguiente en batch: **S04** (catálogo estructural e instancias).
+Fecha: 2026-10-10 · Sprints: **S00–S04 APROBADOS**.
+Siguiente en batch: **S05** (eventos, snapshots, replay, determinismo).
 
 ## Estado científico/arquitectónico actual
 
@@ -28,9 +28,9 @@ Siguiente en batch: **S04** (catálogo estructural e instancias).
    2026-10-10.
 2. ~~Licencia sin decidir~~ — resuelto: Apache-2.0 solo código propio
    (propietario 2026-10-10); `LICENSE` + `THIRD_PARTY_NOTICES.md` creados.
-3. S01–S03 APROBADOS 2026-10-10 (S02: clon fresco + replay MATCH;
-   S03: 27 tests). Deuda: CI Windows sin ejecutar; `trybuild` diferido;
-   compatibilidad fina en S07.
+3. S01–S04 APROBADOS 2026-10-10 (S02: clon fresco + replay MATCH;
+   S03: 27 tests; S04: reload match + log trazable). Deuda: CI Windows sin
+   ejecutar; `trybuild` diferido; compatibilidad fina en S07.
 
 ## Roles y reglas de cambio (S00)
 
@@ -68,10 +68,15 @@ Clon fresco + replay MATCH. Detalle en `docs/sprints/S02.md`.
 Tipos SI + `Table1` + `dimensions.md` + `units-demo`. Ver
 `docs/sprints/S03.md`.
 
-## Brief S04 (siguiente en batch)
+## Brief S04 (APROBADO 2026-10-10)
 
-Tipos `PartDefinition`, `PartInstance`, `Interface`, `Joint`, `Port` e IDs
-persistentes; topología de conectores; versionado de esquemas +
-migrations/fail-closed; operaciones atómicas con validación geométrica
-nominal; imposible vs destructivo. Gate: grafos persistentes y operaciones
-trazables; sin simular física.
+Crate `assembly` + catálogo semilla + `assembly-demo`. Ver
+`docs/sprints/S04.md`.
+
+## Brief S05 (EN_CURSO en batch)
+
+Evento de tiempo físico con orden total determinístico; savefiles
+inmutables/versionados con `EngineState` migrable; log append-only +
+snapshots periódicos; replay sin reloj/aleatoriedad del sistema;
+hash/checksum canónico; property tests de operaciones + recarga. Gate:
+100 secuencias controladas sin divergencia estructural.

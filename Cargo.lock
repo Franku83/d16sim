@@ -53,6 +53,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "assembly"
+version = "0.1.0"
+dependencies = [
+ "engine-types",
+ "serde",
+ "serde_json",
+ "thiserror",
+]
+
+[[package]]
 name = "block-buffer"
 version = "0.10.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -136,6 +146,7 @@ dependencies = [
 name = "d16sim"
 version = "0.1.0"
 dependencies = [
+ "assembly",
  "clap",
  "engine-types",
  "math",

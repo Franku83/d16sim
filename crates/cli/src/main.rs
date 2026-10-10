@@ -52,6 +52,11 @@ enum Command {
     PhysicsStatus,
     /// Demostración reproducible de unidades e interpolación (S03).
     UnitsDemo,
+    /// Demostración reproducible del grafo de montaje (S04).
+    AssemblyDemo {
+        #[arg(long)]
+        out: PathBuf,
+    },
 }
 
 fn run() -> Result<(), EngineError> {
@@ -138,6 +143,7 @@ fn run() -> Result<(), EngineError> {
             }
         }
         Command::UnitsDemo => units_demo(),
+        Command::AssemblyDemo { out } => assembly_demo(&out),
     }
 }
 
@@ -148,6 +154,98 @@ fn main() {
     }
 }
 
+/// Demostración S04: bloque desnudo + cigüeñal + pistón, joints,
+/// guardado, recarga y comparación de hashes. Sin física.
+fn assembly_demo(out: &std::path::Path) -> Result<(), EngineError> {
+    use assembly::{apply_operation, EngineGraph, Operation, OperationResult};
+
+    let mut graph = assembly::d16y7::bare_block_with_catalog("demo-engine-001");
+    let h0 = graph.state_hash();
+    let mut v = graph.op_version();
+    let seq = [
+        Operation::Install {
+            serial: "crank-001".to_owned(),
+            definition_id: "honda.crankshaft".to_owned(),
+            actor: "demo".to_owned(),
+            tool_id: "hand".to_owned(),
+        },
+        Operation::Install {
+            serial: "piston-001".to_owned(),
+            definition_id: "honda.piston.std".to_owned(),
+            actor: "demo".to_owned(),
+            tool_id: "hand".to_owned(),
+        },
+    ];
+    for op in seq {
+        match apply_operation(&mut graph, op, v) {
+            Ok(OperationResult::Applied { .. }) => {}
+            Ok(OperationResult::AppliedWithRisk { risk_note, .. }) => {
+                println!("assembly-demo note (risk): {risk_note}");
+            }
+            Ok(OperationResult::Rejected { reason }) => {
+                return Err(EngineError::SchemaValidation(reason));
+            }
+            Err(e) => {
+                return Err(EngineError::SchemaValidation(e.to_string()));
+            }
+        }
+        v = graph.op_version();
+    }
+    // Joint cigüeñal-bloque por puertos mecánicos compatibles.
+    let joint = Operation::Connect {
+        joint_id: "crank-mains".to_owned(),
+        ports: vec![
+            "block-001::main_journals".to_owned(),
+            "crank-001::main_journal".to_owned(),
+        ],
+        actor: "demo".to_owned(),
+        tool_id: "hand".to_owned(),
+    };
+    match apply_operation(&mut graph, joint, v) {
+        Ok(OperationResult::Applied { .. }) => {}
+        Ok(other) => {
+            return Err(EngineError::SchemaValidation(format!(
+                "unexpected joint outcome: {other:?}"
+            )));
+        }
+        Err(e) => return Err(EngineError::SchemaValidation(e.to_string())),
+    }
+    let h1 = graph.state_hash();
+    std::fs::create_dir_all(out).map_err(|e| EngineError::Io {
+        path: out.display().to_string(),
+        source: e,
+    })?;
+    let saved = graph
+        .save_to(&out.join("graph.json"))
+        .map_err(|e| EngineError::SchemaValidation(e.to_string()))?;
+    let reloaded = EngineGraph::load_from(&out.join("graph.json"))
+        .map_err(|e| EngineError::SchemaValidation(e.to_string()))?;
+    println!("assembly-demo:");
+    println!("  bare_block hash : {h0}");
+    println!("  assembled hash  : {h1}");
+    println!("  saved sha256    : {saved}");
+    println!(
+        "  reload match    : {}",
+        if reloaded.state_hash() == h1 {
+            "true"
+        } else {
+            "false"
+        }
+    );
+    println!(
+        "  instances       : {} joints: {} log: {}",
+        graph.instances.len(),
+        graph.joints.len(),
+        graph.operation_log.len()
+    );
+    if reloaded.state_hash() != h1 {
+        return Err(EngineError::ReplayMismatch {
+            expected: h1,
+            actual: reloaded.state_hash(),
+        });
+    }
+    Ok(())
+}
 /// Todo valor impreso deriva de constructores validados; cualquier fallo
 /// de validación aborta con error estructurado (sin pánico).
 fn units_demo() -> Result<(), EngineError> {

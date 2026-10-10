@@ -81,3 +81,16 @@ Solo hechos constatables; sin cifras improvisadas.
 - Gate S03: PASS por construcción (tipos disjuntos, campo privado, sin
   impls cruzados) + validadores testeados. Deuda: suite `trybuild`
   diferida; constantes físicas (R, composiciones) en S09.
+
+## 2026-10-10 · S04 · Catálogo y grafo de montaje (APROBADO)
+
+- Crate `assembly` (tipos + `EngineGraph` + ops tri-estado + catálogo
+  semilla 10 definiciones EPC + `block-001` inicial); `d16sim
+  assembly-demo` (bare `4e9010e7…` → montado `1799d767…`, reload match,
+  3 instancias / 1 joint / 3 registros).
+- Tests: 5 passed (fuera de orden, ausente/duplicados, serial+roundtrip,
+  incompatibles/versión rancia, esquema futuro fail-closed). Total
+  workspace: 32 passed, 0 failed. Hashes S02 intactos tras higiene de
+  lints (`traces=dd830da7…`).
+- Gate S04: PASS — persistencia + trazabilidad verificadas; sin física.
+- Deuda: compatibilidad fina en S07; `mates_with` sin chequeo cruzado.
