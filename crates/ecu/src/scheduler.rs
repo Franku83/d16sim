@@ -129,6 +129,23 @@ impl Ecu {
     #[must_use]
     pub fn schedule(&self, est: &SyncEstimate, load_0_1: f64, dtcs: &DtcSet) -> ActuationPlan {
         let mut log = Vec::new();
+        // R02-C1/RV07: observaciones no finitas inhiben la actuación; no se
+        // emiten comandos con magnitudes inválidas ni se sustituye el fallo
+        // de referencia por confianza/sincronía ficticias.
+        if !(est.rpm.is_finite()
+            && est.confidence.is_finite()
+            && est.cycle_deg_at.is_finite()
+            && est.at_time_s.is_finite()
+            && load_0_1.is_finite())
+        {
+            log.push("invalid observation: actuation inhibited".to_owned());
+            return ActuationPlan {
+                ecu_state: EcuState::SyncLost,
+                injections: Vec::new(),
+                ignitions: Vec::new(),
+                log,
+            };
+        }
         let state = self.classify(est);
         log.push(format!(
             "sync={:?} rpm={:.0} conf={:.2} -> {:?}",
@@ -262,5 +279,28 @@ mod tests {
         assert!((ig.requested_btdc_deg - ig.effective_btdc_deg - 4.5).abs() < 1e-9);
         assert!(p.log.iter().any(|l| l.contains("lat=")));
         let _ = Decoder::new(vec![0.0, 0.01], vec![], 0.01).unwrap();
+    }
+
+    #[test]
+    fn invalid_observations_inhibit_actuation() {
+        // R02-C1/RV07: rpm/load/fase no finitos ⇒ sin comandos, sin
+        // magnitudes inválidas, sin sincronía ficticia.
+        let e = ecu();
+        let empty = DtcSet { active: vec![] };
+        for (rpm, load, phase) in [
+            (f64::NAN, 0.5, 100.0),
+            (1200.0, f64::NAN, 100.0),
+            (1200.0, 0.5, f64::NAN),
+        ] {
+            let est = SyncEstimate {
+                state: SyncState::Synced720,
+                rpm,
+                confidence: 1.0,
+                cycle_deg_at: phase,
+                at_time_s: 1.0,
+            };
+            let p = e.schedule(&est, load, &empty);
+            assert!(p.injections.is_empty() && p.ignitions.is_empty());
+        }
     }
 }

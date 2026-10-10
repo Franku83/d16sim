@@ -52,15 +52,17 @@ pub struct EngineState {
     /// Red térmica S21 (None = instantáneas S16; `default` migra v1).
     #[serde(default)]
     pub thermal: Option<ThermalSnap>,
-    /// Combustible (kg) presente en el plenum (R01-F01). 0 = campo ausente
-    /// en snapshots previos; se omite de la forma canónica cuando es 0.
-    #[serde(default, skip_serializing_if = "is_zero_f64")]
+    /// Combustible (kg) presente en el plenum (R01-F01). 0 positivo =
+    /// campo ausente en snapshots previos; se omite de la forma canónica.
+    /// El cero NEGADO (`-0.0`) es un valor representable distinto y se
+    /// serializa para preservar sus bits (R01-C1/RV03).
+    #[serde(default, skip_serializing_if = "is_positive_zero")]
     pub plen_fuel_kg: f64,
     /// Combustible (kg) presente en el escape (R01-F01).
-    #[serde(default, skip_serializing_if = "is_zero_f64")]
+    #[serde(default, skip_serializing_if = "is_positive_zero")]
     pub exh_fuel_kg: f64,
     /// Combustible (kg) cruzado a la frontera ambiente (R01-F01).
-    #[serde(default, skip_serializing_if = "is_zero_f64")]
+    #[serde(default, skip_serializing_if = "is_positive_zero")]
     pub fuel_emitted_kg: f64,
     /// Máximo de presión de cilindro (Pa) usado por la fricción (R01-F07);
     /// `None` = snapshot previo sin historia de presión.
@@ -68,10 +70,13 @@ pub struct EngineState {
     pub pmax_pa: Option<f64>,
 }
 
-/// Auxiliar de `skip_serializing_if` para campos numéricos opcionales.
+/// Auxiliar de `skip_serializing_if` para campos numéricos opcionales:
+/// omite SOLO el cero positivo (bit pattern 0), de modo que el cero negativo
+/// conserva su bit de signo al serializar/parsear (R01-C1/RV03). Así los
+/// snapshots v1/v2 sin el campo (que llegan como +0.0) mantienen su hash.
 #[must_use]
-fn is_zero_f64(v: &f64) -> bool {
-    *v == 0.0
+fn is_positive_zero(v: &f64) -> bool {
+    v.to_bits() == 0
 }
 
 /// Red térmica serializada (S21).
@@ -89,6 +94,30 @@ pub struct ThermalSnap {
 pub struct EngineSnapshot {
     pub state: EngineState,
     pub state_hash: String,
+    /// Procedencia de una migración legacy (R02-C1/RV04). `None` en
+    /// snapshots nativos completos; presente cuando el estado provino de un
+    /// esquema sin los inventarios de nodo o sin historia de presión.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub provenance: Option<MigrationProvenance>,
+}
+
+/// Registro de una migración de snapshot legacy (R02-C1/RV04): qué esquema se
+/// leyó, su hash original, la transformación aplicada, los campos históricos
+/// ausentes y el alcance de la continuación física.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct MigrationProvenance {
+    /// Esquema de origen (1 o 2 legacy).
+    pub from_schema: u32,
+    /// Hash del snapshot original (integridad de lectura).
+    pub original_hash: String,
+    /// Transformación aplicada al migrar.
+    pub transformation: String,
+    /// Campos que el esquema de origen no representaba (historia ausente).
+    pub missing_fields: Vec<String>,
+    /// `exact_neutral` (estado inicial sin historia: los valores neutros son
+    /// la historia conocida) o `approximate_hot` (había combustible/movimiento:
+    /// la continuación no es equivalente a la trayectoria histórica).
+    pub continuation: String,
 }
 
 impl EngineSnapshot {
@@ -98,6 +127,17 @@ impl EngineSnapshot {
         Self {
             state: state.clone(),
             state_hash: canonical_state_hash(state),
+            provenance: None,
+        }
+    }
+
+    /// Captura con procedencia de migración (R02-C1/RV04).
+    #[must_use]
+    pub fn capture_with(state: &EngineState, provenance: Option<MigrationProvenance>) -> Self {
+        Self {
+            state: state.clone(),
+            state_hash: canonical_state_hash(state),
+            provenance,
         }
     }
 

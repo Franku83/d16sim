@@ -71,8 +71,17 @@ impl Correction {
                 applied: false,
             });
         }
+        let factor = (99.0 / amb.p_kpa) * ((amb.t_c + 273.15) / 298.15).sqrt();
+        // R02-C1/RV09: el dominio declarado admite presiones finitas > 0 que
+        // desbordan 99/p; un factor no finito es error de frontera, nunca una
+        // salida imposible.
+        if !factor.is_finite() {
+            return Err(DynoError::Invalid {
+                reason: "correction factor non-finite".to_owned(),
+            });
+        }
         Ok(Self {
-            factor: (99.0 / amb.p_kpa) * ((amb.t_c + 273.15) / 298.15).sqrt(),
+            factor,
             applied: true,
         })
     }
@@ -165,5 +174,17 @@ mod tests {
             true
         )
         .is_ok());
+    }
+
+    #[test]
+    fn overflow_factor_is_rejected() {
+        // R02-C1/RV09: p finita > 0 que desborda 99/p no devuelve factor Inf.
+        let amb = Ambient {
+            p_kpa: 1e-308,
+            t_c: 25.0,
+        };
+        assert!(Correction::of(&amb, true).is_err());
+        // Sin aplicar corrección no se calcula el factor: sigue Ok.
+        assert!(Correction::of(&amb, false).is_ok());
     }
 }

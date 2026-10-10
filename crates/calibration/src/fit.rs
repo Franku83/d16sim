@@ -47,18 +47,32 @@ where
     if n == 0 || m == 0 || w.len() != n || !(tol.is_finite() && tol > 0.0) {
         return Err(bad("dims/tol"));
     }
+    if !(y.iter().all(|v| v.is_finite())
+        && w.iter().all(|v| v.is_finite())
+        && p0.iter().all(|v| v.is_finite()))
+    {
+        return Err(bad("non-finite data"));
+    }
     // Escalado interno: q = p/scale con scale = |p0| (los parámetros de
     // órdenes dispares —C~1e6 vs p~1e3— volverían singular a JᵀJ).
     let scale: Vec<f64> = p0.iter().map(|v| v.abs().max(1e-300)).collect();
     let unscale = |q: &[f64]| -> Vec<f64> { q.iter().zip(&scale).map(|(qi, s)| qi * s).collect() };
-    let fq = |q: &[f64]| f(&unscale(q));
+    // R02-C1/RV08: la salida del callback se valida (dimensión y finitud)
+    // antes de indexarla; un modelo mal formado es error tipado, no panic.
+    let fq = |q: &[f64]| -> Result<Vec<f64>, FitError> {
+        let out = f(&unscale(q));
+        if out.len() != n || !out.iter().all(|v| v.is_finite()) {
+            return Err(bad("callback output dims/finite"));
+        }
+        Ok(out)
+    };
     let q0: Vec<f64> = p0.iter().zip(&scale).map(|(v, s)| v / s).collect();
     let mut p = q0;
     let h = 1e-6;
     let mut iters = 0;
     for it in 0..100 {
         iters = it + 1;
-        let r: Vec<f64> = fq(&p).iter().zip(y).map(|(a, b)| a - b).collect();
+        let r: Vec<f64> = fq(&p)?.iter().zip(y).map(|(a, b)| a - b).collect();
         let norm: f64 = r
             .iter()
             .zip(w)
@@ -70,10 +84,10 @@ where
         for k in 0..m {
             let mut pp = p.clone();
             pp[k] += h;
-            let fp = fq(&pp);
+            let fp = fq(&pp)?;
             let mut pm = p.clone();
             pm[k] -= h;
-            let fm = fq(&pm);
+            let fm = fq(&pm)?;
             for i in 0..n {
                 j[i][k] = (fp[i] - fm[i]) / (2.0 * h);
             }
@@ -103,7 +117,7 @@ where
                 alpha *= 0.5;
                 continue;
             }
-            let rc: Vec<f64> = fq(&cand).iter().zip(y).map(|(a, b)| a - b).collect();
+            let rc: Vec<f64> = fq(&cand)?.iter().zip(y).map(|(a, b)| a - b).collect();
             if !rc.iter().all(|v| v.is_finite()) {
                 alpha *= 0.5;
                 continue;
@@ -130,7 +144,7 @@ where
         }
     }
     // Covarianza (JᵀW²J)⁻¹ en el óptimo.
-    let r: Vec<f64> = fq(&p).iter().zip(y).map(|(a, b)| a - b).collect();
+    let r: Vec<f64> = fq(&p)?.iter().zip(y).map(|(a, b)| a - b).collect();
     let norm: f64 = r
         .iter()
         .zip(w)
@@ -141,10 +155,10 @@ where
     for k in 0..m {
         let mut pp = p.clone();
         pp[k] += h;
-        let fp = fq(&pp);
+        let fp = fq(&pp)?;
         let mut pm = p.clone();
         pm[k] -= h;
-        let fm = fq(&pm);
+        let fm = fq(&pm)?;
         for i in 0..n {
             j[i][k] = (fp[i] - fm[i]) / (2.0 * h);
         }
@@ -276,5 +290,18 @@ mod tests {
         // Singular bajo-determinado (1 punto, 2 params) ⇒ fail-closed.
         let f1 = |p: &[f64]| vec![model(p, 1e-6)];
         assert!(least_squares(f1, &y[..1], &w[..1], &[2.4e6, 1800.0], 1e-9).is_err());
+    }
+
+    #[test]
+    fn malformed_callback_is_typed_error_not_panic() {
+        // R02-C1/RV08: dimensión de salida inválida ⇒ error tipado, sin panic.
+        let r = std::panic::catch_unwind(|| {
+            least_squares(|_| vec![], &[1.0, 2.0], &[1.0, 1.0], &[1.0], 1e-8)
+        });
+        assert!(r.is_ok(), "el fitter no debe hacer panic");
+        assert!(r.unwrap().is_err());
+        // Salida finita pero de longitud distinta a `y` también se rechaza.
+        let r2 = least_squares(|_| vec![1.0], &[1.0, 2.0], &[1.0, 1.0], &[1.0], 1e-8);
+        assert!(r2.is_err());
     }
 }

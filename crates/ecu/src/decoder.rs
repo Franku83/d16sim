@@ -102,7 +102,14 @@ impl Decoder {
     }
 
     /// Actualiza el estado a `now_s` (timeout = 3× periodo esperado).
+    ///
+    /// R02-C1/RV07: una observación no finita no corrompe el estado; se
+    /// declara pérdida de sincronía sin tocar `last_time_s`.
     pub fn update(&mut self, now_s: f64) {
+        if !now_s.is_finite() {
+            self.state = SyncState::SyncLost;
+            return;
+        }
         self.last_time_s = now_s;
         let rpm = self.rpm_estimate().unwrap_or(0.0);
         let expected_period = if rpm > 1.0 {
@@ -197,14 +204,35 @@ impl Decoder {
 
     /// Estima fase de ciclo a `now_s` por dead-reckoning desde el último
     /// flanco CKP (fase 0 = flanco CKP n.º 0 del ciclo genérico).
+    ///
+    /// R02-C1/RV07: entradas no finitas devuelven una estima conservadora
+    /// (sin sincronía, fase 0, tiempo finito), nunca NaN/Inf propagado.
     #[must_use]
     pub fn estimate(&self, now_s: f64) -> SyncEstimate {
-        let rpm = self.rpm_estimate().unwrap_or(0.0);
+        let rpm = self.rpm_estimate().filter(|v| v.is_finite()).unwrap_or(0.0);
+        if !now_s.is_finite() {
+            return SyncEstimate {
+                state: SyncState::SyncLost,
+                rpm,
+                confidence: 0.0,
+                cycle_deg_at: 0.0,
+                at_time_s: if self.last_time_s.is_finite() {
+                    self.last_time_s
+                } else {
+                    0.0
+                },
+            };
+        }
         let cycle_deg_at = if let Some(&last) = self.ckp_edges.iter().rev().find(|t| **t <= now_s) {
             // Índice del último flanco ⇒ fase base + avance por tiempo.
             let idx = self.ckp_edges.iter().position(|t| *t == last).unwrap_or(0);
             let base = f64::from(idx as u32 % 24) * 30.0;
-            (base + (now_s - last) * rpm / 60.0 * 360.0) % 720.0
+            let phase = (base + (now_s - last) * rpm / 60.0 * 360.0) % 720.0;
+            if phase.is_finite() {
+                phase
+            } else {
+                0.0
+            }
         } else {
             0.0
         };
@@ -283,5 +311,18 @@ mod tests {
         assert!(Decoder::new(vec![1.0, 2.0], Vec::new(), 0.0).is_err());
         assert!(Decoder::new(Vec::new(), vec![1.0], 0.0).is_err());
         assert!(Decoder::new(vec![0.0, 1.0], Vec::new(), 1.0).is_ok());
+    }
+
+    #[test]
+    fn nonfinite_observations_do_not_propagate() {
+        // R02-C1/RV07: update/estimate con NaN/Inf no propagan tiempo/fase
+        // no finitos ni corrompen el estado.
+        let mut d = Decoder::new(vec![0.0, 0.01, 0.02, 0.03], vec![], 0.03).unwrap();
+        d.update(f64::NAN);
+        let est = d.estimate(f64::INFINITY);
+        assert!(est.at_time_s.is_finite());
+        assert!(est.cycle_deg_at.is_finite());
+        assert!(est.rpm.is_finite());
+        assert_eq!(est.state, SyncState::SyncLost);
     }
 }

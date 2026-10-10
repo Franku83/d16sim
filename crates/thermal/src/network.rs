@@ -173,9 +173,15 @@ impl ThermalState {
     /// sale de la red), para que el ledger energético del motor pueda
     /// contabilizar esa frontera (R01-F10).
     ///
+    /// Atomicidad (R02-C1/RV06): se valida el estado de entrada y el ambiente
+    /// antes de calcular, el estado candidato se computa en locales y solo se
+    /// confirma si es finito y sobre el cero absoluto. Un error (temperatura
+    /// imposible, capacidad extrema/overflow) deja el estado intacto.
+    ///
     /// # Errors
     ///
-    /// `Invalid` si entradas no finitas/negativas donde no corresponde.
+    /// `Invalid` si parámetros, entradas, estado de entrada o candidato
+    /// violan dominio (finitud, Kelvin > 0).
     pub fn step(
         &mut self,
         dt_s: f64,
@@ -184,6 +190,7 @@ impl ThermalState {
         ambient_c: f64,
         p: &ThermalParams,
     ) -> Result<f64, ThermalError> {
+        const ABS_ZERO_C: f64 = -273.15;
         p.validated()?;
         let bad = ThermalError::Invalid {
             reason: "thermal step".to_owned(),
@@ -194,10 +201,24 @@ impl ThermalState {
         if !(q_burn_to_wall_j.is_finite()
             && q_burn_to_wall_j >= 0.0
             && p_fric_w.is_finite()
-            && p_fric_w >= 0.0
-            && ambient_c.is_finite())
+            && p_fric_w >= 0.0)
         {
             return Err(bad);
+        }
+        if !(ambient_c.is_finite() && ambient_c > ABS_ZERO_C) {
+            return Err(bad);
+        }
+        // Estado de entrada: temperaturas absolutas válidas antes de tocar nada.
+        for v in [
+            self.t_wall_c,
+            self.t_piston_c,
+            self.t_oil_c,
+            self.t_cool_c,
+            self.ect_filt_c,
+        ] {
+            if !(v.is_finite() && v > ABS_ZERO_C) {
+                return Err(bad);
+            }
         }
         let tstat = self.thermostat_factor(p);
         // Calor neto a ambiente (frontera declarada, R01-F10): pared, aceite y
@@ -215,22 +236,29 @@ impl ThermalState {
             - p.ha_oil_amb * (self.t_oil_c - ambient_c) * dt_s;
         let d_cool = p.ha_wall_cool * (self.t_wall_c - self.t_cool_c) * dt_s
             - (p.ha_rad_full * tstat) * (self.t_cool_c - ambient_c) * dt_s;
-        self.t_wall_c += d_wall / p.c_wall;
-        self.t_piston_c += d_piston / p.c_piston;
-        self.t_oil_c += d_oil / p.c_oil;
-        self.t_cool_c += d_cool / p.c_cool;
+        // Candidato en locales: nada se confirma hasta validarlo.
+        let t_wall = self.t_wall_c + d_wall / p.c_wall;
+        let t_piston = self.t_piston_c + d_piston / p.c_piston;
+        let t_oil = self.t_oil_c + d_oil / p.c_oil;
+        let t_cool = self.t_cool_c + d_cool / p.c_cool;
         // ECT con lag de primer orden hacia el refrigerante.
         let a = dt_s / (p.ect_tau_s + dt_s);
-        self.ect_filt_c += a * (self.t_cool_c - self.ect_filt_c);
-        if !(self.t_wall_c.is_finite()
-            && self.t_piston_c.is_finite()
-            && self.t_oil_c.is_finite()
-            && self.t_cool_c.is_finite()
-            && self.ect_filt_c.is_finite()
-            && q_amb.is_finite())
-        {
+        let ect = self.ect_filt_c + a * (t_cool - self.ect_filt_c);
+        for v in [t_wall, t_piston, t_oil, t_cool, ect] {
+            if !(v.is_finite() && v > ABS_ZERO_C) {
+                return Err(bad);
+            }
+        }
+        // `q_amb` es energía (J), puede ser negativa (ambiente más caliente);
+        // solo se exige finitud.
+        if !q_amb.is_finite() {
             return Err(bad);
         }
+        self.t_wall_c = t_wall;
+        self.t_piston_c = t_piston;
+        self.t_oil_c = t_oil;
+        self.t_cool_c = t_cool;
+        self.ect_filt_c = ect;
         Ok(q_amb)
     }
 }
@@ -309,5 +337,29 @@ mod tests {
         let before = s;
         assert!(s.step(1.0, 1.0, 0.0, 20.0, &p).is_err());
         assert_eq!(s, before);
+    }
+
+    #[test]
+    fn rejects_invalid_state_and_ambient_atomically() {
+        // R02-C1/RV06: NaN/Inf/bajo cero absoluto en el estado o el ambiente
+        // se rechazan ANTES de mutar; el overflow por capacidad extrema
+        // tampoco deja estado parcial.
+        let p = ThermalParams::illustrative();
+        for bad in [f64::NAN, f64::INFINITY, -300.0] {
+            let mut s = ThermalState::cold(bad);
+            let before = format!("{s:?}");
+            assert!(s.step(0.1, 0.0, 0.0, 20.0, &p).is_err());
+            assert_eq!(format!("{s:?}"), before);
+        }
+        let mut s = ThermalState::cold(20.0);
+        let before = s;
+        assert!(s.step(0.1, 0.0, 0.0, -300.0, &p).is_err());
+        assert_eq!(s, before);
+        let mut p2 = p;
+        p2.c_wall = 1e-308;
+        let mut s2 = ThermalState::cold(20.0);
+        let before2 = s2;
+        assert!(s2.step(0.1, 100.0, 0.0, 20.0, &p2).is_err());
+        assert_eq!(s2, before2);
     }
 }
