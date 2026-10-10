@@ -50,6 +50,8 @@ enum Command {
     },
     /// Estado del crate de física (siempre stub en S02).
     PhysicsStatus,
+    /// Demostración reproducible de unidades e interpolación (S03).
+    UnitsDemo,
 }
 
 fn run() -> Result<(), EngineError> {
@@ -135,6 +137,7 @@ fn run() -> Result<(), EngineError> {
                 }
             }
         }
+        Command::UnitsDemo => units_demo(),
     }
 }
 
@@ -143,4 +146,49 @@ fn main() {
         eprintln!("d16sim: error: {e:#}");
         std::process::exit(1);
     }
+}
+
+/// Todo valor impreso deriva de constructores validados; cualquier fallo
+/// de validación aborta con error estructurado (sin pánico).
+fn units_demo() -> Result<(), EngineError> {
+    use math::{OutOfRange, Table1};
+    use units::{display, fuel::Afr, mechanics::Rpm, pressure::PressureAbs, thermal::Kelvin};
+
+    let rpm = Rpm::from_rpm(750.0).map_err(|e| EngineError::SchemaValidation(e.to_string()))?;
+    let omega = rpm.to_rad_per_s();
+    let rail =
+        PressureAbs::from_kpa(270.0).map_err(|e| EngineError::SchemaValidation(e.to_string()))?;
+    let ambient =
+        PressureAbs::from_kpa(101.325).map_err(|e| EngineError::SchemaValidation(e.to_string()))?;
+    let gauge = rail.to_gauge(ambient);
+    let ect = Kelvin::from_kelvin(display::celsius_to_kelvin(80.0))
+        .map_err(|e| EngineError::SchemaValidation(e.to_string()))?;
+    let stoich = Afr::from_ratio(14.7).map_err(|e| EngineError::SchemaValidation(e.to_string()))?;
+    let lambda = Afr::from_ratio(13.2)
+        .map_err(|e| EngineError::SchemaValidation(e.to_string()))?
+        .to_lambda(stoich)
+        .map_err(|e| EngineError::SchemaValidation(e.to_string()))?;
+    let table = Table1::new("demo", &[0.0, 1.0, 2.0], &[0.0, 10.0, 30.0])
+        .map_err(|e| EngineError::SchemaValidation(e.to_string()))?;
+    let mid = table
+        .eval(1.5, OutOfRange::Reject)
+        .map_err(|e| EngineError::SchemaValidation(e.to_string()))?;
+
+    println!("units-demo:");
+    println!("  750 rpm = {:.6} rad/s", omega.as_rad_per_s());
+    println!(
+        "  rail 270 kPa abs @ ambient 101.325 kPa = {:.3} kPa gauge",
+        gauge.as_pa() / 1_000.0
+    );
+    println!(
+        "  ECT 80 C = {:.2} K; 270 kPa = {:.3} psi (display)",
+        ect.as_kelvin(),
+        display::pa_to_psi(rail.as_pa())
+    );
+    println!(
+        "  AFR 13.2 @ stoich 14.7 -> lambda {:.6}",
+        lambda.as_value()
+    );
+    println!("  table(1.5) = {mid:.3}");
+    Ok(())
 }

@@ -1,6 +1,8 @@
 [workspace]
 members = [
     "crates/engine-types",
+    "crates/math",
+    "crates/units",
     "crates/physics",
     "crates/simulation",
     "crates/cli",

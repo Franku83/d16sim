@@ -42,7 +42,7 @@ pub fn run_scenario(
         )));
     }
 
-    let manifest_sha256 = sha256_hex(&canonical_json(&manifest).as_bytes());
+    let manifest_sha256 = sha256_hex(canonical_json(&manifest).as_bytes());
     let ticks = manifest.scenario.simulated_ticks;
 
     // Autocontador determinista derivado de la seed (LCG 64-bit, constantes
@@ -159,7 +159,7 @@ pub fn replay(
         });
     }
 
-    let manifest_sha256 = sha256_hex(&canonical_json(&manifest).as_bytes());
+    let manifest_sha256 = sha256_hex(canonical_json(&manifest).as_bytes());
     Ok(RunSummary {
         experiment_id: manifest.experiment_id,
         seed: manifest.seed,

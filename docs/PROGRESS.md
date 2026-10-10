@@ -38,3 +38,46 @@ Solo hechos constatables; sin cifras improvisadas.
   ECU/sensores ligados a variante; sin física añadida.
 - Deuda: edición/página OEM exactas pendientes; torque/ángulos de apriete
   PENDING; licencia sigue por decidir (bloquea S02).
+
+## 2026-10-10 · Licencia (decisión del propietario, desbloquea S02)
+
+- Apache-2.0 exclusivamente al código propio. Creados `LICENSE`,
+  `THIRD_PARTY_NOTICES.md` (tras S02); `Cargo.toml`s declaran
+  `license = "Apache-2.0"`. Research/datos terceros bajo sus condiciones.
+  Sin código GPL sin revisión+autorización.
+
+## 2026-10-10 · S02 · Toolchain, CI y runner headless (APROBADO)
+
+- Creados: `rust-toolchain.toml` (1.99.0), `Cargo.toml` workspace
+  (`engine-types`, `physics` stub, `simulation`, `cli`), `Cargo.lock`,
+  `.github/workflows/rust-ci.yml` (Linux+Windows), `THIRD_PARTY_NOTICES.md`
+  (44 paquetes, todo permisivo MIT/Apache/Unlicense/Unicode, sin GPL),
+  `docs/adr/ADR-013-trazas-jsonl.md`, `docs/sprints/S02.md`, `.gitignore`.
+- Tests: `cargo test --locked --workspace` → 9 passed, 0 failed
+  (unit + tamper-replay + schema + validación datos S01).
+  `cargo fmt --check` OK; clippy: 0 errores `unwrap_used` (avisos
+  `missing_errors_doc` como warn, a documentar en S03).
+- Demo: `validate-data` OK; `physics-status` confirma stub S09;
+  `init/run-scenario` ×2 → hashes idénticos
+  (`manifest=b6030259…`, `traces=dd830da7…`, `metrics=3e2d97c1…`);
+  `replay: MATCH`; `report` OK.
+- Gate S02: PASS — clon fresco `/tmp/opencode/d16sim-clone` reproduce
+  `traces=dd830da7…` idénticas + `replay: MATCH` (misma toolchain/Linux).
+  Windows-CI pendiente de runner (deuda).
+- Corrección: commit inicial arrastró `target/`; excluido con `.gitignore`
+  + `git rm --cached` (commit `84d3390`).
+- Deuda: avisos clippy `missing_errors_doc`; CI Windows sin ejecutar;
+  `cargo-deny` evaluado y no adoptado (auditoría manual documentada).
+
+## 2026-10-10 · S03 · Unidades y álgebra (APROBADO)
+
+- Crates `units` (tipos SI + abs/gauge/delta + AFR/lambda + banco/rueda +
+  política f64) y `math` (`Table1` con dominio); `docs/physics/dimensions.md`;
+  `d16sim units-demo` (750 rpm → 78.539816 rad/s; rail 270 kPa abs →
+  168.675 kPa gauge; ECT 80 °C → 353.15 K; lambda 0.897959; tabla 20.000).
+- Tests: 27 passed, 0 failed (un test falló primero por constante manual
+  errónea lb·ft — corregido contra el factor definitorio, no contra el
+  código). `fmt` OK; clippy sin errores `unwrap_used`.
+- Gate S03: PASS por construcción (tipos disjuntos, campo privado, sin
+  impls cruzados) + validadores testeados. Deuda: suite `trybuild`
+  diferida; constantes físicas (R, composiciones) en S09.

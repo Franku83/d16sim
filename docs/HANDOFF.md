@@ -1,8 +1,7 @@
 # HANDOFF — punto de entrada al siguiente agente
 
-Fecha: 2026-10-10 · Sprints: **S00 APROBADO, S01 APROBADO**.
-Siguiente en batch: **S02 BLOQUEADO por decisión de licencia del
-propietario** (ver abajo). Prohibido adelantar física/UI sin licencia.
+Fecha: 2026-10-10 · Sprints: **S00–S03 APROBADOS**.
+Siguiente en batch: **S04** (catálogo estructural e instancias).
 
 ## Estado científico/arquitectónico actual
 
@@ -29,7 +28,9 @@ propietario** (ver abajo). Prohibido adelantar física/UI sin licencia.
    2026-10-10.
 2. ~~Licencia sin decidir~~ — resuelto: Apache-2.0 solo código propio
    (propietario 2026-10-10); `LICENSE` + `THIRD_PARTY_NOTICES.md` creados.
-3. S01 APROBADO 2026-10-10. S02 EN_CURSO (clon fresco tras commit).
+3. S01–S03 APROBADOS 2026-10-10 (S02: clon fresco + replay MATCH;
+   S03: 27 tests). Deuda: CI Windows sin ejecutar; `trybuild` diferido;
+   compatibilidad fina en S07.
 
 ## Roles y reglas de cambio (S00)
 
@@ -58,7 +59,19 @@ cat docs/sprints/S00.md
 S01 APROBADO 2026-10-10. Ficha en `docs/variants/`, catálogos en
 `data/d16y7/`. Todo número sigue PENDING/DISPUTED/IDENTITY_ONLY.
 
-## Brief S02 (EN_CURSO — licencia resuelta)
+## Brief S02 (APROBADO 2026-10-10)
 
-Licencia Apache-2.0 aprobada. Workspace y CLI implementados
-(`docs/sprints/S02.md`). Resta: clon fresco + PASS formal del gate.
+Clon fresco + replay MATCH. Detalle en `docs/sprints/S02.md`.
+
+## Brief S03 (APROBADO 2026-10-10)
+
+Tipos SI + `Table1` + `dimensions.md` + `units-demo`. Ver
+`docs/sprints/S03.md`.
+
+## Brief S04 (siguiente en batch)
+
+Tipos `PartDefinition`, `PartInstance`, `Interface`, `Joint`, `Port` e IDs
+persistentes; topología de conectores; versionado de esquemas +
+migrations/fail-closed; operaciones atómicas con validación geométrica
+nominal; imposible vs destructivo. Gate: grafos persistentes y operaciones
+trazables; sin simular física.
