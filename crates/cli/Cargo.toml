@@ -13,6 +13,7 @@ path = "src/main.rs"
 assembly = { path = "../assembly" }
 contacts = { path = "../contacts" }
 engine-types = { path = "../engine-types" }
+fastener = { path = "../fastener" }
 kinematics = { path = "../kinematics" }
 math = { path = "../math" }
 units = { path = "../units" }

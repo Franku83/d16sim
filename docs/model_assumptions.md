@@ -36,3 +36,12 @@ futuros: toda aproximación pasa por aquí + `ModelCard` (§11.4).
 | H-S07-02 | Biela–bloque simétrico L0 | Entradas S07 | Supuesto declarado | Geometría de cárter real |
 | H-S07-03 | Ningún contacto implica daño sin modelo material | Todo S07 | Decisión de diseño (gate) | S27 con criterio validado |
 | H-S07-04 | Medición L1 aditiva | Instrumentos S07 | Supuesto declarado | Caracterización de instrumento |
+
+## Registro S08 (precarga y junta L1)
+
+| ID | Hipótesis | Dominio | Fuente | Invalida si |
+|---|---|---|---|---|
+| H-S08-01 | `F = T/(K·d)` con K por condición | L1 S08 | Modelo torque-factor (texto) | Curva clamp-load medida |
+| H-S08-02 | Rangos K ilustrativos genéricos (NO OEM) | Sensibilidad S08 | Lit. genérica, cal. pendiente | Medición de K |
+| H-S08-03 | Reparto por pesos de rigidez, secuencia sin efecto en L1 | Junta S08 | Supuesto declarado | Modelo elástico S08+ |
+| H-S08-04 | Sellado indeterminado sin ley de fuga | Junta S08 | Decisión (gate S23) | Solver S23 |

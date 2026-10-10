@@ -161,6 +161,7 @@ dependencies = [
  "clap",
  "contacts",
  "engine-types",
+ "fastener",
  "kinematics",
  "math",
  "physics",
@@ -187,6 +188,15 @@ dependencies = [
  "serde_json",
  "sha2",
  "thiserror",
+]
+
+[[package]]
+name = "fastener"
+version = "0.1.0"
+dependencies = [
+ "engine-types",
+ "thiserror",
+ "units",
 ]
 
 [[package]]

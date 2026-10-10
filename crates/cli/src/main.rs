@@ -82,6 +82,13 @@ enum Command {
         #[arg(long, default_value_t = 6.0)]
         closed_gap_mm: f64,
     },
+    /// Precarga de pernos y campo de junta L1 (S08, K ilustrativo).
+    FastenerSealTest {
+        #[arg(long, default_value_t = 50.0)]
+        torque_nm: f64,
+        #[arg(long, default_value_t = 10.0)]
+        dia_mm: f64,
+    },
 }
 
 fn run() -> Result<(), EngineError> {
@@ -180,6 +187,9 @@ fn run() -> Result<(), EngineError> {
             lift_mm,
             closed_gap_mm,
         } => contact_check_cmd(theta720_deg, lift_mm, closed_gap_mm),
+        Command::FastenerSealTest { torque_nm, dia_mm } => {
+            fastener_seal_test_cmd(torque_nm, dia_mm)
+        }
     }
 }
 
@@ -475,5 +485,65 @@ fn contact_check_cmd(
     println!("  penetration_mm  : {:.4}", report.penetration_m * 1_000.0);
     println!("  needs_material  : {}", report.needs_material_model);
     println!("  damage          : {:?}", report.damage);
+    Ok(())
+}
+
+/// Comando S08: 10 pernos al torque de demostración (valor ARBITRARIO, no
+/// OEM) con K ilustrativo por lubricante + campo de junta uniforme.
+/// Demuestra el gate: mismo torque + distinto lubricante ⇒ distinta F.
+fn fastener_seal_test_cmd(torque_nm: f64, dia_mm: f64) -> Result<(), EngineError> {
+    use fastener::{
+        distribute_clamp, preload_of_step, LubricantCondition, SealSegment, TorqueStep,
+    };
+
+    let dia_m = dia_mm / 1_000.0;
+    println!("fastener-seal-test (ARBITRARY demo torque, ILLUSTRATIVE K; not Honda):");
+    let mut total_nom = 0.0;
+    for (name, cond) in [
+        ("dry", LubricantCondition::DryAsReceived),
+        ("oiled", LubricantCondition::OiledGeneric),
+        ("antiseize", LubricantCondition::AntiSeizeGeneric),
+    ] {
+        let est = preload_of_step(
+            TorqueStep {
+                torque_nm: Some(torque_nm),
+                angle_rad: 0.0,
+                lubricant: cond,
+            },
+            dia_m,
+            None,
+            None,
+        )
+        .map_err(|e| EngineError::SchemaValidation(e.to_string()))?;
+        println!(
+            "  {name:9} F_lo={:.0} F_nom={:.0} F_hi={:.0} N",
+            est.force_lo_n, est.force_nom_n, est.force_hi_n
+        );
+        if name == "oiled" {
+            total_nom = est.force_nom_n * 10.0;
+        }
+    }
+    let segments = vec![
+        SealSegment {
+            area_m2: 400e-6,
+            stiffness_weight: 1.0,
+        };
+        4
+    ];
+    let field = distribute_clamp(total_nom, &segments)
+        .map_err(|e| EngineError::SchemaValidation(e.to_string()))?;
+    println!("  total_clamp_N       : {total_nom:.0}");
+    println!(
+        "  ring_MPa            : {}",
+        field
+            .contact_pressure_pa
+            .iter()
+            .map(|p| format!("{:.2}", p / 1e6))
+            .collect::<Vec<_>>()
+            .join(" ")
+    );
+    println!("  non_uniformity      : {:.4}", field.non_uniformity);
+    println!("  seal_status         : {:?}", field.status[0]);
+    println!("  conductance         : Unsupported (S23)");
     Ok(())
 }

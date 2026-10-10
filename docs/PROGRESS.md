@@ -132,3 +132,18 @@ Solo hechos constatables; sin cifras improvisadas.
 - Gate S07: PASS — daño jamás decretado; interferencias cuantificadas.
 - Deuda: compatibilidad fina S04 sigue nominal; dinámica de válvula en
   S11; material en S27.
+
+## 2026-10-10 · S08 · Pernos, precarga y junta L1 (APROBADO)
+
+- Crate `fastener` (L1 `T=K·F·d` + junta por segmentos +
+  `SealConductance::Unsupported`); `d16sim fastener-seal-test`
+  (seco 25.0 kN vs aceitado 33.3 kN a 50 N·m; 208.33 MPa/anillo;
+  `SealingIndeterminate`); ADR-015; `docs/physics/fastener.md`;
+  H-S08-01..04.
+- Tests: 6 passed (lubricante, monotonía/propagación, rechazo
+  ángulo-solo, fluencia-estado sin rotura, campo uniforme/subapriete,
+  costura S23).
+- Gate S08: PASS — torque y lubricante cambian F según modelo;
+  calibración pendiente declarada en reporte y física.
+- Deuda: secuencia OEM sin transcribir; interacción elástica; fuga en
+  S23; K medido en S25.

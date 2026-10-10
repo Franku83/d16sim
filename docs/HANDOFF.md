@@ -1,7 +1,7 @@
 # HANDOFF — punto de entrada al siguiente agente
 
-Fecha: 2026-10-10 · Sprints: **S00–S07 APROBADOS (batch S06–S10)**.
-Siguiente: **S08**. **S11 prohibido sin autorización.**
+Fecha: 2026-10-10 · Sprints: **S00–S08 APROBADOS (batch S06–S10)**.
+Siguiente: **S09**. **S11 prohibido sin autorización.**
 
 ## Estado científico/arquitectónico actual
 
@@ -28,9 +28,9 @@ Siguiente: **S08**. **S11 prohibido sin autorización.**
    2026-10-10.
 2. ~~Licencia sin decidir~~ — resuelto: Apache-2.0 solo código propio
    (propietario 2026-10-10); `LICENSE` + `THIRD_PARTY_NOTICES.md` creados.
-3. S01–S07 APROBADOS 2026-10-10 (S06: 8 tests analíticos; S07: daño
-   jamás decretado). Deuda: CI Windows sin ejecutar; `trybuild` diferido;
-   válvula real en S11; material en S27.
+3. S01–S08 APROBADOS 2026-10-10 (S07: daño jamás decretado; S08:
+   F seca vs aceitada 25.0/33.3 kN). Deuda: CI Windows sin ejecutar;
+   fuga en S23; K medido en S25; secuencia OEM sin transcribir.
 
 ## Roles y reglas de cambio (S00)
 
@@ -86,11 +86,14 @@ Crate `kinematics` + CLI + ADR-014. Ver `docs/sprints/S06.md`.
 
 Crate `contacts` + `contact-check`. Ver `docs/sprints/S07.md`.
 
-## Brief S08 (siguiente en batch autorizado)
+## Brief S08 (APROBADO 2026-10-10)
 
-Pernos y junta L1: historial torque/ángulo/lubricante por perno,
-precarga `T = K·F·d` con K explícito e incertidumbre, campo de presión
-por segmentos con rigidez equivalente, `SealConductance` como costura
-futura (S23), secuencia OEM solo si verificada. Gate: torque y
-lubricante cambian precarga según modelo; calibración pendiente
-declarada.
+Crate `fastener` + `fastener-seal-test` + ADR-015. Ver
+`docs/sprints/S08.md`.
+
+## Brief S09 (siguiente en batch autorizado)
+
+Cilindro sellado ideal sin combustión: `ThermoState` + mezcla simple,
+primera ley con geometría variable (Q=0), integración RK4 por ángulo,
+comparación adiabática analítica + convergencia, auditoría energética.
+Gate: coincide con ideal en tolerancia justificada; no «D16 validado».

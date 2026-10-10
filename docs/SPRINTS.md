@@ -16,7 +16,7 @@ Ningún sprint S01+ está iniciado.
 | S05 | S02–S04 | Eventos, snapshots, replay | 100 secuencias controladas sin divergencia estructural | **APROBADO** (2026-10-10; 0 divergencias; ver `docs/sprints/S05.md`) |
 | S06 | S03–S05 | Cinemática cigüeñal/pistón/biela | Conservación geométrica + tests analíticos; sin RPM simuladas | **APROBADO** (2026-10-10; 8 tests; ver `docs/sprints/S06.md`) |
 | S07 | S04,S06 | Herramientas y contactos | Sin daño sin material/criterio; errores detectables por estado | **APROBADO** (2026-10-10; 5 tests; ver `docs/sprints/S07.md`) |
-| S08 | S01,S03–S05,S07 | Pernos, precarga, junta | Torque→precarga bajo hipótesis; lubricante cambia precarga; calibración pendiente declarada | PENDIENTE |
+| S08 | S01,S03–S05,S07 | Pernos, precarga, junta | Torque/lubricante cambian precarga; calibración pendiente | **APROBADO** (2026-10-10; 6 tests; ver `docs/sprints/S08.md`) |
 | S09 | S03,S06 | Gas ideal / cilindro sellado | Coincide con ideal en tolerancia justificada; no «D16 validado» | PENDIENTE |
 | S10 | S09 | Combustión reducida | Retrasar heat release desplaza p/trabajo explicablemente; sin dyno al freno | PENDIENTE |
 | S11 | S06–S07,S09 | Distribución SOHC | 4 cilindros derivan de cam+crank compartidos; sin daños automáticos | PENDIENTE |
@@ -57,6 +57,6 @@ ecuaciones con animaciones. Ver foundation §16. Todos PENDIENTE.
 
 ## Regla de avance
 
-S00–S07 APROBADOS. Batch autorizado S06–S10, siguiente: S08.
+S00–S08 APROBADOS. Batch autorizado S06–S10, siguiente: S09.
 S11 prohibido sin autorización. Gates universales §12.3 +
 `docs/definition-of-done.md` aplican.

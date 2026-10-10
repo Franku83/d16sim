@@ -6,6 +6,7 @@ members = [
     "crates/assembly",
     "crates/kinematics",
     "crates/contacts",
+    "crates/fastener",
     "crates/physics",
     "crates/simulation",
     "crates/cli",
