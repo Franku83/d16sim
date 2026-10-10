@@ -44,3 +44,17 @@ trayectoria nominal (el combustible que sale/refluye cambia masa quemada y
 el término de presión de fricción deja de reiniciarse). Los valores
 nominales anteriores de RPM/trabajo ya no aplican; no se han reajustado
 parámetros para preservarlos. Ver el reporte de batch R01–R02.
+
+## Remediación R01-C1/RV01 y R02-C1/RV05 (2026-10-10)
+
+- **Presupuesto químico (RV01):** la energía liberada por Wiebe consume el
+  inventario químico en la **misma convención temporal** (`dm = dQ/(LHV·η)`).
+  El remanente no quemado (completitud < 1) permanece en la cámara como
+  especie transportable; no se suma calor liberado y combustible intacto como
+  energías independientes. El ralentí nominal cambia ~1e-5 relativo por el
+  orden de operaciones; sin reajuste de parámetros.
+- **Fronteras y atomicidad (RV05):** las entradas se validan (áreas ≥ 0,
+  Wiebe, fricción, volúmenes) y `resume` valida estado/ledgers y avanza sobre
+  una copia, confirmándola solo si termina bien. Un error de fricción se
+  propaga; no se convierte en torque cero. `restore` valida también historia
+  de eventos y contadores.

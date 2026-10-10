@@ -29,3 +29,13 @@ inputs físicos preserva la observación; causas con la misma firma permanecen
 ambiguas. El escape, sin puerto en la red, se declara `no instrumentado`
 (frontera 0), no un porcentaje heurístico. La construcción de la avería y la
 de la observación quedan desacopladas.
+
+## Remediación R01-C1/RV02 (2026-10-10)
+
+El helper contabiliza **toda** ruta de gas instrumentada desde la cámara
+(cárter, escape/admisión y refrigerante) en el denominador físico: un escape
+con caudal ya no se descarta ni se reporta como 0. Un reparto sin ninguna
+fracción observada (todas cero) **no es una medición**: el protocolo lo declara
+`Inconclusive` y no fuerza una causa. La ambigüedad entre causas con firmas
+indistinguibles se mantiene; AUD-R01 no se declara resuelto (faltan modelos de
+fuga de válvula y campaña de indistinguibilidad).

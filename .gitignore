@@ -3,3 +3,4 @@
 # Copia local del harness independiente (R01-R02) para ejecutarlo contra esta
 # rama; el original del auditor vive intacto en el worktree de auditoría.
 /audit/
+/verification/

@@ -31,3 +31,12 @@ horizonte de test: se verifica inicio + lógica + auditoría).
 - **Fail-closed (R02-F15):** las capacidades deben ser estrictamente
   positivas; una capacidad nula produce error tipado antes de mutar, no un
   estado no finito.
+
+## Remediación R02-C1/RV06 (2026-10-10)
+
+`step` valida las temperaturas de entrada y el ambiente (finitud y Kelvin
+sobre el cero absoluto) **antes** de calcular, computa el estado candidato en
+locales y solo lo confirma si es finito y físico. Temperaturas imposibles,
+ambiente bajo cero absoluto y overflow por capacidad extrema devuelven error
+tipado **sin mutar** el estado (atomicidad). El calor `q_amb` es energía (J) y
+puede ser negativo si el ambiente está más caliente; solo se exige finitud.

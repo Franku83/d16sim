@@ -490,3 +490,22 @@ detención. Batch S26–S30 autorizado; S31 prohibido.
 - Cambios numéricos: las cifras nominales de RPM/trabajo cambian (especies +
   presión de fricción); no se reajustaron parámetros para conservarlas.
 - **STOP**: no se inicia R03 hasta autorización explícita. S31 prohibido.
+
+## 2026-10-10 · Remediación R01–R02-C1 (IMPLEMENTED_PENDING_INDEPENDENT_REVIEW)
+
+- Rama `remediation/r01-r02-c1` desde `8a7e868` (R01–R02 verificado con
+  `REMEDIATION_REQUIRED_BEFORE_R03_R04`). Reporte:
+  `docs/remediation/R01_R02_C1_BATCH_REPORT.md`; ADR-039.
+- **RV01/F01**: presupuesto químico transitorio (la energía consume el
+  inventario en el mismo paso); exceso 1156.15→1.5e-11 J.
+- **RV02/F02**: toda ruta de gas instrumentada entra en el reparto; reparto
+  nulo ⇒ Inconclusive (no Rings).
+- **RV03/F05**: `-0.0` conserva bits en los campos opcionales.
+- **RV04/F06**: `MigrationProvenance` (origen, transformación, campos
+  ausentes, `exact_neutral`/`approximate_hot`).
+- **RV05–RV09/F15**: validación atómica fail-closed en engine, thermal,
+  decoder/ECU, fitter y dyno; sin panic ni mutación parcial.
+- Tests: workspace **198 passed / 0 failed** (183 + 15); fmt/clippy OK.
+  Harness adversarial **19/19** (196 predicados; antes 9/19). Harness original
+  **22/32** con los mismos 10 fallos de R03/R04. F07/F08/F09/F10 conservados.
+- **STOP**: no se inicia R03/R04/R05 ni S31 sin autorización explícita.

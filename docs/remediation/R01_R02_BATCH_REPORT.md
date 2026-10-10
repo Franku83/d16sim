@@ -214,3 +214,13 @@ IDs contra los probes re-ejecutados y el diff de `audit/independent/src/main.rs`
 - Working tree limpio salvo la documentación de este commit.
 - **Recomendación:** solicitar **autorización explícita para el batch 2 (R03–R04)**.
   **STOP**: no iniciar R03/R04/R05 ni S31 sin nueva autorización.
+
+---
+
+## Erratum (R01–R02-C1, 2026-10-10)
+
+- La frase «163 passed / 0 failed (59 targets con casos)» de la sección 3.1
+  debe leerse como: **163 casos**, 59 bloques de resultado, **29 con casos**
+  (30 tras R01–R02); los doc-tests vacíos no son casos. Detectado por la
+  verificación independiente (RV-D01). No altera los 163/183 casos
+  reproducidos. Ver `R01_R02_C1_BATCH_REPORT.md`.

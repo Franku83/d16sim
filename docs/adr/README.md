@@ -31,3 +31,4 @@ Los ADR de la remediación R01–R05 se indexan aparte para no reescribir el
 | ID | Archivo | Estado |
 |---|---|---|
 | ADR-038 | `ADR-038-remediation-state-species.md` | ACEPTADO (R01–R02) |
+| ADR-039 | `ADR-039-remediation-c1-boundaries.md` | ACEPTADO (R01–R02-C1) |
