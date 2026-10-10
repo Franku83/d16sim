@@ -1,7 +1,7 @@
 # HANDOFF — punto de entrada al siguiente agente
 
-Fecha: 2026-10-10 · Sprints: **S00–S11 APROBADOS (batch S11–S15)**.
-Siguiente: **S12**. **S16 prohibido sin autorización.**
+Fecha: 2026-10-10 · Sprints: **S00–S12 APROBADOS (batch S11–S15)**.
+Siguiente: **S13**. **S16 prohibido sin autorización.**
 
 ## Estado científico/arquitectónico actual
 
@@ -32,9 +32,9 @@ Siguiente: **S12**. **S16 prohibido sin autorización.**
    2026-10-10.
 2. ~~Licencia sin decidir~~ — resuelto: Apache-2.0 solo código propio
    (propietario 2026-10-10); `LICENSE` + `THIRD_PARTY_NOTICES.md` creados.
-3. S01–S11 APROBADOS 2026-10-10 (S10: Q audit 5.5e−8; S11: IO cada
-   180°, Vtr 410.40 cm³, solape informado sin daño). Deuda: CI Windows sin
-   ejecutar; perfil Y7 medido pendiente; gas exchange en S12.
+3. S01–S12 APROBADOS 2026-10-10 (S11: Vtr 410.40 cm³; S12: cierre
+   masa ~1e−15, reflujo medido). Deuda: CI Windows sin ejecutar; perfil
+   Y7 y puertos medidos pendientes; inyección en S13.
 
 ## Roles y reglas de cambio (S00)
 
@@ -107,11 +107,17 @@ Crate `combustion` + `closed-cycle-burn` + ADR-017. Ver
 ## Brief S11 (APROBADO 2026-10-10)
 
 Crate `valvetrain` + `valvetrain` CLI + ADR-018. Ver `docs/sprints/S11.md`.
+Nota S12: `lift_at` ahora envuelve a (−360°, 360°] (bug corregido,
+re-verificado).
 
-## Brief S12 (siguiente en batch autorizado)
+## Brief S12 (APROBADO 2026-10-10)
 
-Flujos de admisión/escape 0D: nodos m/U/p/T/composición, flujo
-compresible por válvulas y mariposa con área/descarga documentados,
-conservación entre nodos, residuales, integración de eventos sin
-discontinuidades falsas. Gate: el efecto válvula viaja por caudal
-calculado; faltantes 1D declarados.
+Crate `flow` + `gas-exchange` CLI + ADR-019. Ver `docs/sprints/S12.md`.
+
+## Brief S13 (siguiente en batch autorizado)
+
+Combustible: depósito/rail/bomba/inyector reducido con propiedades
+identificadas, presión de rail y regulador referenciado, inyector
+masa vs Δp/duración/deadtime/tensión, eventos por cilindro según
+estrategia futura, comandado vs entregado, casos de fallo. Gate: sin
+rendimiento desde AFR sin entrega real; sin DTC por bomba sin presión.

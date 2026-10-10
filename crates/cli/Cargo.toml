@@ -15,6 +15,7 @@ combustion = { path = "../combustion" }
 contacts = { path = "../contacts" }
 engine-types = { path = "../engine-types" }
 fastener = { path = "../fastener" }
+flow = { path = "../flow" }
 kinematics = { path = "../kinematics" }
 thermo = { path = "../thermo" }
 valvetrain = { path = "../valvetrain" }

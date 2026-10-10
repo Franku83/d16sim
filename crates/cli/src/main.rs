@@ -120,6 +120,19 @@ enum Command {
         #[arg(long, default_value_t = 6.0)]
         closed_gap_mm: f64,
     },
+    /// Ciclo 720° con gas exchange 0D (S12, entradas ilustrativas).
+    GasExchange {
+        #[arg(long, default_value_t = 750.0)]
+        rpm: f64,
+        #[arg(long, default_value_t = 2.0)]
+        plenum_l: f64,
+        #[arg(long, default_value_t = 1.5)]
+        exhaust_l: f64,
+        #[arg(long, default_value_t = 8.0)]
+        throttle_cm2: f64,
+        #[arg(long, default_value_t = 8.0)]
+        tailpipe_cm2: f64,
+    },
 }
 
 fn run() -> Result<(), EngineError> {
@@ -238,6 +251,13 @@ fn run() -> Result<(), EngineError> {
             belt_offset_teeth,
             closed_gap_mm,
         } => valvetrain_cmd(belt_teeth, belt_offset_teeth, closed_gap_mm),
+        Command::GasExchange {
+            rpm,
+            plenum_l,
+            exhaust_l,
+            throttle_cm2,
+            tailpipe_cm2,
+        } => gas_exchange_cmd(rpm, plenum_l, exhaust_l, throttle_cm2, tailpipe_cm2),
     }
 }
 
@@ -731,5 +751,58 @@ fn valvetrain_cmd(
             c.overlap,
         );
     }
+    Ok(())
+}
+
+/// Comando S12: ciclo 720° no combustivo con gas exchange 0D y auditoría.
+/// Sin VE impuesta: la masa atrapada emerge del caudal por válvula.
+fn gas_exchange_cmd(
+    rpm: f64,
+    plenum_l: f64,
+    exhaust_l: f64,
+    throttle_cm2: f64,
+    tailpipe_cm2: f64,
+) -> Result<(), EngineError> {
+    use flow::{run_cycle, GasExchangeInputs};
+    use kinematics::GeometryPack;
+    use thermo::Mixture;
+    use valvetrain::{BeltDrive, CamSpec};
+
+    let err = |e: String| EngineError::SchemaValidation(e);
+    let geom = GeometryPack::illustrative_d16_like().map_err(|e| err(e.to_string()))?;
+    let mix = Mixture::new(287.0, 1.4).map_err(|e| err(e.to_string()))?;
+    let intake = CamSpec::proxy_d16a6_intake().map_err(|e| err(e.to_string()))?;
+    let exhaust = CamSpec::proxy_d16a6_exhaust().map_err(|e| err(e.to_string()))?;
+    let belt = BeltDrive::new(100.0, 0.0).map_err(|e| err(e.to_string()))?;
+    let (trace, audit) = run_cycle(
+        &geom,
+        mix,
+        &intake,
+        &exhaust,
+        &belt,
+        GasExchangeInputs {
+            rpm,
+            p_amb_pa: 101_325.0,
+            t_amb_k: 293.15,
+            plenum_v_m3: plenum_l * 1e-3,
+            exhaust_v_m3: exhaust_l * 1e-3,
+            throttle_area_m2: throttle_cm2 * 1e-4,
+            tailpipe_area_m2: tailpipe_cm2 * 1e-4,
+            step_deg: 0.25,
+            exhaust_init: None,
+        },
+    )
+    .map_err(|e| err(e.to_string()))?;
+    println!("gas-exchange (ILLUSTRATIVE volumes/areas/Cd; no VE set):");
+    println!("  trapped_mg        : {:.3}", audit.trapped_kg * 1e6);
+    println!("  residual_frac     : {:.4}", audit.residual_frac);
+    println!("  mass_closure      : {:.3e}", audit.mass_closure);
+    println!("  energy_closure    : {:.3e}", audit.energy_closure);
+    println!(
+        "  p_cyl_kPa_min/max : {:.1} / {:.1}",
+        audit.p_min_pa / 1_000.0,
+        audit.p_max_pa / 1_000.0
+    );
+    println!("  trace_points      : {}", trace.len());
     Ok(())
 }

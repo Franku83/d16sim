@@ -201,3 +201,17 @@ Solo hechos constatables; sin cifras improvisadas.
   decretado.
 - Deuda: tabla lift-vs-CA medida, dinámica de muelle/flotación, holgura
   térmica, VTEC (otra arquitectura); perfil Y7 sigue MISSING-DATA.
+
+## 2026-10-10 · S12 · Flujos 0D con Cd medido (APROBADO)
+
+- Crate `flow` (orificio compresible + Cd Y7/P2A-06 + nodos 2 especies +
+  ciclo 720° con auditoría); `d16sim gas-exchange` (trapped 519.9 mg,
+  residual 0.0000, cierres ~1e-15, p 96/2235 kPa, 2881 puntos);
+  ADR-019; `docs/physics/gas_exchange.md`; H-S12-01..05.
+- Tests: 8 passed (choke/incompresible, monotonía, Cd, cierre masa,
+  reflujo+especies, dosificación mariposa 0.79×, refinamiento <1%,
+  rechazos). 3 bugs reales corregidos: literal crítico, Pa-como-kg,
+  envoltura de leva (este último también tocó S11, re-verificado 6/6).
+- Gate S12: PASS — caudal calculado, sin VE; faltantes 1D declarados.
+- Deuda: garganta explícita, puertos/colector medidos, red 1D,
+  multicilindro y periódico en S16, γ(T), lift medido.

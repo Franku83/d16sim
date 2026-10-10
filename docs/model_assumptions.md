@@ -73,3 +73,13 @@ futuros: toda aproximación pasa por aquí + `ModelCard` (§11.4).
 | H-S11-03 | Ley sen² simétrica ilustrativa (050 subestimado) | Alzada S11 | Supuesto declarado | Tabla medida |
 | H-S11-04 | Correa 2:1, dientes ilustrativos, solo desfasa eventos | S11 | Supuesto declarado | Conteo OEM + patrón |
 | H-S11-05 | Contacto informado, daño pospuesto a material | S11 | Decisión (gate S27) | Modelo S27 |
+
+## Registro S12 (gas exchange 0D)
+
+| ID | Hipótesis | Dominio | Fuente | Invalida si |
+|---|---|---|---|---|
+| H-S12-01 | Cd medido por válvula, sin garganta (no doble conteo) | Flujo S12 | Research + §24.4 | Cd con banco + garganta |
+| H-S12-02 | Dos especies; residual quemado exige combustión | Nodos S12 | Decisión + física | Acople S16 |
+| H-S12-03 | Volúmenes/áreas ilustrativos; mariposa = área efectiva | Demo S12 | Supuesto declarado | Geometría medida |
+| H-S12-04 | Primer ciclo transitorio; periódico en S16 | Ciclo S12 | Supuesto declarado | Operación continua |
+| H-S12-05 | Euler explícito; masa exacta contable, energía auditada | S12 | ADR-019 | Acoplamiento implícito |

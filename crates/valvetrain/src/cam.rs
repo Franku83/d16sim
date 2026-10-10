@@ -139,12 +139,16 @@ impl CamSpec {
     }
 
     /// Alzada (mm) a ángulo de cigüeñal relativo al centro del lóbulo
-    /// (`relativ_deg = 0` en el centro). Ley ilustrativa simétrica.
+    /// (`relativ_deg = 0` en el centro). Ley ilustrativa simétrica. El
+    /// relativo se envuelve a (−360°, 360°]: la leva abre una vez por ciclo
+    /// aunque la ventana cruce el 0°/720° (sin envoltura se perdería la
+    /// apertura a caballo del origen).
     #[must_use]
     pub fn lift_at(&self, relative_crank_deg: f64) -> f64 {
         let half = self.adv_duration_crank_deg / 2.0;
         // Ventana en grados de LEVA (la mitad): la forma vive en el árbol.
-        let u = (relative_crank_deg / half + 1.0) / 2.0;
+        let rel = (relative_crank_deg + 360.0).rem_euclid(720.0) - 360.0;
+        let u = (rel / half + 1.0) / 2.0;
         if u <= 0.0 || u >= 1.0 {
             0.0
         } else {
