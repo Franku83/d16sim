@@ -15,7 +15,7 @@ Ningún sprint S01+ está iniciado.
 | S04 | S01–S03 | Catálogo estructural e instancias | Grafos persistentes y operaciones trazables; sin simular física | **APROBADO** (2026-10-10; reload match; ver `docs/sprints/S04.md`) |
 | S05 | S02–S04 | Eventos, snapshots, replay | 100 secuencias controladas sin divergencia estructural | **APROBADO** (2026-10-10; 0 divergencias; ver `docs/sprints/S05.md`) |
 | S06 | S03–S05 | Cinemática cigüeñal/pistón/biela | Conservación geométrica + tests analíticos; sin RPM simuladas | **APROBADO** (2026-10-10; 8 tests; ver `docs/sprints/S06.md`) |
-| S07 | S04,S06 | Herramientas y contactos | Sin daño sin material/criterio; errores detectables por estado | PENDIENTE |
+| S07 | S04,S06 | Herramientas y contactos | Sin daño sin material/criterio; errores detectables por estado | **APROBADO** (2026-10-10; 5 tests; ver `docs/sprints/S07.md`) |
 | S08 | S01,S03–S05,S07 | Pernos, precarga, junta | Torque→precarga bajo hipótesis; lubricante cambia precarga; calibración pendiente declarada | PENDIENTE |
 | S09 | S03,S06 | Gas ideal / cilindro sellado | Coincide con ideal en tolerancia justificada; no «D16 validado» | PENDIENTE |
 | S10 | S09 | Combustión reducida | Retrasar heat release desplaza p/trabajo explicablemente; sin dyno al freno | PENDIENTE |
@@ -57,6 +57,6 @@ ecuaciones con animaciones. Ver foundation §16. Todos PENDIENTE.
 
 ## Regla de avance
 
-S00–S06 APROBADOS. Batch autorizado S06–S10, siguiente: S07.
+S00–S07 APROBADOS. Batch autorizado S06–S10, siguiente: S08.
 S11 prohibido sin autorización. Gates universales §12.3 +
 `docs/definition-of-done.md` aplican.

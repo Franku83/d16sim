@@ -121,3 +121,14 @@ Solo hechos constatables; sin cifras improvisadas.
 - Gate S06: PASS — verificación matemática, no validación; ω es
   parámetro, sin RPM simuladas.
 - Deuda: offset de bulón, masas/inercia (S14), contacto (S07/S11).
+
+## 2026-10-10 · S07 · Herramientas y contactos (APROBADO)
+
+- Crate `contacts` (interferencias + medición L1 + herramientas);
+  `d16sim contact-check` (interferencia 2 mm a PMS con lift impuesto,
+  `damage: NotAssessed`); `docs/physics/contacts.md`; H-S07-01..04.
+- Tests: 5 passed (huelgo exacto, cant, biela/rosca, no-daño incl.
+  penetración profunda, medición). Build sin warnings nuevos.
+- Gate S07: PASS — daño jamás decretado; interferencias cuantificadas.
+- Deuda: compatibilidad fina S04 sigue nominal; dinámica de válvula en
+  S11; material en S27.

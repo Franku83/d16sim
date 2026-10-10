@@ -1,7 +1,7 @@
 # HANDOFF — punto de entrada al siguiente agente
 
-Fecha: 2026-10-10 · Sprints: **S00–S06 APROBADOS (batch S06–S10)**.
-Siguiente: **S07**. **S11 prohibido sin autorización.**
+Fecha: 2026-10-10 · Sprints: **S00–S07 APROBADOS (batch S06–S10)**.
+Siguiente: **S08**. **S11 prohibido sin autorización.**
 
 ## Estado científico/arquitectónico actual
 
@@ -28,9 +28,9 @@ Siguiente: **S07**. **S11 prohibido sin autorización.**
    2026-10-10.
 2. ~~Licencia sin decidir~~ — resuelto: Apache-2.0 solo código propio
    (propietario 2026-10-10); `LICENSE` + `THIRD_PARTY_NOTICES.md` creados.
-3. S01–S06 APROBADOS 2026-10-10 (S05: 0 divergencias; S06: 8 tests
-   analíticos). Deuda: CI Windows sin ejecutar; `trybuild` diferido;
-   compatibilidad fina en S07; offset de bulón; masas/inercia en S14.
+3. S01–S07 APROBADOS 2026-10-10 (S06: 8 tests analíticos; S07: daño
+   jamás decretado). Deuda: CI Windows sin ejecutar; `trybuild` diferido;
+   válvula real en S11; material en S27.
 
 ## Roles y reglas de cambio (S00)
 
@@ -82,10 +82,15 @@ Crate `assembly` + catálogo semilla + `assembly-demo`. Ver
 
 Crate `kinematics` + CLI + ADR-014. Ver `docs/sprints/S06.md`.
 
-## Brief S07 (siguiente en batch autorizado)
+## Brief S07 (APROBADO 2026-10-10)
 
-Herramientas y contactos geométricos: tipos herramienta/operación,
-superficies de interferencia simplificadas (pistón-válvula con lift
-impuesto, biela-bloque, pernos), imposible vs destructivo, reporte con
-penetración y `needs_material_model` sin daño inventado. Gate: ningún
-daño sin material/criterio activo.
+Crate `contacts` + `contact-check`. Ver `docs/sprints/S07.md`.
+
+## Brief S08 (siguiente en batch autorizado)
+
+Pernos y junta L1: historial torque/ángulo/lubricante por perno,
+precarga `T = K·F·d` con K explícito e incertidumbre, campo de presión
+por segmentos con rigidez equivalente, `SealConductance` como costura
+futura (S23), secuencia OEM solo si verificada. Gate: torque y
+lubricante cambian precarga según modelo; calibración pendiente
+declarada.

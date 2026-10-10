@@ -73,6 +73,15 @@ enum Command {
         #[arg(long, default_value_t = 0)]
         sweep: u32,
     },
+    /// Chequeo geométrico pistón–válvula con alzada impuesta (S07).
+    ContactCheck {
+        #[arg(long, default_value_t = 360.0)]
+        theta720_deg: f64,
+        #[arg(long, default_value_t = 8.0)]
+        lift_mm: f64,
+        #[arg(long, default_value_t = 6.0)]
+        closed_gap_mm: f64,
+    },
 }
 
 fn run() -> Result<(), EngineError> {
@@ -166,6 +175,11 @@ fn run() -> Result<(), EngineError> {
             rpm,
             sweep,
         } => kinematics_cmd(theta720_deg, rpm, sweep),
+        Command::ContactCheck {
+            theta720_deg,
+            lift_mm,
+            closed_gap_mm,
+        } => contact_check_cmd(theta720_deg, lift_mm, closed_gap_mm),
     }
 }
 
@@ -423,5 +437,43 @@ fn kinematics_cmd(theta720_deg: f64, rpm: f64, sweep: u32) -> Result<(), EngineE
             );
         }
     }
+    Ok(())
+}
+
+/// Comando S07: huelgo pistón–válvula del cilindro 1 al ángulo global dado,
+/// con alzeda impuesta (el perfil real es S11). Todo en mm de demostración.
+fn contact_check_cmd(
+    theta720_deg: f64,
+    lift_mm: f64,
+    closed_gap_mm: f64,
+) -> Result<(), EngineError> {
+    use contacts::{check_piston_valve, PistonValveInput};
+    use kinematics::{cylinder_local_angle, phases::CylinderId, GeometryPack};
+
+    let geom = GeometryPack::illustrative_d16_like()
+        .map_err(|e| EngineError::SchemaValidation(e.to_string()))?;
+    if !(0.0..=720.0).contains(&theta720_deg) {
+        return Err(EngineError::SchemaValidation(format!(
+            "theta720_deg {theta720_deg} outside [0, 720]"
+        )));
+    }
+    let local = cylinder_local_angle(theta720_deg, CylinderId::Cyl1);
+    let crank = kinematics::phases::crank_angle_for_piston(local);
+    let x = geom.displacement(crank.to_radians());
+    let report = check_piston_valve(PistonValveInput {
+        closed_gap_m: closed_gap_mm / 1_000.0,
+        lift_m: lift_mm / 1_000.0,
+        cant_rad: 0.0,
+        valve_dia_m: 0.030,
+        piston_x_m: x,
+    })
+    .map_err(|e| EngineError::SchemaValidation(e.to_string()))?;
+    println!("contact-check (cyl1, illustrative geometry, imposed lift):");
+    println!("  global_deg      : {theta720_deg:.3}");
+    println!("  clearance_mm    : {:.4}", report.clearance_m * 1_000.0);
+    println!("  overlap         : {}", report.overlap);
+    println!("  penetration_mm  : {:.4}", report.penetration_m * 1_000.0);
+    println!("  needs_material  : {}", report.needs_material_model);
+    println!("  damage          : {:?}", report.damage);
     Ok(())
 }

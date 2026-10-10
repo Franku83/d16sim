@@ -11,6 +11,7 @@ path = "src/main.rs"
 
 [dependencies]
 assembly = { path = "../assembly" }
+contacts = { path = "../contacts" }
 engine-types = { path = "../engine-types" }
 kinematics = { path = "../kinematics" }
 math = { path = "../math" }

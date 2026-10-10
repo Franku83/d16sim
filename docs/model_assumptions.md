@@ -27,3 +27,12 @@ futuros: toda aproximación pasa por aquí + `ModelCard` (§11.4).
 | H-S06-02 | Régimen estacionario (`dω/dt=0`) en `state()` | Evaluación S06 | Supuesto declarado | S14 integra dinámica |
 | H-S06-03 | Preset ilustrativo 75×90/137/CR9.4 solo para verificación | Tests/demos S06–S10 | S01 PENDING + ADR-014 | Auditoría OEM lo sustituye |
 | H-S06-04 | Compañeras (1,4)/(2,3) y orden 1-3-4-2 ilustrativos | Fases S06 | S01 PENDING | Manual variante fija topología |
+
+## Registro S07 (contactos sin material)
+
+| ID | Hipótesis | Dominio | Fuente | Invalida si |
+|---|---|---|---|---|
+| H-S07-01 | Huelgo axial coaxial con corona plana; offset lateral irrelevante en axial | Geometría S07 | Supuesto declarado + test | Corona no plana o válvula angulada real |
+| H-S07-02 | Biela–bloque simétrico L0 | Entradas S07 | Supuesto declarado | Geometría de cárter real |
+| H-S07-03 | Ningún contacto implica daño sin modelo material | Todo S07 | Decisión de diseño (gate) | S27 con criterio validado |
+| H-S07-04 | Medición L1 aditiva | Instrumentos S07 | Supuesto declarado | Caracterización de instrumento |
