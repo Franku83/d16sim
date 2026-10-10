@@ -18,7 +18,7 @@ Ningún sprint S01+ está iniciado.
 | S07 | S04,S06 | Herramientas y contactos | Sin daño sin material/criterio; errores detectables por estado | **APROBADO** (2026-10-10; 5 tests; ver `docs/sprints/S07.md`) |
 | S08 | S01,S03–S05,S07 | Pernos, precarga, junta | Torque/lubricante cambian precarga; calibración pendiente | **APROBADO** (2026-10-10; 6 tests; ver `docs/sprints/S08.md`) |
 | S09 | S03,S06 | Gas ideal / cilindro sellado | Coincide con ideal en tolerancia justificada; no «D16 validado» | **APROBADO** (2026-10-10; err 7e-11, orden 3.9; ver `docs/sprints/S09.md`) |
-| S10 | S09 | Combustión reducida | Retrasar heat release desplaza p/trabajo explicablemente; sin dyno al freno | PENDIENTE |
+| S10 | S09 | Combustión reducida | Retraso desplaza p/trabajo explicablemente; sin dyno al freno | **APROBADO** (2026-10-10; barrido monótono; ver `docs/sprints/S10.md`) |
 | S11 | S06–S07,S09 | Distribución SOHC | 4 cilindros derivan de cam+crank compartidos; sin daños automáticos | PENDIENTE |
 | S12 | S09,S11 | Flujos adm/esc 0D | Efecto válvula por caudal calculado; declarar faltantes 1D | PENDIENTE |
 | S13 | S03,S10,S12 | Combustible rail/inyector | Sin rendimiento desde AFR sin entrega real; sin DTC por bomba sin presión | PENDIENTE |
@@ -57,6 +57,6 @@ ecuaciones con animaciones. Ver foundation §16. Todos PENDIENTE.
 
 ## Regla de avance
 
-S00–S09 APROBADOS. Batch autorizado S06–S10, siguiente: S10.
-S11 prohibido sin autorización. Gates universales §12.3 +
+S00–S10 APROBADOS. Batch autorizado S06–S10 completo.
+**S11 prohibido sin autorización.** Gates universales §12.3 +
 `docs/definition-of-done.md` aplican.

@@ -160,3 +160,18 @@ Solo hechos constatables; sin cifras improvisadas.
 - Gate S09: PASS — coincide con ideal en tolerancia medida; rotulado no
   validado.
 - Deuda: γ(T,mezcla), fugas, pared, residuales, combustión (S10/S12/S21).
+
+## 2026-10-10 · S10 · Combustión Wiebe y presión indicada (APROBADO)
+
+- Crate `combustion` (Wiebe validado + zona única + auditoría GL);
+  `d16sim closed-cycle-burn` (W 562.5 J, IMEP 14.1 bar ill., pmax 5852
+  kPa @ 377.8°, Q err 5.5e−8); ADR-017; `docs/physics/wiebe.md`;
+  H-S10-01..04.
+- Tests: 4 passed (forma/completitud, barrido monótono W+pmax, cero-fuel
+  ⇒ motored, rechazos). 1 fallo intermedio honesto: Simpson global del
+  calor hereda O(h·salto) del borde Wiebe (1.4e−4) → GL por tramos
+  (5.5e−8), analizado en ADR-017.
+- Gate S10: PASS — retraso explicable y monótono; sensibilidad revisada
+  (barrido 340/350/360), no calibrada; sin dyno al freno.
+- Deuda: γ(T,mezcla), residuales, pared L1, ciclo-a-ciclo, knock
+  (UNSUPPORTED), gas exchange (S12), p(θ) medida (S25).

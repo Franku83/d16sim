@@ -8,6 +8,7 @@ members = [
     "crates/contacts",
     "crates/fastener",
     "crates/thermo",
+    "crates/combustion",
     "crates/physics",
     "crates/simulation",
     "crates/cli",

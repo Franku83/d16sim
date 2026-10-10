@@ -100,6 +100,17 @@ enum Command {
         #[arg(long, default_value_t = 0.25)]
         step_deg: f64,
     },
+    /// Ciclo con combustión Wiebe (S10, entradas ilustrativas).
+    ClosedCycleBurn {
+        #[arg(long, default_value_t = 340.0)]
+        start_deg: f64,
+        #[arg(long, default_value_t = 60.0)]
+        duration_deg: f64,
+        #[arg(long, default_value_t = 25.0)]
+        fuel_mg: f64,
+        #[arg(long, default_value_t = 1.35)]
+        gamma: f64,
+    },
 }
 
 fn run() -> Result<(), EngineError> {
@@ -207,6 +218,12 @@ fn run() -> Result<(), EngineError> {
             gamma,
             step_deg,
         } => closed_cycle_cmd(p_bdc_kpa, t_bdc_k, gamma, step_deg),
+        Command::ClosedCycleBurn {
+            start_deg,
+            duration_deg,
+            fuel_mg,
+            gamma,
+        } => closed_cycle_burn_cmd(start_deg, duration_deg, fuel_mg, gamma),
     }
 }
 
@@ -608,5 +625,53 @@ fn closed_cycle_cmd(
     println!("  W_net_J            : {:.4e}", audit.w_net_j);
     println!("  max_p_rel_err      : {:.3e}", audit.max_p_rel_err);
     println!("  conv_order         : {:.3}", audit.conv_order);
+    Ok(())
+}
+
+/// Comando S10: ciclo con Wiebe y auditoría (IMEP ilustrativo, sin dyno).
+fn closed_cycle_burn_cmd(
+    start_deg: f64,
+    duration_deg: f64,
+    fuel_mg: f64,
+    gamma: f64,
+) -> Result<(), EngineError> {
+    use combustion::{BurnCycle, BurnParams, WallHeat, Wiebe};
+    use kinematics::GeometryPack;
+    use thermo::Mixture;
+
+    let err = |e: String| EngineError::SchemaValidation(e);
+    let geom = GeometryPack::illustrative_d16_like().map_err(|e| err(e.to_string()))?;
+    let mix = Mixture::new(287.0, gamma).map_err(|e| err(e.to_string()))?;
+    let wiebe = Wiebe::new(5.0, 2.0, start_deg.to_radians(), duration_deg.to_radians())
+        .map_err(|e| err(e.to_string()))?;
+    let cycle = BurnCycle::new(
+        geom,
+        mix,
+        101_325.0,
+        350.0,
+        wiebe,
+        BurnParams {
+            fuel_mass_kg: fuel_mg * 1e-6,
+            lower_heating_value_j_per_kg: 44e6,
+            combustion_efficiency: 1.0,
+            wall: WallHeat::Adiabatic,
+        },
+    )
+    .map_err(|e| err(e.to_string()))?;
+    let (_, audit) = cycle.run(0.25);
+    println!("closed-cycle-burn (ILLUSTRATIVE inputs; verification only, not D16 validation):");
+    println!("  trapped_air_mg    : {:.2}", cycle.trapped_air_kg() * 1e6);
+    println!("  fuel_mg           : {fuel_mg:.2}");
+    println!("  W_net_J           : {:.3}", audit.w_net_j);
+    println!("  IMEP_bar (ill.)   : {:.3}", audit.imep_pa / 1e5);
+    println!(
+        "  pmax_kPa@deg       : {:.0} @ {:.2}",
+        audit.pmax_pa / 1_000.0,
+        audit.pmax_theta_deg
+    );
+    println!("  Q_target_J        : {:.2}", audit.q_target_j);
+    println!("  Q_integrated_J    : {:.2}", audit.q_integrated_j);
+    println!("  Q_rel_err         : {:.3e}", audit.q_rel_err);
+    println!("  W_motored_J       : {:.4e}", audit.w_motored_j);
     Ok(())
 }

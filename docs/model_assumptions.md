@@ -54,3 +54,12 @@ futuros: toda aproximación pasa por aquí + `ModelCard` (§11.4).
 | H-S09-02 | Q_pared = 0, sin fugas ni residuales | Ciclo cerrado S09 | Supuesto declarado | Modelos S12/S21/S23 |
 | H-S09-03 | Entradas p/T BDC ilustrativas (101.325 kPa/350 K) | Demo S09 | Supuesto declarado | Medición en motor |
 | H-S09-04 | RK4+Simpson verifica contra adiabática, no valida motor | Tests S09 | ADR-016 | — |
+
+## Registro S10 (Wiebe zona única)
+
+| ID | Hipótesis | Dominio | Fuente | Invalida si |
+|---|---|---|---|---|
+| H-S10-01 | Wiebe a=5/m=2/Δθ=60° ilustrativos, no universales | Demo S10 | Default de libro + research | p(θ) medida |
+| H-S10-02 | Zona única, γ const, Q_pared=0, eff=1, sin residuales | Ciclo S10 | Supuesto declarado | S12/S21, γ(T) |
+| H-S10-03 | Combustible 25 mg y LHV44 ilustrativos (no P2A-000) | Demo S10 | Supuesto declarado | Banco P2A-000 |
+| H-S10-04 | IMEP ilustrativo ≠ validación (overshoot esperado) | Reporte S10 | ADR-017 | Calibración S25 |

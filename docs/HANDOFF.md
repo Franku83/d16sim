@@ -1,7 +1,7 @@
 # HANDOFF — punto de entrada al siguiente agente
 
-Fecha: 2026-10-10 · Sprints: **S00–S09 APROBADOS (batch S06–S10)**.
-Siguiente: **S10**. **S11 prohibido sin autorización.**
+Fecha: 2026-10-10 · Sprints: **S00–S10 APROBADOS (batch S06–S10)**.
+**S11 NO iniciado: prohibido sin autorización explícita.**
 
 ## Estado científico/arquitectónico actual
 
@@ -28,9 +28,10 @@ Siguiente: **S10**. **S11 prohibido sin autorización.**
    2026-10-10.
 2. ~~Licencia sin decidir~~ — resuelto: Apache-2.0 solo código propio
    (propietario 2026-10-10); `LICENSE` + `THIRD_PARTY_NOTICES.md` creados.
-3. S01–S09 APROBADOS 2026-10-10 (S08: 25.0/33.3 kN; S09: err 7e−11,
-   orden 3.9). Deuda: CI Windows sin ejecutar; γ(T) y fugas pendientes;
-   combustión en S10.
+3. S01–S10 APROBADOS 2026-10-10 (S09: err 7e−11, orden 3.9; S10:
+   barrido W monótono 562→478 J, Q audit 5.5e−8). Deuda: CI Windows sin
+   ejecutar; γ(T)/residuales/pared/knock pendientes; gas exchange S12;
+   p(θ) medida S25.
 
 ## Roles y reglas de cambio (S00)
 
@@ -95,10 +96,13 @@ Crate `fastener` + `fastener-seal-test` + ADR-015. Ver
 
 Crate `thermo` + `closed-cycle` + ADR-016. Ver `docs/sprints/S09.md`.
 
-## Brief S10 (siguiente en batch autorizado)
+## Brief S10 (APROBADO 2026-10-10)
 
-Combustión reducida: Wiebe paramétrico (a/m/inicio/duración explícitos),
-acople a primera ley sin doble conteo, torque indicado `p·dV/dθ` y trabajo
-neto, barrido de avance con Q_pared=0, sin calibración a hp de catálogo.
-Gate: retrasar la liberación desplaza presión/trabajo de forma explicable;
-sensibilidad revisada; sin dyno al freno.
+Crate `combustion` + `closed-cycle-burn` + ADR-017. Ver
+`docs/sprints/S10.md`.
+
+## Brief S11 (PROHIBIDO sin autorización explícita del propietario)
+
+Distribución SOHC: `CamProfile` lift-vs-θ, cinemática 2:1 + offset de
+correa, valvetrain cuasiestático, clearance/volumen efectivo, detección
+de contacto (daño pospuesto a material). Dep: S06–S07, S09.

@@ -20,7 +20,7 @@ hay código de física.
   dyno stock completo, mapas P2E, deadtime P2A-000, FMEP D16Y7).
 - Toda UI/3D (Tauri/Three.js/WASM). Prohibida en S00 por brief.
 
-## Estado tras S01–S05 (sin cambios físicos: sigue vigente lo anterior)
+## Estado tras S01–S10 (sin cambios físicos: sigue vigente lo anterior)
 
 - S01 fijó variante y ficha con todo número en PENDING/DISPUTED.
 - S02–S05 añaden infraestructura (toolchain, runner, unidades, grafo,
