@@ -1,7 +1,6 @@
 # HANDOFF — punto de entrada al siguiente agente
 
-Fecha: 2026-10-10 · Sprints: **S00–S25 APROBADOS — batch S21–S25
-COMPLETO; batch S26–S30 AUTORIZADO** (reconciliación Fase 0).
+Fecha: 2026-10-10 · Sprints: **S00–S26 APROBADOS (batch S26–S30 en curso)**.
 **S31 prohibido sin autorización explícita.**
 
 ## Estado científico/arquitectónico actual
@@ -176,9 +175,11 @@ Crate `leak` + `leak-test` + ADR-030. Ver `docs/sprints/S23.md`.
 
 Crate `calibration` + `calibration-demo` + `docs/calibration/` + ADR-032. Ver `docs/sprints/S25.md`.
 
-## Brief S26 (AUTORIZADO 2026-10-10, batch S26–S30)
+## Brief S26 (APROBADO 2026-10-10, TREND_CONDITIONED)
 
-**Reconciliación explícita (no sustitución silenciosa):** este brief
+Crate `wear` + `wear-demo` + ADR-033. Ver `docs/sprints/S26.md`.
+
+**Reconciliación explícita Fase 0 (no sustitución silenciosa):** este brief
 decía «calibración stock…» por un copia-pega de S25. La fuente normativa
 (Foundation §15, S26 «Motor persistente: desgaste y mantenimiento bajo
 incertidumbre») y `SPRINTS.md` (S26 = desgaste) concuerdan: **S26 es

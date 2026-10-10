@@ -22,6 +22,7 @@ members = [
     "crates/lube",
     "crates/leak",
     "crates/calibration",
+    "crates/wear",
     "crates/physics",
     "crates/simulation",
     "crates/cli",

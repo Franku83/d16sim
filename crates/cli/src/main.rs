@@ -197,6 +197,11 @@ enum Command {
     },
     /// Self-consistency del fitter + sensibilidad (S25, sintético rotulado).
     CalibrationDemo,
+    /// Motor persistente 50 h sintético + acople a fugas (S26, tendencias).
+    WearDemo {
+        #[arg(long, default_value_t = 50.0)]
+        hours: f64,
+    },
     /// Dinámica de cigüeñal con traza motored (S14, ilustrativo).
     CrankDynamics {
         #[arg(long, default_value_t = 750.0)]
@@ -347,6 +352,7 @@ fn run() -> Result<(), EngineError> {
         Command::LeakTest { scenario } => leak_test_cmd(&scenario),
         Command::MechDemo { scenario } => mech_demo_cmd(&scenario),
         Command::CalibrationDemo => calibration_demo_cmd(),
+        Command::WearDemo { hours } => wear_demo_cmd(hours),
         Command::CrankDynamics { rpm0, seconds } => crank_dynamics_cmd(rpm0, seconds),
         Command::ColdCrank => cold_crank_cmd(),
     }
@@ -1779,5 +1785,58 @@ fn calibration_demo_cmd() -> Result<(), EngineError> {
     println!("  morris_rank         : {} > {}", mo[0].0, mo[1].0);
     println!("  identifiable/blocked: {nid}/{}", set.len() - nid);
     println!("  dataset status      : NO FIELD DATA — NUMERICALLY_VERIFIED_ONLY (P1 blocked)");
+    Ok(())
+}
+
+/// Comando S26: 50 h sintéticas etiquetadas + acople desgaste→fuga.
+/// Tendencias condicionadas, jamás vida útil; lo no soportado se lista.
+fn wear_demo_cmd(hours: f64) -> Result<(), EngineError> {
+    use wear::{OperatingPoint, ServiceLog, WearLaw, WearState};
+
+    let err = |e: String| EngineError::SchemaValidation(e);
+    if !(hours.is_finite() && hours > 0.0 && hours <= 200.0) {
+        return Err(err("hours in (0, 200]".to_owned()));
+    }
+    let op = OperatingPoint {
+        rpm: 3000.0,
+        load_01: 0.6,
+        oil_temp_c: 100.0,
+        coolant_temp_c: 88.0,
+        film_0_1: 0.8,
+        ring_pressure_pa: 5e6,
+        bearing_pressure_pa: 5e6,
+    };
+    let (rl, bl, ol) = (
+        WearLaw::archard_ring(),
+        WearLaw::bearing_starvation(),
+        WearLaw::oil_aging(),
+    );
+    let mut s = WearState::new_seeded(7);
+    let steps = (hours * 2.0).ceil() as usize;
+    let dt = hours / steps as f64;
+    for _ in 0..steps {
+        s.advance(dt, &op, &rl, &bl, &ol)
+            .map_err(|e| err(e.to_string()))?;
+    }
+    let a0 = s.ring_leak_area_m2(0, 3e-3, 0.03);
+    println!("wear-demo {hours:.0}h SYNTHETIC (TREND_CONDITIONED, not life):");
+    println!("  ring_gap_um[0]      : {:.1}", s.ring_gap_m[0] * 1e6);
+    println!("  liner_wear_um[0]    : {:.2}", s.liner_wear_m[0] * 1e6);
+    println!("  bearing_extra_nm[0] : {:.1}", s.bearing_extra_m[0] * 1e9);
+    println!("  oil_oxidation       : {:.3}", s.oil_oxidation_01);
+    println!("  gasket_relax        : {:.4}", s.gasket_relax_01);
+    println!(
+        "  ring_leak_mm2[0]    : {:.4} (feeds S23 annulus law, no flag)",
+        a0 * 1e6
+    );
+    println!("  state_hash          : {}", s.hash());
+    let mut log = ServiceLog::new();
+    log.apply(&mut s, "oil_change", "10W30", "op")
+        .map_err(err)?;
+    println!(
+        "  post_service_oil    : {:.3} (reset logged, parts untouched)",
+        s.oil_oxidation_01
+    );
+    println!("  UNSUPPORTED         : scuffing, contact fatigue, thermal fretting (no law)");
     Ok(())
 }

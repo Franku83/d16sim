@@ -205,3 +205,13 @@ futuros: toda aproximación pasa por aquí + `ModelCard` (§11.4).
 | H-S25-02 | Self-test sintético verifica fitter, no valida | S25 | Regla EVIDENCE | Mal uso (prohibido) |
 | H-S25-03 | Ancla sellada rompe degenerescencia C/p_ideal | S25 | Análisis (corr −0.98→−0.54) | Banco C2 |
 | H-S25-04 | Cierre NUMERICALLY_VERIFIED_ONLY; precisión bloqueada | S25 | Decisión ADR-032 | Manifiesto con datos |
+
+## Registro S26 (desgaste persistente)
+
+| ID | Hipótesis | Dominio | Fuente | Invalida si |
+|---|---|---|---|---|
+| H-S26-01 | Archard oiled K=1e-8 efectivo (rango 1e-9–1e-7) | S26 | Orden µm/50h ilustrativo | Tribología P1 |
+| H-S26-02 | Cojinete Kb=5e-18 con (1−film); aceite A=5e4/Ea=80kJ | S26 | Supuesto declarado | Banco P1 |
+| H-S26-03 | Creep logarítmico integrado en forma cerrada | S26 | Decisión ADR-033 | Modelo de junta |
+| H-S26-04 | Fatiga/scuffing/fretting UNSUPPORTED | S26 | Sin ley | Ley constitutiva |
+| H-S26-05 | Salidas TREND_CONDITIONED, nunca vida útil | S26 | Regla S26 | Evidencia S30 |

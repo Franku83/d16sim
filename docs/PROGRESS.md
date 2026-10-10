@@ -408,3 +408,15 @@ heredados, tabla BACKLOG congelada en S00 → actualizada con puntero
 autoritativo a SPRINTS); (6) HANDOFF extendido con Briefs S27–S30
 ausentes. Sin contradicciones materiales irresolubles: no se requirió
 detención. Batch S26–S30 autorizado; S31 prohibido.
+
+## 2026-10-10 · S26 · Motor persistente (APROBADO, TREND_CONDITIONED)
+
+- Crate `wear` (slow-state + 3 leyes efectivas + creep + 5 servicios +
+  acople gap→fuga S23); `d16sim wear-demo` (50 h: gap +2.4 µm, cojinete
+  +0.9 µm, oxidación 0.057); ADR-033; `docs/physics/wear.md`; H-S26-01..05.
+- Tests: 4 passed (Archard/oiled, subdivisión, replay+snapshot,
+  servicios). Fallos reales: K seco→metros; creep Euler dependiente del
+  paso → forma cerrada; test de bits → acuerdo 1e-9.
+- Gate S26: PASS — leyes/provenance, escala libre, cero vidas útiles.
+- Deuda: tribología P1, fatiga/scuffing/fretting UNSUPPORTED, acople
+  motor vivo (S29), K efectivo pendiente de mapa de película.
