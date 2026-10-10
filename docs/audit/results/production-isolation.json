@@ -1,0 +1,29 @@
+{
+  "base_commit": "ff09a0dda82188e6bf27a80d17c902f8972a39d2",
+  "audit_branch": "audit/independent-2026-10-10",
+  "diff_scope": "every tracked path against base, including staged and working changes",
+  "production_changed_paths": [],
+  "allowed_new_paths": [
+    "audit/independent/",
+    "docs/audit/"
+  ],
+  "original_worktree": "/home/franku/projects/d16sim",
+  "original_head": "ff09a0dda82188e6bf27a80d17c902f8972a39d2",
+  "original_status": "",
+  "complete_docs": [
+    "INDEPENDENT_AUDIT_REPORT.md",
+    "FINDINGS.md",
+    "REPRODUCTION.md",
+    "DOCUMENTATION_CONSISTENCY.md",
+    "CAPABILITY_RISK_ASSESSMENT.md",
+    "S25_EVIDENCE_ACQUISITION_PLAN.md"
+  ],
+  "confirmed_by_severity": {
+    "P0": 2,
+    "P1": 12,
+    "P2": 5
+  },
+  "documentation_entries": 26,
+  "finding_catalog_complete": true,
+  "meaning": "package and isolation check; not Engine Core PASS"
+}

@@ -1,0 +1,24 @@
+release-check (S30; NUMERICALLY_VERIFIED, never validated):
+  chain torque->sealing    PASS
+    - torque 100/200 kN (S08)
+    - preload field (S08)
+    - gasket leak area (S23)
+    - area 4.000e-4 -> 0.000e0 m2
+  chain cam->compression   PASS
+    - centerline +6° (S11 proxy)
+    - intake_cam field (S16 input)
+    - idle rpm 4455 -> 4568 (emergent, no coupling invented)
+  chain ckp->spark         PASS
+    - CKP edges (S17 GENERIC, n=72)
+    - decoder rpm 749.8, conf 1.000 -> 0.875
+    - map advance 16.0 deg (REF-*, S18)
+  chain ring->blowby       PASS
+    - 50 h at 3000 rpm (S26)
+    - gap 300.0 -> 302.4 um
+    - leak area 2.700e-8 -> 2.722e-8 m2 (S23 law)
+  profile dt=3e-5 rpm=4354.6 mass=-1.2e-11 energy=2.3e-5
+  profile dt=5e-5 rpm=4342.2 mass=-9.8e-13 energy=4.5e-5
+  profile dt=1e-4 rpm=4331.0 mass=2.3e-13 energy=9.1e-5
+  env license=true third_party=true research=["D16Y7_RESEARCH_v0.1.md", "D16Y7_RESEARCH_DONANTES_v0.1.md"]
+  bench 122 ms per 2 sim-s (realtime ×16.4)
+  PENDING: 2nd machine, expert review, field data (P1)

@@ -1,0 +1,5 @@
+dyno-demo (ILLUSTRATIVE params; power from integrated torque):
+  part25      3975 rpm P_ind=11.79 P_fric= 9.60 P_aux=0.83 P_brake= 1.67 kW resid=0.027 Covered
+  part50      4720 rpm P_ind=17.13 P_fric=13.98 P_aux=0.99 P_brake= 1.98 kW resid=0.011 Covered
+  part50-load  4591 rpm P_ind=17.67 P_fric=13.14 P_aux=0.96 P_brake= 2.88 kW resid=0.038 Covered
+  manifest_hash       : c3fecbb09334d19be17b11b247d5a6fc547fb9519d98cdf39ce7fb1701d98b26

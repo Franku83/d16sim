@@ -1,0 +1,10 @@
+wear-demo 50h SYNTHETIC (TREND_CONDITIONED, not life):
+  ring_gap_um[0]      : 302.4
+  liner_wear_um[0]    : 2.45
+  bearing_extra_nm[0] : 900.0
+  oil_oxidation       : 0.057
+  gasket_relax        : 0.0002
+  ring_leak_mm2[0]    : 0.0272 (feeds S23 annulus law, no flag)
+  state_hash          : d995b74cd4af2f89c8878fa580068058c10a44709e2a82aace79dccc1114a8f0
+  post_service_oil    : 0.000 (reset logged, parts untouched)
+  UNSUPPORTED         : scuffing, contact fatigue, thermal fretting (no law)

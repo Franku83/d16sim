@@ -1,0 +1,169 @@
+[
+  {
+    "argv": [
+      "/home/franku/projects/d16sim-audit/target/debug/d16sim",
+      "validate-data",
+      "--data-dir",
+      "data"
+    ],
+    "exit": 0,
+    "log": "cli-00-validate-data.log",
+    "elapsed_s": 0.0019084730001850403
+  },
+  {
+    "argv": [
+      "/home/franku/projects/d16sim-audit/target/debug/d16sim",
+      "release-check"
+    ],
+    "exit": 0,
+    "log": "cli-01-release-check.log",
+    "elapsed_s": 1.132713300999967
+  },
+  {
+    "argv": [
+      "/home/franku/projects/d16sim-audit/target/debug/d16sim",
+      "mech-demo",
+      "--scenario",
+      "missing_head_gasket"
+    ],
+    "exit": 0,
+    "log": "cli-02-mech-demo.log",
+    "elapsed_s": 0.0152672019999045
+  },
+  {
+    "argv": [
+      "/home/franku/projects/d16sim-audit/target/debug/d16sim",
+      "mech-demo",
+      "--scenario",
+      "underclamped_head"
+    ],
+    "exit": 0,
+    "log": "cli-03-mech-demo.log",
+    "elapsed_s": 0.024572940000098242
+  },
+  {
+    "argv": [
+      "/home/franku/projects/d16sim-audit/target/debug/d16sim",
+      "sensor-demo",
+      "--case",
+      "ect_false_cold"
+    ],
+    "exit": 0,
+    "log": "cli-04-sensor-demo.log",
+    "elapsed_s": 0.0016291569997974875
+  },
+  {
+    "argv": [
+      "/home/franku/projects/d16sim-audit/target/debug/d16sim",
+      "sensor-demo",
+      "--case",
+      "map_open"
+    ],
+    "exit": 0,
+    "log": "cli-05-sensor-demo.log",
+    "elapsed_s": 0.0015102089998890733
+  },
+  {
+    "argv": [
+      "/home/franku/projects/d16sim-audit/target/debug/d16sim",
+      "sensor-demo",
+      "--case",
+      "map_shorted"
+    ],
+    "exit": 0,
+    "log": "cli-06-sensor-demo.log",
+    "elapsed_s": 0.0013949900001080096
+  },
+  {
+    "argv": [
+      "/home/franku/projects/d16sim-audit/target/debug/d16sim",
+      "ecu-demo"
+    ],
+    "exit": 0,
+    "log": "cli-07-ecu-demo.log",
+    "elapsed_s": 0.01869839400001183
+  },
+  {
+    "argv": [
+      "/home/franku/projects/d16sim-audit/target/debug/d16sim",
+      "wear-demo",
+      "--hours",
+      "50"
+    ],
+    "exit": 0,
+    "log": "cli-08-wear-demo.log",
+    "elapsed_s": 0.0017260049999094917
+  },
+  {
+    "argv": [
+      "/home/franku/projects/d16sim-audit/target/debug/d16sim",
+      "damage-demo",
+      "--case",
+      "pv_contact"
+    ],
+    "exit": 0,
+    "log": "cli-09-damage-demo.log",
+    "elapsed_s": 0.0015355579998868052
+  },
+  {
+    "argv": [
+      "/home/franku/projects/d16sim-audit/target/debug/d16sim",
+      "dyno-demo"
+    ],
+    "exit": 0,
+    "log": "cli-10-dyno-demo.log",
+    "elapsed_s": 1.0965855939998619
+  },
+  {
+    "argv": [
+      "/home/franku/projects/d16sim-audit/target/debug/d16sim",
+      "init",
+      "--manifest",
+      "/home/franku/projects/d16sim-audit/docs/audit/results/runner-manifest.json"
+    ],
+    "exit": 0,
+    "log": "cli-11-init.log",
+    "elapsed_s": 0.0015528480000739364
+  },
+  {
+    "argv": [
+      "/home/franku/projects/d16sim-audit/target/debug/d16sim",
+      "run-scenario",
+      "--manifest",
+      "/home/franku/projects/d16sim-audit/docs/audit/results/runner-manifest.json",
+      "--out",
+      "/home/franku/projects/d16sim-audit/docs/audit/results/runner-run"
+    ],
+    "exit": 0,
+    "log": "cli-12-run-scenario.log",
+    "elapsed_s": 0.0018840930001715606
+  },
+  {
+    "argv": [
+      "/home/franku/projects/d16sim-audit/target/debug/d16sim",
+      "replay",
+      "--manifest",
+      "/home/franku/projects/d16sim-audit/docs/audit/results/runner-manifest.json",
+      "--run-dir",
+      "/home/franku/projects/d16sim-audit/docs/audit/results/runner-run"
+    ],
+    "exit": 0,
+    "log": "cli-13-replay.log",
+    "elapsed_s": 0.0018245239998577745
+  },
+  {
+    "argv": [
+      "/home/franku/projects/d16sim-audit/target/debug/d16sim",
+      "export-trace",
+      "--scenario",
+      "healthy",
+      "--seconds",
+      "2",
+      "--out",
+      "/home/franku/projects/d16sim-audit/docs/audit/results/trace-bundle.json"
+    ],
+    "exit": 0,
+    "log": "cli-14-export-trace.log",
+    "elapsed_s": 0.12461935599981189
+  }
+]

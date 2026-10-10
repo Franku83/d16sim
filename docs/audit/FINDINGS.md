@@ -1,0 +1,1801 @@
+# Hallazgos independientes
+
+Base auditada: `ff09a0dda82188e6bf27a80d17c902f8972a39d2`. Fecha: 2026-10-10.
+
+Estas categorías son etiquetas de auditoría, no estados científicos nuevos. La severidad representa el impacto en los contratos y en la inferencia, no el esfuerzo de reparación. P0 compromete una cadena científica central; P1 afecta resultados, persistencia o garantías; P2 afecta escenarios acotados o controles operativos; P3 afecta claridad o referencias.
+
+Los fixtures numéricos son `SYNTHETIC_SELFTEST`: sirven para falsar contratos y verificar software; ninguno es evidencia experimental del D16Y7. Los errores esperados permanecen rojos en la batería. Reproducción común: [REPRODUCTION.md](REPRODUCTION.md).
+
+| ID | Categoría | Severidad | Hallazgo |
+|---|---|---|---|
+| [F01](#f01) | CONFIRMED_DEFECT | P0 | Combustible no transportado con las salidas del cilindro |
+| [F02](#f02) | CONFIRMED_DEFECT | P0 | Observación diagnóstica derivada de la etiqueta verdadera del escenario |
+| [F03](#f03) | CONFIRMED_DEFECT | P1 | Aliasing de torque cambia la aceptación del punto dyno carga-8 |
+| [F04](#f04) | CONFIRMED_DEFECT | P1 | Canales de potencia combinan ventanas incompatibles |
+| [F05](#f05) | CONFIRMED_DEFECT | P1 | Round-trip JSON invalida hashes de estados válidos |
+| [F06](#f06) | CONFIRMED_DEFECT | P1 | Snapshot v1 con hash histórico válido no migra |
+| [F07](#f07) | CONFIRMED_DEFECT | P1 | Presión máxima usada por fricción no persiste en replay |
+| [F08](#f08) | CONFIRMED_DEFECT | P1 | La red de fugas transporta masa sin transportar especie fresca |
+| [F09](#f09) | CONFIRMED_DEFECT | P1 | Caudal volumétrico de fuga líquida tratado como masa |
+| [F10](#f10) | CONFIRMED_DEFECT | P1 | Balance integrado omite calor cedido al ambiente por la red térmica |
+| [F11](#f11) | CONFIRMED_DEFECT | P1 | Leyes UNSUPPORTED de desgaste producen valores numéricos |
+| [F12](#f12) | CONFIRMED_DEFECT | P2 | Relajación persistente de junta se revierte a temperatura negativa |
+| [F13](#f13) | CONFIRMED_DEFECT | P1 | Fase del decoder depende del inicio del vector y no se recupera |
+| [F14](#f14) | CONFIRMED_DEFECT | P2 | Semilla declarada de cableado intermitente es ignorada |
+| [F15](#f15) | CONFIRMED_DEFECT | P1 | Fronteras públicas aceptan entradas inválidas o producen panic/NaN |
+| [F16](#f16) | CONFIRMED_DEFECT | P2 | Periodicidad de perfil y evento de inyección son inconsistentes |
+| [F17](#f17) | CONFIRMED_DEFECT | P2 | Workflow documental conserva controles exclusivos de S00 |
+| [F18](#f18) | CONFIRMED_DEFECT | P1 | Incertidumbre del fitter permanece en coordenadas escaladas |
+| [F19](#f19) | CONFIRMED_DEFECT | P2 | El fitter rechaza un óptimo inicial exacto |
+| [R01](#r01) | SUSPECTED_DEFECT | P1 | Clasificador de compresión colapsa combinaciones de causas |
+| [K01](#k01) | KNOWN_LIMITATION | P1 | Fugas, lubricación, desgaste, daño y ECU no cierran el motor runtime |
+| [K02](#k02) | KNOWN_LIMITATION | P1 | Combustión y llenado siguen siendo aproximaciones L1 ilustrativas |
+| [K03](#k03) | KNOWN_LIMITATION | P1 | Interferencia geométrica no predice rotura ni vida útil |
+| [G01](#g01) | EVIDENCE_GAP | P1 | No hay calibración o validación experimental D16Y7 |
+| [G02](#g02) | EVIDENCE_GAP | P1 | Estabilidad general y convergencia larga del motor no demostradas |
+| [G03](#g03) | EVIDENCE_GAP | P1 | Reproducibilidad externa y revisión experta siguen abiertas |
+| [G04](#g04) | EVIDENCE_GAP | P2 | Cuatro release-checks no cubren cuatro cadenas físicas completas |
+| [G05](#g05) | EVIDENCE_GAP | P2 | Identificabilidad declarada necesita experimentos y rango del Jacobiano |
+| [G06](#g06) | EVIDENCE_GAP | P2 | Sincronía y protocolos electrónicos tienen alcance genérico parcial |
+| [G07](#g07) | EVIDENCE_GAP | P1 | Manifiestos de resultados no demuestran el experimento físico completo |
+| [D01](#d01) | DOCUMENTATION_DRIFT | P2 | Resumen general S00–S25 y rango de fichas hasta S25 |
+| [D02](#d02) | DOCUMENTATION_DRIFT | P2 | «25 crates» inventario actual |
+| [D03](#d03) | DOCUMENTATION_DRIFT | P2 | Hipótesis registradas solo hasta H-S25 |
+| [D04](#d04) | DOCUMENTATION_DRIFT | P2 | Deuda S26–S30 descrita como trabajo pendiente |
+| [D05](#d05) | DOCUMENTATION_DRIFT | P2 | S11/S12/S13 aparecen Pendiente y APROBADO en filas contiguas |
+| [D06](#d06) | DOCUMENTATION_DRIFT | P2 | Resumen hasta S25 y S26–S30 «AUTORIZADO» |
+| [D07](#d07) | DOCUMENTATION_DRIFT | P2 | Sin motor físico implementado; S11–S37 pendientes |
+| [D08](#d08) | DOCUMENTATION_DRIFT | P2 | H-S10, ADR017, fichas S00–S10 e inventario de 12 crates |
+| [D09](#d09) | DOCUMENTATION_DRIFT | P3 | Research referidos en directorio padre |
+| [D10](#d10) | DOCUMENTATION_DRIFT | P2 | Índice solo ADR001–017 |
+| [D11](#d11) | DOCUMENTATION_DRIFT | P1 | «Estado tras S01–S20… sigue vigente lo anterior» y matriz global S00 |
+| [D12](#d12) | DOCUMENTATION_DRIFT | P2 | Matriz inicial sin consolidación explícita S21–S30 |
+| [D13](#d13) | DOCUMENTATION_DRIFT | P2 | Ocho tarjetas resumidas S25 usadas como inventario de subsistemas |
+| [D14](#d14) | DOCUMENTATION_DRIFT | P3 | «thermal … 10 tests» sin distribución de cobertura |
+| [D15](#d15) | DOCUMENTATION_DRIFT | P1 | default migra v1 y v2 lee v1; hash antes de migrar |
+| [D16](#d16) | DOCUMENTATION_DRIFT | P1 | «snapshot bit-idéntico; determinismo total» |
+| [D17](#d17) | DOCUMENTATION_DRIFT | P2 | «torque→sellado», valores 100/200 kN llamados torque |
+| [D18](#d18) | DOCUMENTATION_DRIFT | P1 | Cuatro «cadenas auditadas»: cam→compresión, CKP→chispa, ring→blow-by |
+| [D19](#d19) | DOCUMENTATION_DRIFT | P2 | dt25/50/100 µs ⇒4470/4454/4445 rpm |
+| [D20](#d20) | DOCUMENTATION_DRIFT | P1 | «ruptura» con criterio genérico Rp0.2 |
+| [D21](#d21) | DOCUMENTATION_DRIFT | P2 | 12 ADR y prohibición de crates en workflow actual |
+| [D22](#d22) | DOCUMENTATION_DRIFT | P3 | Ayuda global dice «S02 plumbing only, no physics» |
+| [D23](#d23) | DOCUMENTATION_DRIFT | P2 | k_film inferible solo de presión; p(θ) opcional pese a bloqueo de combustión; motored/MAF sin campaña propia |
+| [D24](#d24) | DOCUMENTATION_DRIFT | P3 | `EXPERIMENTALLY_VALIDATED` frente a taxonomía oficial |
+| [D25](#d25) | DOCUMENTATION_DRIFT | P1 | Decoder 24+1/4+1 marcado implementado |
+| [D26](#d26) | DOCUMENTATION_DRIFT | P1 | H-S28-04 «carga-8 no estabiliza» frente a «candidata sin veredicto» S29 |
+
+<a id="f01"></a>
+
+## F01 — Combustible no transportado con las salidas del cilindro
+
+**Categoría:** CONFIRMED_DEFECT
+
+**Severidad:** P0
+
+**Subsistema:** Motor S13/S16
+
+**Archivo, símbolo y líneas:** `crates/engine/src/run.rs:644–687`, `drive`; inventario/inyección/quemado: 732–787.
+
+**Afirmación o gate comprometido:** Foundation §6.3–6.4: conservación de especies y calor procedente del combustible efectivo. S16 integrado y cadena S30.
+
+**Método de reproducción:** Probe `fuel_outflow`: snapshot homogéneo con presión de cilindro 200 kPa, admisión abierta y salida; un paso. `fuel_inventory`: no chispa, 200 ventanas hasta 4 s. Caso 10.
+
+**Resultado esperado:** La fracción de combustible de una salida homogénea debe acompañar la masa; masa de combustible ≤ masa total del cilindro.
+
+**Resultado observado:** Masa baja de 0.0006649390855354171 a 0.0006463520755036424 kg; combustible queda en 0.00006649390855354172, frente a 0.00006463520755036424 kg esperado. Máximo fuel/masa total = 2.3657034193425432.
+
+**Causa raíz o hipótesis causal:** Confirmada: salidas restan masa y entalpía, pero no `c.fuel`; los nodos plenum/escape tampoco contienen inventario de combustible para transportarlo. El latch de combustión consume este inventario.
+
+**Alcance del impacto:** El cierre de masa total puede pasar mientras las especies son imposibles. Compromete inventario químico, reversiones, arranques fallidos y cualquier afirmación general de combustión conservativa. No demuestra un error cuantificado de potencia del motor real.
+
+**Recomendación:** Diseñar y revisar transporte de especies y presupuesto químico completo antes de sostener el gate integrado.
+
+**Regresión propuesta:** Salida homogénea en ambos puertos, reflujo, no chispa prolongado y cierre de combustible inyectado = quemado + almacenado + emitido.
+
+**Estado de evidencia:** Reproducido ejecutablemente; JSONL engine y caso 10 rojo. Cierre total control conservado.
+
+
+<a id="f02"></a>
+
+## F02 — Observación diagnóstica derivada de la etiqueta verdadera del escenario
+
+**Categoría:** CONFIRMED_DEFECT
+
+**Severidad:** P0
+
+**Subsistema:** Diagnóstico S24 / CLI
+
+**Archivo, símbolo y líneas:** `crates/cli/src/main.rs:1681–1705`, `mech_demo_cmd`; consumo 1741–1742; totales descartados 1755.
+
+**Afirmación o gate comprometido:** S24: protocolo basado en mediciones independientes, sin acceso directo o indirecto a la verdad física; H-S20; Foundation §8.5 causalidad.
+
+**Método de reproducción:** `mech-demo missing_head_gasket`; comparar con probe `leak_scenario` y sus totales por puerto, dt 500/250 µs. Inspeccionar el `match s` que construye `LeakSplit`.
+
+**Resultado esperado:** El reparto observado debe proceder de un instrumento o transporte físico, independiente del nombre del escenario; un escape sin puerto no recibe caudal.
+
+**Resultado observado:** CLI impone 0.30/0.10/0.60 (cárter/escape/refrigerante). La red produce aproximadamente 0.1402/0/0.8598 (refinado: 0.1364/0/0.8636). No existe puerto de fuga a escape en esa red. El clasificador recibe directamente el reparto seleccionado por `LeakScenario`.
+
+**Causa raíz o hipótesis causal:** Confirmada: construcción de una supuesta observación mediante la misma etiqueta que genera la verdad, mientras los totales físicos se descartan.
+
+**Alcance del impacto:** No acredita aislamiento observación/verdad ni el gate de protocolo integrado. Una firma artificial puede ser un fixture legítimo de pruebas del clasificador si se declara como tal; no es medición física independiente.
+
+**Recomendación:** Reevaluar la demostración S24/S30; especificar sensor/protocolo de localización y obtener observaciones desde su modelo o datos externos.
+
+**Regresión propuesta:** Renombrar escenarios sin cambiar física debe preservar observaciones; causas distintas con observables iguales deben permanecer ambiguas. Verificar que no haya rutas de lectura del identificador verdadero.
+
+**Estado de evidencia:** Evidencia técnica directa suficiente y CLI ejecutada; no requiere alterar producción para confirmar el flujo de datos.
+
+
+<a id="f03"></a>
+
+## F03 — Aliasing de torque cambia la aceptación del punto dyno carga-8
+
+**Categoría:** CONFIRMED_DEFECT
+
+**Severidad:** P1
+
+**Subsistema:** Dyno S28
+
+**Archivo, símbolo y líneas:** `crates/dyno/src/sweep.rs:110–128,159`, `run_sweep`; muestreo `crates/engine/src/run.rs:880–889`.
+
+**Afirmación o gate comprometido:** S28: criterios de estacionariedad y residuo fiables; S30 interpreta carga-8 como Unsettled.
+
+**Método de reproducción:** Probe `dyno_sampling`, carga 8 Nm + auxiliar 2 Nm, mismo dt 50 µs, 6 s, última quinta parte; cambiar únicamente `record_every` 400/40/4/1. Caso 17.
+
+**Resultado esperado:** La clasificación debe converger con muestreo que resuelva el torque; una reducción del residuo por resolución no exige cambiar umbrales.
+
+**Resultado observado:** Residuo 0.619587 (400 pasos) frente a 0.007688 (40), 0.0081708 (4), 0.0082761 (1). RPM media densa 4462.683; deriva de extremos 0.005239 < 0.02. La identidad mecánica global, incluido arranque, cierra ≈6.95e-16.
+
+**Causa raíz o hipótesis causal:** Confirmada para este punto: promedios de torque instantáneo submuestreado cada 20 ms, sensibles a fase de ciclo. El refinamiento del registro no cambia la trayectoria del motor.
+
+**Alcance del impacto:** El residuo elevado del escenario carga-8 no demuestra por sí mismo inestabilidad física. No demuestra que todos los puntos sean estables ni resuelve la convergencia del motor.
+
+**Recomendación:** Reevaluar la interpretación de carga-8 con integración de trabajo o muestreo angular/cíclico y ventanas explícitas; conservar criterios hasta justificarlos.
+
+**Regresión propuesta:** Misma trayectoria con distintas cadencias de salida y fases iniciales; comparación con integrales resueltas y varios ciclos completos.
+
+**Estado de evidencia:** Reproducido ejecutablemente, caso 17 rojo; controles de balance y deriva publicados.
+
+
+<a id="f04"></a>
+
+## F04 — Canales de potencia combinan ventanas incompatibles
+
+**Categoría:** CONFIRMED_DEFECT
+
+**Severidad:** P1
+
+**Subsistema:** Dyno S28
+
+**Archivo, símbolo y líneas:** `crates/dyno/src/sweep.rs:134–153`, `run_sweep`.
+
+**Afirmación o gate comprometido:** S28 separación indicada/efectiva y cierre energético de los resultados reportados.
+
+**Método de reproducción:** Probe `dyno_public` carga-4 y `dyno_sampling`; calcular Pind−Pfric−Paux−Pbrake−Pacc con los canales públicos. Caso 18.
+
+**Resultado esperado:** Canales sobre la misma ventana; potencia variable como media de τ·ω o trabajo/tiempo. Arranque explícito cuando la ventana lo contiene.
+
+**Resultado observado:** Carga-4 publica 17.12859884−13.97967031−0.98853203−1.97706406−3.07976572 = −2.89643328 kW (16.91% de Pind). Pacc de cola ≈147.54 W, frente a 3079.77 W de todo el arranque.
+
+**Causa raíz o hipótesis causal:** Confirmada: Pind/Pfric usan producto de medias de cola; Pacc usa ΔKE/6 s de todo el recorrido. Las potencias de auditoría calculadas se descartan. Producto de medias tampoco equivale a media del producto en señales correlacionadas.
+
+**Alcance del impacto:** Los canales de `SweepResult` no sostienen el cierre que sus comentarios anuncian, incluso en un punto Covered. La potencia de freno para carga constante sí usa correctamente carga × velocidad media.
+
+**Recomendación:** Unificar ventanas e integrar trabajo y velocidad; separar canales transitorios y estacionarios, incluidos arranque y auxiliar.
+
+**Regresión propuesta:** Identidad energética independiente sobre ventana global y cola; torque variable correlacionado con ω; escenarios Covered y Unsettled.
+
+**Estado de evidencia:** Reproducido ejecutablemente, caso 18 rojo; el balance mecánico global independiente sirve como control.
+
+
+<a id="f05"></a>
+
+## F05 — Round-trip JSON invalida hashes de estados válidos
+
+**Categoría:** CONFIRMED_DEFECT
+
+**Severidad:** P1
+
+**Subsistema:** Snapshots motor y desgaste
+
+**Archivo, símbolo y líneas:** `crates/engine/src/state.rs:69–82`, `EngineSnapshot`; `crates/wear/src/state.rs:162–165`, `hash`; `crates/engine-types/src/lib.rs:67–98`, JSON canónico.
+
+**Afirmación o gate comprometido:** Contratos snapshot/replay y S26/S30: serialización y hash exactos en plataforma fija.
+
+**Método de reproducción:** Probes `snapshot_json` (motor a 1 s, c2=0 y .05), `wear_roundtrip` (1 h): serializar, deserializar con serde_json de dependencias por defecto, recalcular hash. Casos 12–13.
+
+**Resultado esperado:** El JSON producido por el propio snapshot se recarga con hash y floats exactos.
+
+**Resultado observado:** θ cambia 122.39085530309971→122.39085530309973; ω 186.55569340539338→186.55569340539336; `verified=false`. El hash de desgaste también cambia. El fixture histórico de 10 h no cubre estos valores.
+
+**Causa raíz o hipótesis causal:** Confirmada la pérdida de bits. Árbol de features y parser local muestran ruta sin `float_roundtrip`; canonicalizar antes y después no recupera los bits originales.
+
+**Alcance del impacto:** Rechazo de snapshots legítimos; replay persistido y hashes científicos dejan de ser garantías generales. Una diferencia de ULP pequeña no es por sí sola un gran error físico, pero sí rompe el contrato de integridad.
+
+**Recomendación:** Revisar formato/lectura lossless y compatibilidad versionada; no habilitar cambios de serialización durante esta auditoría.
+
+**Regresión propuesta:** Round-trip por disco con estados reales de varias duraciones, extremos de f64 y desgaste, seguido de restore y replay.
+
+**Estado de evidencia:** Reproducido en release y control debug; logs de features conservados; casos 12–13 rojos.
+
+
+<a id="f06"></a>
+
+## F06 — Snapshot v1 con hash histórico válido no migra
+
+**Categoría:** CONFIRMED_DEFECT
+
+**Severidad:** P1
+
+**Subsistema:** Snapshots v1/v2
+
+**Archivo, símbolo y líneas:** `crates/engine/src/state.rs:44–45`, campo thermal con default; `crates/engine/src/run.rs:356–367`, `WorkState::restore`.
+
+**Afirmación o gate comprometido:** Contrato de migración v1→v2; S21 compatibilidad declarada.
+
+**Método de reproducción:** Probe `v1_hash_migration`: tipo histórico archivado en results/historical-engine-state-v1.rs, mismos campos/orden y hash SHA-256 de bytes sin thermal. Caso 14. No depende de lectura decimal.
+
+**Resultado esperado:** Verificar el hash con el esquema original antes de migrar a v2.
+
+**Resultado observado:** Hash v1 deb04a1b413455e20c057ec5cca14c28d691ab52630cef28d172c9224b0dea93 válido para los bytes históricos; restore rechaza.
+
+**Causa raíz o hipótesis causal:** Confirmada: al tipar v1 como estado actual se agrega `thermal:null`; `verified()` recalcula sobre el esquema nuevo antes de ejecutar migración.
+
+**Alcance del impacto:** La migración de verdaderos snapshots v1 no está demostrada y el ejemplo válido falla. Rechazar un hash deliberadamente falso no verifica migración.
+
+**Recomendación:** Verificar bytes/canonicalización según versión y migrar después, con fixtures históricos auténticos.
+
+**Regresión propuesta:** v1 válido de commit anterior, v1 alterado, versión desconocida y round-trip v2; conservar hashes originales.
+
+**Estado de evidencia:** Reproducido ejecutablemente, caso 14 rojo; tipo histórico y bytes/hash archivados.
+
+
+<a id="f07"></a>
+
+## F07 — Presión máxima usada por fricción no persiste en replay
+
+**Categoría:** CONFIRMED_DEFECT
+
+**Severidad:** P1
+
+**Subsistema:** Motor / Chen–Flynn
+
+**Archivo, símbolo y líneas:** `crates/engine/src/run.rs:603,624,857–861`, `drive`; ausencia en `crates/engine/src/state.rs:17–45`.
+
+**Afirmación o gate comprometido:** S16/S30 replay bit a bit con parámetros admitidos y snapshot completo.
+
+**Método de reproducción:** Probe `replay_split`: 3 s continuos contra 1 s + restore en memoria + continuación a 3 s; c2=.05 y control c2=0. Caso 11.
+
+**Resultado esperado:** Misma trayectoria y hash, conservando todo estado que modifica fuerzas.
+
+**Resultado observado:** c2=.05: RPM 175.6083776 continuo frente a 859.5356946 dividido, diferencia angular −88.9211436 rad; hashes distintos. Control c2=0 coincide exactamente.
+
+**Causa raíz o hipótesis causal:** Confirmada: `pmax_run` se reinicia a 101325 Pa en cada llamada y afecta torque de fricción. No está en el snapshot. El control aísla esta dependencia, sin JSON de por medio.
+
+**Alcance del impacto:** Replay de la familia de fricción con término de presión; el preset c2=0 oculta el defecto. El coeficiente no se presenta como calibración D16.
+
+**Recomendación:** Persistir o redefinir explícitamente la historia física de presión y sus fronteras de ciclo; reevaluar completitud del estado.
+
+**Regresión propuesta:** Replay en varios cortes de ciclo con todos los términos no nulos y parámetros idénticos; control de energías por segmento.
+
+**Estado de evidencia:** Reproducido ejecutablemente, caso 11 rojo; control positivo pasa.
+
+
+<a id="f08"></a>
+
+## F08 — La red de fugas transporta masa sin transportar especie fresca
+
+**Categoría:** CONFIRMED_DEFECT
+
+**Severidad:** P1
+
+**Subsistema:** Fugas S23
+
+**Archivo, símbolo y líneas:** `crates/leak/src/network.rs:229–245`, `run_leakdown`.
+
+**Afirmación o gate comprometido:** Tarea S23 de transporte fresco/residual y Foundation §6.3.
+
+**Método de reproducción:** Probe `leak_species`: donante fresco=1 y receptor fresco=0, volúmenes y presiones declarados. Caso 15.
+
+**Resultado esperado:** Fracción receptora = masa fresca recibida / nueva masa del receptor.
+
+**Resultado observado:** Transfiere 0.0004667120332508509 kg; fracción receptora esperada 0.004002307770342, observada 0.
+
+**Causa raíz o hipótesis causal:** Confirmada: actualiza masa y temperatura, omite `fresh_frac`.
+
+**Alcance del impacto:** Balances de masa/energía de la red no demuestran balances de especies ni calidad de mezcla.
+
+**Recomendación:** Revisar advección consistente de especies en puertos y regulador.
+
+**Regresión propuesta:** Marca pasiva con mezcla homogénea; suma de masa fresca y residual cerrada con fronteras.
+
+**Estado de evidencia:** Reproducido ejecutablemente, caso 15 rojo.
+
+
+<a id="f09"></a>
+
+## F09 — Caudal volumétrico de fuga líquida tratado como masa
+
+**Categoría:** CONFIRMED_DEFECT
+
+**Severidad:** P1
+
+**Subsistema:** Fugas líquidas S23
+
+**Archivo, símbolo y líneas:** `crates/leak/src/network.rs:212–215`, rama no compresible.
+
+**Afirmación o gate comprometido:** Ley viscosa dimensional y conservación física, S23.
+
+**Método de reproducción:** Probe `leak_liquid_units`: ley con volumen 1e-6 m³ en 1 s, aceite de densidad declarada 870 kg/m³. Caso 16.
+
+**Resultado esperado:** Masa = densidad × volumen = 0.00087 kg.
+
+**Resultado observado:** Masa reportada ≈1e-6 kg: factor 870 menor. Conductancia × Δp / μ × dt tiene dimensiones de volumen.
+
+**Causa raíz o hipótesis causal:** Confirmada: falta conversión por densidad antes de actualizar kg y entalpía.
+
+**Alcance del impacto:** Predicciones líquidas dimensionalmente incorrectas, aunque lo restado se sume exactamente al receptor; demos gaseosas no lo detectan.
+
+**Recomendación:** Establecer contrato dimensional de conductancia y densidad para líquidos, con unidades explícitas.
+
+**Regresión propuesta:** Dos densidades para mismo caudal volumétrico y solución analítica de ranura viscosa.
+
+**Estado de evidencia:** Reproducido ejecutablemente, caso 16 rojo; análisis dimensional independiente.
+
+
+<a id="f10"></a>
+
+## F10 — Balance integrado omite calor cedido al ambiente por la red térmica
+
+**Categoría:** CONFIRMED_DEFECT
+
+**Severidad:** P1
+
+**Subsistema:** Motor S21 / térmico
+
+**Archivo, símbolo y líneas:** `crates/thermal/src/network.rs:185–203`, `ThermalState::step`; `crates/engine/src/run.rs:909–938`, `audit_of`.
+
+**Afirmación o gate comprometido:** S21 y Foundation §12.3: cierre energético con fronteras declaradas.
+
+**Método de reproducción:** Probe `thermal_boundary` hot-start 100 °C, dt .1 s; `thermal_long` 120 s dt100/50/25 µs. Inspeccionar ledger global.
+
+**Resultado esperado:** Incluir integrales de calor al ambiente/radiador cuando se incluye energía almacenada en la red.
+
+**Resultado observado:** La red aislada pierde 13064 J y cierra exactamente al contar ese calor. El ledger del motor no contiene el término; residuo relativo a 120 s −.003891/−.003687/−.003636 persiste al refinar.
+
+**Causa raíz o hipótesis causal:** Confirmada omisión en la auditoría energética. El error global además puede contener splitting; no se atribuye todo el residuo exclusivamente al sumidero omitido.
+
+**Alcance del impacto:** No permite interpretar el residuo como conservación completa del motor térmico. No prueba creación/destrucción en las ecuaciones de red: la pérdida física existe y el ledger la omite.
+
+**Recomendación:** Contabilizar todas las fronteras térmicas y separar error de discretización del error del ledger.
+
+**Regresión propuesta:** Red adiabática y abierta con pérdidas integradas; motor hot/cold-start con refinamiento y balance dimensional completo.
+
+**Estado de evidencia:** Evidencia técnica directa y probes de frontera/refinamiento; no hay test contractual dedicado en los 32 casos.
+
+
+<a id="f11"></a>
+
+## F11 — Leyes UNSUPPORTED de desgaste producen valores numéricos
+
+**Categoría:** CONFIRMED_DEFECT
+
+**Severidad:** P1
+
+**Subsistema:** Desgaste S26
+
+**Archivo, símbolo y líneas:** `crates/wear/src/state.rs:137–144`, `advance`; contraste validación ring 125–130.
+
+**Afirmación o gate comprometido:** S26/H-S26: dominio y estados UNSUPPORTED explícitos, fail-closed.
+
+**Método de reproducción:** Probe `wear_unsupported`: ley de anillo soportada, cojinete/aceite UNSUPPORTED; avance 1 h. Caso 19.
+
+**Resultado esperado:** Rechazo tipado o ausencia explícita de predicción no soportada.
+
+**Resultado observado:** Acepta; desgaste de cojinete 0 y oxidación 1.0 con ley de aceite UNSUPPORTED.
+
+**Causa raíz o hipótesis causal:** Confirmada: uso directo de coeficientes sin verificar soporte; el coeficiente cero no significa ausencia de conocimiento y en Arrhenius elimina la barrera.
+
+**Alcance del impacto:** Salida numérica que parece condición material pese a no haber ley válida.
+
+**Recomendación:** Validar soporte de todas las leyes y distinguir desconocido de cero físico.
+
+**Regresión propuesta:** Cada combinación de leyes soportadas/no soportadas debe conservar semántica y no mutar estado ante rechazo.
+
+**Estado de evidencia:** Reproducido ejecutablemente, caso 19 rojo.
+
+
+<a id="f12"></a>
+
+## F12 — Relajación persistente de junta se revierte a temperatura negativa
+
+**Categoría:** CONFIRMED_DEFECT
+
+**Severidad:** P2
+
+**Subsistema:** Desgaste S26
+
+**Archivo, símbolo y líneas:** `crates/wear/src/state.rs:32–60`, `OperatingPoint::validated`; 148–150, `advance`.
+
+**Afirmación o gate comprometido:** S26 persistencia e irreversibilidad sin servicio; tendencias dentro de dominio explícito.
+
+**Método de reproducción:** Probe `wear_irreversible`: coolant −20 °C (253.15 K), estado relajación .1, avance .01 h, sin servicio. Caso 20.
+
+**Resultado esperado:** Rechazo por dominio si la ley solo admite caliente, o relajación acumulada no decreciente.
+
+**Resultado observado:** Acepta y reduce .1→.09999075803759254.
+
+**Causa raíz o hipótesis causal:** Confirmada: tasa proporcional a °C cambia de signo por debajo de cero; validación solo exige finitud.
+
+**Alcance del impacto:** Escenario frío acotado: recuperación espontánea de una variable declarada de desgaste acumulativo. No se infiere comportamiento real de una junta.
+
+**Recomendación:** Especificar/enforzar dominio térmico y forma dimensional de la ley acumulativa.
+
+**Regresión propuesta:** Frío/caliente, subdivisión, sin servicio y con servicio explícito; monotonicidad donde corresponda.
+
+**Estado de evidencia:** Reproducido ejecutablemente, caso 20 rojo.
+
+
+<a id="f13"></a>
+
+## F13 — Fase del decoder depende del inicio del vector y no se recupera
+
+**Categoría:** CONFIRMED_DEFECT
+
+**Severidad:** P1
+
+**Subsistema:** Electrónica S18
+
+**Archivo, símbolo y líneas:** `crates/ecu/src/decoder.rs:180–195`, `estimate`; índice base en 184–185.
+
+**Afirmación o gate comprometido:** S18 sincronización por señales observadas, pérdida y recuperación de pulsos; scheduler S19.
+
+**Método de reproducción:** Probes `decoder_origin`: mismo CYP, eliminar cinco CKP iniciales; `decoder_recovery`: eliminar un CKP y observar CYP posteriores. Casos 21–22.
+
+**Resultado esperado:** Misma fase física con igual referencia CYP; recuperación debe anclar de nuevo tras referencia válida.
+
+**Resultado observado:** Con Synced720 y misma RPM ≈750: origen distinto produce 690°/540°; tras pérdida recupera confianza 1 pero fase 660° frente a 690° sano.
+
+**Causa raíz o hipótesis causal:** Confirmada: fase = índice del vector %24 ×30°; CYP decide estado de sincronía pero no reancla ese índice.
+
+**Alcance del impacto:** Actuación planificada puede quedar desplazada pese a declarar sincronía plena. No existe todavía acoplamiento runtime ECU→motor para cuantificar daño/torque real.
+
+**Recomendación:** Revisar anclaje físico y máquina de sincronización, con referencias explícitas y política de recuperación.
+
+**Regresión propuesta:** Inicio arbitrario, pérdida/duplicación y referencias posteriores, aceleración y señales OEM separadas del patrón genérico.
+
+**Estado de evidencia:** Reproducido ejecutablemente, casos 21–22 rojos.
+
+
+<a id="f14"></a>
+
+## F14 — Semilla declarada de cableado intermitente es ignorada
+
+**Categoría:** CONFIRMED_DEFECT
+
+**Severidad:** P2
+
+**Subsistema:** Electrónica / ruido
+
+**Archivo, símbolo y líneas:** `crates/electrical/src/wiring.rs:64–85`, constructor de `WireChannel`.
+
+**Afirmación o gate comprometido:** Reproducibilidad parametrizada y realizaciones independientes de fallos, S20/S29.
+
+**Método de reproducción:** Probe `wire_seed`: semillas 1 y 2, 32 lecturas cada una. Caso 23.
+
+**Resultado esperado:** Misma semilla reproduce; semillas diferentes controlan realizaciones distintas (no garantía de diferencia para toda muestra aislada).
+
+**Resultado observado:** Las 32 lecturas coinciden exactamente para semillas distintas; fuente usa 7193 fijo.
+
+**Causa raíz o hipótesis causal:** Confirmada: parámetro `seed` del fallo intermitente no alimenta `ChannelNoise::new`.
+
+**Alcance del impacto:** Muestreo de cableado no explora el espacio anunciado por la semilla; determinismo de una misma semilla sí sobrevive.
+
+**Recomendación:** Conectar y registrar semilla y stream por canal en la futura corrección.
+
+**Regresión propuesta:** Igual semilla/stream reproduce; streams/semillas diferentes con serie suficientemente larga; prueba semántica de selección.
+
+**Estado de evidencia:** Reproducido ejecutablemente y confirmado por literal del constructor; caso 23 rojo.
+
+
+<a id="f15"></a>
+
+## F15 — Fronteras públicas aceptan entradas inválidas o producen panic/NaN
+
+**Categoría:** CONFIRMED_DEFECT
+
+**Severidad:** P1
+
+**Subsistema:** Infraestructura transversal
+
+**Archivo, símbolo y líneas:** `crates/engine/src/run.rs:963–980,356–367,880`; `crates/thermal/src/network.rs:94,194`; `crates/dyno/src/brake.rs:35–41,60–71`; `crates/ecu/src/decoder.rs:58–80,180–196`, `new`/`estimate`; `crates/calibration/src/dataset.rs:58–97`.
+
+**Afirmación o gate comprometido:** Foundation §3.3 fail-closed con error tipado y §12.3; políticas de procedencia/uncertainty.
+
+**Método de reproducción:** Probes `engine_invalid`, `restore_invalid`, `thermal_invalid`, `dyno_invalid`, `decoder_invalid`, `dataset_invalid`; casos 24–27,29–30.
+
+**Resultado esperado:** Rechazo tipado antes de cálculo o mutación; magnitudes finitas, capacidades positivas, temperaturas absolutas positivas, incertidumbres válidas, estado físico y cronología consistentes.
+
+**Resultado observado:** record_every=0 causa panic por módulo; ηcomb −1 y >1 se aceptan en llamada corta; accesorio negativo también se acepta, pero su dominio de signo no está especificado y no se cuenta como defecto independiente; snapshot con masa negativa y hash válido se acepta en restore. Capacidad térmica cero devuelve Ok con estado no finito. Dyno −300 °C devuelve Ok con factor no finito. CKP NaN/futuros se aceptan. Manifest admite observaciones no finitas, incertidumbre inválida y metadata incompleta.
+
+**Causa raíz o hipótesis causal:** Confirmados varios huecos de validación en fronteras; agrupados como una familia, no como un único mecanismo. Hash valida integridad, no plausibilidad física. El test corto de η no prueba quemado negativo: prueba aceptación inválida.
+
+**Alcance del impacto:** Garantía fail-closed global no acreditada. Cada resultado está limitado a la API y fixture ensayados; no se afirma corrupción nominal universal ni explotación.
+
+**Recomendación:** Inventariar contratos de dominio por API y verificar antes de mutación; mantener error tipado coherente.
+
+**Regresión propuesta:** Matriz de invalidación por campo y NaN/Inf/cero; rollback/no mutación; restore con hash correcto y estado imposible; causalidad temporal sin mirar eventos futuros.
+
+**Estado de evidencia:** Reproducido ejecutablemente; seis casos contractuales rojos. Familia agrupada para no inflar conteo de hallazgos.
+
+
+<a id="f16"></a>
+
+## F16 — Periodicidad de perfil y evento de inyección son inconsistentes
+
+**Categoría:** CONFIRMED_DEFECT
+
+**Severidad:** P2
+
+**Subsistema:** Distribución / inyección
+
+**Archivo, símbolo y líneas:** `crates/engine/src/run.rs:469–476`, `crossed_edge`; 693–695, umbral IC; lift 631–638.
+
+**Afirmación o gate comprometido:** S11/S12/S16: geometría y eventos coherentes, equivalencia angular.
+
+**Método de reproducción:** Probe `cam_integrated`: mismo perfil salvo centerline+720°, todos los demás inputs iguales. Caso 28.
+
+**Resultado esperado:** Geometría y eventos equivalentes bajo un ciclo completo, o rechazo explícito de ese dominio.
+
+**Resultado observado:** Lift a 70° idéntico ≈6.371502836 mm; RPM a 8 s 1059.8606 frente a 1025.8177 base; cambia combustible. Entrada aceptada.
+
+**Causa raíz o hipótesis causal:** Confirmada: lift envuelve ángulo pero IC no se normaliza al dominio del detector de cruces.
+
+**Alcance del impacto:** Invariancia de una representación angular equivalente. No se interpreta +720° como fallo mecánico real ni prueba daño.
+
+**Recomendación:** Unificar dominio angular de eventos/perfiles o rechazar explícitamente valores fuera de la representación admitida.
+
+**Regresión propuesta:** Equivalencias ±720°, ambas direcciones, cruce de cero y phase shifts nominales con fuel timing independiente.
+
+**Estado de evidencia:** Reproducido ejecutablemente, caso 28 rojo.
+
+
+<a id="f17"></a>
+
+## F17 — Workflow documental conserva controles exclusivos de S00
+
+**Categoría:** CONFIRMED_DEFECT
+
+**Severidad:** P2
+
+**Subsistema:** CI documental
+
+**Archivo, símbolo y líneas:** `.github/workflows/docs-check.yml:26,31`.
+
+**Afirmación o gate comprometido:** Gates ejecutables y DoD de documentación operativa vigente.
+
+**Método de reproducción:** Comandos del workflow archivados y ejecutados en `results/docs-ci-controls.json`.
+
+**Resultado esperado:** Controles ajustados a la fase real, manteniendo validación de inventarios.
+
+**Resultado observado:** Conteo esperado 12 ADR frente a 37; prohibición incondicional de crates pese a 30 existentes. Ambos comandos salen 1.
+
+**Causa raíz o hipótesis causal:** Confirmada: checks de bootstrap S00 permanecen en workflow push/PR.
+
+**Alcance del impacto:** CI documental falla por estado legítimo actual. No se afirma haber ejecutado GitHub Actions ni que todos los jobs remotos fallen.
+
+**Recomendación:** Revisar alcance/fase del workflow en futura corrección, contrastando autoridad normativa e inventario.
+
+**Regresión propuesta:** Ejecutar workflow actual en S30 y validar inventario real, referencias y documentos obligatorios.
+
+**Estado de evidencia:** Controles shell ejecutados localmente; exit codes conservados.
+
+
+<a id="f18"></a>
+
+## F18 — Incertidumbre del fitter permanece en coordenadas escaladas
+
+**Categoría:** CONFIRMED_DEFECT
+
+**Severidad:** P1
+
+**Subsistema:** Calibración S25
+
+**Archivo, símbolo y líneas:** `crates/calibration/src/fit.rs:50–55,161–172`, `least_squares`.
+
+**Afirmación o gate comprometido:** S25: incertidumbres de parámetros y maquinaria verificada; no validación experimental.
+
+**Método de reproducción:** Probe `fit_analytic`: f(p)=p², y=4, peso=1 (σobs=1), inicios p0=3 y 6. Caso 31.
+
+**Resultado esperado:** En p=2, Jacobiano físico 4; std local =1/4=.25 en unidades de p, independiente de escala interna.
+
+**Resultado observado:** Parámetro ajustado=2 y residuo=0 para ambos; std=.08333333333 y .04166666667 respectivamente.
+
+**Causa raíz o hipótesis causal:** Confirmada: covarianza corresponde a q=p/scale; params se desescala pero std no. Falta transformación cov_p=D cov_q D.
+
+**Alcance del impacto:** Intervalos y ranking basado en incertidumbre reportada pueden ser incorrectos. Correlación bajo escalas positivas no queda falsada por este caso. No son intervalos experimentales D16.
+
+**Recomendación:** Reevaluar salida de incertidumbre y todos los reportes que la consuman; especificar unidades y supuestos estadísticos.
+
+**Regresión propuesta:** Invariancia al cambio de unidad y p0; referencia analítica de una y varias variables con observación de incertidumbre conocida.
+
+**Estado de evidencia:** Reproducido ejecutablemente, caso 31 rojo; referencia independiente derivada de sensibilidad analítica.
+
+
+<a id="f19"></a>
+
+## F19 — El fitter rechaza un óptimo inicial exacto
+
+**Categoría:** CONFIRMED_DEFECT
+
+**Severidad:** P2
+
+**Subsistema:** Calibración S25
+
+**Archivo, símbolo y líneas:** `crates/calibration/src/fit.rs:59–125`, `least_squares`.
+
+**Afirmación o gate comprometido:** S25 robustez de maquinaria para entradas válidas.
+
+**Método de reproducción:** Probe `fit_analytic`: f(p)=p², y=4, p0=2, peso=1. Caso 32.
+
+**Resultado esperado:** Aceptar solución ya convergida, con incertidumbre calculada si identificable.
+
+**Resultado observado:** Devuelve `invalid fit: no descent` aunque residual inicial es cero y Jacobiano no singular.
+
+**Causa raíz o hipótesis causal:** Confirmada: exige descenso estricto antes de comprobar convergencia; paso cero no satisface `nrm < norm`.
+
+**Alcance del impacto:** Rechazo acotado de una solución válida, sin afectar todos los ajustes.
+
+**Recomendación:** Distinguir convergencia inicial, estancamiento y fallo de descenso según contratos explícitos.
+
+**Regresión propuesta:** Óptimo exacto/casi exacto, caso singular y no finito; error solo cuando corresponde.
+
+**Estado de evidencia:** Reproducido ejecutablemente, caso 32 rojo.
+
+
+<a id="r01"></a>
+
+## R01 — Clasificador de compresión colapsa combinaciones de causas
+
+**Categoría:** SUSPECTED_DEFECT
+
+**Severidad:** P1
+
+**Subsistema:** Diagnóstico mecánico
+
+**Archivo, símbolo y líneas:** `crates/diagnostics/src/mech.rs:338–370`, `diagnose_low_compression`.
+
+**Afirmación o gate comprometido:** S24/S29: hipótesis basadas en observables y ambigüedad explícita.
+
+**Método de reproducción:** Probe `diagnosis_multicause`: baja compresión + fuga y split .5/.5/0; split 0/0/0. Inspeccionar ramas.
+
+**Resultado esperado:** Conservar conjuntos de causas posibles o pedir medición complementaria ante firmas mixtas/no informativas.
+
+**Resultado observado:** Firma mixta retorna HeadGasket; firma cero retorna Rings. No hay modelo físico de fuga de válvula para generar el contrafactual completo.
+
+**Causa raíz o hipótesis causal:** Hipótesis: heurística de dominancia y fallback fuerzan etiqueta única. La reproducción de la clasificación existe; falta un escenario multicause válido y observabilidad independiente para demostrar causa incorrecta.
+
+**Alcance del impacto:** Riesgo de diagnóstico sobreseguro; no se etiqueta como defecto físico confirmado ni se inventa valve-leak.
+
+**Recomendación:** Especificar semántica de hipótesis múltiple y probar con escenarios físicamente observables e indistinguibles.
+
+**Regresión propuesta:** Pares multicause con mismos observables y tercer ensayo independiente, sin acceder a Scenario.
+
+**Estado de evidencia:** Indicio reproducido; falsación de causa real incompleta.
+
+
+<a id="k01"></a>
+
+## K01 — Fugas, lubricación, desgaste, daño y ECU no cierran el motor runtime
+
+**Categoría:** KNOWN_LIMITATION
+
+**Severidad:** P1
+
+**Subsistema:** Integración
+
+**Archivo, símbolo y líneas:** `crates/engine/Cargo.toml:8–26`; `crates/engine/src/run.rs`, EngineInputs; `docs/PROGRESS.md:365,421–422,435,457`.
+
+**Afirmación o gate comprometido:** Lectura amplia de cadenas S23–S30 y matriz de capacidades.
+
+**Método de reproducción:** Inspección del DAG en inventory.json y llamadas de engine, wear-demo, leak y release-check.
+
+**Resultado esperado:** Una cadena integrada requeriría feedback de caudal/precarga/film/desgaste/actuadores al estado del motor.
+
+**Resultado observado:** Hay demos y dependencias parciales wear→leak, lube→crank, pero engine no incorpora esos estados ni consume scheduler ECU. El trabajo reconocido como futuro no está implementado.
+
+**Causa raíz o hipótesis causal:** Limitación arquitectónica declarada, no fallo nuevo ni dependencia circular.
+
+**Alcance del impacto:** No demuestra fuga con motor funcionando ni progresión de daño dependiente de contactos runtime. Dependencia de crate no equivale a integración física.
+
+**Recomendación:** Mantener alcance parcial en todo release; una futura fase requiere autorización separada, sin iniciar S31.
+
+**Regresión propuesta:** Cuando se autorice: contrafactuales runtime con misma energía/estado inicial y perturbación física, incluyendo replay.
+
+**Estado de evidencia:** Inspección técnica y deuda declarada; escenarios de integración ausentes.
+
+
+<a id="k02"></a>
+
+## K02 — Combustión y llenado siguen siendo aproximaciones L1 ilustrativas
+
+**Categoría:** KNOWN_LIMITATION
+
+**Severidad:** P1
+
+**Subsistema:** Motor / distribución
+
+**Archivo, símbolo y líneas:** `crates/engine/src/run.rs:690–787`; `crates/engine/src/control.rs`; `docs/adr/ADR-023-integrated-engine.md`; hipótesis S16.
+
+**Afirmación o gate comprometido:** Cadena distribución→masa atrapada→combustión→torque→RPM.
+
+**Método de reproducción:** Probes `cam_event_chain`, `cam_flow`, `cam_integrated`; inspección de dosificación y Wiebe.
+
+**Resultado esperado:** Interpretar causalidad dentro de los supuestos; no atribuir calibración o validación de mezclas/combustión real.
+
+**Resultado observado:** Los dos signos ±6° cambian lift/flow, masa atrapada en IVC, combustible latched, Q/work/RPM. Pero dosificación usa densidad de plenum y ηv control, no oxígeno real atrapado; mover centerline mueve también inyección en IC.
+
+**Causa raíz o hipótesis causal:** Supuestos L1 documentados; no se encontró el acoplamiento artificial lift→VE descartado en S30. La equivalencia de mecanismos no está validada experimentalmente.
+
+**Alcance del impacto:** La propagación física de lift→área→flow existe; el barrido no aísla solo aire ni acredita el balance químico afectado por F01.
+
+**Recomendación:** Restringir afirmaciones a propagación implementada; separar air timing/fuel timing y adquirir p(θ)/air/fuel.
+
+**Regresión propuesta:** Comparaciones de mezcla/combustión con masa de oxígeno, fuel timing fijo y holdout externo.
+
+**Estado de evidencia:** Mecanismo inspeccionado y eventos medidos numéricamente; calibración/validación pendientes.
+
+
+<a id="k03"></a>
+
+## K03 — Interferencia geométrica no predice rotura ni vida útil
+
+**Categoría:** KNOWN_LIMITATION
+
+**Severidad:** P1
+
+**Subsistema:** Daño S27
+
+**Archivo, símbolo y líneas:** `crates/damage/src/mechanism.rs:33–58,67–88,102–137,146–183`, `piston_valve_state`, `bolt_yield_state`, riesgos; `crates/contacts/src/interference.rs`; `docs/adr/ADR-034-damage-mechanisms.md`.
+
+**Afirmación o gate comprometido:** S27 y veto de predicción material sin material/geometría/calibración.
+
+**Método de reproducción:** Probes `damage_bolt`, `damage_geometry`, `damage_support`; damage-demo pv_contact.
+
+**Resultado esperado:** Riesgo geométrico y onset genérico separados de fractura y probabilidad de fallo real.
+
+**Resultado observado:** Perno: Elastic/UncertainRange/PlasticOnsetGeneric según carga/material genérico. Interferencia solo Clear/Risk; thread y otros mecanismos Unsupported. No se produce daño material D16 demostrado.
+
+**Causa raíz o hipótesis causal:** Límite declarado; una variante de estado Ruptured no demuestra un modelo de rotura implementado.
+
+**Alcance del impacto:** No se sostienen instantes de fallo, fiabilidad, fatiga o vida útil; el control positivo respeta el alcance de los probes.
+
+**Recomendación:** Conservar etiquetas y corregir referencias a ruptura cuando describan solo inicio de plasticidad.
+
+**Regresión propuesta:** Dominios y UNSUPPORTED, incertidumbre material, sin convertir interferencia a daño automático.
+
+**Estado de evidencia:** Casos 7 y CLI pasan dentro de alcance; sin validación material externa.
+
+
+<a id="g01"></a>
+
+## G01 — No hay calibración o validación experimental D16Y7
+
+**Categoría:** EVIDENCE_GAP
+
+**Severidad:** P1
+
+**Subsistema:** Programa S25
+
+**Archivo, símbolo y líneas:** `docs/calibration/D16Y7_CALIBRATION_REPORT.md:3–7,37–49`; datasets manifiestos.
+
+**Afirmación o gate comprometido:** Cualquier interpretación predictiva, CALIBRATED o VALIDATED_IN_DOMAIN.
+
+**Método de reproducción:** validate-data, inventario de manifests y campañas; búsqueda externa documentada en plan S25.
+
+**Resultado esperado:** Datos externos con procedencia, incertidumbre y separación calibration/holdout independiente.
+
+**Resultado observado:** Ocho vacíos registrados; validación de estructura no aporta observaciones experimentales. No se adquirió dataset D16 en esta auditoría.
+
+**Causa raíz o hipótesis causal:** Evidencia faltante explícita, no defecto por no inventarla. La búsqueda limitada no prueba inexistencia mundial de datos.
+
+**Alcance del impacto:** No autoriza 106 hp, eficiencia real, vida útil ni etiquetas predictivas.
+
+**Recomendación:** Ejecutar el plan priorizado de adquisición, después de revisar los errores de software que contaminarían ajustes.
+
+**Regresión propuesta:** Gate de procedencia, unidades, incertidumbre, identificabilidad y holdout por motor/campaña, nunca sintético como validación.
+
+**Estado de evidencia:** Vacío reconocido y confirmado en el repositorio; plan de adquisición sin datasets inventados.
+
+
+<a id="g02"></a>
+
+## G02 — Estabilidad general y convergencia larga del motor no demostradas
+
+**Categoría:** EVIDENCE_GAP
+
+**Severidad:** P1
+
+**Subsistema:** Motor S16/S30
+
+**Archivo, símbolo y líneas:** `crates/audit/src/profiles.rs`; `docs/sprints/S16.md`, `docs/sprints/S30.md`; `crates/engine/src/run.rs` splitting.
+
+**Afirmación o gate comprometido:** Extender estabilidad de un ralentí ilustrativo a dominio general.
+
+**Método de reproducción:** 24 filas `engine_refinement`, 3 `thermal_long`, 2 `idle_finer`, controles negativos y fuel_cut.
+
+**Resultado esperado:** Convergencia de observables de ciclo y ventanas largas, robustez a condiciones iniciales y transitorios, no solo RPM final.
+
+**Resultado observado:** Ralentí a 8 s: dt200µs ≈1229.6 RPM frente a dt25µs ≈1023.47; a120s dt100/50/25µs medias de cola 985.82/928.14/912.39. No se estableció tolerancia científica para toda la familia ni ciclo estacionario convergido.
+
+**Causa raíz o hipótesis causal:** Hipótesis pendientes: splitting/eventos y phase-dependent sampling. No se declara inestabilidad general ni fallo de todos los gates por esta sensibilidad.
+
+**Alcance del impacto:** Verificación local de escenarios sí sobrevive; generalidad, orden efectivo del sistema abierto y horizonte más largo quedan sin demostrar.
+
+**Recomendación:** Definir observables/ventanas/tolerancias de convergencia antes de nuevas pruebas; corregir F01/F07/F10 sin retocar parámetros para forzar convergencia.
+
+**Regresión propuesta:** Refinamiento temporal y angular de ciclos completos, múltiples estados iniciales, carga/rpm, eventos y balances.
+
+**Estado de evidencia:** Barridos ejecutados; generalización y convergence rate del motor completo pendientes.
+
+
+<a id="g03"></a>
+
+## G03 — Reproducibilidad externa y revisión experta siguen abiertas
+
+**Categoría:** EVIDENCE_GAP
+
+**Severidad:** P1
+
+**Subsistema:** Infraestructura / release
+
+**Archivo, símbolo y líneas:** `docs/FOUNDATION_RELEASE_REPORT.md`; `docs/sprints/S30.md`; `docs/adr/ADR-037-release-audit.md`.
+
+**Afirmación o gate comprometido:** S30 objetivo de dos máquinas y revisión experta antes de L2+.
+
+**Método de reproducción:** Results/environment.json; ejecución debug/release en una máquina Linux x86_64.
+
+**Resultado esperado:** Comparar hashes/contratos en los entornos declarados y revisión independiente de dominio con límites claros.
+
+**Resultado observado:** Solo una máquina, un toolchain y OS; no Windows/ARM ni segundo host. No se realizó revisión externa de un experto en motores.
+
+**Causa raíz o hipótesis causal:** Límite de entorno explícito; no es defecto confirmado de portabilidad.
+
+**Alcance del impacto:** No demostrar determinismo universal o coincidencia entre plataformas. El determinismo local no salva pérdidas JSON ni estado omitido.
+
+**Recomendación:** Conservar PENDING_EXTERNAL y repetir paquete fijando flags/toolchain en segundo host autorizado.
+
+**Regresión propuesta:** Misma fixture serializada y replay por versión, con mapa de tolerancias si contrato no es bit-exacto entre plataformas.
+
+**Estado de evidencia:** Cobertura local documentada; evidencia externa pendiente.
+
+
+<a id="g04"></a>
+
+## G04 — Cuatro release-checks no cubren cuatro cadenas físicas completas
+
+**Categoría:** EVIDENCE_GAP
+
+**Severidad:** P2
+
+**Subsistema:** Auditoría interna S30
+
+**Archivo, símbolo y líneas:** `crates/audit/src/chains.rs:42–74` y demás chain_*; `docs/capability_matrix.md:22`.
+
+**Afirmación o gate comprometido:** S30 cadenas auditadas y pretensión de pruebas contrafactuales integradas.
+
+**Método de reproducción:** release-check y lectura de chains.rs; comparación con probes independientes.
+
+**Resultado esperado:** Evidencia de cada flecha y aislamiento entre variables observadas/verdaderas.
+
+**Resultado observado:** Release-check pasa cuatro chains. Precarga se introduce como carga kN, no torque de apriete Nm con dispersión; ring chain comprueba área, no todo pressure/flow/runtime; cam chequea RPM final; CKP lookup de mapa no equivale a actuación effective runtime.
+
+**Causa raíz o hipótesis causal:** Pruebas de demostración parciales, con F02/F13 que comprometen lectura más amplia. No se encontró ciclo de dependencias en Cargo.
+
+**Alcance del impacto:** Un PASS interno acredita sus assertions concretas, no todo el grafo causal anunciado.
+
+**Recomendación:** Restringir redacción y reevaluar gate S30 identificando flechas sin evidence y fuente observacional.
+
+**Regresión propuesta:** Instrumentar eventos/flujo/masa/Q/work/actuación y balances; contrafactuales con mismas condiciones y cambios únicos.
+
+**Estado de evidencia:** CLI y fuente inspeccionadas; partes completas pendientes, no falsación de todas las flechas.
+
+
+<a id="g05"></a>
+
+## G05 — Identificabilidad declarada necesita experimentos y rango del Jacobiano
+
+**Categoría:** EVIDENCE_GAP
+
+**Severidad:** P2
+
+**Subsistema:** Calibración S25
+
+**Archivo, símbolo y líneas:** `docs/calibration/D16Y7_CALIBRATION_REPORT.md:23–27`; `docs/calibration/campaigns.md`; parámetros y ModelCards.
+
+**Afirmación o gate comprometido:** Seis parámetros identificables con taller y campañas suficientes.
+
+**Método de reproducción:** Comparar observables previstos con leyes de fricción, térmica, film y llenado; fitter analítico F18/F19.
+
+**Resultado esperado:** Rango/sensibilidad, correlaciones y profile likelihood sobre datos con excitación e incertidumbre apropiadas.
+
+**Resultado observado:** No hay datos ni demostración experimental de rango. Presión de aceite sola no identifica film; calentamiento sin entradas térmicas conocidas confunde capacidad/conductancia; torque neto solo confunde pérdidas/combustión/llenado.
+
+**Causa raíz o hipótesis causal:** Insuficiencia de observables y evidencia, no prueba de no identificabilidad universal.
+
+**Alcance del impacto:** No utilizar ajuste exitoso como prueba de parámetro físico único ni segundo motor como garantía de toda la población.
+
+**Recomendación:** Diseñar campañas conjuntas y preservar holdouts por régimen/motor; corregir incertidumbre del fitter antes de reportar intervalos.
+
+**Regresión propuesta:** Rango y correlación con incertidumbre, perturbaciones independientes, comparación de modelos y holdout no reutilizado.
+
+**Estado de evidencia:** Análisis estructural; identificabilidad efectiva pendiente de adquisición.
+
+
+<a id="g06"></a>
+
+## G06 — Sincronía y protocolos electrónicos tienen alcance genérico parcial
+
+**Categoría:** EVIDENCE_GAP
+
+**Severidad:** P2
+
+**Subsistema:** Electrónica S17–S20
+
+**Archivo, símbolo y líneas:** `crates/ecu/src/decoder.rs`, `scheduler.rs`; `crates/trigger/src`; `docs/sprints/S18.md`, ADR-025–027.
+
+**Afirmación o gate comprometido:** CKP/TDC/CYP, fallback 360° y solicitado frente a efectivo.
+
+**Método de reproducción:** Probes scheduler/decoder, sensor-demo ECT/MAP y ecu-demo; lectura de interfaces.
+
+**Resultado esperado:** Señales OEM separadas, referencia TDC explícita si se anuncia y actuación efectiva observada, incluyendo transitorios.
+
+**Resultado observado:** Pattern GENERIC y mapas/DTC REF se distinguen de OEM. Decoder acepta CKP/CYP, sin entrada TDC independiente; scheduler genera planes, no ejecución acoplada al motor. CYP obsoleto mantiene Synced720 en probe, sin política temporal explícita.
+
+**Causa raíz o hipótesis causal:** Cobertura incompleta y política faltante; CYP viejo solo no se llama defecto porque CKP continuo podría conservar fase. F13 sí reproduce desplazamiento real.
+
+**Alcance del impacto:** No valida distribuidor OEM, fallback real ni actuación combustion runtime. ECT/MAP y wiring son observaciones separadas pero fallos no cierran con el motor.
+
+**Recomendación:** Aclarar dominio y demostrar políticas de pérdida/reanclaje/transitorios antes de afirmar sincronía/actuación completas.
+
+**Regresión propuesta:** Aceleración, inicio arbitrario, timeout/referencia, fallback y trazas solicitado/efectivo desde ejecutor.
+
+**Estado de evidencia:** Controles genéricos ejecutados; integración y OEM pendientes.
+
+
+<a id="g07"></a>
+
+## G07 — Manifiestos de resultados no demuestran el experimento físico completo
+
+**Categoría:** EVIDENCE_GAP
+
+**Severidad:** P1
+
+**Subsistema:** Trazabilidad / dyno / export
+
+**Archivo, símbolo y líneas:** `crates/dyno/src/sweep.rs:51–58`, `Manifest`; `crates/cli/src/main.rs:1522–1527`, manifest export; `crates/simulation/src`; `docs/definition-of-done.md:12`.
+
+**Afirmación o gate comprometido:** Foundation §12.1: experimento reproducible con commit/toolchain/flags, packs, assembly/oplog, ambiente y solver; DoD físico con manifiesto.
+
+**Método de reproducción:** Inspeccionar Manifest dyno y `results/trace-bundle.json`, comparar con `results/runner-manifest.json` y logs run/replay.
+
+**Resultado esperado:** Artefacto físico contiene o referencia inputs completos/versionados y entorno suficiente para reproducir, además del hash de resultados.
+
+**Resultado observado:** Manifest dyno guarda schema/provenance/results/hash, omite cfg/puntos/inputs completos y entorno. Export hashea un resumen de scenario/seconds/dt, no todo EngineInputs. Runner con manifest más amplio es explícitamente plumbing sin física, hashes placeholder y build_profile genérico.
+
+**Causa raíz o hipótesis causal:** Evidencia de trazabilidad incompleta: estructuras distintas de resultados y runner no están conectadas a un experimento físico completo. No se afirma que un pack experimental no observado exista o falle.
+
+**Alcance del impacto:** Un hash de salida no determina de forma única sus inputs y software; el replay plumbing no acredita S16. Este paquete de auditoría fija base, lock, harness e inputs para reproducir sus probes.
+
+**Recomendación:** Reevaluar DoD de manifest por CLI física; definir paquete de experimento autosuficiente, sin confundir resumen de resultados con provenance completa.
+
+**Regresión propuesta:** Reproducción desde paquete en checkout limpio y segundo host, sin acceder a presets cambiantes ni condiciones implícitas; manipulación de cada input detectada.
+
+**Estado de evidencia:** Inspección técnica y export/runner ejecutados; garantía general pendiente.
+
+
+<a id="d01"></a>
+
+## D01 — Resumen general S00–S25 y rango de fichas hasta S25
+
+**Categoría:** DOCUMENTATION_DRIFT
+
+**Severidad:** P2
+
+**Subsistema:** Documentación / docs/SPRINTS.md:3–6
+
+**Archivo, símbolo y líneas:** `docs/SPRINTS.md:3–6`; sección/texto citado en el inventario D.
+
+**Afirmación o gate comprometido:** Resumen general S00–S25 y rango de fichas hasta S25; requisito de correspondencia operativa DoD §3, puntos 5–7. Fuente de contraste: Tabla S26–S30 en 48–52, regla 61 y PROGRESS
+
+**Método de reproducción:** Leer las líneas del commit base y contrastarlas con Tabla S26–S30 en 48–52, regla 61 y PROGRESS. Inventario reproducible: audit/independent/inventory.py; comandos y logs en REPRODUCTION.
+
+**Resultado esperado:** Información vigente inequívoca, referencias existentes y afirmaciones limitadas a implementación/evidencia; historia claramente delimitada sin reescribir gates.
+
+**Resultado observado:** Resumen general S00–S25 y rango de fichas hasta S25; contradicción/omisión descrita en DOCUMENTATION_CONSISTENCY con su fuente autoritativa.
+
+**Causa raíz o hipótesis causal:** Desalineación documental confirmada en el aspecto indicado; el origen editorial no se investigó. En textos históricos el problema es ausencia/ambigüedad del estado operativo actual, no falsedad retroactiva.
+
+**Alcance del impacto:** Puede inducir a reproducir el escenario equivocado, confundir estado implementado/histórico o extender evidencia más allá de su dominio; alcance específico en la fila del inventario.
+
+**Recomendación:** Resumen S00–S30 congelado y enlaces a todas las fichas; mantener historia fechada. No aplicado en esta fase.
+
+**Regresión propuesta:** Revisión cruzada de esa fila contra fuente/código/log vigente; validar ruta, unidades, versión y alcance. Si es inventario/CI, contraste automático de conteos reales; si es científico, regression técnica enlazada al hallazgo correspondiente.
+
+**Estado de evidencia:** Contraste documental/técnico efectuado en base fijada; propuesta pendiente de autorización. No se cambió el documento fuente.
+
+
+<a id="d02"></a>
+
+## D02 — «25 crates» inventario actual
+
+**Categoría:** DOCUMENTATION_DRIFT
+
+**Severidad:** P2
+
+**Subsistema:** Documentación / docs/HANDOFF.md:9–13
+
+**Archivo, símbolo y líneas:** `docs/HANDOFF.md:9–13`; sección/texto citado en el inventario D.
+
+**Afirmación o gate comprometido:** «25 crates» inventario actual; requisito de correspondencia operativa DoD §3, puntos 5–7. Fuente de contraste: Cargo metadata: 30 paquetes, `results/inventory.json`
+
+**Método de reproducción:** Leer las líneas del commit base y contrastarlas con Cargo metadata: 30 paquetes, `results/inventory.json`. Inventario reproducible: audit/independent/inventory.py; comandos y logs en REPRODUCTION.
+
+**Resultado esperado:** Información vigente inequívoca, referencias existentes y afirmaciones limitadas a implementación/evidencia; historia claramente delimitada sin reescribir gates.
+
+**Resultado observado:** «25 crates» inventario actual; contradicción/omisión descrita en DOCUMENTATION_CONSISTENCY con su fuente autoritativa.
+
+**Causa raíz o hipótesis causal:** Desalineación documental confirmada en el aspecto indicado; el origen editorial no se investigó. En textos históricos el problema es ausencia/ambigüedad del estado operativo actual, no falsedad retroactiva.
+
+**Alcance del impacto:** Puede inducir a reproducir el escenario equivocado, confundir estado implementado/histórico o extender evidencia más allá de su dominio; alcance específico en la fila del inventario.
+
+**Recomendación:** Incluir adversarial, audit, damage, dyno, wear; distinguir nombre de paquete `d16sim` del directorio `cli`. No aplicado en esta fase.
+
+**Regresión propuesta:** Revisión cruzada de esa fila contra fuente/código/log vigente; validar ruta, unidades, versión y alcance. Si es inventario/CI, contraste automático de conteos reales; si es científico, regression técnica enlazada al hallazgo correspondiente.
+
+**Estado de evidencia:** Contraste documental/técnico efectuado en base fijada; propuesta pendiente de autorización. No se cambió el documento fuente.
+
+
+<a id="d03"></a>
+
+## D03 — Hipótesis registradas solo hasta H-S25
+
+**Categoría:** DOCUMENTATION_DRIFT
+
+**Severidad:** P2
+
+**Subsistema:** Documentación / docs/HANDOFF.md:16–17
+
+**Archivo, símbolo y líneas:** `docs/HANDOFF.md:16–17`; sección/texto citado en el inventario D.
+
+**Afirmación o gate comprometido:** Hipótesis registradas solo hasta H-S25; requisito de correspondencia operativa DoD §3, puntos 5–7. Fuente de contraste: `docs/model_assumptions.md` incluye H-S26–H-S30
+
+**Método de reproducción:** Leer las líneas del commit base y contrastarlas con `docs/model_assumptions.md` incluye H-S26–H-S30. Inventario reproducible: audit/independent/inventory.py; comandos y logs en REPRODUCTION.
+
+**Resultado esperado:** Información vigente inequívoca, referencias existentes y afirmaciones limitadas a implementación/evidencia; historia claramente delimitada sin reescribir gates.
+
+**Resultado observado:** Hipótesis registradas solo hasta H-S25; contradicción/omisión descrita en DOCUMENTATION_CONSISTENCY con su fuente autoritativa.
+
+**Causa raíz o hipótesis causal:** Desalineación documental confirmada en el aspecto indicado; el origen editorial no se investigó. En textos históricos el problema es ausencia/ambigüedad del estado operativo actual, no falsedad retroactiva.
+
+**Alcance del impacto:** Puede inducir a reproducir el escenario equivocado, confundir estado implementado/histórico o extender evidencia más allá de su dominio; alcance específico en la fila del inventario.
+
+**Recomendación:** Inventario hasta H-S30 con referencias por mecanismo. No aplicado en esta fase.
+
+**Regresión propuesta:** Revisión cruzada de esa fila contra fuente/código/log vigente; validar ruta, unidades, versión y alcance. Si es inventario/CI, contraste automático de conteos reales; si es científico, regression técnica enlazada al hallazgo correspondiente.
+
+**Estado de evidencia:** Contraste documental/técnico efectuado en base fijada; propuesta pendiente de autorización. No se cambió el documento fuente.
+
+
+<a id="d04"></a>
+
+## D04 — Deuda S26–S30 descrita como trabajo pendiente
+
+**Categoría:** DOCUMENTATION_DRIFT
+
+**Severidad:** P2
+
+**Subsistema:** Documentación / docs/HANDOFF.md:39–44
+
+**Archivo, símbolo y líneas:** `docs/HANDOFF.md:39–44`; sección/texto citado en el inventario D.
+
+**Afirmación o gate comprometido:** Deuda S26–S30 descrita como trabajo pendiente; requisito de correspondencia operativa DoD §3, puntos 5–7. Fuente de contraste: Encabezado 3, briefs aprobados 178–237, PROGRESS y fichas S26–S30
+
+**Método de reproducción:** Leer las líneas del commit base y contrastarlas con Encabezado 3, briefs aprobados 178–237, PROGRESS y fichas S26–S30. Inventario reproducible: audit/independent/inventory.py; comandos y logs en REPRODUCTION.
+
+**Resultado esperado:** Información vigente inequívoca, referencias existentes y afirmaciones limitadas a implementación/evidencia; historia claramente delimitada sin reescribir gates.
+
+**Resultado observado:** Deuda S26–S30 descrita como trabajo pendiente; contradicción/omisión descrita en DOCUMENTATION_CONSISTENCY con su fuente autoritativa.
+
+**Causa raíz o hipótesis causal:** Desalineación documental confirmada en el aspecto indicado; el origen editorial no se investigó. En textos históricos el problema es ausencia/ambigüedad del estado operativo actual, no falsedad retroactiva.
+
+**Alcance del impacto:** Puede inducir a reproducir el escenario equivocado, confundir estado implementado/histórico o extender evidencia más allá de su dominio; alcance específico en la fila del inventario.
+
+**Recomendación:** Separar objetivos ejecutados de deuda actual: integración, calibración, datos, segunda máquina y revisión experta. No aplicado en esta fase.
+
+**Regresión propuesta:** Revisión cruzada de esa fila contra fuente/código/log vigente; validar ruta, unidades, versión y alcance. Si es inventario/CI, contraste automático de conteos reales; si es científico, regression técnica enlazada al hallazgo correspondiente.
+
+**Estado de evidencia:** Contraste documental/técnico efectuado en base fijada; propuesta pendiente de autorización. No se cambió el documento fuente.
+
+
+<a id="d05"></a>
+
+## D05 — S11/S12/S13 aparecen Pendiente y APROBADO en filas contiguas
+
+**Categoría:** DOCUMENTATION_DRIFT
+
+**Severidad:** P2
+
+**Subsistema:** Documentación / docs/BACKLOG.md:24–29
+
+**Archivo, símbolo y líneas:** `docs/BACKLOG.md:24–29`; sección/texto citado en el inventario D.
+
+**Afirmación o gate comprometido:** S11/S12/S13 aparecen Pendiente y APROBADO en filas contiguas; requisito de correspondencia operativa DoD §3, puntos 5–7. Fuente de contraste: SPRINTS y fichas S11–S13
+
+**Método de reproducción:** Leer las líneas del commit base y contrastarlas con SPRINTS y fichas S11–S13. Inventario reproducible: audit/independent/inventory.py; comandos y logs en REPRODUCTION.
+
+**Resultado esperado:** Información vigente inequívoca, referencias existentes y afirmaciones limitadas a implementación/evidencia; historia claramente delimitada sin reescribir gates.
+
+**Resultado observado:** S11/S12/S13 aparecen Pendiente y APROBADO en filas contiguas; contradicción/omisión descrita en DOCUMENTATION_CONSISTENCY con su fuente autoritativa.
+
+**Causa raíz o hipótesis causal:** Desalineación documental confirmada en el aspecto indicado; el origen editorial no se investigó. En textos históricos el problema es ausencia/ambigüedad del estado operativo actual, no falsedad retroactiva.
+
+**Alcance del impacto:** Puede inducir a reproducir el escenario equivocado, confundir estado implementado/histórico o extender evidencia más allá de su dominio; alcance específico en la fila del inventario.
+
+**Recomendación:** Una tabla vigente; si se conserva el original, bloque histórico rotulado y fechado. No aplicado en esta fase.
+
+**Regresión propuesta:** Revisión cruzada de esa fila contra fuente/código/log vigente; validar ruta, unidades, versión y alcance. Si es inventario/CI, contraste automático de conteos reales; si es científico, regression técnica enlazada al hallazgo correspondiente.
+
+**Estado de evidencia:** Contraste documental/técnico efectuado en base fijada; propuesta pendiente de autorización. No se cambió el documento fuente.
+
+
+<a id="d06"></a>
+
+## D06 — Resumen hasta S25 y S26–S30 «AUTORIZADO»
+
+**Categoría:** DOCUMENTATION_DRIFT
+
+**Severidad:** P2
+
+**Subsistema:** Documentación / docs/BACKLOG.md:12,32
+
+**Archivo, símbolo y líneas:** `docs/BACKLOG.md:12,32`; sección/texto citado en el inventario D.
+
+**Afirmación o gate comprometido:** Resumen hasta S25 y S26–S30 «AUTORIZADO»; requisito de correspondencia operativa DoD §3, puntos 5–7. Fuente de contraste: SPRINTS 48–52 y estado congelado HANDOFF 3–4
+
+**Método de reproducción:** Leer las líneas del commit base y contrastarlas con SPRINTS 48–52 y estado congelado HANDOFF 3–4. Inventario reproducible: audit/independent/inventory.py; comandos y logs en REPRODUCTION.
+
+**Resultado esperado:** Información vigente inequívoca, referencias existentes y afirmaciones limitadas a implementación/evidencia; historia claramente delimitada sin reescribir gates.
+
+**Resultado observado:** Resumen hasta S25 y S26–S30 «AUTORIZADO»; contradicción/omisión descrita en DOCUMENTATION_CONSISTENCY con su fuente autoritativa.
+
+**Causa raíz o hipótesis causal:** Desalineación documental confirmada en el aspecto indicado; el origen editorial no se investigó. En textos históricos el problema es ausencia/ambigüedad del estado operativo actual, no falsedad retroactiva.
+
+**Alcance del impacto:** Puede inducir a reproducir el escenario equivocado, confundir estado implementado/histórico o extender evidencia más allá de su dominio; alcance específico en la fila del inventario.
+
+**Recomendación:** Registrar entregados, con límites y reevaluaciones enlazadas; no activar S31. No aplicado en esta fase.
+
+**Regresión propuesta:** Revisión cruzada de esa fila contra fuente/código/log vigente; validar ruta, unidades, versión y alcance. Si es inventario/CI, contraste automático de conteos reales; si es científico, regression técnica enlazada al hallazgo correspondiente.
+
+**Estado de evidencia:** Contraste documental/técnico efectuado en base fijada; propuesta pendiente de autorización. No se cambió el documento fuente.
+
+
+<a id="d07"></a>
+
+## D07 — Sin motor físico implementado; S11–S37 pendientes
+
+**Categoría:** DOCUMENTATION_DRIFT
+
+**Severidad:** P2
+
+**Subsistema:** Documentación / README.md:4–5,21–23
+
+**Archivo, símbolo y líneas:** `README.md:4–5,21–23`; sección/texto citado en el inventario D.
+
+**Afirmación o gate comprometido:** Sin motor físico implementado; S11–S37 pendientes; requisito de correspondencia operativa DoD §3, puntos 5–7. Fuente de contraste: Motor ejecutable, SPRINTS, PROGRESS y `engine-run`
+
+**Método de reproducción:** Leer las líneas del commit base y contrastarlas con Motor ejecutable, SPRINTS, PROGRESS y `engine-run`. Inventario reproducible: audit/independent/inventory.py; comandos y logs en REPRODUCTION.
+
+**Resultado esperado:** Información vigente inequívoca, referencias existentes y afirmaciones limitadas a implementación/evidencia; historia claramente delimitada sin reescribir gates.
+
+**Resultado observado:** Sin motor físico implementado; S11–S37 pendientes; contradicción/omisión descrita en DOCUMENTATION_CONSISTENCY con su fuente autoritativa.
+
+**Causa raíz o hipótesis causal:** Desalineación documental confirmada en el aspecto indicado; el origen editorial no se investigó. En textos históricos el problema es ausencia/ambigüedad del estado operativo actual, no falsedad retroactiva.
+
+**Alcance del impacto:** Puede inducir a reproducir el escenario equivocado, confundir estado implementado/histórico o extender evidencia más allá de su dominio; alcance específico en la fila del inventario.
+
+**Recomendación:** Explicar modelos L1 implementados/no calibrados y freeze S00–S30; mantener veto predictivo. No aplicado en esta fase.
+
+**Regresión propuesta:** Revisión cruzada de esa fila contra fuente/código/log vigente; validar ruta, unidades, versión y alcance. Si es inventario/CI, contraste automático de conteos reales; si es científico, regression técnica enlazada al hallazgo correspondiente.
+
+**Estado de evidencia:** Contraste documental/técnico efectuado en base fijada; propuesta pendiente de autorización. No se cambió el documento fuente.
+
+
+<a id="d08"></a>
+
+## D08 — H-S10, ADR017, fichas S00–S10 e inventario de 12 crates
+
+**Categoría:** DOCUMENTATION_DRIFT
+
+**Severidad:** P2
+
+**Subsistema:** Documentación / README.md:34–45
+
+**Archivo, símbolo y líneas:** `README.md:34–45`; sección/texto citado en el inventario D.
+
+**Afirmación o gate comprometido:** H-S10, ADR017, fichas S00–S10 e inventario de 12 crates; requisito de correspondencia operativa DoD §3, puntos 5–7. Fuente de contraste: 30 paquetes, 37 ADR y 31 fichas S00–S30 en inventory.json
+
+**Método de reproducción:** Leer las líneas del commit base y contrastarlas con 30 paquetes, 37 ADR y 31 fichas S00–S30 en inventory.json. Inventario reproducible: audit/independent/inventory.py; comandos y logs en REPRODUCTION.
+
+**Resultado esperado:** Información vigente inequívoca, referencias existentes y afirmaciones limitadas a implementación/evidencia; historia claramente delimitada sin reescribir gates.
+
+**Resultado observado:** H-S10, ADR017, fichas S00–S10 e inventario de 12 crates; contradicción/omisión descrita en DOCUMENTATION_CONSISTENCY con su fuente autoritativa.
+
+**Causa raíz o hipótesis causal:** Desalineación documental confirmada en el aspecto indicado; el origen editorial no se investigó. En textos históricos el problema es ausencia/ambigüedad del estado operativo actual, no falsedad retroactiva.
+
+**Alcance del impacto:** Puede inducir a reproducir el escenario equivocado, confundir estado implementado/histórico o extender evidencia más allá de su dominio; alcance específico en la fila del inventario.
+
+**Recomendación:** Inventario generado o enlaces a índices vigentes, con versión del estado. No aplicado en esta fase.
+
+**Regresión propuesta:** Revisión cruzada de esa fila contra fuente/código/log vigente; validar ruta, unidades, versión y alcance. Si es inventario/CI, contraste automático de conteos reales; si es científico, regression técnica enlazada al hallazgo correspondiente.
+
+**Estado de evidencia:** Contraste documental/técnico efectuado en base fijada; propuesta pendiente de autorización. No se cambió el documento fuente.
+
+
+<a id="d09"></a>
+
+## D09 — Research referidos en directorio padre
+
+**Categoría:** DOCUMENTATION_DRIFT
+
+**Severidad:** P3
+
+**Subsistema:** Documentación / README.md:14–15
+
+**Archivo, símbolo y líneas:** `README.md:14–15`; sección/texto citado en el inventario D.
+
+**Afirmación o gate comprometido:** Research referidos en directorio padre; requisito de correspondencia operativa DoD §3, puntos 5–7. Fuente de contraste: Research reales en raíz del repositorio; HANDOFF 27–28 sí tiene rutas correctas desde docs
+
+**Método de reproducción:** Leer las líneas del commit base y contrastarlas con Research reales en raíz del repositorio; HANDOFF 27–28 sí tiene rutas correctas desde docs. Inventario reproducible: audit/independent/inventory.py; comandos y logs en REPRODUCTION.
+
+**Resultado esperado:** Información vigente inequívoca, referencias existentes y afirmaciones limitadas a implementación/evidencia; historia claramente delimitada sin reescribir gates.
+
+**Resultado observado:** Research referidos en directorio padre; contradicción/omisión descrita en DOCUMENTATION_CONSISTENCY con su fuente autoritativa.
+
+**Causa raíz o hipótesis causal:** Desalineación documental confirmada en el aspecto indicado; el origen editorial no se investigó. En textos históricos el problema es ausencia/ambigüedad del estado operativo actual, no falsedad retroactiva.
+
+**Alcance del impacto:** Puede inducir a reproducir el escenario equivocado, confundir estado implementado/histórico o extender evidencia más allá de su dominio; alcance específico en la fila del inventario.
+
+**Recomendación:** Quitar `../` únicamente en README raíz. No aplicado en esta fase.
+
+**Regresión propuesta:** Revisión cruzada de esa fila contra fuente/código/log vigente; validar ruta, unidades, versión y alcance. Si es inventario/CI, contraste automático de conteos reales; si es científico, regression técnica enlazada al hallazgo correspondiente.
+
+**Estado de evidencia:** Contraste documental/técnico efectuado en base fijada; propuesta pendiente de autorización. No se cambió el documento fuente.
+
+
+<a id="d10"></a>
+
+## D10 — Índice solo ADR001–017
+
+**Categoría:** DOCUMENTATION_DRIFT
+
+**Severidad:** P2
+
+**Subsistema:** Documentación / docs/adr/README.md:1,8–24
+
+**Archivo, símbolo y líneas:** `docs/adr/README.md:1,8–24`; sección/texto citado en el inventario D.
+
+**Afirmación o gate comprometido:** Índice solo ADR001–017; requisito de correspondencia operativa DoD §3, puntos 5–7. Fuente de contraste: Existen ADR001–037, sin archivos declarados inexistentes
+
+**Método de reproducción:** Leer las líneas del commit base y contrastarlas con Existen ADR001–037, sin archivos declarados inexistentes. Inventario reproducible: audit/independent/inventory.py; comandos y logs en REPRODUCTION.
+
+**Resultado esperado:** Información vigente inequívoca, referencias existentes y afirmaciones limitadas a implementación/evidencia; historia claramente delimitada sin reescribir gates.
+
+**Resultado observado:** Índice solo ADR001–017; contradicción/omisión descrita en DOCUMENTATION_CONSISTENCY con su fuente autoritativa.
+
+**Causa raíz o hipótesis causal:** Desalineación documental confirmada en el aspecto indicado; el origen editorial no se investigó. En textos históricos el problema es ausencia/ambigüedad del estado operativo actual, no falsedad retroactiva.
+
+**Alcance del impacto:** Puede inducir a reproducir el escenario equivocado, confundir estado implementado/histórico o extender evidencia más allá de su dominio; alcance específico en la fila del inventario.
+
+**Recomendación:** Añadir ADR018–037 y metadatos; distinguir fase histórica del índice actual. No aplicado en esta fase.
+
+**Regresión propuesta:** Revisión cruzada de esa fila contra fuente/código/log vigente; validar ruta, unidades, versión y alcance. Si es inventario/CI, contraste automático de conteos reales; si es científico, regression técnica enlazada al hallazgo correspondiente.
+
+**Estado de evidencia:** Contraste documental/técnico efectuado en base fijada; propuesta pendiente de autorización. No se cambió el documento fuente.
+
+
+<a id="d11"></a>
+
+## D11 — «Estado tras S01–S20… sigue vigente lo anterior» y matriz global S00
+
+**Categoría:** DOCUMENTATION_DRIFT
+
+**Severidad:** P1
+
+**Subsistema:** Documentación / docs/limitations.md:23–30,42–51
+
+**Archivo, símbolo y líneas:** `docs/limitations.md:23–30,42–51`; sección/texto citado en el inventario D.
+
+**Afirmación o gate comprometido:** «Estado tras S01–S20… sigue vigente lo anterior» y matriz global S00; requisito de correspondencia operativa DoD §3, puntos 5–7. Fuente de contraste: Matriz S30, código físico y Foundation §12.3/DoD
+
+**Método de reproducción:** Leer las líneas del commit base y contrastarlas con Matriz S30, código físico y Foundation §12.3/DoD. Inventario reproducible: audit/independent/inventory.py; comandos y logs en REPRODUCTION.
+
+**Resultado esperado:** Información vigente inequívoca, referencias existentes y afirmaciones limitadas a implementación/evidencia; historia claramente delimitada sin reescribir gates.
+
+**Resultado observado:** «Estado tras S01–S20… sigue vigente lo anterior» y matriz global S00; contradicción/omisión descrita en DOCUMENTATION_CONSISTENCY con su fuente autoritativa.
+
+**Causa raíz o hipótesis causal:** Desalineación documental confirmada en el aspecto indicado; el origen editorial no se investigó. En textos históricos el problema es ausencia/ambigüedad del estado operativo actual, no falsedad retroactiva.
+
+**Alcance del impacto:** Puede inducir a reproducir el escenario equivocado, confundir estado implementado/histórico o extender evidencia más allá de su dominio; alcance específico en la fila del inventario.
+
+**Recomendación:** Mantener sección S00 como historia y añadir limitaciones actuales por subsistema, integración y defectos conocidos. No aplicado en esta fase.
+
+**Regresión propuesta:** Revisión cruzada de esa fila contra fuente/código/log vigente; validar ruta, unidades, versión y alcance. Si es inventario/CI, contraste automático de conteos reales; si es científico, regression técnica enlazada al hallazgo correspondiente.
+
+**Estado de evidencia:** Contraste documental/técnico efectuado en base fijada; propuesta pendiente de autorización. No se cambió el documento fuente.
+
+
+<a id="d12"></a>
+
+## D12 — Matriz inicial sin consolidación explícita S21–S30
+
+**Categoría:** DOCUMENTATION_DRIFT
+
+**Severidad:** P2
+
+**Subsistema:** Documentación / docs/RISK_MATRIX.md:1
+
+**Archivo, símbolo y líneas:** `docs/RISK_MATRIX.md:1` y matriz S00; sección/texto citado en el inventario D.
+
+**Afirmación o gate comprometido:** Matriz inicial sin consolidación explícita S21–S30; requisito de correspondencia operativa DoD §3, puntos 5–7. Fuente de contraste: Nuevos mecanismos, hipótesis y deudas en PROGRESS/fichas
+
+**Método de reproducción:** Leer las líneas del commit base y contrastarlas con Nuevos mecanismos, hipótesis y deudas en PROGRESS/fichas. Inventario reproducible: audit/independent/inventory.py; comandos y logs en REPRODUCTION.
+
+**Resultado esperado:** Información vigente inequívoca, referencias existentes y afirmaciones limitadas a implementación/evidencia; historia claramente delimitada sin reescribir gates.
+
+**Resultado observado:** Matriz inicial sin consolidación explícita S21–S30; contradicción/omisión descrita en DOCUMENTATION_CONSISTENCY con su fuente autoritativa.
+
+**Causa raíz o hipótesis causal:** Desalineación documental confirmada en el aspecto indicado; el origen editorial no se investigó. En textos históricos el problema es ausencia/ambigüedad del estado operativo actual, no falsedad retroactiva.
+
+**Alcance del impacto:** Puede inducir a reproducir el escenario equivocado, confundir estado implementado/histórico o extender evidencia más allá de su dominio; alcance específico en la fila del inventario.
+
+**Recomendación:** Addendum actual con riesgos residuales, propietario y evidencia; conservar matriz S00. No aplicado en esta fase.
+
+**Regresión propuesta:** Revisión cruzada de esa fila contra fuente/código/log vigente; validar ruta, unidades, versión y alcance. Si es inventario/CI, contraste automático de conteos reales; si es científico, regression técnica enlazada al hallazgo correspondiente.
+
+**Estado de evidencia:** Contraste documental/técnico efectuado en base fijada; propuesta pendiente de autorización. No se cambió el documento fuente.
+
+
+<a id="d13"></a>
+
+## D13 — Ocho tarjetas resumidas S25 usadas como inventario de subsistemas
+
+**Categoría:** DOCUMENTATION_DRIFT
+
+**Severidad:** P2
+
+**Subsistema:** Documentación / docs/calibration/model_cards.md:8–15
+
+**Archivo, símbolo y líneas:** `docs/calibration/model_cards.md:8–15`; sección/texto citado en el inventario D.
+
+**Afirmación o gate comprometido:** Ocho tarjetas resumidas S25 usadas como inventario de subsistemas; requisito de correspondencia operativa DoD §3, puntos 5–7. Fuente de contraste: Nuevos mecanismos S26–S30 y Foundation §3.1/§12.3
+
+**Método de reproducción:** Leer las líneas del commit base y contrastarlas con Nuevos mecanismos S26–S30 y Foundation §3.1/§12.3. Inventario reproducible: audit/independent/inventory.py; comandos y logs en REPRODUCTION.
+
+**Resultado esperado:** Información vigente inequívoca, referencias existentes y afirmaciones limitadas a implementación/evidencia; historia claramente delimitada sin reescribir gates.
+
+**Resultado observado:** Ocho tarjetas resumidas S25 usadas como inventario de subsistemas; contradicción/omisión descrita en DOCUMENTATION_CONSISTENCY con su fuente autoritativa.
+
+**Causa raíz o hipótesis causal:** Desalineación documental confirmada en el aspecto indicado; el origen editorial no se investigó. En textos históricos el problema es ausencia/ambigüedad del estado operativo actual, no falsedad retroactiva.
+
+**Alcance del impacto:** Puede inducir a reproducir el escenario equivocado, confundir estado implementado/histórico o extender evidencia más allá de su dominio; alcance específico en la fila del inventario.
+
+**Recomendación:** Tarjetas específicas de wear/damage/dyno/trigger y límites de integración; no elevar estados científicos. No aplicado en esta fase.
+
+**Regresión propuesta:** Revisión cruzada de esa fila contra fuente/código/log vigente; validar ruta, unidades, versión y alcance. Si es inventario/CI, contraste automático de conteos reales; si es científico, regression técnica enlazada al hallazgo correspondiente.
+
+**Estado de evidencia:** Contraste documental/técnico efectuado en base fijada; propuesta pendiente de autorización. No se cambió el documento fuente.
+
+
+<a id="d14"></a>
+
+## D14 — «thermal … 10 tests» sin distribución de cobertura
+
+**Categoría:** DOCUMENTATION_DRIFT
+
+**Severidad:** P3
+
+**Subsistema:** Documentación / docs/calibration/model_cards.md:11
+
+**Archivo, símbolo y líneas:** `docs/calibration/model_cards.md:11`; sección/texto citado en el inventario D.
+
+**Afirmación o gate comprometido:** «thermal … 10 tests» sin distribución de cobertura; requisito de correspondencia operativa DoD §3, puntos 5–7. Fuente de contraste: Suite thermal tiene 1 caso y engine 9; baselines en workspace-test.log
+
+**Método de reproducción:** Leer las líneas del commit base y contrastarlas con Suite thermal tiene 1 caso y engine 9; baselines en workspace-test.log. Inventario reproducible: audit/independent/inventory.py; comandos y logs en REPRODUCTION.
+
+**Resultado esperado:** Información vigente inequívoca, referencias existentes y afirmaciones limitadas a implementación/evidencia; historia claramente delimitada sin reescribir gates.
+
+**Resultado observado:** «thermal … 10 tests» sin distribución de cobertura; contradicción/omisión descrita en DOCUMENTATION_CONSISTENCY con su fuente autoritativa.
+
+**Causa raíz o hipótesis causal:** Desalineación documental confirmada en el aspecto indicado; el origen editorial no se investigó. En textos históricos el problema es ausencia/ambigüedad del estado operativo actual, no falsedad retroactiva.
+
+**Alcance del impacto:** Puede inducir a reproducir el escenario equivocado, confundir estado implementado/histórico o extender evidencia más allá de su dominio; alcance específico en la fila del inventario.
+
+**Recomendación:** Separar crate/target/caso/mecanismo y fecha; no anunciar 10 casos térmicos independientes. No aplicado en esta fase.
+
+**Regresión propuesta:** Revisión cruzada de esa fila contra fuente/código/log vigente; validar ruta, unidades, versión y alcance. Si es inventario/CI, contraste automático de conteos reales; si es científico, regression técnica enlazada al hallazgo correspondiente.
+
+**Estado de evidencia:** Contraste documental/técnico efectuado en base fijada; propuesta pendiente de autorización. No se cambió el documento fuente.
+
+
+<a id="d15"></a>
+
+## D15 — default migra v1 y v2 lee v1; hash antes de migrar
+
+**Categoría:** DOCUMENTATION_DRIFT
+
+**Severidad:** P1
+
+**Subsistema:** Documentación / docs/snapshot-contract.md:3–9
+
+**Archivo, símbolo y líneas:** `docs/snapshot-contract.md:3–9`; sección/texto citado en el inventario D.
+
+**Afirmación o gate comprometido:** default migra v1 y v2 lee v1; hash antes de migrar; requisito de correspondencia operativa DoD §3, puntos 5–7. Fuente de contraste: F05/F06 y código state/WorkState::restore
+
+**Método de reproducción:** Leer las líneas del commit base y contrastarlas con F05/F06 y código state/WorkState::restore. Inventario reproducible: audit/independent/inventory.py; comandos y logs en REPRODUCTION.
+
+**Resultado esperado:** Información vigente inequívoca, referencias existentes y afirmaciones limitadas a implementación/evidencia; historia claramente delimitada sin reescribir gates.
+
+**Resultado observado:** default migra v1 y v2 lee v1; hash antes de migrar; contradicción/omisión descrita en DOCUMENTATION_CONSISTENCY con su fuente autoritativa.
+
+**Causa raíz o hipótesis causal:** Desalineación documental confirmada en el aspecto indicado; el origen editorial no se investigó. En textos históricos el problema es ausencia/ambigüedad del estado operativo actual, no falsedad retroactiva.
+
+**Alcance del impacto:** Puede inducir a reproducir el escenario equivocado, confundir estado implementado/histórico o extender evidencia más allá de su dominio; alcance específico en la fila del inventario.
+
+**Recomendación:** Añadir incidencia y restringir compatibilidad demostrada; resolver en fase autorizada antes de mantener la garantía. No aplicado en esta fase.
+
+**Regresión propuesta:** Revisión cruzada de esa fila contra fuente/código/log vigente; validar ruta, unidades, versión y alcance. Si es inventario/CI, contraste automático de conteos reales; si es científico, regression técnica enlazada al hallazgo correspondiente.
+
+**Estado de evidencia:** Contraste documental/técnico efectuado en base fijada; propuesta pendiente de autorización. No se cambió el documento fuente.
+
+
+<a id="d16"></a>
+
+## D16 — «snapshot bit-idéntico; determinismo total»
+
+**Categoría:** DOCUMENTATION_DRIFT
+
+**Severidad:** P1
+
+**Subsistema:** Documentación / docs/physics/integrated_engine.md:17
+
+**Archivo, símbolo y líneas:** `docs/physics/integrated_engine.md:17`; sección/texto citado en el inventario D.
+
+**Afirmación o gate comprometido:** «snapshot bit-idéntico; determinismo total»; requisito de correspondencia operativa DoD §3, puntos 5–7. Fuente de contraste: F05/F07: JSON y replay c2>0 fallan
+
+**Método de reproducción:** Leer las líneas del commit base y contrastarlas con F05/F07: JSON y replay c2>0 fallan. Inventario reproducible: audit/independent/inventory.py; comandos y logs en REPRODUCTION.
+
+**Resultado esperado:** Información vigente inequívoca, referencias existentes y afirmaciones limitadas a implementación/evidencia; historia claramente delimitada sin reescribir gates.
+
+**Resultado observado:** «snapshot bit-idéntico; determinismo total»; contradicción/omisión descrita en DOCUMENTATION_CONSISTENCY con su fuente autoritativa.
+
+**Causa raíz o hipótesis causal:** Desalineación documental confirmada en el aspecto indicado; el origen editorial no se investigó. En textos históricos el problema es ausencia/ambigüedad del estado operativo actual, no falsedad retroactiva.
+
+**Alcance del impacto:** Puede inducir a reproducir el escenario equivocado, confundir estado implementado/histórico o extender evidencia más allá de su dominio; alcance específico en la fila del inventario.
+
+**Recomendación:** Declarar fixture/configuración/plataforma demostradas y defectos de persistencia abiertos. No aplicado en esta fase.
+
+**Regresión propuesta:** Revisión cruzada de esa fila contra fuente/código/log vigente; validar ruta, unidades, versión y alcance. Si es inventario/CI, contraste automático de conteos reales; si es científico, regression técnica enlazada al hallazgo correspondiente.
+
+**Estado de evidencia:** Contraste documental/técnico efectuado en base fijada; propuesta pendiente de autorización. No se cambió el documento fuente.
+
+
+<a id="d17"></a>
+
+## D17 — «torque→sellado», valores 100/200 kN llamados torque
+
+**Categoría:** DOCUMENTATION_DRIFT
+
+**Severidad:** P2
+
+**Subsistema:** Documentación / docs/FOUNDATION_RELEASE_REPORT.md:12
+
+**Archivo, símbolo y líneas:** `docs/FOUNDATION_RELEASE_REPORT.md:12`; `crates/audit/src/chains.rs:36–82`; sección/texto citado en el inventario D.
+
+**Afirmación o gate comprometido:** «torque→sellado», valores 100/200 kN llamados torque; requisito de correspondencia operativa DoD §3, puntos 5–7. Fuente de contraste: Implementación usa carga de apriete directa en N, sin conversión Nm→precarga
+
+**Método de reproducción:** Leer las líneas del commit base y contrastarlas con Implementación usa carga de apriete directa en N, sin conversión Nm→precarga. Inventario reproducible: audit/independent/inventory.py; comandos y logs en REPRODUCTION.
+
+**Resultado esperado:** Información vigente inequívoca, referencias existentes y afirmaciones limitadas a implementación/evidencia; historia claramente delimitada sin reescribir gates.
+
+**Resultado observado:** «torque→sellado», valores 100/200 kN llamados torque; contradicción/omisión descrita en DOCUMENTATION_CONSISTENCY con su fuente autoritativa.
+
+**Causa raíz o hipótesis causal:** Desalineación documental confirmada en el aspecto indicado; el origen editorial no se investigó. En textos históricos el problema es ausencia/ambigüedad del estado operativo actual, no falsedad retroactiva.
+
+**Alcance del impacto:** Puede inducir a reproducir el escenario equivocado, confundir estado implementado/histórico o extender evidencia más allá de su dominio; alcance específico en la fila del inventario.
+
+**Recomendación:** Nombrar precarga→presión→área y declarar primera flecha no ejercida; futura prueba de torque con K/rosca. No aplicado en esta fase.
+
+**Regresión propuesta:** Revisión cruzada de esa fila contra fuente/código/log vigente; validar ruta, unidades, versión y alcance. Si es inventario/CI, contraste automático de conteos reales; si es científico, regression técnica enlazada al hallazgo correspondiente.
+
+**Estado de evidencia:** Contraste documental/técnico efectuado en base fijada; propuesta pendiente de autorización. No se cambió el documento fuente.
+
+
+<a id="d18"></a>
+
+## D18 — Cuatro «cadenas auditadas»: cam→compresión, CKP→chispa, ring→blow-by
+
+**Categoría:** DOCUMENTATION_DRIFT
+
+**Severidad:** P1
+
+**Subsistema:** Documentación / docs/FOUNDATION_RELEASE_REPORT.md:13–15
+
+**Archivo, símbolo y líneas:** `docs/FOUNDATION_RELEASE_REPORT.md:13–15`; `docs/capability_matrix.md:22`; sección/texto citado en el inventario D.
+
+**Afirmación o gate comprometido:** Cuatro «cadenas auditadas»: cam→compresión, CKP→chispa, ring→blow-by; requisito de correspondencia operativa DoD §3, puntos 5–7. Fuente de contraste: G04; chain_cam devuelve RPM, chain_ckp consulta mapa sano, chain_ring devuelve área
+
+**Método de reproducción:** Leer las líneas del commit base y contrastarlas con G04; chain_cam devuelve RPM, chain_ckp consulta mapa sano, chain_ring devuelve área. Inventario reproducible: audit/independent/inventory.py; comandos y logs en REPRODUCTION.
+
+**Resultado esperado:** Información vigente inequívoca, referencias existentes y afirmaciones limitadas a implementación/evidencia; historia claramente delimitada sin reescribir gates.
+
+**Resultado observado:** Cuatro «cadenas auditadas»: cam→compresión, CKP→chispa, ring→blow-by; contradicción/omisión descrita en DOCUMENTATION_CONSISTENCY con su fuente autoritativa.
+
+**Causa raíz o hipótesis causal:** Desalineación documental confirmada en el aspecto indicado; el origen editorial no se investigó. En textos históricos el problema es ausencia/ambigüedad del estado operativo actual, no falsedad retroactiva.
+
+**Alcance del impacto:** Puede inducir a reproducir el escenario equivocado, confundir estado implementado/histórico o extender evidencia más allá de su dominio; alcance específico en la fila del inventario.
+
+**Recomendación:** Describir eslabones observados y pendientes; enlazar reevaluación F01/F02/F13 sin revocar gate automáticamente. No aplicado en esta fase.
+
+**Regresión propuesta:** Revisión cruzada de esa fila contra fuente/código/log vigente; validar ruta, unidades, versión y alcance. Si es inventario/CI, contraste automático de conteos reales; si es científico, regression técnica enlazada al hallazgo correspondiente.
+
+**Estado de evidencia:** Contraste documental/técnico efectuado en base fijada; propuesta pendiente de autorización. No se cambió el documento fuente.
+
+
+<a id="d19"></a>
+
+## D19 — dt25/50/100 µs ⇒4470/4454/4445 rpm
+
+**Categoría:** DOCUMENTATION_DRIFT
+
+**Severidad:** P2
+
+**Subsistema:** Documentación / docs/FOUNDATION_RELEASE_REPORT.md:19–20
+
+**Archivo, símbolo y líneas:** `docs/FOUNDATION_RELEASE_REPORT.md:19–20`; sección/texto citado en el inventario D.
+
+**Afirmación o gate comprometido:** dt25/50/100 µs ⇒4470/4454/4445 rpm; requisito de correspondencia operativa DoD §3, puntos 5–7. Fuente de contraste: `release-check` actual ⇒4354.6/4342.2/4331.0, profiles.rs usa carga10 Nm
+
+**Método de reproducción:** Leer las líneas del commit base y contrastarlas con `release-check` actual ⇒4354.6/4342.2/4331.0, profiles.rs usa carga10 Nm. Inventario reproducible: audit/independent/inventory.py; comandos y logs en REPRODUCTION.
+
+**Resultado esperado:** Información vigente inequívoca, referencias existentes y afirmaciones limitadas a implementación/evidencia; historia claramente delimitada sin reescribir gates.
+
+**Resultado observado:** dt25/50/100 µs ⇒4470/4454/4445 rpm; contradicción/omisión descrita en DOCUMENTATION_CONSISTENCY con su fuente autoritativa.
+
+**Causa raíz o hipótesis causal:** Desalineación documental confirmada en el aspecto indicado; el origen editorial no se investigó. En textos históricos el problema es ausencia/ambigüedad del estado operativo actual, no falsedad retroactiva.
+
+**Alcance del impacto:** Puede inducir a reproducir el escenario equivocado, confundir estado implementado/histórico o extender evidencia más allá de su dominio; alcance específico en la fila del inventario.
+
+**Recomendación:** Identificar inputs/commit/ventana del resultado publicado; actualizar addendum con ejecución actual sin inventar origen de cifras. No aplicado en esta fase.
+
+**Regresión propuesta:** Revisión cruzada de esa fila contra fuente/código/log vigente; validar ruta, unidades, versión y alcance. Si es inventario/CI, contraste automático de conteos reales; si es científico, regression técnica enlazada al hallazgo correspondiente.
+
+**Estado de evidencia:** Contraste documental/técnico efectuado en base fijada; propuesta pendiente de autorización. No se cambió el documento fuente.
+
+
+<a id="d20"></a>
+
+## D20 — «ruptura» con criterio genérico Rp0.2
+
+**Categoría:** DOCUMENTATION_DRIFT
+
+**Severidad:** P1
+
+**Subsistema:** Documentación / docs/physics/damage.md:6–7
+
+**Archivo, símbolo y líneas:** `docs/physics/damage.md:6–7`; sección/texto citado en el inventario D.
+
+**Afirmación o gate comprometido:** «ruptura» con criterio genérico Rp0.2; requisito de correspondencia operativa DoD §3, puntos 5–7. Fuente de contraste: mechanism.rs:102–137 y probe: PlasticOnsetGeneric, fluencia; ADR034 y dominio 19–21
+
+**Método de reproducción:** Leer las líneas del commit base y contrastarlas con mechanism.rs:102–137 y probe: PlasticOnsetGeneric, fluencia; ADR034 y dominio 19–21. Inventario reproducible: audit/independent/inventory.py; comandos y logs en REPRODUCTION.
+
+**Resultado esperado:** Información vigente inequívoca, referencias existentes y afirmaciones limitadas a implementación/evidencia; historia claramente delimitada sin reescribir gates.
+
+**Resultado observado:** «ruptura» con criterio genérico Rp0.2; contradicción/omisión descrita en DOCUMENTATION_CONSISTENCY con su fuente autoritativa.
+
+**Causa raíz o hipótesis causal:** Desalineación documental confirmada en el aspecto indicado; el origen editorial no se investigó. En textos históricos el problema es ausencia/ambigüedad del estado operativo actual, no falsedad retroactiva.
+
+**Alcance del impacto:** Puede inducir a reproducir el escenario equivocado, confundir estado implementado/histórico o extender evidencia más allá de su dominio; alcance específico en la fila del inventario.
+
+**Recomendación:** Usar inicio de plasticidad genérico; rotura UNSUPPORTED hasta material/criterio/evidencia apropiados. No aplicado en esta fase.
+
+**Regresión propuesta:** Revisión cruzada de esa fila contra fuente/código/log vigente; validar ruta, unidades, versión y alcance. Si es inventario/CI, contraste automático de conteos reales; si es científico, regression técnica enlazada al hallazgo correspondiente.
+
+**Estado de evidencia:** Contraste documental/técnico efectuado en base fijada; propuesta pendiente de autorización. No se cambió el documento fuente.
+
+
+<a id="d21"></a>
+
+## D21 — 12 ADR y prohibición de crates en workflow actual
+
+**Categoría:** DOCUMENTATION_DRIFT
+
+**Severidad:** P2
+
+**Subsistema:** Documentación / .github/workflows/docs-check.yml:26,31
+
+**Archivo, símbolo y líneas:** `.github/workflows/docs-check.yml:26,31`; sección/texto citado en el inventario D.
+
+**Afirmación o gate comprometido:** 12 ADR y prohibición de crates en workflow actual; requisito de correspondencia operativa DoD §3, puntos 5–7. Fuente de contraste: 37 ADR / 30 paquetes; comandos locales ambos exit1, F17
+
+**Método de reproducción:** Leer las líneas del commit base y contrastarlas con 37 ADR / 30 paquetes; comandos locales ambos exit1, F17. Inventario reproducible: audit/independent/inventory.py; comandos y logs en REPRODUCTION.
+
+**Resultado esperado:** Información vigente inequívoca, referencias existentes y afirmaciones limitadas a implementación/evidencia; historia claramente delimitada sin reescribir gates.
+
+**Resultado observado:** 12 ADR y prohibición de crates en workflow actual; contradicción/omisión descrita en DOCUMENTATION_CONSISTENCY con su fuente autoritativa.
+
+**Causa raíz o hipótesis causal:** Desalineación documental confirmada en el aspecto indicado; el origen editorial no se investigó. En textos históricos el problema es ausencia/ambigüedad del estado operativo actual, no falsedad retroactiva.
+
+**Alcance del impacto:** Puede inducir a reproducir el escenario equivocado, confundir estado implementado/histórico o extender evidencia más allá de su dominio; alcance específico en la fila del inventario.
+
+**Recomendación:** Controlar fase explícita o sustituir por inventario actual aprobado en una fase de correcciones. No aplicado en esta fase.
+
+**Regresión propuesta:** Revisión cruzada de esa fila contra fuente/código/log vigente; validar ruta, unidades, versión y alcance. Si es inventario/CI, contraste automático de conteos reales; si es científico, regression técnica enlazada al hallazgo correspondiente.
+
+**Estado de evidencia:** Contraste documental/técnico efectuado en base fijada; propuesta pendiente de autorización. No se cambió el documento fuente.
+
+
+<a id="d22"></a>
+
+## D22 — Ayuda global dice «S02 plumbing only, no physics»
+
+**Categoría:** DOCUMENTATION_DRIFT
+
+**Severidad:** P3
+
+**Subsistema:** Documentación / crates/cli/src/main.rs:13
+
+**Archivo, símbolo y líneas:** `crates/cli/src/main.rs:13` y `results/cli-help.log`; sección/texto citado en el inventario D.
+
+**Afirmación o gate comprometido:** Ayuda global dice «S02 plumbing only, no physics»; requisito de correspondencia operativa DoD §3, puntos 5–7. Fuente de contraste: Comandos engine/dyno/wear/diagnóstico y código real
+
+**Método de reproducción:** Leer las líneas del commit base y contrastarlas con Comandos engine/dyno/wear/diagnóstico y código real. Inventario reproducible: audit/independent/inventory.py; comandos y logs en REPRODUCTION.
+
+**Resultado esperado:** Información vigente inequívoca, referencias existentes y afirmaciones limitadas a implementación/evidencia; historia claramente delimitada sin reescribir gates.
+
+**Resultado observado:** Ayuda global dice «S02 plumbing only, no physics»; contradicción/omisión descrita en DOCUMENTATION_CONSISTENCY con su fuente autoritativa.
+
+**Causa raíz o hipótesis causal:** Desalineación documental confirmada en el aspecto indicado; el origen editorial no se investigó. En textos históricos el problema es ausencia/ambigüedad del estado operativo actual, no falsedad retroactiva.
+
+**Alcance del impacto:** Puede inducir a reproducir el escenario equivocado, confundir estado implementado/histórico o extender evidencia más allá de su dominio; alcance específico en la fila del inventario.
+
+**Recomendación:** Ayuda global vigente, con descripción específica de runner plumbing separada de motor físico L1. No aplicado en esta fase.
+
+**Regresión propuesta:** Revisión cruzada de esa fila contra fuente/código/log vigente; validar ruta, unidades, versión y alcance. Si es inventario/CI, contraste automático de conteos reales; si es científico, regression técnica enlazada al hallazgo correspondiente.
+
+**Estado de evidencia:** Contraste documental/técnico efectuado en base fijada; propuesta pendiente de autorización. No se cambió el documento fuente.
+
+
+<a id="d23"></a>
+
+## D23 — k_film inferible solo de presión; p(θ) opcional pese a bloqueo de combustión; motored/MAF sin campaña propia
+
+**Categoría:** DOCUMENTATION_DRIFT
+
+**Severidad:** P2
+
+**Subsistema:** Documentación / docs/calibration/campaigns.md:13,16–20
+
+**Archivo, símbolo y líneas:** `docs/calibration/campaigns.md:13,16–20`; informe S25 23–43; sección/texto citado en el inventario D.
+
+**Afirmación o gate comprometido:** k_film inferible solo de presión; p(θ) opcional pese a bloqueo de combustión; motored/MAF sin campaña propia; requisito de correspondencia operativa DoD §3, puntos 5–7. Fuente de contraste: G05 y ocho vacíos declarados
+
+**Método de reproducción:** Leer las líneas del commit base y contrastarlas con G05 y ocho vacíos declarados. Inventario reproducible: audit/independent/inventory.py; comandos y logs en REPRODUCTION.
+
+**Resultado esperado:** Información vigente inequívoca, referencias existentes y afirmaciones limitadas a implementación/evidencia; historia claramente delimitada sin reescribir gates.
+
+**Resultado observado:** k_film inferible solo de presión; p(θ) opcional pese a bloqueo de combustión; motored/MAF sin campaña propia; contradicción/omisión descrita en DOCUMENTATION_CONSISTENCY con su fuente autoritativa.
+
+**Causa raíz o hipótesis causal:** Desalineación documental confirmada en el aspecto indicado; el origen editorial no se investigó. En textos históricos el problema es ausencia/ambigüedad del estado operativo actual, no falsedad retroactiva.
+
+**Alcance del impacto:** Puede inducir a reproducir el escenario equivocado, confundir estado implementado/histórico o extender evidencia más allá de su dominio; alcance específico en la fila del inventario.
+
+**Recomendación:** Campañas observacionalmente suficientes; p(θ) requerido para claims de combustión; añadir motored/air y holdout por capacidad. No aplicado en esta fase.
+
+**Regresión propuesta:** Revisión cruzada de esa fila contra fuente/código/log vigente; validar ruta, unidades, versión y alcance. Si es inventario/CI, contraste automático de conteos reales; si es científico, regression técnica enlazada al hallazgo correspondiente.
+
+**Estado de evidencia:** Contraste documental/técnico efectuado en base fijada; propuesta pendiente de autorización. No se cambió el documento fuente.
+
+
+<a id="d24"></a>
+
+## D24 — `EXPERIMENTALLY_VALIDATED` frente a taxonomía oficial
+
+**Categoría:** DOCUMENTATION_DRIFT
+
+**Severidad:** P3
+
+**Subsistema:** Documentación / docs/capability_matrix.md:3
+
+**Archivo, símbolo y líneas:** `docs/capability_matrix.md:3`; `docs/limitations.md:10–11`; sección/texto citado en el inventario D.
+
+**Afirmación o gate comprometido:** `EXPERIMENTALLY_VALIDATED` frente a taxonomía oficial; requisito de correspondencia operativa DoD §3, puntos 5–7. Fuente de contraste: Foundation §3.1: VALIDATED_IN_DOMAIN
+
+**Método de reproducción:** Leer las líneas del commit base y contrastarlas con Foundation §3.1: VALIDATED_IN_DOMAIN. Inventario reproducible: audit/independent/inventory.py; comandos y logs en REPRODUCTION.
+
+**Resultado esperado:** Información vigente inequívoca, referencias existentes y afirmaciones limitadas a implementación/evidencia; historia claramente delimitada sin reescribir gates.
+
+**Resultado observado:** `EXPERIMENTALLY_VALIDATED` frente a taxonomía oficial; contradicción/omisión descrita en DOCUMENTATION_CONSISTENCY con su fuente autoritativa.
+
+**Causa raíz o hipótesis causal:** Desalineación documental confirmada en el aspecto indicado; el origen editorial no se investigó. En textos históricos el problema es ausencia/ambigüedad del estado operativo actual, no falsedad retroactiva.
+
+**Alcance del impacto:** Puede inducir a reproducir el escenario equivocado, confundir estado implementado/histórico o extender evidencia más allá de su dominio; alcance específico en la fila del inventario.
+
+**Recomendación:** Aclarar que la frase equivale a ausencia de VALIDATED_IN_DOMAIN; conservar términos oficiales en estados. No aplicado en esta fase.
+
+**Regresión propuesta:** Revisión cruzada de esa fila contra fuente/código/log vigente; validar ruta, unidades, versión y alcance. Si es inventario/CI, contraste automático de conteos reales; si es científico, regression técnica enlazada al hallazgo correspondiente.
+
+**Estado de evidencia:** Contraste documental/técnico efectuado en base fijada; propuesta pendiente de autorización. No se cambió el documento fuente.
+
+
+<a id="d25"></a>
+
+## D25 — Decoder 24+1/4+1 marcado implementado
+
+**Categoría:** DOCUMENTATION_DRIFT
+
+**Severidad:** P1
+
+**Subsistema:** Documentación / docs/sprints/S18.md:7
+
+**Archivo, símbolo y líneas:** `docs/sprints/S18.md:7`; `docs/adr/ADR-025-ecu-reference.md:5`; sección/texto citado en el inventario D.
+
+**Afirmación o gate comprometido:** Decoder 24+1/4+1 marcado implementado; requisito de correspondencia operativa DoD §3, puntos 5–7. Fuente de contraste: Decoder estima 30° por CKP y acepta solo CKP/CYP; no ruta 4+1 demostrada; G06/F13
+
+**Método de reproducción:** Leer las líneas del commit base y contrastarlas con Decoder estima 30° por CKP y acepta solo CKP/CYP; no ruta 4+1 demostrada; G06/F13. Inventario reproducible: audit/independent/inventory.py; comandos y logs en REPRODUCTION.
+
+**Resultado esperado:** Información vigente inequívoca, referencias existentes y afirmaciones limitadas a implementación/evidencia; historia claramente delimitada sin reescribir gates.
+
+**Resultado observado:** Decoder 24+1/4+1 marcado implementado; contradicción/omisión descrita en DOCUMENTATION_CONSISTENCY con su fuente autoritativa.
+
+**Causa raíz o hipótesis causal:** Desalineación documental confirmada en el aspecto indicado; el origen editorial no se investigó. En textos históricos el problema es ausencia/ambigüedad del estado operativo actual, no falsedad retroactiva.
+
+**Alcance del impacto:** Puede inducir a reproducir el escenario equivocado, confundir estado implementado/histórico o extender evidencia más allá de su dominio; alcance específico en la fila del inventario.
+
+**Recomendación:** Delimitar 24+1 genérico, listar 4+1/TDC como pendiente hasta evidencia específica. No aplicado en esta fase.
+
+**Regresión propuesta:** Revisión cruzada de esa fila contra fuente/código/log vigente; validar ruta, unidades, versión y alcance. Si es inventario/CI, contraste automático de conteos reales; si es científico, regression técnica enlazada al hallazgo correspondiente.
+
+**Estado de evidencia:** Contraste documental/técnico efectuado en base fijada; propuesta pendiente de autorización. No se cambió el documento fuente.
+
+
+<a id="d26"></a>
+
+## D26 — H-S28-04 «carga-8 no estabiliza» frente a «candidata sin veredicto» S29
+
+**Categoría:** DOCUMENTATION_DRIFT
+
+**Severidad:** P1
+
+**Subsistema:** Documentación / docs/model_assumptions.md:236
+
+**Archivo, símbolo y líneas:** `docs/model_assumptions.md:236`; contraste 247; sección/texto citado en el inventario D.
+
+**Afirmación o gate comprometido:** H-S28-04 «carga-8 no estabiliza» frente a «candidata sin veredicto» S29; requisito de correspondencia operativa DoD §3, puntos 5–7. Fuente de contraste: F03: misma trayectoria con registro resuelto cumple residuo sin cambiar umbral
+
+**Método de reproducción:** Leer las líneas del commit base y contrastarlas con F03: misma trayectoria con registro resuelto cumple residuo sin cambiar umbral. Inventario reproducible: audit/independent/inventory.py; comandos y logs en REPRODUCTION.
+
+**Resultado esperado:** Información vigente inequívoca, referencias existentes y afirmaciones limitadas a implementación/evidencia; historia claramente delimitada sin reescribir gates.
+
+**Resultado observado:** H-S28-04 «carga-8 no estabiliza» frente a «candidata sin veredicto» S29; contradicción/omisión descrita en DOCUMENTATION_CONSISTENCY con su fuente autoritativa.
+
+**Causa raíz o hipótesis causal:** Desalineación documental confirmada en el aspecto indicado; el origen editorial no se investigó. En textos históricos el problema es ausencia/ambigüedad del estado operativo actual, no falsedad retroactiva.
+
+**Alcance del impacto:** Puede inducir a reproducir el escenario equivocado, confundir estado implementado/histórico o extender evidencia más allá de su dominio; alcance específico en la fila del inventario.
+
+**Recomendación:** Conservar resultado histórico Unsettled y anotar defecto de muestreo; no afirmar inestabilidad física demostrada. No aplicado en esta fase.
+
+**Regresión propuesta:** Revisión cruzada de esa fila contra fuente/código/log vigente; validar ruta, unidades, versión y alcance. Si es inventario/CI, contraste automático de conteos reales; si es científico, regression técnica enlazada al hallazgo correspondiente.
+
+**Estado de evidencia:** Contraste documental/técnico efectuado en base fijada; propuesta pendiente de autorización. No se cambió el documento fuente.

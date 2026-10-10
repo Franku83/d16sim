@@ -1,0 +1,9 @@
+ecu-demo (P2E-like reference, maps+codes NOT Honda OEM):
+  state             : Running
+  rpm_est/conf      : 750 / 1.00
+  injections        : 4
+  ignitions         : 4
+  timing req/eff    : 14.00 / 9.50 BTDC
+  dtcs              : []
+  log: sync=Synced720 rpm=750 conf=1.00 -> Running
+  log: map: load=0.40 fuel=7.70e-6kg adv=14.0btdc lat=4.50deg

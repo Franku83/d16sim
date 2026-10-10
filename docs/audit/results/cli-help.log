@@ -1,0 +1,48 @@
+   Compiling d16sim v0.1.0 (/home/franku/projects/d16sim-audit/crates/cli)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.91s
+     Running `target/debug/d16sim --help`
+D16Y7 engineering sandbox runner (S02: plumbing only, no physics)
+
+Usage: d16sim <COMMAND>
+
+Commands:
+  init                Escribe un manifiesto de ejemplo en la ruta indicada
+  validate-data       Valida `data/d16y7/` contra los contratos de esquema de S01
+  run-scenario        Ejecuta un escenario y escribe traces/metrics/hashes
+  replay              Reejecuta y compara contra los artefactos registrados
+  report              Muestra el resumen de una corrida
+  physics-status      Estado del crate de física (siempre stub en S02)
+  units-demo          Demostración reproducible de unidades e interpolación (S03)
+  assembly-demo       Demostración reproducible del grafo de montaje (S04)
+  history-demo        Demostración reproducible de historia determinista (S05)
+  kinematics          Cinemática biela-manivela por cilindro (S06, preset ilustrativo)
+  contact-check       Chequeo geométrico pistón–válvula con alzada impuesta (S07)
+  fastener-seal-test  Precarga de pernos y campo de junta L1 (S08, K ilustrativo)
+  closed-cycle        Ciclo cerrado ideal sin combustión (S09, entradas ilustrativas)
+  closed-cycle-burn   Ciclo con combustión Wiebe (S10, entradas ilustrativas)
+  valvetrain          Distribución SOHC: eventos y huelgos (S11, proxy A6, sin daño)
+  gas-exchange        Ciclo 720° con gas exchange 0D (S12, entradas ilustrativas)
+  fuel-supply-test    Suministro de combustible L1 (S13, hipótesis etiquetadas)
+  engine-run          Motor integrado end-to-end (S16, sin clamp de RPM)
+  trigger-waveform    Forma de onda CKP/TDC/CYP + flancos (S17, GENERIC_TRIGGER)
+  ecu-demo            ECU de referencia: sync + comandos + DTC (S18, P2E-like no OEM)
+  sensor-demo         Cadena sensorial: señal/lectura/acción ECU (S19, sin termodinámica)
+  diagnose-demo       Casos ambiguos con veredicto (S20, sin panel secreto)
+  warmup              Calentamiento con red térmica L1 (S21, arranque en frío)
+  export-trace        Exportación de trazas solo lectura (contrato trace-bundle-v1)
+  lubrication-test    Red de lubricación L1 (S22, sin bandera de daño)
+  leak-test           Banco de fugas con tres escenarios (S23, ley explícita)
+  mech-demo           Protocolo compresión + leak-down con dos mediciones (S24, sin GUI)
+  calibration-demo    Self-consistency del fitter + sensibilidad (S25, sintético rotulado)
+  wear-demo           Motor persistente 50 h sintético + acople a fugas (S26, tendencias)
+  damage-demo         Mecanismos de daño con dominio (S27, riesgo vs ruptura)
+  dyno-demo           Barrido de freno auditable (S28, potencia desde torque)
+  adversarial-demo    Suite adversarial de pares + Monte Carlo (S29, sin flags)
+  release-check       Auditoría final S30: cadenas, perfiles, entorno, benchmark
+  crank-dynamics      Dinámica de cigüeñal con traza motored (S14, ilustrativo)
+  cold-crank          Arranque arrastrado en frío (S15, sin bootstrap)
+  help                Print this message or the help of the given subcommand(s)
+
+Options:
+  -h, --help     Print help
+  -V, --version  Print version

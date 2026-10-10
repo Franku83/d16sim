@@ -1,0 +1,33 @@
+{
+  "exit": 1,
+  "summary": {
+    "test_targets": 1,
+    "test_cases": 32,
+    "assertion_predicates_executed": 88,
+    "failures": 23,
+    "errors": 0,
+    "probe_rows": 138,
+    "purpose": "required contracts; expected failures remain red"
+  },
+  "comparison": {
+    "probes-engine.jsonl": {
+      "byte_identical": true,
+      "archived_sha256": "2f5cb70f0674437a8b15118fe8d2e869146427e912219b2f978f12dd301cb8d9",
+      "repeated_sha256": "2f5cb70f0674437a8b15118fe8d2e869146427e912219b2f978f12dd301cb8d9",
+      "rows": 73
+    },
+    "probes-subsystems.jsonl": {
+      "byte_identical": true,
+      "archived_sha256": "9a43d60384d6d60f02d05ea7957034a4b0ff7e9b43ec13f854e7b8688c7d589b",
+      "repeated_sha256": "9a43d60384d6d60f02d05ea7957034a4b0ff7e9b43ec13f854e7b8688c7d589b",
+      "rows": 50
+    },
+    "probes-dyno.jsonl": {
+      "byte_identical": true,
+      "archived_sha256": "60f485f5ef50c516e4c604b3ff3771a48c71c6b2edcaae3e9f8ea8ffc8bc2456",
+      "repeated_sha256": "60f485f5ef50c516e4c604b3ff3771a48c71c6b2edcaae3e9f8ea8ffc8bc2456",
+      "rows": 15
+    }
+  },
+  "same_machine_same_release_build": true
+}

@@ -1,0 +1,1 @@
+damage-demo case=pv_contact: overlap=true Risk { margin: "penetration 4.500 mm", needs: "valve material + seat geometry (PENDING); bending NOT inferred" }

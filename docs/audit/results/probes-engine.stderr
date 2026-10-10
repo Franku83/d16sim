@@ -1,0 +1,3 @@
+   Compiling d16sim-independent-probes v0.1.0 (/home/franku/projects/d16sim-audit/audit/independent)
+    Finished `release` profile [optimized] target(s) in 1.05s
+     Running `audit/independent/target/release/d16sim-independent-probes engine`

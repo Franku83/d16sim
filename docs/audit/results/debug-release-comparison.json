@@ -1,0 +1,94 @@
+{
+  "leak_scenario": {
+    "rows": 8,
+    "equal": true
+  },
+  "leak_species": {
+    "rows": 1,
+    "equal": true
+  },
+  "leak_liquid_units": {
+    "rows": 1,
+    "equal": true
+  },
+  "diagnosis_multicause": {
+    "rows": 1,
+    "equal": true
+  },
+  "wear_grid": {
+    "rows": 9,
+    "equal": true
+  },
+  "wear_unsupported": {
+    "rows": 1,
+    "equal": true
+  },
+  "wear_irreversible": {
+    "rows": 1,
+    "equal": true
+  },
+  "wear_roundtrip": {
+    "rows": 1,
+    "equal": true
+  },
+  "damage_bolt": {
+    "rows": 3,
+    "equal": true
+  },
+  "damage_geometry": {
+    "rows": 2,
+    "equal": true
+  },
+  "damage_support": {
+    "rows": 1,
+    "equal": true
+  },
+  "decoder_origin": {
+    "rows": 2,
+    "equal": true
+  },
+  "decoder_recovery": {
+    "rows": 2,
+    "equal": true
+  },
+  "decoder_cyp_dropout": {
+    "rows": 1,
+    "equal": true
+  },
+  "decoder_invalid": {
+    "rows": 1,
+    "equal": true
+  },
+  "wire_seed": {
+    "rows": 2,
+    "equal": true
+  },
+  "scheduler": {
+    "rows": 1,
+    "equal": true
+  },
+  "analytic_cylinder": {
+    "rows": 4,
+    "equal": true
+  },
+  "flow_metamorphic": {
+    "rows": 1,
+    "equal": true
+  },
+  "thermal_invalid": {
+    "rows": 1,
+    "equal": true
+  },
+  "thermal_boundary": {
+    "rows": 1,
+    "equal": true
+  },
+  "dyno_invalid": {
+    "rows": 1,
+    "equal": true
+  },
+  "dataset_invalid": {
+    "rows": 1,
+    "equal": true
+  }
+}

@@ -1,0 +1,22 @@
+[
+  {
+    "argv": [
+      "bash",
+      "-c",
+      "ls docs/adr/ADR-*.md | wc -l | grep -q 12"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "bash",
+      "-c",
+      "test ! -d crates && test ! -d ui"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": ""
+  }
+]

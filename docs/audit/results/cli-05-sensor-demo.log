@@ -1,0 +1,6 @@
+sensor-demo case=map_open (thermo untouched: ECT=90C MAP=35kPa):
+  ect_reading_V       : 0.484
+  map_reading_V       : 0.000
+  ecu_enrich_factor   : 1.00 (from ECT reading only)
+  ecu_load_est        : 0.000 (from MAP reading only)
+  map_monitor_active  : true (REF-MAP-RANGE)
