@@ -73,6 +73,22 @@ impl Manifest {
             if t.observations.is_empty() {
                 return Err(bad("trial without observations"));
             }
+            // Metadatos/procedencia completos (R02-F15): sin motor/campaña no
+            // es un ensayo trazable.
+            if t.motor_id.trim().is_empty() || t.campaign.trim().is_empty() {
+                return Err(bad("trial without motor/campaign metadata"));
+            }
+            for o in &t.observations {
+                if o.quantity.trim().is_empty() || o.unit.trim().is_empty() {
+                    return Err(bad("observation without quantity/unit"));
+                }
+                if !o.value.is_finite() {
+                    return Err(bad("non-finite observation"));
+                }
+                if !(o.uncertainty_k1.is_finite() && o.uncertainty_k1 >= 0.0) {
+                    return Err(bad("invalid observation uncertainty"));
+                }
+            }
             match &t.source {
                 DataSource::Real { provenance } => {
                     if provenance.trim().is_empty() {
@@ -163,5 +179,33 @@ mod tests {
             holdout: vec![trial("H1", "M2", real("banco B"))],
         };
         assert!(noprove.validated().is_err());
+    }
+
+    #[test]
+    fn non_finite_observation_and_bad_uncertainty_rejected() {
+        // R02-F15: valores no finitos o incertidumbre inválida no son datos.
+        let mut nan = trial("T1", "M1", real("banco A"));
+        nan.observations[0].value = f64::NAN;
+        let m = Manifest {
+            train: vec![nan],
+            holdout: vec![trial("H1", "M2", real("banco B"))],
+        };
+        assert!(m.validated().is_err());
+
+        let mut bad_sigma = trial("T1", "M1", real("banco A"));
+        bad_sigma.observations[0].uncertainty_k1 = -1.0;
+        let m2 = Manifest {
+            train: vec![bad_sigma],
+            holdout: vec![trial("H1", "M2", real("banco B"))],
+        };
+        assert!(m2.validated().is_err());
+
+        let mut no_unit = trial("T1", "M1", real("banco A"));
+        no_unit.observations[0].unit = String::new();
+        let m3 = Manifest {
+            train: vec![no_unit],
+            holdout: vec![trial("H1", "M2", real("banco B"))],
+        };
+        assert!(m3.validated().is_err());
     }
 }

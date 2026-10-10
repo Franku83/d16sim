@@ -31,11 +31,17 @@ impl Ambient {
     ///
     /// # Errors
     ///
-    /// `Invalid` si p/T no finitas o p ≤ 0.
+    /// `Invalid` si p/T no finitas, p ≤ 0, o T por debajo del cero absoluto
+    /// (R02-F15: el factor de corrección sería no finito).
     pub fn validated(&self) -> Result<(), DynoError> {
-        if !(self.p_kpa.is_finite() && self.p_kpa > 0.0 && self.t_c.is_finite()) {
+        if !(self.p_kpa.is_finite() && self.p_kpa > 0.0) {
             return Err(DynoError::Invalid {
                 reason: "ambient".to_owned(),
+            });
+        }
+        if !(self.t_c.is_finite() && self.t_c > -273.15) {
+            return Err(DynoError::Invalid {
+                reason: "ambient below absolute zero".to_owned(),
             });
         }
         Ok(())
@@ -137,5 +143,27 @@ mod tests {
             true
         )
         .is_err());
+    }
+
+    #[test]
+    fn ambient_below_absolute_zero_is_rejected() {
+        // R02-F15: −300 °C no es ambiente físico; el factor sería no finito.
+        assert!(Correction::of(
+            &Ambient {
+                p_kpa: 99.0,
+                t_c: -300.0
+            },
+            true
+        )
+        .is_err());
+        // −250 °C es frío extremo pero sobre el cero absoluto: aceptado.
+        assert!(Correction::of(
+            &Ambient {
+                p_kpa: 99.0,
+                t_c: -250.0
+            },
+            true
+        )
+        .is_ok());
     }
 }

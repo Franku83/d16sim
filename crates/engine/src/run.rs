@@ -104,6 +104,14 @@ pub struct RunAudit {
     pub delta_ke_j: f64,
     pub h_amb_net_j: f64,
     pub h_fuel_j: f64,
+    /// Combustible almacenado al final en cilindros + nodos (kg, R01-F01).
+    pub fuel_stored_kg: f64,
+    /// Combustible cruzado a la frontera ambiente (kg, R01-F01).
+    pub fuel_emitted_kg: f64,
+    /// Calor neto cedido al ambiente por la red térmica (J, R01-F10).
+    pub th_q_amb_j: f64,
+    /// Máximo de presión de cilindro persistido usado por fricción (Pa, F07).
+    pub pmax_pa: f64,
     /// Resumen térmico final (None = red desactivada, modo S16).
     pub thermal: Option<ThermalSummary>,
 }
@@ -246,6 +254,13 @@ pub struct WorkState {
     pub h_fuel_in_j: f64,
     pub m_sys_0_kg: f64,
     pub u_sys_0_j: f64,
+    /// Máximo de presión de cilindro (Pa) desde el arranque; alimenta el
+    /// término de presión de Chen–Flynn y persiste en el snapshot (R01-F07).
+    pub pmax_pa: f64,
+    /// Calor neto acumulado cedido al ambiente por la red térmica (J, R01-F10).
+    pub th_q_amb_j: f64,
+    /// Combustible acumulado cruzado a la frontera ambiente (kg, R01-F01).
+    pub fuel_emitted_kg: f64,
 }
 
 /// Cámara de trabajo (conserva átomos: lo quemado sigue en `m`).
@@ -267,6 +282,8 @@ pub struct NodeW {
     pub v: f64,
     pub fresh: f64,
     pub cv: f64,
+    /// Combustible (kg) homogéneo en el nodo (R01-F01).
+    pub fuel: f64,
 }
 
 impl NodeW {
@@ -278,31 +295,72 @@ impl NodeW {
         self.m * self.cv * self.t
     }
 
-    /// Suma `dm` (kg, fracción `f_in`) y `du` (J), fail-closed.
-    fn add(&mut self, dm: f64, f_in: f64, du: f64) -> Result<(), EngineError> {
+    /// Fracción másica de combustible del nodo.
+    #[allow(dead_code)]
+    fn fuel_frac(&self) -> f64 {
+        if self.m > 0.0 {
+            self.fuel / self.m
+        } else {
+            0.0
+        }
+    }
+
+    /// Entrada de masa `dm` (kg ≥ 0) con fracción fresca `f_in` [0,1], masa
+    /// de combustible `fuel_in` (kg) y entalpía `du` (J). Mezcla homogénea.
+    fn add_in(&mut self, dm: f64, f_in: f64, fuel_in: f64, du: f64) -> Result<(), EngineError> {
         let bad = EngineError::Invalid {
-            reason: "node step".to_owned(),
+            reason: "node inflow".to_owned(),
         };
-        if !(dm.is_finite() && du.is_finite() && f_in.is_finite()) {
+        if !(dm.is_finite() && du.is_finite() && f_in.is_finite() && fuel_in.is_finite()) {
+            return Err(bad);
+        }
+        if dm < 0.0 || !(0.0..=1.0).contains(&f_in) || fuel_in < 0.0 {
             return Err(bad);
         }
         let m1 = self.m + dm;
         if !(m1.is_finite() && m1 > 0.0) {
             return Err(bad);
         }
-        if dm >= 0.0 {
-            if !(0.0..=1.0).contains(&f_in) {
-                return Err(bad);
-            }
+        if dm > 0.0 {
             self.fresh = (self.fresh * self.m + f_in * dm) / m1;
         }
+        self.fuel += fuel_in;
         let u1 = self.m * self.cv * self.t + du;
         self.m = m1;
         self.t = u1 / (m1 * self.cv);
         if !(self.t.is_finite() && self.t > 0.0) {
             return Err(bad);
         }
+        if !(self.fuel.is_finite() && self.fuel >= 0.0 && self.fuel <= m1 * (1.0 + 1e-12)) {
+            return Err(bad);
+        }
         Ok(())
+    }
+
+    /// Salida de masa `dm` (kg ≥ 0) homogénea con entalpía específica
+    /// `h_spec` (J/kg); devuelve la masa de combustible que sale (kg).
+    fn remove(&mut self, dm: f64, h_spec: f64) -> Result<f64, EngineError> {
+        let bad = EngineError::Invalid {
+            reason: "node outflow".to_owned(),
+        };
+        if !(dm.is_finite() && dm >= 0.0 && h_spec.is_finite()) {
+            return Err(bad);
+        }
+        if !(self.m - dm > 0.0) {
+            return Err(bad);
+        }
+        let df = self.fuel * dm / self.m;
+        let u1 = self.m * self.cv * self.t - dm * h_spec;
+        self.m -= dm;
+        self.fuel -= df;
+        self.t = u1 / (self.m * self.cv);
+        if !(self.t.is_finite() && self.t > 0.0) {
+            return Err(bad);
+        }
+        if !(self.fuel.is_finite() && self.fuel >= 0.0) {
+            return Err(bad);
+        }
+        Ok(df)
     }
 }
 
@@ -345,6 +403,10 @@ impl WorkState {
                     t_cool_c: st.t_cool_c,
                     ect_filt_c: st.ect_filt_c,
                 }),
+            plen_fuel_kg: self.plen.fuel,
+            exh_fuel_kg: self.exh.fuel,
+            fuel_emitted_kg: self.fuel_emitted_kg,
+            pmax_pa: Some(self.pmax_pa),
         })
     }
 
@@ -367,6 +429,12 @@ impl WorkState {
             });
         }
         let s = &snap.state;
+        // v1 histórico no tenía campo térmico: su presencia es inconsistente.
+        if s.schema_version == 1 && s.thermal.is_some() {
+            return Err(EngineError::Invalid {
+                reason: "v1 snapshot must not carry thermal state".to_owned(),
+            });
+        }
         let cv = inputs.mix.cv();
         let mut ws = Self {
             time_s: s.time_s,
@@ -385,6 +453,7 @@ impl WorkState {
                 v: inputs.plenum_v_m3,
                 fresh: s.plen_fresh,
                 cv,
+                fuel: s.plen_fuel_kg,
             },
             exh: NodeW {
                 m: s.exh_m_kg,
@@ -392,6 +461,7 @@ impl WorkState {
                 v: inputs.exhaust_v_m3,
                 fresh: s.exh_fresh,
                 cv,
+                fuel: s.exh_fuel_kg,
             },
             fuel_injected_kg: s.fuel_injected_kg,
             fuel_burned_kg: s.fuel_burned_kg,
@@ -409,6 +479,9 @@ impl WorkState {
             u_sys_0_j: 0.0,
             therm: None,
             th_u0_j: 0.0,
+            pmax_pa: 0.0,
+            th_q_amb_j: 0.0,
+            fuel_emitted_kg: s.fuel_emitted_kg,
         };
         // Red térmica: nativa en v2; en v1 migra a frío si las entradas la
         // piden, o ausente si no (error si difiere de las entradas).
@@ -439,10 +512,80 @@ impl WorkState {
         if let Some((st, p)) = &ws.therm {
             ws.th_u0_j = st.stored_j(p);
         }
+        // Historia de presión para fricción (F07): nativa si existe; en
+        // snapshots previos se migra a una cota inferior física declarada
+        // (máximo entre la presión ambiente y las presiones de cilindro
+        // actuales), nunca a un valor inventado de régimen.
+        let r_gas = inputs.mix.r();
+        let p_amb = 101_325.0;
+        let p_cyl_max = ws
+            .cyls
+            .iter()
+            .enumerate()
+            .map(|(k, c)| {
+                let local = cylinder_local_angle(ws.theta_rad.to_degrees(), CYLS[k]);
+                let crank = crank_angle_for_piston(local);
+                let v = inputs.geom.volume(crank.to_radians());
+                let t_cyl = c.u / (c.m * cv);
+                c.m * r_gas * t_cyl / v
+            })
+            .fold(p_amb, f64::max);
+        ws.pmax_pa = s.pmax_pa.unwrap_or(p_cyl_max);
         ws.m_sys_0_kg = ws.plen.m + ws.exh.m + ws.cyls.iter().map(|c| c.m).sum::<f64>();
         ws.u_sys_0_j = ws.plen.u() + ws.exh.u() + ws.cyls.iter().map(|c| c.u).sum::<f64>();
+        // Fail-closed: hash válido no implica estado físico válido (R02-F15).
+        validate_physical_state(&ws, "restored snapshot")?;
         Ok(ws)
     }
+}
+
+/// Valida magnitudes físicas del estado de trabajo (masas/temperaturas/
+/// fracciones/energías finitas y en dominio). Fail-closed antes de avanzar.
+fn validate_physical_state(ws: &WorkState, ctx: &str) -> Result<(), EngineError> {
+    let bad = |why: &str| EngineError::Invalid {
+        reason: format!("{ctx}: {why}"),
+    };
+    if !(ws.time_s.is_finite()
+        && ws.time_s >= 0.0
+        && ws.theta_rad.is_finite()
+        && ws.omega_rad_s.is_finite()
+        && ws.omega_rad_s >= 0.0
+        && ws.pmax_pa.is_finite()
+        && ws.pmax_pa > 0.0)
+    {
+        return Err(bad("scalar state"));
+    }
+    for c in &ws.cyls {
+        if !(c.m.is_finite()
+            && c.m > 0.0
+            && c.u.is_finite()
+            && c.u > 0.0
+            && c.fresh.is_finite()
+            && (0.0..=1.0).contains(&c.fresh)
+            && c.fuel.is_finite()
+            && c.fuel >= 0.0
+            && c.fuel <= c.m * (1.0 + 1e-9)
+            && c.burn_latched.is_finite()
+            && c.burn_latched >= 0.0)
+        {
+            return Err(bad("cylinder state"));
+        }
+    }
+    for n in [&ws.plen, &ws.exh] {
+        if !(n.m.is_finite()
+            && n.m > 0.0
+            && n.t.is_finite()
+            && n.t > 0.0
+            && n.fresh.is_finite()
+            && (0.0..=1.0).contains(&n.fresh)
+            && n.fuel.is_finite()
+            && n.fuel >= 0.0
+            && n.fuel <= n.m * (1.0 + 1e-9))
+        {
+            return Err(bad("node state"));
+        }
+    }
+    Ok(())
 }
 
 fn ws_cyl(c: &CylW) -> CylState {
@@ -503,6 +646,7 @@ fn initial_state(inputs: &EngineInputs) -> Result<WorkState, EngineError> {
         v: inputs.plenum_v_m3,
         fresh: 1.0,
         cv,
+        fuel: 0.0,
     };
     let exh = NodeW {
         m: p_amb * inputs.exhaust_v_m3 / (r_gas * t_amb),
@@ -510,6 +654,7 @@ fn initial_state(inputs: &EngineInputs) -> Result<WorkState, EngineError> {
         v: inputs.exhaust_v_m3,
         fresh: 0.0,
         cv,
+        fuel: 0.0,
     };
     let m0 = plen.m + exh.m + cyls.iter().map(|c| c.m).sum::<f64>();
     let u0 = plen.u() + exh.u() + cyls.iter().map(|c| c.u).sum::<f64>();
@@ -555,6 +700,9 @@ fn initial_state(inputs: &EngineInputs) -> Result<WorkState, EngineError> {
         h_fuel_in_j: 0.0,
         m_sys_0_kg: m0,
         u_sys_0_j: u0,
+        pmax_pa: p_amb,
+        th_q_amb_j: 0.0,
+        fuel_emitted_kg: 0.0,
     })
 }
 
@@ -600,7 +748,6 @@ fn drive(
         dwell_s: inputs.dwell_s,
     };
     let regulator = Regulator::new(inputs.regulator_dp_pa).map_err(|_| bad("regulator"))?;
-    let mut pmax_run = 101_325.0f64;
     let mut samples = Vec::new();
     let mut step = step_offset;
 
@@ -621,7 +768,7 @@ fn drive(
             if !(p_cyl.is_finite() && p_cyl > 0.0 && t_cyl > 0.0) {
                 return Err(bad("cylinder state"));
             }
-            pmax_run = pmax_run.max(p_cyl);
+            ws.pmax_pa = ws.pmax_pa.max(p_cyl);
             tau_ind += p_cyl * dvdth;
             // Trabajo del gas sobre el pistón (lo que el cigüeñal recibe
             // como W_ind): sin este término la energía aparece de la nada.
@@ -641,48 +788,56 @@ fn drive(
 
             let p_plen = ws.plen.p(r_gas);
             let p_exh = ws.exh.p(r_gas);
-            // Admisión plen↔cyl (aplica a ambos lados).
+            // Admisión plen↔cyl (aplica a ambos lados). R01-F01: la especie
+            // combustible se advecta con la masa (homogénea) y se reintegra
+            // en el reflujo.
             if p_plen > p_cyl {
                 let m = flow::mass_flow(p_plen, ws.plen.t, p_cyl, a_iv, r_gas, gamma)
                     .map_err(|_| bad("iv flow"))?;
                 let dm = m * dt;
                 let f_in = ws.plen.fresh;
                 let h_in = cp * ws.plen.t;
-                ws.plen.add(-dm, f_in, -dm * h_in)?;
+                let df = ws.plen.remove(dm, h_in)?;
                 let m_prev = c.m;
                 c.m += dm;
+                c.fuel += df;
                 c.fresh = (c.fresh * m_prev + f_in * dm) / c.m;
                 c.u += dm * h_in;
             } else if p_cyl > p_plen {
                 let m = flow::mass_flow(p_cyl, t_cyl, p_plen, a_iv, r_gas, gamma)
                     .map_err(|_| bad("iv flow"))?;
                 let dm = m * dt;
-                c.m -= dm;
-                if !(c.m.is_finite() && c.m > 0.0) {
+                if !(c.m - dm > 0.0) {
                     return Err(bad("cylinder mass"));
                 }
+                let df = c.fuel * dm / c.m;
+                c.m -= dm;
+                c.fuel -= df;
                 c.u -= dm * cp * t_cyl;
-                ws.plen.add(dm, c.fresh, dm * cp * t_cyl)?;
+                ws.plen.add_in(dm, c.fresh, df, dm * cp * t_cyl)?;
             }
             // Escape cyl↔exh.
             if p_cyl > p_exh {
                 let m = flow::mass_flow(p_cyl, t_cyl, p_exh, a_ev, r_gas, gamma)
                     .map_err(|_| bad("ev flow"))?;
                 let dm = m * dt;
-                c.m -= dm;
-                if !(c.m.is_finite() && c.m > 0.0) {
+                if !(c.m - dm > 0.0) {
                     return Err(bad("cylinder mass"));
                 }
+                let df = c.fuel * dm / c.m;
+                c.m -= dm;
+                c.fuel -= df;
                 c.u -= dm * cp * t_cyl;
-                ws.exh.add(dm, c.fresh, dm * cp * t_cyl)?;
+                ws.exh.add_in(dm, c.fresh, df, dm * cp * t_cyl)?;
             } else if p_exh > p_cyl {
                 let m = flow::mass_flow(p_exh, ws.exh.t, p_cyl, a_ev, r_gas, gamma)
                     .map_err(|_| bad("ev flow"))?;
                 let dm = m * dt;
                 let (f_in, h_in) = (ws.exh.fresh, cp * ws.exh.t);
-                ws.exh.add(-dm, f_in, -dm * h_in)?;
+                let df = ws.exh.remove(dm, h_in)?;
                 let m_prev = c.m;
                 c.m += dm;
+                c.fuel += df;
                 c.fresh = (c.fresh * m_prev + f_in * dm) / c.m;
                 c.u += dm * h_in;
             }
@@ -794,14 +949,15 @@ fn drive(
             ws.prev_local_deg[k] = local;
         }
 
-        // Frontera ambiente.
+        // Frontera ambiente. R01-F01: el combustible que cruza a ambiente se
+        // contabiliza aparte (aire fresco entra con fracción de fuel nula).
         let p_plen = ws.plen.p(r_gas);
         let a_thr = inputs.throttle_area_m2 + inputs.idle_bypass_area_m2;
         if p_amb > p_plen {
             let m = flow::mass_flow(p_amb, t_amb, p_plen, a_thr, r_gas, gamma)
                 .map_err(|_| bad("throttle"))?;
             let dm = m * dt;
-            ws.plen.add(dm, 1.0, dm * cp * t_amb)?;
+            ws.plen.add_in(dm, 1.0, 0.0, dm * cp * t_amb)?;
             ws.m_in_amb_kg += dm;
             ws.h_in_amb_j += dm * cp * t_amb;
         } else if p_plen > p_amb {
@@ -809,7 +965,8 @@ fn drive(
                 .map_err(|_| bad("throttle"))?;
             let dm = m * dt;
             let h = cp * ws.plen.t;
-            ws.plen.add(-dm, ws.plen.fresh, -dm * h)?;
+            let df = ws.plen.remove(dm, h)?;
+            ws.fuel_emitted_kg += df;
             ws.m_out_amb_kg += dm;
             ws.h_out_amb_j += dm * h;
         }
@@ -826,14 +983,15 @@ fn drive(
             .map_err(|_| bad("tailpipe"))?;
             let dm = m * dt;
             let h = cp * ws.exh.t;
-            ws.exh.add(-dm, ws.exh.fresh, -dm * h)?;
+            let df = ws.exh.remove(dm, h)?;
+            ws.fuel_emitted_kg += df;
             ws.m_out_amb_kg += dm;
             ws.h_out_amb_j += dm * h;
         } else if p_amb > p_exh {
             let m = flow::mass_flow(p_amb, t_amb, p_exh, inputs.tailpipe_area_m2, r_gas, gamma)
                 .map_err(|_| bad("tailpipe"))?;
             let dm = m * dt;
-            ws.exh.add(dm, 1.0, dm * cp * t_amb)?;
+            ws.exh.add_in(dm, 1.0, 0.0, dm * cp * t_amb)?;
             ws.m_in_amb_kg += dm;
             ws.h_in_amb_j += dm * cp * t_amb;
         }
@@ -857,7 +1015,7 @@ fn drive(
         let sp = 2.0 * inputs.geom.stroke().as_m() * rpm_now.max(0.0) / 60.0;
         let tau_fric = inputs
             .friction
-            .torque_mag(sp, pmax_run, vd_cyl * 4.0, ws.omega_rad_s)
+            .torque_mag(sp, ws.pmax_pa, vd_cyl * 4.0, ws.omega_rad_s)
             .unwrap_or(0.0);
         let acc = (tau_ind - tau_fric - inputs.accessory_tau_n_m + tau_starter) / j_eff;
         let om_new = (ws.omega_rad_s + acc * dt).max(0.0);
@@ -868,10 +1026,13 @@ fn drive(
         ws.w_starter_j += tau_starter * om_avg * dt;
         ws.w_load_j += inputs.accessory_tau_n_m * om_avg * dt;
         // Red térmica: paredes reciben su fracción del quemado y el aceite
-        // la fricción (mismos julios que la auditoría: exacto).
+        // la fricción (mismos julios que la auditoría: exacto). El calor neto
+        // cedido al ambiente se acumula para el ledger (R01-F10).
         if let Some((st, tp)) = ws.therm.as_mut() {
-            st.step(dt, dq_wall_step, p_fric_w, 20.0, tp)
+            let q_amb = st
+                .step(dt, dq_wall_step, p_fric_w, 20.0, tp)
                 .map_err(|_| bad("thermal step"))?;
+            ws.th_q_amb_j += q_amb;
         }
         ws.theta_rad += om_avg * dt;
         ws.omega_rad_s = om_new;
@@ -928,14 +1089,19 @@ fn audit_of(ws: &WorkState, _lhv_j_per_kg: f64, j_eff: f64) -> RunAudit {
         // (no E_chem inyectada); las demás fuentes son H_amb + H_fuel +
         // W_starter; con red térmica el sumidero es solo W_load (la fricción
         // queda en el aceite) y el almacén suma la red; sin red, W_fric es
-        // sumidero (fórmula S16 exacta).
+        // sumidero (fórmula S16 exacta). El calor cedido al ambiente por la
+        // red (R01-F10) entra como sumidero declarado.
         energy_closure: ((u_sys_1 - ws.u_sys_0_j + (u_th_1 - ws.th_u0_j) + ke_1)
-            + (fric_sink + ws.w_load_j)
+            + (fric_sink + ws.w_load_j + ws.th_q_amb_j)
             - ((ws.h_in_amb_j - ws.h_out_amb_j)
                 + ws.h_fuel_in_j
                 + ws.heat_released_j
                 + ws.w_starter_j))
             / scale_e,
+        fuel_stored_kg: ws.cyls.iter().map(|c| c.fuel).sum::<f64>() + ws.plen.fuel + ws.exh.fuel,
+        fuel_emitted_kg: ws.fuel_emitted_kg,
+        th_q_amb_j: ws.th_q_amb_j,
+        pmax_pa: ws.pmax_pa,
         final_rpm: ws.omega_rad_s * 60.0 / (2.0 * std::f64::consts::PI),
         delta_ke_j: 0.5 * j_eff * ws.omega_rad_s * ws.omega_rad_s,
         h_amb_net_j: ws.h_in_amb_j - ws.h_out_amb_j,
@@ -956,16 +1122,7 @@ fn audit_of(ws: &WorkState, _lhv_j_per_kg: f64, j_eff: f64) -> RunAudit {
 ///
 /// `Invalid` ante parámetros inválidos o estado no físico (fail-closed).
 pub fn run_engine(inputs: &EngineInputs) -> Result<RunTrace, EngineError> {
-    if !(inputs.dt_s.is_finite() && inputs.dt_s > 0.0 && inputs.dt_s <= 2e-4) {
-        return Err(EngineError::Invalid {
-            reason: "dt in (0, 200µs]".to_owned(),
-        });
-    }
-    if !(inputs.t_end_s.is_finite() && inputs.t_end_s > 0.0) {
-        return Err(EngineError::Invalid {
-            reason: "t_end".to_owned(),
-        });
-    }
+    validate_inputs(inputs)?;
     let mut ws = initial_state(inputs).map_err(|_| EngineError::Invalid {
         reason: "initial state".to_owned(),
     })?;
@@ -975,6 +1132,49 @@ pub fn run_engine(inputs: &EngineInputs) -> Result<RunTrace, EngineError> {
         samples,
         audit: audit_of(&ws, inputs.fuel.lhv_j_per_kg, j_eff),
     })
+}
+
+/// Valida el contrato de entradas antes de cualquier mutación/cálculo
+/// (fail-closed, R02-F15): evita panics (p. ej. `record_every = 0`) y estados
+/// imposibles (eficiencia de combustión fuera de [0, 1]).
+fn validate_inputs(inputs: &EngineInputs) -> Result<(), EngineError> {
+    let bad = |r: &str| EngineError::Invalid {
+        reason: r.to_owned(),
+    };
+    if !(inputs.dt_s.is_finite() && inputs.dt_s > 0.0 && inputs.dt_s <= 2e-4) {
+        return Err(bad("dt in (0, 200us]"));
+    }
+    if !(inputs.t_end_s.is_finite() && inputs.t_end_s >= 0.0) {
+        return Err(bad("t_end finite"));
+    }
+    if inputs.record_every == 0 {
+        return Err(bad("record_every must be > 0"));
+    }
+    if !(inputs.combustion_efficiency.is_finite()
+        && (0.0..=1.0).contains(&inputs.combustion_efficiency))
+    {
+        return Err(bad("combustion_efficiency in [0, 1]"));
+    }
+    if !(inputs.regulator_dp_pa.is_finite() && inputs.regulator_dp_pa >= 0.0) {
+        return Err(bad("regulator dp"));
+    }
+    for (v, name) in [
+        (inputs.throttle_area_m2, "throttle_area"),
+        (inputs.idle_bypass_area_m2, "idle_bypass_area"),
+        (inputs.tailpipe_area_m2, "tailpipe_area"),
+        (inputs.accessory_tau_n_m, "accessory_tau"),
+    ] {
+        if !v.is_finite() {
+            return Err(bad(name));
+        }
+    }
+    if !(inputs.plenum_v_m3.is_finite() && inputs.plenum_v_m3 > 0.0) {
+        return Err(bad("plenum volume"));
+    }
+    if !(inputs.exhaust_v_m3.is_finite() && inputs.exhaust_v_m3 > 0.0) {
+        return Err(bad("exhaust volume"));
+    }
+    Ok(())
 }
 
 /// Continúa desde un estado de trabajo hasta `t_end` (reanudación exacta).
@@ -987,6 +1187,7 @@ pub fn resume(
     inputs: &EngineInputs,
     t_end: f64,
 ) -> Result<Vec<TraceSample>, EngineError> {
+    validate_inputs(inputs)?;
     if !(t_end.is_finite() && t_end >= ws.time_s) {
         return Err(EngineError::Invalid {
             reason: "t_end must be >= state time".to_owned(),
@@ -1232,5 +1433,247 @@ mod s21_tests {
             serde_json::from_value(serde_json::json!({"state": v1, "state_hash": "00"})).unwrap();
         // Hash falso ⇒ rechaza antes de migrar (verificación primero).
         assert!(WorkState::restore(&snap, &warm_inputs(2.0)).is_err());
+    }
+}
+
+#[cfg(test)]
+mod r01_r02_tests {
+    #![allow(clippy::unwrap_used)]
+
+    use super::*;
+
+    fn idle_point(mut inp: EngineInputs) -> EngineInputs {
+        inp.throttle_area_m2 = 0.05e-4;
+        inp.idle_bypass_area_m2 = 0.02e-4;
+        inp
+    }
+
+    fn with_c2(mut inp: EngineInputs, c2: f64) -> EngineInputs {
+        if let FrictionModel::ChenFlynn { ref mut coeffs } = inp.friction {
+            coeffs.c2_dlless = c2;
+        }
+        inp
+    }
+
+    // ---- R01-F01: especies / combustible --------------------------------
+
+    #[test]
+    fn homogeneous_outflow_carries_fuel_proportionally() {
+        // R01-F01: una cámara homogénea pierde combustible en proporción a la
+        // masa que sale (la salida no deja el fuel atrás).
+        let mut inp = idle_point(healthy_inputs());
+        inp.control.fuel_enabled = false;
+        inp.control.spark_enabled = false;
+        let mut w = initial_state(&inp).unwrap();
+        w.omega_rad_s = 100.0;
+        w.theta_rad = std::f64::consts::PI / 2.0;
+        let v = inp.geom.volume(std::f64::consts::PI / 2.0);
+        w.cyls[0].m = 200_000.0 * v / (inp.mix.r() * 293.15);
+        w.cyls[0].u = w.cyls[0].m * inp.mix.cv() * 293.15;
+        w.cyls[0].fuel = w.cyls[0].m * 0.1;
+        let (m0, f0) = (w.cyls[0].m, w.cyls[0].fuel);
+        drive(&mut w, &inp, inp.dt_s, inp.record_every, 0).unwrap();
+        assert!(w.cyls[0].m < m0, "fixture debe tener salida");
+        let expected = f0 * w.cyls[0].m / m0;
+        assert!(
+            (w.cyls[0].fuel - expected).abs() < 1e-15,
+            "fuel {} vs {}",
+            w.cyls[0].fuel,
+            expected
+        );
+    }
+
+    #[test]
+    fn fuel_inventory_bounded_and_conserved_without_spark() {
+        // R01-F01: sin chispa prolongado, 0 ≤ fuel ≤ m y el presupuesto
+        // inyectado = almacenado + quemado + emitido (frontera declarada).
+        let mut inp = idle_point(healthy_inputs());
+        inp.control.spark_enabled = false;
+        inp.t_end_s = 4.0;
+        let mut w = initial_state(&inp).unwrap();
+        let mut max_ratio = 0.0f64;
+        for n in 1..=200 {
+            drive(&mut w, &inp, n as f64 * 0.02, inp.record_every, 0).unwrap();
+            max_ratio = max_ratio.max(w.cyls.iter().map(|c| c.fuel / c.m).fold(0.0, f64::max));
+        }
+        assert!(max_ratio <= 1.0, "max fuel/mass ratio {max_ratio}");
+        let stored: f64 = w.cyls.iter().map(|c| c.fuel).sum::<f64>() + w.plen.fuel + w.exh.fuel;
+        let closure = w.fuel_injected_kg - (stored + w.fuel_burned_kg + w.fuel_emitted_kg);
+        assert!(closure.abs() < 1e-9, "fuel closure {closure}");
+    }
+
+    #[test]
+    fn burned_fuel_never_exceeds_injected_and_energy_needs_mass() {
+        // R01-F01: no hay energía química sin masa quemada.
+        let inp = idle_point(healthy_inputs());
+        let trace = run_engine(&inp).unwrap();
+        let a = trace.audit;
+        assert!(a.fuel_burned_kg <= a.fuel_injected_kg);
+        assert!(a.fuel_burned_kg > 0.0 && a.heat_released_j > 0.0);
+        assert!(a.fuel_stored_kg >= 0.0 && a.fuel_emitted_kg >= 0.0);
+    }
+
+    // ---- R01-F07: historia de presión en replay -------------------------
+
+    #[test]
+    fn replay_split_with_pressure_history_is_bit_identical() {
+        // R01-F07: con c2≠0, cualquier corte de ciclo reproduce el estado
+        // continuo porque pmax se persiste (no se reinicia por llamada).
+        let mut inp = idle_point(healthy_inputs());
+        inp = with_c2(inp, 0.05);
+        inp.t_end_s = 3.0;
+        let mut full = initial_state(&inp).unwrap();
+        drive(&mut full, &inp, 3.0, inp.record_every, 0).unwrap();
+        for cut in [0.5, 1.0, 1.5, 2.0, 2.5] {
+            let mut a = initial_state(&inp).unwrap();
+            drive(&mut a, &inp, cut, inp.record_every, 0).unwrap();
+            let snap = a.snapshot();
+            assert!(snap.verified());
+            let mut b = WorkState::restore(&snap, &inp).unwrap();
+            drive(&mut b, &inp, 3.0, inp.record_every, 0).unwrap();
+            assert_eq!(
+                full.snapshot().state_hash,
+                b.snapshot().state_hash,
+                "cut={cut}"
+            );
+        }
+        // Control c2=0 sigue coincidiendo.
+        let mut inp0 = idle_point(healthy_inputs());
+        inp0 = with_c2(inp0, 0.0);
+        inp0.t_end_s = 3.0;
+        let mut full0 = initial_state(&inp0).unwrap();
+        drive(&mut full0, &inp0, 3.0, inp0.record_every, 0).unwrap();
+        let mut a0 = initial_state(&inp0).unwrap();
+        drive(&mut a0, &inp0, 1.0, inp0.record_every, 0).unwrap();
+        let mut b0 = WorkState::restore(&a0.snapshot(), &inp0).unwrap();
+        drive(&mut b0, &inp0, 3.0, inp0.record_every, 0).unwrap();
+        assert_eq!(full0.snapshot().state_hash, b0.snapshot().state_hash);
+    }
+
+    // ---- R01-F10: ledger térmico con frontera ambiente ------------------
+
+    #[test]
+    fn thermal_ambient_loss_enters_energy_ledger() {
+        let mut inp = idle_point(healthy_inputs());
+        inp.thermal = Some(thermal::ThermalParams::illustrative());
+        inp.t_end_s = 30.0;
+        let trace = run_engine(&inp).unwrap();
+        assert!(trace.audit.th_q_amb_j > 0.0, "debe ceder calor al ambiente");
+        assert!(
+            trace.audit.energy_closure.abs() < 1e-3,
+            "closure {}",
+            trace.audit.energy_closure
+        );
+        // Adiabático (hA a ambiente nulos) ⇒ sin término de sumidero.
+        let mut p = thermal::ThermalParams::illustrative();
+        p.ha_wall_amb = 0.0;
+        p.ha_oil_amb = 0.0;
+        p.ha_rad_full = 0.0;
+        let mut inp2 = idle_point(healthy_inputs());
+        inp2.thermal = Some(p);
+        inp2.t_end_s = 30.0;
+        let trace2 = run_engine(&inp2).unwrap();
+        assert!(trace2.audit.th_q_amb_j.abs() < 1e-9);
+        assert!(trace2.audit.energy_closure.abs() < 1e-3);
+    }
+
+    // ---- R02-F05: round-trip JSON lossless ------------------------------
+
+    #[test]
+    fn json_roundtrip_preserves_bits_and_hash() {
+        let mut inp = idle_point(healthy_inputs());
+        inp.t_end_s = 1.0;
+        let mut w = initial_state(&inp).unwrap();
+        drive(&mut w, &inp, 1.0, inp.record_every, 0).unwrap();
+        let snap = w.snapshot();
+        let bytes = engine_types::canonical_json(&snap);
+        let parsed: EngineSnapshot = serde_json::from_str(&bytes).unwrap();
+        assert!(parsed.verified());
+        assert_eq!(parsed.state, snap.state);
+        assert_eq!(
+            engine_types::canonical_json(&parsed.state),
+            engine_types::canonical_json(&snap.state)
+        );
+    }
+
+    // ---- R02-F06: migración v1 auténtica --------------------------------
+
+    #[test]
+    fn v1_historical_hash_verifies_before_migration() {
+        let cyl = serde_json::json!({
+            "m_kg": 4e-4, "u_j": 90.0, "fresh_frac": 1.0, "fuel_kg": 0.0,
+            "burn_latched_kg": 0.0, "burn_accounted": true
+        });
+        let v1 = serde_json::json!({
+            "schema_version": 1,
+            "time_s": 1.0, "theta_global_rad": 0.5, "omega_rad_s": 80.0,
+            "prev_local_deg": [0.0, 180.0, 540.0, 0.0],
+            "cyls": [cyl.clone(), cyl.clone(), cyl.clone(), cyl.clone()],
+            "plen_m_kg": 2e-3, "plen_t_k": 293.0, "plen_fresh": 1.0,
+            "exh_m_kg": 1e-3, "exh_t_k": 293.0, "exh_fresh": 0.0,
+            "fuel_injected_kg": 0.0, "fuel_burned_kg": 0.0, "heat_released_j": 0.0,
+            "work_ind_j": 0.0, "work_fric_j": 0.0, "work_starter_j": 0.0, "work_load_j": 0.0
+        });
+        let state: EngineState = serde_json::from_value(v1).unwrap();
+        assert_eq!(state.schema_version, 1);
+        let snap = EngineSnapshot::capture(&state);
+        assert!(snap.verified());
+        let inp = idle_point(healthy_inputs());
+        assert!(WorkState::restore(&snap, &inp).is_ok());
+        // Hash alterado ⇒ rechazo antes de migrar.
+        let mut tampered = snap.clone();
+        tampered.state_hash = "00".to_owned();
+        assert!(WorkState::restore(&tampered, &inp).is_err());
+        // Esquema desconocido ⇒ rechazo.
+        let mut future = state.clone();
+        future.schema_version = 99;
+        let fs = EngineSnapshot::capture(&future);
+        assert!(WorkState::restore(&fs, &inp).is_err());
+    }
+
+    // ---- R02-F15: fronteras fail-closed ---------------------------------
+
+    #[test]
+    fn invalid_inputs_fail_closed_without_panic() {
+        let mut zero = idle_point(healthy_inputs());
+        zero.record_every = 0;
+        assert!(run_engine(&zero).is_err());
+        let mut neg = idle_point(healthy_inputs());
+        neg.combustion_efficiency = -1.0;
+        assert!(run_engine(&neg).is_err());
+        let mut over = idle_point(healthy_inputs());
+        over.combustion_efficiency = 2.0;
+        assert!(run_engine(&over).is_err());
+        let mut bad_dt = idle_point(healthy_inputs());
+        bad_dt.dt_s = 0.0;
+        assert!(run_engine(&bad_dt).is_err());
+    }
+
+    #[test]
+    fn restore_rejects_physically_impossible_state_with_valid_hash() {
+        let inp = idle_point(healthy_inputs());
+        let mut w = initial_state(&inp).unwrap();
+        w.cyls[0].m = -1.0;
+        // Hash válido sobre un estado físicamente imposible.
+        let snap = w.snapshot();
+        assert!(snap.verified());
+        assert!(WorkState::restore(&snap, &inp).is_err());
+        // Masa de nodo nula también se rechaza.
+        let mut w2 = initial_state(&inp).unwrap();
+        w2.plen.m = 0.0;
+        let snap2 = w2.snapshot();
+        assert!(snap2.verified());
+        assert!(WorkState::restore(&snap2, &inp).is_err());
+    }
+
+    #[test]
+    fn restore_rejects_thermal_mismatch_and_unknown_schema() {
+        let mut inp = idle_point(healthy_inputs());
+        inp.thermal = Some(thermal::ThermalParams::illustrative());
+        let mut w = initial_state(&inp).unwrap();
+        w.therm = None;
+        let snap = w.snapshot();
+        assert!(snap.verified());
+        assert!(WorkState::restore(&snap, &inp).is_err());
     }
 }

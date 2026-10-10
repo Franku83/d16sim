@@ -7,7 +7,10 @@ rust-version.workspace = true
 
 [dependencies]
 serde = { version = "1.0", features = ["derive"] }
-serde_json = "1.0"
+# `float_roundtrip` fija la ruta de parseo lossless de f64 exigida por los
+# contratos de snapshot/hash (R02-F05): sin ella, ciertos valores finitos
+# cambian de bits al recargar el JSON canónico.
+serde_json = { version = "1.0", features = ["float_roundtrip"] }
 sha2 = "0.10"
 thiserror = "2.0"
 

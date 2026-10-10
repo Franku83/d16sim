@@ -54,8 +54,29 @@ impl Decoder {
     ///
     /// # Errors
     ///
-    /// `InvalidEdges` si alguna lista no es estrictamente creciente.
+    /// `InvalidEdges` si algún flanco no es finito, si una lista no es
+    /// estrictamente creciente, o si se declara un flanco futuro (> `now_s`).
     pub fn new(ckp_edges: Vec<f64>, cyp_edges: Vec<f64>, now_s: f64) -> Result<Self, DecoderError> {
+        if !now_s.is_finite() {
+            return Err(DecoderError::InvalidEdges {
+                reason: "now must be finite".to_owned(),
+            });
+        }
+        for (name, edges) in [("ckp", &ckp_edges), ("cyp", &cyp_edges)] {
+            for t in edges {
+                if !t.is_finite() {
+                    return Err(DecoderError::InvalidEdges {
+                        reason: format!("{name} edge not finite"),
+                    });
+                }
+                // Causalidad temporal: no se aceptan flancos futuros.
+                if *t > now_s {
+                    return Err(DecoderError::InvalidEdges {
+                        reason: format!("{name} edge in the future"),
+                    });
+                }
+            }
+        }
         for w in ckp_edges.windows(2) {
             if w[1] <= w[0] {
                 return Err(DecoderError::InvalidEdges {
@@ -252,5 +273,15 @@ mod tests {
         let now2 = ckp2[10];
         let d2 = Decoder::new(ckp2[..11].to_vec(), Vec::new(), now2).unwrap();
         assert_eq!(d2.estimate(now2).state, SyncState::Synced360);
+    }
+
+    #[test]
+    fn rejects_non_finite_and_future_edges() {
+        // R02-F15: NaN/inf y flancos futuros no son observaciones físicas.
+        assert!(Decoder::new(vec![0.0, f64::NAN], Vec::new(), 1.0).is_err());
+        assert!(Decoder::new(vec![0.0, f64::INFINITY], Vec::new(), 1.0).is_err());
+        assert!(Decoder::new(vec![1.0, 2.0], Vec::new(), 0.0).is_err());
+        assert!(Decoder::new(Vec::new(), vec![1.0], 0.0).is_err());
+        assert!(Decoder::new(vec![0.0, 1.0], Vec::new(), 1.0).is_ok());
     }
 }

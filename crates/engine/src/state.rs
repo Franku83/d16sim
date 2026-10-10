@@ -20,6 +20,13 @@ pub struct CylState {
 }
 
 /// Estado completo e inmutable del motor (snapshot, esquema 2).
+///
+/// Compatibilidad (R02-F05/F06): los campos añadidos en la remediación R01
+/// (inventario de combustible en nodos y frontera emitida, historia de
+/// presión para fricción) son opcionales y se omiten de la representación
+/// canónica cuando valen su valor neutro. Así los snapshots v1/v2 previos
+/// conservan su hash histórico y los nuevos serializan el estado físico
+/// completo. El esquema nativo sigue siendo 2.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct EngineState {
     pub schema_version: u32,
@@ -45,6 +52,26 @@ pub struct EngineState {
     /// Red térmica S21 (None = instantáneas S16; `default` migra v1).
     #[serde(default)]
     pub thermal: Option<ThermalSnap>,
+    /// Combustible (kg) presente en el plenum (R01-F01). 0 = campo ausente
+    /// en snapshots previos; se omite de la forma canónica cuando es 0.
+    #[serde(default, skip_serializing_if = "is_zero_f64")]
+    pub plen_fuel_kg: f64,
+    /// Combustible (kg) presente en el escape (R01-F01).
+    #[serde(default, skip_serializing_if = "is_zero_f64")]
+    pub exh_fuel_kg: f64,
+    /// Combustible (kg) cruzado a la frontera ambiente (R01-F01).
+    #[serde(default, skip_serializing_if = "is_zero_f64")]
+    pub fuel_emitted_kg: f64,
+    /// Máximo de presión de cilindro (Pa) usado por la fricción (R01-F07);
+    /// `None` = snapshot previo sin historia de presión.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub pmax_pa: Option<f64>,
+}
+
+/// Auxiliar de `skip_serializing_if` para campos numéricos opcionales.
+#[must_use]
+fn is_zero_f64(v: &f64) -> bool {
+    *v == 0.0
 }
 
 /// Red térmica serializada (S21).
@@ -70,14 +97,29 @@ impl EngineSnapshot {
     pub fn capture(state: &EngineState) -> Self {
         Self {
             state: state.clone(),
-            state_hash: engine_types::sha256_hex(engine_types::canonical_json(state).as_bytes()),
+            state_hash: canonical_state_hash(state),
         }
     }
 
-    /// Verifica el hash contra el contenido.
+    /// Verifica el hash contra el contenido, bajo el esquema declarado.
     #[must_use]
     pub fn verified(&self) -> bool {
-        engine_types::sha256_hex(engine_types::canonical_json(&self.state).as_bytes())
-            == self.state_hash
+        canonical_state_hash(&self.state) == self.state_hash
     }
+}
+
+/// Hash canónico del estado según su esquema.
+///
+/// v1 histórico (anterior a S21) no tenía campo `thermal`: se reconstruye la
+/// representación original ANTES de migrar (R02-F06). v2 y nativo usan la
+/// serialización canónica completa; los campos nuevos de R01 se omiten cuando
+/// valen su valor neutro, preservando hashes de snapshots previos.
+fn canonical_state_hash(state: &EngineState) -> String {
+    let text = engine_types::canonical_json(state);
+    let text = if state.schema_version == 1 {
+        text.replace(",\"thermal\":null", "")
+    } else {
+        text
+    };
+    engine_types::sha256_hex(text.as_bytes())
 }
