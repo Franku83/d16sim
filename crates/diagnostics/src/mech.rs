@@ -314,8 +314,18 @@ pub enum MechVerdict {
 /// - compresión baja + fuga a escape ⇒ válvula;
 /// - compresión baja + fuga a refrigerante (o múltiple) ⇒ junta.
 ///
-/// R01-C1/RV02: un reparto sin ninguna fracción observada (todas cero) no es
-/// una medición; no cuenta como segunda medición ni permite discriminar.
+/// R01-C1/RV02 y R01-C2/C1-03: una observación **no válida** no es una
+/// medición. Se exige:
+/// - compresión finita ≥ 0 (si se aporta);
+/// - leak-down finito ∈ [0, 100] % (si se aporta);
+/// - `LeakSplit` como **descomposición completa normalizada**: cada fracción
+///   finita ∈ [0,1] y suma ≈ 1 (tol `1e-6`). Una fracción parcial o imposible
+///   se expresa pasando `None` (observación ausente), nunca un vector
+///   incompleto. Con datos inválidos o parciales el veredicto es
+///   `Inconclusive`; nunca una causa discriminada.
+///
+/// Un reparto sin ninguna fracción observada (todas cero) no es una medición;
+/// no cuenta como segunda medición ni permite discriminar.
 #[must_use]
 pub fn diagnose_low_compression(
     compression_kpa: Option<f64>,
@@ -323,13 +333,25 @@ pub fn diagnose_low_compression(
     leak_pct: Option<f64>,
     split: Option<LeakSplit>,
 ) -> MechVerdict {
-    let split_observed =
-        split.filter(|s| s.to_crankcase_01 + s.to_exhaust_01 + s.to_coolant_01 > 1e-12);
+    // Umbral: sin umbral válido no hay protocolo.
+    if !(low_threshold_kpa.is_finite() && low_threshold_kpa > 0.0) {
+        return MechVerdict::Inconclusive {
+            have_n: 0,
+            need_n: 2,
+        };
+    }
+    let comp_valid = compression_kpa.filter(|v| v.is_finite() && *v >= 0.0);
+    let pct_valid = leak_pct.filter(|v| v.is_finite() && (0.0..=100.0).contains(v));
+    let split_valid = split.filter(|s| {
+        let v = [s.to_crankcase_01, s.to_exhaust_01, s.to_coolant_01];
+        v.iter().all(|x| x.is_finite() && (0.0..=1.0).contains(x))
+            && (v.iter().sum::<f64>() - 1.0).abs() <= 1e-6
+    });
     let mut n = 0;
-    if compression_kpa.is_some() {
+    if comp_valid.is_some() {
         n += 1;
     }
-    if leak_pct.is_some() && split_observed.is_some() {
+    if pct_valid.is_some() && split_valid.is_some() {
         n += 1;
     }
     if n < 2 {
@@ -338,9 +360,9 @@ pub fn diagnose_low_compression(
             need_n: 2,
         };
     }
-    let comp = compression_kpa.unwrap_or(f64::MAX);
-    let pct = leak_pct.unwrap_or(0.0);
-    let s = split_observed.unwrap_or(LeakSplit {
+    let comp = comp_valid.unwrap_or(f64::MAX);
+    let pct = pct_valid.unwrap_or(0.0);
+    let s = split_valid.unwrap_or(LeakSplit {
         to_crankcase_01: 0.0,
         to_exhaust_01: 0.0,
         to_coolant_01: 0.0,
@@ -466,6 +488,9 @@ mod tests {
     fn two_measurements_separate_rings_valve_gasket() {
         // La SEGUNDA medición independiente (reparto del leak-down)
         // separa las tres causas con la misma compresión baja.
+        // R01-C2/C1-03: el contrato exige una descomposición completa
+        // normalizada (Σ = 1); los fixtures se normalizan sin cambiar la
+        // causa esperada (solo se reparte el 10% no atribuido).
         let r = diagnose_low_compression(
             Some(700.0),
             900.0,
@@ -473,7 +498,7 @@ mod tests {
             Some(LeakSplit {
                 to_crankcase_01: 0.8,
                 to_exhaust_01: 0.1,
-                to_coolant_01: 0.0,
+                to_coolant_01: 0.1,
             }),
         );
         let v = diagnose_low_compression(
@@ -483,7 +508,7 @@ mod tests {
             Some(LeakSplit {
                 to_crankcase_01: 0.1,
                 to_exhaust_01: 0.8,
-                to_coolant_01: 0.0,
+                to_coolant_01: 0.1,
             }),
         );
         let g = diagnose_low_compression(
@@ -493,7 +518,7 @@ mod tests {
             Some(LeakSplit {
                 to_crankcase_01: 0.3,
                 to_exhaust_01: 0.3,
-                to_coolant_01: 0.3,
+                to_coolant_01: 0.4,
             }),
         );
         assert_eq!(
@@ -549,5 +574,54 @@ mod tests {
                 need_n: 2
             }
         );
+    }
+
+    #[test]
+    fn invalid_or_partial_observations_cannot_discriminate() {
+        // R01-C2/C1-03: NaN/Inf/negativos/parciales no son mediciones.
+        let full = LeakSplit {
+            to_crankcase_01: 0.1,
+            to_exhaust_01: 0.7,
+            to_coolant_01: 0.2,
+        };
+        let cases = [
+            (Some(f64::NAN), 900.0, Some(30.0), Some(full)),
+            (Some(f64::INFINITY), 900.0, Some(30.0), Some(full)),
+            (Some(500.0), 900.0, Some(f64::INFINITY), Some(full)),
+            (Some(500.0), 900.0, Some(-1.0), Some(full)),
+            (
+                Some(500.0),
+                900.0,
+                Some(30.0),
+                Some(LeakSplit {
+                    to_crankcase_01: 2.0,
+                    to_exhaust_01: -1.0,
+                    to_coolant_01: 0.0,
+                }),
+            ),
+            (
+                Some(500.0),
+                900.0,
+                Some(30.0),
+                Some(LeakSplit {
+                    to_crankcase_01: 0.1,
+                    to_exhaust_01: 0.0,
+                    to_coolant_01: 0.0,
+                }),
+            ),
+            (Some(500.0), f64::NAN, Some(30.0), Some(full)),
+        ];
+        for (comp, thr, pct, s) in cases {
+            let v = diagnose_low_compression(comp, thr, pct, s);
+            assert!(
+                matches!(v, MechVerdict::Inconclusive { .. }),
+                "{v:?} for {comp:?}/{thr}/{pct:?}"
+            );
+        }
+        // Control válido completo sí discrimina.
+        assert!(matches!(
+            diagnose_low_compression(Some(500.0), 900.0, Some(30.0), Some(full)),
+            MechVerdict::Discriminated { .. }
+        ));
     }
 }
