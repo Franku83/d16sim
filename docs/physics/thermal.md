@@ -1,0 +1,22 @@
+# Sistema térmico L1 — S21
+
+## Modelo
+
+Nodos metal/pistón/aceite/refrigerante + ambiente BC; quemado→paredes
+(fw = 0.30) + resto al gas; fricción→aceite; pistón↔metal, metal↔
+refrigerante/aceite/ambiente, aceite→ambiente, radiador con termostato
+80–88 °C; ECT con lag 5 s → enriquecimiento 1.25/1.05/1.0.
+Capacitancias/conductancias ilustrativas de orden de magnitud.
+
+## Verificación (2026-10-10)
+
+Sin quemado no hay calentamiento de paredes; fricción→aceite exacta;
+termostato 0/0.5/1 en banda; ECT sigue con lag (63% en τ); arranque en
+frío 30 s: ECT 20→20.33 °C, aceite 22.64, termostato cerrado,
+enriquecido inyecta más; masa 4e−10, energía 3.7e−4; S16 intacto.
+
+## Dominio y deuda
+
+Sin hA/C medidos, sin curva real de termostato/bomba, sin ECT con S19
+completo, sin viscosidad (S22), calentamiento real en minutos (fuera de
+horizonte de test: se verifica inicio + lógica + auditoría).

@@ -157,3 +157,13 @@ futuros: toda aproximación pasa por aquí + `ModelCard` (§11.4).
 | H-S20-02 | Scope sin antialias: alias declarado, no oculto | S20 | Decisión ADR-027 | Filtro modelado |
 | H-S20-03 | Scanner espejo; manual por enlaces, sin contenido | S20 | Decisión (licencias) | Protocolo variante |
 | H-S20-04 | Ambigüedad exige complementaria; verdad solo monta | S20 | Gate S20 | — |
+
+## Registro S21 (térmico L1)
+
+| ID | Hipótesis | Dominio | Fuente | Invalida si |
+|---|---|---|---|---|
+| H-S21-01 | Red opt-in; None = S16 exacto | S21 | Decisión ADR-028 | — |
+| H-S21-02 | fw = 0.30 a paredes; fricción al aceite | S21 | Supuesto declarado | Reparto medido |
+| H-S21-03 | hA/C ilustrativos de orden de magnitud | S21 | Supuesto declarado | Caracterización |
+| H-S21-04 | Termostato 80–88 genérico; ECT lag 5 s | S21 | Supuesto declarado | Curvas OEM |
+| H-S21-05 | Enriquecimiento ECT 1.25/1.05/1.0 (cadena L1) | S21 | S19 + supuesto | Closed-loop |

@@ -1,7 +1,7 @@
 # HANDOFF — punto de entrada al siguiente agente
 
-Fecha: 2026-10-10 · Sprints: **S00–S20 APROBADOS (batch S16–S20)**.
-**S21 NO iniciado: prohibido sin autorización explícita.**
+Fecha: 2026-10-10 · Sprints: **S00–S21 APROBADOS (batch S21–S25)**.
+Siguiente: **S22**. **S26 prohibido sin autorización.**
 
 ## Estado científico/arquitectónico actual
 
@@ -32,9 +32,9 @@ Fecha: 2026-10-10 · Sprints: **S00–S20 APROBADOS (batch S16–S20)**.
    2026-10-10.
 2. ~~Licencia sin decidir~~ — resuelto: Apache-2.0 solo código propio
    (propietario 2026-10-10); `LICENSE` + `THIRD_PARTY_NOTICES.md` creados.
-3. S01–S20 APROBADOS 2026-10-10 (S19: gate causal; S20: veredicto
-   por complementaria). Deuda: térmico/aceite en S21–S22; estrategia OEM;
-   scope OEM + página de manual.
+3. S01–S21 APROBADOS 2026-10-10 (S20: veredicto por complementaria;
+   S21: ECT 20→20.33 °C, auditoría ramificada). Deuda: viscosidad y
+   galerías en S22; mapas/banco pendientes.
 
 ## Roles y reglas de cambio (S00)
 
@@ -147,14 +147,14 @@ Cadena sensorial + `sensor-demo` + ADR-026. Ver `docs/sprints/S19.md`.
 
 Crate `diagnostics` + `diagnose-demo` + ADR-027. Ver `docs/sprints/S20.md`.
 
-## Brief S21 (PROHIBIDO sin autorización explícita del propietario)
+## Brief S21 (APROBADO 2026-10-10)
 
-Sistema térmico L1: nodos metal/aceite/refrigerante/ambiente,
-transferencia combustión→paredes→fluidos, termostato/bomba/radiador,
-ECT/IAT reales alimentando ECU y fricción. Dep: S09–S16, S19.
+Crate `thermal` + acople + `warmup`/`export-trace` + ADR-028. Ver
+`docs/sprints/S21.md`.
 
-Herramientas diagnósticas sin pistas automáticas: sondas con acceso
-físico/polaridad/masa, multímetro con impedancia, osciloscopio con
-timebase/muestreo/trigger, scanner solo con lo que la ECU genera,
-manual indexado. Gate: sin panel secreto; dos causas, una lectura:
-prueba complementaria obligatoria.
+## Brief S22 (siguiente en batch autorizado)
+
+Aceite y cojinetes: bomba/alivio, viscosidad vs T, nivel y galerías por
+holgura, presión local (no solo global), fricción con lubricación
+dependiente del régimen, `film_quality` hacia desgaste futuro. Gate:
+fallo de aceite por ruta presión/film/fricción, nunca bandera.

@@ -166,6 +166,20 @@ enum Command {
         #[arg(long, default_value = "map")]
         case: String,
     },
+    /// Calentamiento con red térmica L1 (S21, arranque en frío).
+    Warmup {
+        #[arg(long, default_value_t = 30.0)]
+        seconds: f64,
+    },
+    /// Exportación de trazas solo lectura (contrato trace-bundle-v1).
+    ExportTrace {
+        #[arg(long, default_value = "healthy")]
+        scenario: String,
+        #[arg(long, default_value_t = 6.0)]
+        seconds: f64,
+        #[arg(long, default_value = "trace-bundle.json")]
+        out: String,
+    },
     /// Dinámica de cigüeñal con traza motored (S14, ilustrativo).
     CrankDynamics {
         #[arg(long, default_value_t = 750.0)]
@@ -306,6 +320,12 @@ fn run() -> Result<(), EngineError> {
         Command::EcuDemo { rpm, fault } => ecu_demo_cmd(rpm, fault),
         Command::SensorDemo { case } => sensor_demo_cmd(&case),
         Command::DiagnoseDemo { case } => diagnose_demo_cmd(&case),
+        Command::Warmup { seconds } => warmup_cmd(seconds),
+        Command::ExportTrace {
+            scenario,
+            seconds,
+            out,
+        } => export_trace_cmd(&scenario, seconds, &out),
         Command::CrankDynamics { rpm0, seconds } => crank_dynamics_cmd(rpm0, seconds),
         Command::ColdCrank => cold_crank_cmd(),
     }
@@ -1390,5 +1410,106 @@ fn diagnose_demo_cmd(case: &str) -> Result<(), EngineError> {
         }
         _ => return Err(err(format!("unknown case {case}"))),
     }
+    Ok(())
+}
+
+/// Comando S21: arranque en frío con red térmica (ECT, termostato,
+/// enriquecimiento). Sin calibrar: parámetros ilustrativos etiquetados.
+fn warmup_cmd(seconds: f64) -> Result<(), EngineError> {
+    use engine::{healthy_inputs, run_engine};
+    use thermal::ThermalParams;
+
+    let err = |e: String| EngineError::SchemaValidation(e);
+    if !(seconds.is_finite() && seconds > 0.0 && seconds <= 120.0) {
+        return Err(err("seconds in (0, 120]".to_owned()));
+    }
+    let mut inputs = healthy_inputs();
+    inputs.throttle_area_m2 = 0.05e-4;
+    inputs.idle_bypass_area_m2 = 0.02e-4;
+    inputs.thermal = Some(ThermalParams::illustrative());
+    inputs.t_end_s = seconds;
+    let trace = run_engine(&inputs).map_err(|e| err(e.to_string()))?;
+    let a = trace.audit;
+    // ECT final = último estado térmico vía re-ejecución corta? No: la
+    // traza S16 no lleva nodos; se reporta auditoría + régimen (las
+    // temperaturas nodales se verifican en tests con acceso al estado).
+    println!("warmup (ILLUSTRATIVE thermal params; cold start 20C):");
+    println!("  final_rpm         : {:.1}", a.final_rpm);
+    println!("  fuel_inj_g        : {:.3}", a.fuel_injected_kg * 1e3);
+    println!("  mass_closure      : {:.3e}", a.mass_closure);
+    println!("  energy_closure    : {:.3e}", a.energy_closure);
+    if let Some(t) = a.thermal {
+        println!(
+            "  T_wall/oil/cool/ECT : {:.2}/{:.2}/{:.2}/{:.2} C",
+            t.t_wall_c, t.t_oil_c, t.t_cool_c, t.ect_c
+        );
+        println!("  thermostat_0_1    : {:.3}", t.thermostat_0_1);
+    }
+    Ok(())
+}
+
+/// Comando de exportación (contrato trace-bundle-v1, solo lectura): corre
+/// el escenario de forma determinista y escribe el bundle versionado sin
+/// mutar nada del core.
+fn export_trace_cmd(scenario: &str, seconds: f64, out: &str) -> Result<(), EngineError> {
+    use engine::{
+        healthy_inputs, high_friction_inputs, no_fuel_inputs, no_spark_inputs, run_engine,
+    };
+    use engine_types::{canonical_json, sha256_hex};
+
+    let err = |e: String| EngineError::SchemaValidation(e);
+    let mut inputs = match scenario {
+        "healthy" => healthy_inputs(),
+        "no_spark" => no_spark_inputs(),
+        "no_fuel" => no_fuel_inputs(),
+        "high_friction" => high_friction_inputs(),
+        _ => return Err(err(format!("unknown scenario {scenario}"))),
+    };
+    if !(seconds.is_finite() && seconds > 0.0 && seconds <= 30.0) {
+        return Err(err("seconds in (0, 30]".to_owned()));
+    }
+    inputs.t_end_s = seconds;
+    let trace = run_engine(&inputs).map_err(|e| err(e.to_string()))?;
+    let step = (trace.samples.len() / 300).max(1);
+    let dec: Vec<&engine::TraceSample> = trace.samples.iter().step_by(step).collect();
+    let t_s: Vec<f64> = dec.iter().map(|s| s.t_s).collect();
+    let rpm: Vec<f64> = dec.iter().map(|s| s.rpm).collect();
+    let p_plen: Vec<f64> = dec.iter().map(|s| s.p_plen_kpa).collect();
+    let p_exh: Vec<f64> = dec.iter().map(|s| s.p_exh_kpa).collect();
+    let fr: Vec<f64> = dec.iter().map(|s| s.fuel_rate_g_s).collect();
+    let manifest = serde_json::json!({
+        "scenario": scenario,
+        "seconds": seconds,
+        "model_pack": "physics-pack-v0.1-illustrative",
+    });
+    let inputs_hash = sha256_hex(canonical_json(&manifest).as_bytes());
+    let bundle = serde_json::json!({
+        "schema_version": 1,
+        "producer": "d16sim-cli export-trace",
+        "source": {"sprint": "S16", "scenario": scenario, "inputs_hash": inputs_hash},
+        "series": {
+            "t_s": {"unit": "s", "values": t_s},
+            "rpm": {"unit": "rev/min", "values": rpm},
+            "p_plen_kpa": {"unit": "kPa", "values": p_plen},
+            "p_exh_kpa": {"unit": "kPa", "values": p_exh},
+            "fuel_rate_g_s": {"unit": "g/s", "values": fr}
+        },
+        "audit": {
+            "mass_closure": trace.audit.mass_closure,
+            "energy_closure": trace.audit.energy_closure,
+            "final_rpm": trace.audit.final_rpm
+        },
+        "provenance": {"model_pack": "physics-pack-v0.1-illustrative", "labels": ["ILLUSTRATIVE", "VERIFIED_NUMERICALLY", "NOT_VALIDATED"]}
+    });
+    let text = format!("{}\n", canonical_json(&bundle));
+    std::fs::write(out, &text).map_err(|e| EngineError::Io {
+        path: out.to_owned(),
+        source: e,
+    })?;
+    println!(
+        "export-trace: schema=1 points={} sha256={} -> {out}",
+        t_s.len(),
+        sha256_hex(text.as_bytes())
+    );
     Ok(())
 }

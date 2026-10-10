@@ -14,6 +14,6 @@ pub mod state;
 pub use control::{FuelCommand, OpenLoopControl};
 pub use run::{
     healthy_inputs, high_friction_inputs, no_fuel_inputs, no_spark_inputs, resume, run_engine,
-    EngineInputs, RunAudit, RunTrace, WorkState,
+    EngineInputs, RunAudit, RunTrace, ThermalSummary, TraceSample, WorkState,
 };
 pub use state::{CylState, EngineSnapshot, EngineState};

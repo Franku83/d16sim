@@ -322,3 +322,17 @@ Solo hechos constatables; sin cifras improvisadas.
 - Gate S20: PASS — sin panel secreto por construcción; verdad del
   harness solo para montar escenarios.
 - Deuda: instrumentos mecánicos S24, Bode, in-cylinder, tutorial/evaluador.
+
+## 2026-10-10 · S21 · Red térmica L1 (APROBADO)
+
+- Crate `thermal` (4 nodos + termostato + ECT/enrich) acoplada a `engine`
+  como opt-in (S16 bit-idéntico sin ella); fricción→aceite; auditoría
+  ramificada; snapshot esquema 2 con migración v1; `d16sim warmup` +
+  `export-trace` (contrato trace-bundle-v1 solo lectura, sin Blender/UI
+  en core); ADR-028; `docs/physics/thermal.md` + `docs/export-contract.md`;
+  H-S21-01..05.
+- Tests: thermal 1 + engine 9 passed (calentamiento, termostato, lag ECT,
+  enrich causal, sin-quemado, migración con hash falso rechazado).
+- Gate S21: PASS — todo calor con fuente/sumidero; ECT emerge de la red.
+- Deuda: hA/C medidos, termostato/bomba reales, viscosidad S22, S19
+  completo, calentamiento largo fuera de horizonte de test.

@@ -19,7 +19,7 @@ pub struct CylState {
     // (ver `crossed_edge` en run), no por cilindro.
 }
 
-/// Estado completo e inmutable del motor (snapshot).
+/// Estado completo e inmutable del motor (snapshot, esquema 2).
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct EngineState {
     pub schema_version: u32,
@@ -42,6 +42,19 @@ pub struct EngineState {
     pub work_fric_j: f64,
     pub work_starter_j: f64,
     pub work_load_j: f64,
+    /// Red térmica S21 (None = instantáneas S16; `default` migra v1).
+    #[serde(default)]
+    pub thermal: Option<ThermalSnap>,
+}
+
+/// Red térmica serializada (S21).
+#[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
+pub struct ThermalSnap {
+    pub t_wall_c: f64,
+    pub t_piston_c: f64,
+    pub t_oil_c: f64,
+    pub t_cool_c: f64,
+    pub ect_filt_c: f64,
 }
 
 /// Snapshot con hash canónico (excluye UI: no hay).

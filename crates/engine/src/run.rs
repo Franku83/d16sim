@@ -59,6 +59,9 @@ pub struct EngineInputs {
     pub wiebe_m: f64,
     pub wiebe_duration_deg: f64,
     pub combustion_efficiency: f64,
+    /// Red térmica L1 (`None` = comportamiento S16 exacto: quemado íntegro
+    /// al gas, fricción a sumidero no modelado).
+    pub thermal: Option<thermal::ThermalParams>,
     pub dt_s: f64,
     pub t_end_s: f64,
     pub record_every: usize,
@@ -101,6 +104,18 @@ pub struct RunAudit {
     pub delta_ke_j: f64,
     pub h_amb_net_j: f64,
     pub h_fuel_j: f64,
+    /// Resumen térmico final (None = red desactivada, modo S16).
+    pub thermal: Option<ThermalSummary>,
+}
+
+/// Resumen térmico final (telemetría S21).
+#[derive(Debug, Clone, Copy, PartialEq, serde::Serialize, serde::Deserialize)]
+pub struct ThermalSummary {
+    pub ect_c: f64,
+    pub t_wall_c: f64,
+    pub t_oil_c: f64,
+    pub t_cool_c: f64,
+    pub thermostat_0_1: f64,
 }
 
 const CYLS: [CylinderId; 4] = [
@@ -196,6 +211,7 @@ fn base_inputs(spark: bool, fuel: bool, high_fric: bool) -> EngineInputs {
         wiebe_m: 2.0,
         wiebe_duration_deg: 60.0,
         combustion_efficiency: 1.0,
+        thermal: None,
         dt_s: 50e-6,
         t_end_s: 6.0,
         record_every: 400,
@@ -212,6 +228,10 @@ pub struct WorkState {
     pub cyls: [CylW; 4],
     pub plen: NodeW,
     pub exh: NodeW,
+    /// Red térmica + parámetros (None = modo S16).
+    pub therm: Option<(thermal::ThermalState, thermal::ThermalParams)>,
+    /// Energía térmica inicial (J, sobre 0 °C) para la auditoría.
+    pub th_u0_j: f64,
     pub fuel_injected_kg: f64,
     pub fuel_burned_kg: f64,
     pub heat_released_j: f64,
@@ -287,11 +307,11 @@ impl NodeW {
 }
 
 impl WorkState {
-    /// Convierte a snapshot verificable (hash canónico).
+    /// Convierte a snapshot verificable (hash canónico, esquema 2).
     #[must_use]
     pub fn snapshot(&self) -> EngineSnapshot {
         EngineSnapshot::capture(&EngineState {
-            schema_version: 1,
+            schema_version: 2,
             time_s: self.time_s,
             theta_global_rad: self.theta_rad,
             omega_rad_s: self.omega_rad_s,
@@ -315,21 +335,33 @@ impl WorkState {
             work_fric_j: self.w_fric_j,
             work_starter_j: self.w_starter_j,
             work_load_j: self.w_load_j,
+            thermal: self
+                .therm
+                .as_ref()
+                .map(|(st, _)| crate::state::ThermalSnap {
+                    t_wall_c: st.t_wall_c,
+                    t_piston_c: st.t_piston_c,
+                    t_oil_c: st.t_oil_c,
+                    t_cool_c: st.t_cool_c,
+                    ect_filt_c: st.ect_filt_c,
+                }),
         })
     }
 
-    /// Restaura desde snapshot verificado.
+    /// Restaura desde snapshot verificado (acepta esquema 1 migrando la
+    /// red térmica a frío, y esquema 2 nativo).
     ///
     /// # Errors
     ///
-    /// `Invalid` si el hash no verifica o el esquema es desconocido.
+    /// `Invalid` si el hash no verifica, el esquema es desconocido o la
+    /// presencia térmica difiere de las entradas.
     pub fn restore(snap: &EngineSnapshot, inputs: &EngineInputs) -> Result<Self, EngineError> {
         if !snap.verified() {
             return Err(EngineError::Invalid {
                 reason: "snapshot hash mismatch".to_owned(),
             });
         }
-        if snap.state.schema_version != 1 {
+        if snap.state.schema_version != 1 && snap.state.schema_version != 2 {
             return Err(EngineError::Invalid {
                 reason: "unsupported snapshot schema".to_owned(),
             });
@@ -375,7 +407,38 @@ impl WorkState {
             h_fuel_in_j: 0.0,
             m_sys_0_kg: 0.0,
             u_sys_0_j: 0.0,
+            therm: None,
+            th_u0_j: 0.0,
         };
+        // Red térmica: nativa en v2; en v1 migra a frío si las entradas la
+        // piden, o ausente si no (error si difiere de las entradas).
+        let want_therm = inputs.thermal.is_some();
+        let got_therm = snap.state.thermal.is_some();
+        if want_therm != got_therm && snap.state.schema_version == 2 {
+            return Err(EngineError::Invalid {
+                reason: "thermal presence mismatch vs inputs".to_owned(),
+            });
+        }
+        if let (Some(tp), Some(ts)) = (inputs.thermal, snap.state.thermal) {
+            ws.therm = Some((
+                thermal::ThermalState {
+                    t_wall_c: ts.t_wall_c,
+                    t_piston_c: ts.t_piston_c,
+                    t_oil_c: ts.t_oil_c,
+                    t_cool_c: ts.t_cool_c,
+                    ect_filt_c: ts.ect_filt_c,
+                },
+                tp,
+            ));
+        } else if inputs.thermal.is_some() {
+            let tp = inputs
+                .thermal
+                .unwrap_or(thermal::ThermalParams::illustrative());
+            ws.therm = Some((thermal::ThermalState::cold(20.0), tp));
+        }
+        if let Some((st, p)) = &ws.therm {
+            ws.th_u0_j = st.stored_j(p);
+        }
         ws.m_sys_0_kg = ws.plen.m + ws.exh.m + ws.cyls.iter().map(|c| c.m).sum::<f64>();
         ws.u_sys_0_j = ws.plen.u() + ws.exh.u() + ws.cyls.iter().map(|c| c.u).sum::<f64>();
         Ok(ws)
@@ -415,7 +478,7 @@ fn crossed_edge(prev: f64, new: f64, x: f64) -> bool {
 }
 
 /// Construye el estado inicial (reposo, nodos y cámaras a ambiente).
-fn initial_state(inputs: &EngineInputs) -> WorkState {
+fn initial_state(inputs: &EngineInputs) -> Result<WorkState, EngineError> {
     let p_amb = 101_325.0;
     let t_amb = 293.15;
     let r_gas = inputs.mix.r();
@@ -450,13 +513,25 @@ fn initial_state(inputs: &EngineInputs) -> WorkState {
     };
     let m0 = plen.m + exh.m + cyls.iter().map(|c| c.m).sum::<f64>();
     let u0 = plen.u() + exh.u() + cyls.iter().map(|c| c.u).sum::<f64>();
+    // Red térmica en frío a 20 °C (coherente con t_amb de gases).
+    let (therm, th_u0) = match inputs.thermal {
+        Some(p) => {
+            p.validated().map_err(|_| EngineError::Invalid {
+                reason: "thermal params".to_owned(),
+            })?;
+            let st = thermal::ThermalState::cold(20.0);
+            let u = st.stored_j(&p);
+            (Some((st, p)), u)
+        }
+        None => (None, 0.0),
+    };
     let prev_local_deg = [
         cylinder_local_angle(0.0, CYLS[0]),
         cylinder_local_angle(0.0, CYLS[1]),
         cylinder_local_angle(0.0, CYLS[2]),
         cylinder_local_angle(0.0, CYLS[3]),
     ];
-    WorkState {
+    Ok(WorkState {
         time_s: 0.0,
         theta_rad: 0.0,
         omega_rad_s: 0.0,
@@ -464,6 +539,8 @@ fn initial_state(inputs: &EngineInputs) -> WorkState {
         cyls,
         plen,
         exh,
+        therm,
+        th_u0_j: th_u0,
         fuel_injected_kg: 0.0,
         fuel_burned_kg: 0.0,
         heat_released_j: 0.0,
@@ -478,7 +555,7 @@ fn initial_state(inputs: &EngineInputs) -> WorkState {
         h_fuel_in_j: 0.0,
         m_sys_0_kg: m0,
         u_sys_0_j: u0,
-    }
+    })
 }
 
 /// Avanza `ws` hasta `t_end` (≥ actual) devolviendo traza del tramo.
@@ -531,6 +608,7 @@ fn drive(
         let th_deg = ws.theta_rad.to_degrees();
         let mut tau_ind = 0.0;
         let mut fuel_rate = 0.0;
+        let mut dq_wall_step = 0.0;
 
         for (k, cyl_id) in CYLS.iter().enumerate() {
             let local = cylinder_local_angle(th_deg, *cyl_id);
@@ -616,10 +694,17 @@ fn drive(
                 + inputs.intake_cam.adv_duration_crank_deg / 2.0;
             if inputs.control.fuel_enabled && crossed_edge(ws.prev_local_deg[k], local, ic_here) {
                 let rho_man = p_plen / (r_gas * ws.plen.t);
-                let cmd =
+                let mut cmd =
                     inputs
                         .control
                         .fuel_command(rho_man, vd_cyl, inputs.fuel, inputs.injector);
+                // Enriquecimiento por ECT (S21, cadena L1 declarada).
+                let enrich = ws
+                    .therm
+                    .as_ref()
+                    .map(|(st, tp)| st.enrich_factor(tp))
+                    .unwrap_or(1.0);
+                cmd.mass_kg *= enrich;
                 let rail_dp = fuel::resolve_rail(
                     regulator,
                     PumpState {
@@ -673,7 +758,9 @@ fn drive(
                     c.burn_accounted = true;
                 }
             }
-            // Wiebe con reloj local (solo válvulas cerradas).
+            // Wiebe con reloj local (solo válvulas cerradas). Con red
+            // térmica, una fracción fw va a paredes (el gas conserva 1−fw):
+            // sin red, fw = 0 (comportamiento S16 exacto).
             if c.burn_latched > 0.0 && !c.burn_accounted && li < 0.05 && le < 0.05 {
                 let w = combustion::Wiebe::new(
                     inputs.wiebe_a,
@@ -689,8 +776,10 @@ fn drive(
                     * rate
                     * ws.omega_rad_s
                     * dt;
-                c.u += dq;
+                let fw = ws.therm.as_ref().map(|(_, p)| p.wall_frac).unwrap_or(0.0);
+                c.u += dq * (1.0 - fw);
                 ws.heat_released_j += dq;
+                dq_wall_step += dq * fw;
                 if local > fire_local + inputs.wiebe_duration_deg {
                     let b = (c.burn_latched * completeness).min(c.fuel);
                     ws.fuel_burned_kg += b;
@@ -773,10 +862,17 @@ fn drive(
         let acc = (tau_ind - tau_fric - inputs.accessory_tau_n_m + tau_starter) / j_eff;
         let om_new = (ws.omega_rad_s + acc * dt).max(0.0);
         let om_avg = (ws.omega_rad_s + om_new) / 2.0;
+        let p_fric_w = tau_fric * om_avg;
         ws.w_ind_j += tau_ind * om_avg * dt;
-        ws.w_fric_j += tau_fric * om_avg * dt;
+        ws.w_fric_j += p_fric_w * dt;
         ws.w_starter_j += tau_starter * om_avg * dt;
         ws.w_load_j += inputs.accessory_tau_n_m * om_avg * dt;
+        // Red térmica: paredes reciben su fracción del quemado y el aceite
+        // la fricción (mismos julios que la auditoría: exacto).
+        if let Some((st, tp)) = ws.therm.as_mut() {
+            st.step(dt, dq_wall_step, p_fric_w, 20.0, tp)
+                .map_err(|_| bad("thermal step"))?;
+        }
         ws.theta_rad += om_avg * dt;
         ws.omega_rad_s = om_new;
         ws.time_s += dt;
@@ -808,7 +904,13 @@ fn audit_of(ws: &WorkState, _lhv_j_per_kg: f64, j_eff: f64) -> RunAudit {
     // química fuera de U: bug de auditoría corregido).
     // Q_rel es conversión INTERNA, pero es LA medida del aporte térmico
     // efectivo; E_chem inyectada no entra en U hasta quemarse.
-    let scale_e = (ws.u_sys_0_j + ws.heat_released_j + ws.w_starter_j).max(1e-9);
+    // Con red térmica, la fricción calienta el aceite (interna, no sumidero)
+    // y el almacén suma la red; sin red, fórmula S16 exacta.
+    let (u_th_1, fric_sink) = match &ws.therm {
+        Some((st, tp)) => (st.stored_j(tp), 0.0),
+        None => (0.0, ws.w_fric_j),
+    };
+    let scale_e = (ws.u_sys_0_j + ws.th_u0_j + ws.heat_released_j + ws.w_starter_j).max(1e-9);
     RunAudit {
         w_ind_j: ws.w_ind_j,
         w_fric_j: ws.w_fric_j,
@@ -824,9 +926,11 @@ fn audit_of(ws: &WorkState, _lhv_j_per_kg: f64, j_eff: f64) -> RunAudit {
         // Q_rel es conversión INTERNA (química→térmica dentro del gas):
         // como el no quemado no está en U, la fuente efectiva es Q_rel
         // (no E_chem inyectada); las demás fuentes son H_amb + H_fuel +
-        // W_starter, los sumideros W_fric + W_load, y el almacén incluye
-        // ΔKE del cigüeñal (bug de auditoría: se omitía).
-        energy_closure: ((u_sys_1 - ws.u_sys_0_j + ke_1) + (ws.w_fric_j + ws.w_load_j)
+        // W_starter; con red térmica el sumidero es solo W_load (la fricción
+        // queda en el aceite) y el almacén suma la red; sin red, W_fric es
+        // sumidero (fórmula S16 exacta).
+        energy_closure: ((u_sys_1 - ws.u_sys_0_j + (u_th_1 - ws.th_u0_j) + ke_1)
+            + (fric_sink + ws.w_load_j)
             - ((ws.h_in_amb_j - ws.h_out_amb_j)
                 + ws.h_fuel_in_j
                 + ws.heat_released_j
@@ -836,6 +940,13 @@ fn audit_of(ws: &WorkState, _lhv_j_per_kg: f64, j_eff: f64) -> RunAudit {
         delta_ke_j: 0.5 * j_eff * ws.omega_rad_s * ws.omega_rad_s,
         h_amb_net_j: ws.h_in_amb_j - ws.h_out_amb_j,
         h_fuel_j: ws.h_fuel_in_j,
+        thermal: ws.therm.as_ref().map(|(st, tp)| ThermalSummary {
+            ect_c: st.ect_filt_c,
+            t_wall_c: st.t_wall_c,
+            t_oil_c: st.t_oil_c,
+            t_cool_c: st.t_cool_c,
+            thermostat_0_1: st.thermostat_factor(tp),
+        }),
     }
 }
 
@@ -855,7 +966,9 @@ pub fn run_engine(inputs: &EngineInputs) -> Result<RunTrace, EngineError> {
             reason: "t_end".to_owned(),
         });
     }
-    let mut ws = initial_state(inputs);
+    let mut ws = initial_state(inputs).map_err(|_| EngineError::Invalid {
+        reason: "initial state".to_owned(),
+    })?;
     let samples = drive(&mut ws, inputs, inputs.t_end_s, inputs.record_every, 0)?;
     let j_eff = crank::effective_inertia_mean(&inputs.geom, inputs.inertia);
     Ok(RunTrace {
@@ -976,7 +1089,7 @@ mod tests {
         // Corte en marcha ⇒ decae por fricción/bombeo (sin run-on mágico).
         let mut inp = idle_point(healthy_inputs());
         inp.t_end_s = 2.0;
-        let mut ws = initial_state(&inp);
+        let mut ws = initial_state(&inp).unwrap();
         let _ = drive(&mut ws, &inp, 2.0, inp.record_every, 0).unwrap();
         let rpm_mid = ws.omega_rad_s * 60.0 / (2.0 * std::f64::consts::PI);
         assert!(rpm_mid > 400.0);
@@ -997,14 +1110,14 @@ mod tests {
         let mut inp = idle_point(healthy_inputs());
         inp.t_end_s = 2.0;
         let full = run_engine(&inp).unwrap();
-        let mut ws = initial_state(&inp);
+        let mut ws = initial_state(&inp).unwrap();
         let _ = drive(&mut ws, &inp, 1.0, inp.record_every, 0).unwrap();
         let snap = ws.snapshot();
         assert!(snap.verified());
         let mut ws2 = WorkState::restore(&snap, &inp).unwrap();
         let _ = resume(&mut ws2, &inp, 2.0).unwrap();
         let snap_full = {
-            let mut wsf = initial_state(&inp);
+            let mut wsf = initial_state(&inp).unwrap();
             let _ = drive(&mut wsf, &inp, 2.0, inp.record_every, 0).unwrap();
             wsf.snapshot()
         };
@@ -1041,5 +1154,83 @@ mod tests {
         assert!(!crossed_edge(0.0, 10.0, 350.0));
         assert!(crossed_edge(340.0, 350.0, 345.0));
         assert!(!crossed_edge(350.0, 360.0, 345.0));
+    }
+}
+
+#[cfg(test)]
+mod s21_tests {
+    #![allow(clippy::unwrap_used)]
+
+    use super::*;
+
+    fn warm_inputs(t_end: f64) -> EngineInputs {
+        let mut inp = healthy_inputs();
+        inp.throttle_area_m2 = 0.05e-4;
+        inp.idle_bypass_area_m2 = 0.02e-4;
+        inp.thermal = Some(thermal::ThermalParams::illustrative());
+        inp.t_end_s = t_end;
+        inp
+    }
+
+    #[test]
+    fn cold_start_warms_ect_and_enriches() {
+        // Gate S21: el calor del quemado calienta ECT (20 °C → arriba) y el
+        // enriquecimiento por ECT actúa al principio (más combustible que
+        // sin enriquecer). Sin red térmica estos campos no existen.
+        let trace = run_engine(&warm_inputs(30.0)).unwrap();
+        let th = trace.audit.thermal.expect("thermal summary");
+        // Un calentamiento real tarda minutos; 30 s muestran el inicio
+        // (dirección correcta desde 20 °C: ECT≈20.33 por lag) + el acople
+        // ECT→combustible, que es la evidencia causal del gate.
+        assert!(th.ect_c > 20.2, "ect={}", th.ect_c);
+        assert!(th.t_oil_c > 20.0 && th.t_wall_c > 20.0);
+        assert!(trace.audit.mass_closure.abs() < 1e-9);
+        assert!(trace.audit.energy_closure.abs() < 2e-3);
+        // Sin enriquecer (misma red) se inyecta menos en frío.
+        let mut no_en = warm_inputs(10.0);
+        no_en.thermal.as_mut().unwrap().ect_enrich = false;
+        let mut en = warm_inputs(10.0);
+        let _ = &mut en;
+        let a_no = run_engine(&no_en).unwrap().audit;
+        let a_en = run_engine(&warm_inputs(10.0)).unwrap().audit;
+        assert!(
+            a_en.fuel_injected_kg > a_no.fuel_injected_kg,
+            "enrich must add fuel when cold"
+        );
+    }
+
+    #[test]
+    fn no_burn_no_wall_heating_and_snapshot_migrates() {
+        // Sin quemado las paredes se quedan a ambiente (el aceite solo ve
+        // fricción): todo calor con fuente declarada.
+        let mut inp = warm_inputs(3.0);
+        inp.control.fuel_enabled = false;
+        inp.control.spark_enabled = false;
+        let trace = run_engine(&inp).unwrap();
+        let th = trace.audit.thermal.expect("thermal summary");
+        assert!((th.t_wall_c - 20.0).abs() < 3.0, "wall={}", th.t_wall_c);
+        assert!(th.t_oil_c >= 20.0);
+        assert!(trace.audit.energy_closure.abs() < 2e-3);
+        // Migración v1 → v2: snapshot antiguo sin red + entradas con red.
+        let cyl = serde_json::json!({
+            "m_kg": 4e-4, "u_j": 90.0, "fresh_frac": 1.0, "fuel_kg": 0.0,
+            "burn_latched_kg": 0.0, "burn_accounted": true
+        });
+        let v1 = serde_json::json!({
+            "schema_version": 1,
+            "time_s": 1.0,
+            "theta_global_rad": 0.5,
+            "omega_rad_s": 80.0,
+            "prev_local_deg": [0.0, 180.0, 540.0, 0.0],
+            "cyls": [cyl.clone(), cyl.clone(), cyl.clone(), cyl.clone()],
+            "plen_m_kg": 2e-3, "plen_t_k": 293.0, "plen_fresh": 1.0,
+            "exh_m_kg": 1e-3, "exh_t_k": 293.0, "exh_fresh": 0.0,
+            "fuel_injected_kg": 0.0, "fuel_burned_kg": 0.0, "heat_released_j": 0.0,
+            "work_ind_j": 0.0, "work_fric_j": 0.0, "work_starter_j": 0.0, "work_load_j": 0.0
+        });
+        let snap: EngineSnapshot =
+            serde_json::from_value(serde_json::json!({"state": v1, "state_hash": "00"})).unwrap();
+        // Hash falso ⇒ rechaza antes de migrar (verificación primero).
+        assert!(WorkState::restore(&snap, &warm_inputs(2.0)).is_err());
     }
 }

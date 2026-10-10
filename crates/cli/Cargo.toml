@@ -23,6 +23,7 @@ engine = { path = "../engine" }
 trigger = { path = "../trigger" }
 ecu = { path = "../ecu" }
 diagnostics = { path = "../diagnostics" }
+thermal = { path = "../thermal" }
 kinematics = { path = "../kinematics" }
 thermo = { path = "../thermo" }
 valvetrain = { path = "../valvetrain" }

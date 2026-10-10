@@ -197,6 +197,7 @@ dependencies = [
  "physics",
  "serde_json",
  "simulation",
+ "thermal",
  "thermo",
  "trigger",
  "units",
@@ -259,6 +260,7 @@ dependencies = [
  "kinematics",
  "serde",
  "serde_json",
+ "thermal",
  "thermo",
  "thiserror",
  "units",
@@ -472,6 +474,15 @@ dependencies = [
  "proc-macro2",
  "quote",
  "unicode-ident",
+]
+
+[[package]]
+name = "thermal"
+version = "0.1.0"
+dependencies = [
+ "engine-types",
+ "thiserror",
+ "units",
 ]
 
 [[package]]
