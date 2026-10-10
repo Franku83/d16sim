@@ -1,0 +1,27 @@
+{
+  "previous_documents_byte_identical": [
+    "R01_R02_INDEPENDENT_VERIFICATION.md",
+    "FINDINGS.md",
+    "REPRODUCTION.md",
+    "REGRESSION_ASSESSMENT.md",
+    "BATCH_GATE_DECISION.md"
+  ],
+  "original_audit_documents_byte_identical": [
+    "INDEPENDENT_AUDIT_REPORT.md",
+    "FINDINGS.md",
+    "REPRODUCTION.md",
+    "DOCUMENTATION_CONSISTENCY.md",
+    "CAPABILITY_RISK_ASSESSMENT.md",
+    "S25_EVIDENCE_ACQUISITION_PLAN.md"
+  ],
+  "previous_production_unchanged": true,
+  "nominal_initializer_unchanged": true,
+  "historical_references": {
+    "ff09a0d": "ff09a0dda82188e6bf27a80d17c902f8972a39d2",
+    "25d528e": "25d528e3ff5b31eaeab0c894c4227b3e7d3a574c",
+    "1d61437": "1d614378dd8481acb2a513b4c6dc6572345e5c66",
+    "2541266": "254126618fb17b5e09c398078b2f1efd1963de25",
+    "8a7e868": "8a7e8686e4e8831fb30d1a71b815e67e7d7139ef",
+    "caad1cb": "caad1cbf31d01531e0fbd81be6190f52b2d1c2d7"
+  }
+}

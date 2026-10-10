@@ -1,0 +1,121 @@
+[
+  {
+    "args": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "verification/c1_review/Cargo.toml",
+      "--bin",
+      "c1-controls",
+      "--",
+      "chemistry"
+    ],
+    "exit": 0,
+    "elapsed_s": 2.262672852000833
+  },
+  {
+    "args": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "verification/c1_review/Cargo.toml",
+      "--bin",
+      "c1-controls",
+      "--",
+      "diagnostic"
+    ],
+    "exit": 0,
+    "elapsed_s": 0.024829059999319725
+  },
+  {
+    "args": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "verification/c1_review/Cargo.toml",
+      "--bin",
+      "c1-controls",
+      "--",
+      "migration"
+    ],
+    "exit": 0,
+    "elapsed_s": 0.04039100999943912
+  },
+  {
+    "args": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "verification/c1_review/Cargo.toml",
+      "--bin",
+      "c1-controls",
+      "--",
+      "thermal"
+    ],
+    "exit": 0,
+    "elapsed_s": 0.02444904400181258
+  },
+  {
+    "args": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "verification/c1_review/Cargo.toml",
+      "--bin",
+      "c1-controls",
+      "--",
+      "electronics"
+    ],
+    "exit": 0,
+    "elapsed_s": 0.024423453000053996
+  },
+  {
+    "args": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "verification/c1_review/Cargo.toml",
+      "--bin",
+      "c1-controls",
+      "--",
+      "fit"
+    ],
+    "exit": 0,
+    "elapsed_s": 0.02475806100119371
+  },
+  {
+    "args": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "verification/c1_review/Cargo.toml",
+      "--bin",
+      "c1-controls",
+      "--",
+      "dyno"
+    ],
+    "exit": 0,
+    "elapsed_s": 0.024375733999477234
+  }
+]

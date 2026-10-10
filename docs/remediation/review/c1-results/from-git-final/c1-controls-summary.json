@@ -1,0 +1,17 @@
+{
+  "test_targets": 1,
+  "cases": 15,
+  "passed": 10,
+  "failures": 5,
+  "errors": 0,
+  "predicates_executed": 121,
+  "rows": 138,
+  "families": 20,
+  "failure_names": [
+    "test_06_complete_engine_validation",
+    "test_07_restore_thermal_configuration",
+    "test_08_thermal_atomicity_and_overflow",
+    "test_13_invalid_diagnostic_observations",
+    "test_15_r02_midburn_is_not_unlabeled_native_c1"
+  ]
+}

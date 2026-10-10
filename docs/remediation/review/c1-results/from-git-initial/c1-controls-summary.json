@@ -1,0 +1,16 @@
+{
+  "test_targets": 1,
+  "cases": 14,
+  "passed": 10,
+  "failures": 4,
+  "errors": 0,
+  "predicates_executed": 119,
+  "rows": 137,
+  "families": 19,
+  "failure_names": [
+    "test_06_complete_engine_validation",
+    "test_07_restore_thermal_configuration",
+    "test_08_thermal_atomicity_and_overflow",
+    "test_13_invalid_diagnostic_observations"
+  ]
+}

@@ -1,0 +1,80 @@
+test_01_every_step_chemical_inventory (__main__.C1Controls.test_01_every_step_chemical_inventory) ... ok
+test_02_closed_form_burn_antiderivative (__main__.C1Controls.test_02_closed_form_burn_antiderivative) ... ok
+test_03_label_invariance_and_missing_observations (__main__.C1Controls.test_03_label_invariance_and_missing_observations) ... ok
+test_04_signed_zero_through_restore (__main__.C1Controls.test_04_signed_zero_through_restore) ... ok
+test_05_genuine_historical_provenance (__main__.C1Controls.test_05_genuine_historical_provenance) ... ok
+test_06_complete_engine_validation (__main__.C1Controls.test_06_complete_engine_validation) ... FAIL
+test_07_restore_thermal_configuration (__main__.C1Controls.test_07_restore_thermal_configuration) ... FAIL
+test_08_thermal_atomicity_and_overflow (__main__.C1Controls.test_08_thermal_atomicity_and_overflow) ... FAIL
+test_09_full_nonfinite_observation_matrix (__main__.C1Controls.test_09_full_nonfinite_observation_matrix) ... ok
+test_10_changing_callback_dimensions_and_nonfinite (__main__.C1Controls.test_10_changing_callback_dimensions_and_nonfinite) ... ok
+test_11_dyno_nonfinite_outputs (__main__.C1Controls.test_11_dyno_nonfinite_outputs) ... ok
+test_12_valid_temperature_energy_control (__main__.C1Controls.test_12_valid_temperature_energy_control) ... ok
+test_13_invalid_diagnostic_observations (__main__.C1Controls.test_13_invalid_diagnostic_observations) ... FAIL
+test_14_dynamic_error_rolls_back_complete_work_state (__main__.C1Controls.test_14_dynamic_error_rolls_back_complete_work_state) ... ok
+test_15_r02_midburn_is_not_unlabeled_native_c1 (__main__.C1Controls.test_15_r02_midburn_is_not_unlabeled_native_c1) ... FAIL
+
+======================================================================
+FAIL: test_06_complete_engine_validation (__main__.C1Controls.test_06_complete_engine_validation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/franku/projects/d16sim-verification-c1/verification/c1_review/check_c1_controls.py", line 46, in test_06_complete_engine_validation
+    self.check(not r['resume_panicked'] and not r['resume_accepted'] and r['unchanged'] and not r['run_panicked'] and not r['run_accepted'] and not r['restore_panicked'] and not r['restore_accepted'],str(r))
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/franku/projects/d16sim-verification-c1/verification/c1_review/check_c1_controls.py", line 12, in check
+    C1Controls.predicates+=1;self.assertTrue(ok,msg)
+                             ~~~~~~~~~~~~~~~^^^^^^^^
+AssertionError: False is not true : {'case': 'control_afr_nan', 'omega': 1.496515296637808, 'restore_accepted': True, 'restore_panicked': False, 'resume_accepted': True, 'resume_error': None, 'resume_panicked': False, 'run_accepted': True, 'run_energy_finite': True, 'run_panicked': False, 'state_finite': True, 'unchanged': False}
+
+======================================================================
+FAIL: test_07_restore_thermal_configuration (__main__.C1Controls.test_07_restore_thermal_configuration)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/franku/projects/d16sim-verification-c1/verification/c1_review/check_c1_controls.py", line 54, in test_07_restore_thermal_configuration
+    for r in rows('thermal_restore_config'):self.check(r['hash_valid'] and not r['accepted'],str(r))
+                                            ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/franku/projects/d16sim-verification-c1/verification/c1_review/check_c1_controls.py", line 12, in check
+    C1Controls.predicates+=1;self.assertTrue(ok,msg)
+                             ~~~~~~~~~~~~~~~^^^^^^^^
+AssertionError: False is not true : {'accepted': True, 'case': 'capacity_zero', 'hash_valid': True, 'stored_finite': True}
+
+======================================================================
+FAIL: test_08_thermal_atomicity_and_overflow (__main__.C1Controls.test_08_thermal_atomicity_and_overflow)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/franku/projects/d16sim-verification-c1/verification/c1_review/check_c1_controls.py", line 56, in test_08_thermal_atomicity_and_overflow
+    for r in rows('extended_thermal'):self.check(not r['accepted'] and r['unchanged'],str(r))
+                                      ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/franku/projects/d16sim-verification-c1/verification/c1_review/check_c1_controls.py", line 12, in check
+    C1Controls.predicates+=1;self.assertTrue(ok,msg)
+                             ~~~~~~~~~~~~~~~^^^^^^^^
+AssertionError: False is not true : {'accepted': True, 'ambient_Q_finite': True, 'case': 'capacity_large', 'stored_energy_finite': False, 'unchanged': False}
+
+======================================================================
+FAIL: test_13_invalid_diagnostic_observations (__main__.C1Controls.test_13_invalid_diagnostic_observations)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/franku/projects/d16sim-verification-c1/verification/c1_review/check_c1_controls.py", line 70, in test_13_invalid_diagnostic_observations
+    for r in rows('diagnostic_invalid'):self.check('Inconclusive' in r['verdict'],str(r))
+                                        ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/franku/projects/d16sim-verification-c1/verification/c1_review/check_c1_controls.py", line 12, in check
+    C1Controls.predicates+=1;self.assertTrue(ok,msg)
+                             ~~~~~~~~~~~~~~~^^^^^^^^
+AssertionError: False is not true : {'case': 'compression_nan', 'verdict': 'Discriminated { cause: Rings, by_measurements: "compression + leak-down to crankcase" }'}
+
+======================================================================
+FAIL: test_15_r02_midburn_is_not_unlabeled_native_c1 (__main__.C1Controls.test_15_r02_midburn_is_not_unlabeled_native_c1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/franku/projects/d16sim-verification-c1/verification/c1_review/check_c1_controls.py", line 50, in test_15_r02_midburn_is_not_unlabeled_native_c1
+    for r in a:self.check(r["hash_verified"] and r["restored_provenance"] is not None and r["restored_provenance"]["continuation"]=="approximate_hot",str(r))
+               ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/franku/projects/d16sim-verification-c1/verification/c1_review/check_c1_controls.py", line 12, in check
+    C1Controls.predicates+=1;self.assertTrue(ok,msg)
+                             ~~~~~~~~~~~~~~~^^^^^^^^
+AssertionError: False is not true : {'continued_chemical_excess_j': 1157.1513880656353, 'continued_provenance': None, 'hash_verified': True, 'historical_hash': '151f2e8b54d7d154bedce8ae3473f3ba4d38831a468d23c40ae22a46b0f150b8', 'old_burn_accounted': [True, False, True, True], 'old_chemical_excess_j': 1157.151388065635, 'restored_provenance': None, 'time': 0.35959999999996856}
+
+----------------------------------------------------------------------
+Ran 15 tests in 0.002s
+
+FAILED (failures=5)

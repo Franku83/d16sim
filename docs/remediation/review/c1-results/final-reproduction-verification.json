@@ -1,0 +1,16 @@
+{
+  "git_source_tree": "012aead94dddc9d3df7170e70ac0554eadb61d45",
+  "implementation": "caad1cbf31d01531e0fbd81be6190f52b2d1c2d7",
+  "direct_vs_git_controls_all_byte_identical": true,
+  "workspace_cases_C1": 198,
+  "workspace_cases_S30": 163,
+  "original_contract_C1_failures": 10,
+  "original_contract_S30_failures": 23,
+  "adversarial_prior_passed": 19,
+  "additional_cases": 15,
+  "additional_passed": 10,
+  "additional_failures": 5,
+  "reproduction_completed": true,
+  "expected_exit": 1,
+  "gate": "C1_REMEDIATION_REQUIRED"
+}

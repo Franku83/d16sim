@@ -1,0 +1,3 @@
+   Compiling d16sim-independent-probes v0.1.0 (/home/franku/projects/d16sim-verification-c1/verification/c1_review)
+    Finished `release` profile [optimized] target(s) in 0.96s
+     Running `verification/c1_review/target/release/c1-controls boundary`

@@ -1,0 +1,8 @@
+{
+  "reviewed_commit": "caad1cbf31d01531e0fbd81be6190f52b2d1c2d7",
+  "deterministic_modes": 5,
+  "baseline_executed": false,
+  "original_contract_exit": 1,
+  "new_contract_exit": 0,
+  "gate": "NOT_DECIDED_BY_HARNESS"
+}

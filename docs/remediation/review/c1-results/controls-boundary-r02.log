@@ -1,0 +1,5 @@
+     Locking 1 package to highest compatible version
+      Adding thermal v0.1.0 (/home/franku/projects/d16sim-verification-c1/target/remediation-review-r02/crates/thermal)
+   Compiling d16sim-r02-native-producer v0.1.0 (/home/franku/projects/d16sim-verification-c1/verification/c1_review/r02_producer)
+    Finished `release` profile [optimized] target(s) in 0.26s
+     Running `verification/c1_review/r02_producer/target/release/r02-boundary-control`

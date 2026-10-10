@@ -1,0 +1,24 @@
+test_01_fuel_transport_budget_and_bounds (__main__.Contracts.test_01_fuel_transport_budget_and_bounds) ... ok
+test_02_chemical_energy_matches_consumed_fuel_during_burn (__main__.Contracts.test_02_chemical_energy_matches_consumed_fuel_during_burn) ... ok
+test_03_physical_exhaust_is_reported (__main__.Contracts.test_03_physical_exhaust_is_reported) ... ok
+test_04_missing_split_cannot_discriminate (__main__.Contracts.test_04_missing_split_cannot_discriminate) ... ok
+test_05_fresh_transport_closed_invariant (__main__.Contracts.test_05_fresh_transport_closed_invariant) ... ok
+test_06_liquid_mass_and_volume_two_densities (__main__.Contracts.test_06_liquid_mass_and_volume_two_densities) ... ok
+test_07_thermal_local_and_global_energy (__main__.Contracts.test_07_thermal_local_and_global_energy) ... ok
+test_08_thermal_analytic_refinement (__main__.Contracts.test_08_thermal_analytic_refinement) ... ok
+test_09_positive_float_roundtrip (__main__.Contracts.test_09_positive_float_roundtrip) ... ok
+test_10_signed_zero_preserves_promised_bits (__main__.Contracts.test_10_signed_zero_preserves_promised_bits) ... ok
+test_11_authentic_v1_integrity_and_continuation (__main__.Contracts.test_11_authentic_v1_integrity_and_continuation) ... ok
+test_12_native_replay_full_state_and_every_trace_sample (__main__.Contracts.test_12_native_replay_full_state_and_every_trace_sample) ... ok
+test_13_engine_invalid_inputs_reject_atomically (__main__.Contracts.test_13_engine_invalid_inputs_reject_atomically) ... ok
+test_14_restore_rejects_invalid_physics_and_configuration (__main__.Contracts.test_14_restore_rejects_invalid_physics_and_configuration) ... ok
+test_15_thermal_rejects_invalid_state_atomically (__main__.Contracts.test_15_thermal_rejects_invalid_state_atomically) ... ok
+test_16_dyno_never_returns_nonfinite_factor (__main__.Contracts.test_16_dyno_never_returns_nonfinite_factor) ... ok
+test_17_decoder_and_ecu_invalid_observations_inhibit (__main__.Contracts.test_17_decoder_and_ecu_invalid_observations_inhibit) ... ok
+test_18_calibration_malformed_model_returns_error (__main__.Contracts.test_18_calibration_malformed_model_returns_error) ... ok
+test_19_manifest_rejects_invalid_observations_metadata (__main__.Contracts.test_19_manifest_rejects_invalid_observations_metadata) ... ok
+
+----------------------------------------------------------------------
+Ran 19 tests in 0.001s
+
+OK

@@ -1,0 +1,12 @@
+{
+  "every_step_experiments": 12,
+  "steps": 196008,
+  "reacting_steps": 43081,
+  "chemical_inventory_error_j": 2.399525023122351e-12,
+  "fuel_inventory_error_kg": 2.191697751020502e-18,
+  "burn_window_replay_cuts": 36,
+  "native_replays": 54,
+  "fresh_max_kg": 1.3877787807814457e-17,
+  "thermal_max_global_j": 4.685716703534126e-09,
+  "thermal_max_local_j": 2.9272086976561695e-09
+}

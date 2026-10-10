@@ -1,0 +1,34 @@
+{
+  "check_contracts.py": {
+    "sha256": "b027d9e3ab697b1974e87980765b7b4872e24e3792153ec3e02b598bd0756b36",
+    "byte_identical": true,
+    "reference": "25d528e3ff5b31eaeab0c894c4227b3e7d3a574c:audit/independent/check_contracts.py"
+  },
+  "check_adversarial.py": {
+    "sha256": "d67f74f3c560a4bee17d703734a2b48ac5e88d0624351e51dfef5356e59f5b9b",
+    "byte_identical": true,
+    "reference": "1d614378dd8481acb2a513b4c6dc6572345e5c66:verification/remediation_review/check_adversarial.py"
+  },
+  "src/adversarial.rs": {
+    "sha256": "66ffdbc62a866e67d7f819f05e2f920fbbf0de8ce3f1c677b613d13a7a14afa7",
+    "byte_identical": true,
+    "reference": "1d614378dd8481acb2a513b4c6dc6572345e5c66:verification/remediation_review/src/adversarial.rs"
+  },
+  "src/main.rs": {
+    "sha256": "b28adcc0b93950aadf73c950e47b4679f6b90f746dba688ad4cad09c37607982",
+    "byte_identical": true,
+    "reference": "1d614378dd8481acb2a513b4c6dc6572345e5c66:verification/remediation_review/src/main.rs"
+  },
+  "src/common.rs": {
+    "sha256": "62ed1b2a9391e22854e642dd01819fe8e7460c493faccb702cb34abe131ce20d",
+    "byte_identical": true,
+    "reference": "1d614378dd8481acb2a513b4c6dc6572345e5c66:verification/remediation_review/src/common.rs"
+  },
+  "diagnostic_helper": {
+    "sha256": "6f62680b14fb6b8a72443f7aeb6a84d52cda2bf628bff55398c07abf86114f2e",
+    "byte_exact": true,
+    "source": "caad1cbf31d01531e0fbd81be6190f52b2d1c2d7:crates/cli/src/main.rs"
+  },
+  "historical_v1_hot_reproduced_byte_exact": true,
+  "foundation_evidence_dod_unchanged": true
+}

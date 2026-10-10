@@ -1,0 +1,31 @@
+{
+  "implementation": "caad1cbf31d01531e0fbd81be6190f52b2d1c2d7",
+  "historical_adversarial": {
+    "test_targets": 1,
+    "test_cases": 19,
+    "assertion_predicates_executed": 196,
+    "passed": 19,
+    "failures": 0,
+    "errors": 0,
+    "observation_rows": 198,
+    "families": 31,
+    "failure_names": []
+  },
+  "additional_controls": {
+    "test_targets": 1,
+    "cases": 14,
+    "passed": 10,
+    "failures": 4,
+    "errors": 0,
+    "predicates_executed": 119,
+    "rows": 137,
+    "families": 19,
+    "failure_names": [
+      "test_06_complete_engine_validation",
+      "test_07_restore_thermal_configuration",
+      "test_08_thermal_atomicity_and_overflow",
+      "test_13_invalid_diagnostic_observations"
+    ]
+  },
+  "gate": "REQUIRES_INDEPENDENT_DECISION"
+}

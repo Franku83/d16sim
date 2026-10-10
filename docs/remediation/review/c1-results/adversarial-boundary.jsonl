@@ -1,0 +1,31 @@
+{"data":{"accepted":false,"bad":"NaN","state":"ThermalState { t_wall_c: NaN, t_piston_c: NaN, t_oil_c: NaN, t_cool_c: NaN, ect_filt_c: NaN }","unchanged":true},"probe":"thermal_invalid_state"}
+{"data":{"accepted":false,"bad":"Inf","state":"ThermalState { t_wall_c: inf, t_piston_c: inf, t_oil_c: inf, t_cool_c: inf, ect_filt_c: inf }","unchanged":true},"probe":"thermal_invalid_state"}
+{"data":{"accepted":false,"bad":"below_absolute","state":"ThermalState { t_wall_c: -300.0, t_piston_c: -300.0, t_oil_c: -300.0, t_cool_c: -300.0, ect_filt_c: -300.0 }","unchanged":true},"probe":"thermal_invalid_state"}
+{"data":{"accepted":false,"state":"ThermalState { t_wall_c: 20.0, t_piston_c: 20.0, t_oil_c: 20.0, t_cool_c: 20.0, ect_filt_c: 20.0 }"},"probe":"thermal_invalid_ambient"}
+{"data":{"rejected":true,"state":"ThermalState { t_wall_c: 20.0, t_piston_c: 20.0, t_oil_c: 20.0, t_cool_c: 20.0, ect_filt_c: 20.0 }","unchanged":true},"probe":"thermal_overflow_atomic"}
+{"data":{"accepted":false,"error":"invalid engine input/state: restored snapshot: thermal state","field":"thermal_abszero","verified":true},"probe":"restore_boundary"}
+{"data":{"accepted":false,"error":"invalid engine input/state: restored snapshot: thermal state","field":"thermal_nan","verified":true},"probe":"restore_boundary"}
+{"data":{"accepted":false,"error":"invalid engine input/state: restored snapshot: heat_released","field":"counter_nan","verified":true},"probe":"restore_boundary"}
+{"data":{"accepted":false,"error":"invalid engine input/state: restored snapshot: fuel_emitted","field":"counter_negative","verified":true},"probe":"restore_boundary"}
+{"data":{"accepted":false,"error":"invalid engine input/state: restored snapshot: event history","field":"history_nan","verified":true},"probe":"restore_boundary"}
+{"data":{"accepted":false,"error":"invalid engine input/state: plenum volume","field":"node_volume","verified":true},"probe":"restore_boundary"}
+{"data":{"accepted":false,"error":"invalid engine input/state: record_every must be > 0","field":"record_zero","verified":true},"probe":"restore_boundary"}
+{"data":{"accepted":false,"bad":"negative_area","error":"invalid engine input/state: tailpipe_area","panicked":false,"unchanged":true},"probe":"engine_boundary_atomic"}
+{"data":{"accepted":false,"bad":"bad_wiebe","error":"invalid engine input/state: wiebe_a","panicked":false,"unchanged":true},"probe":"engine_boundary_atomic"}
+{"data":{"accepted":false,"bad":"friction_nan","error":"invalid engine input/state: friction c","panicked":false,"unchanged":true},"probe":"engine_boundary_atomic"}
+{"data":{"accepted":false,"bad":"bad_state","error":"invalid engine input/state: resume input: cylinder state","panicked":false,"unchanged":true},"probe":"engine_boundary_atomic"}
+{"data":{"accepted":false,"bad":"counter_nan","error":"invalid engine input/state: resume input: heat_released","panicked":false,"unchanged":true},"probe":"engine_boundary_atomic"}
+{"data":{"accepted":false,"finite":false},"probe":"dyno_overflow"}
+{"data":{"finite_phase":true,"nonfinite_estimate_time":false,"state":"SyncLost"},"probe":"decoder_boundary"}
+{"data":{"field":"value_nan","rejected":true},"probe":"manifest_boundary"}
+{"data":{"field":"value_inf","rejected":true},"probe":"manifest_boundary"}
+{"data":{"field":"sigma_nan","rejected":true},"probe":"manifest_boundary"}
+{"data":{"field":"sigma_negative","rejected":true},"probe":"manifest_boundary"}
+{"data":{"field":"unit_missing","rejected":true},"probe":"manifest_boundary"}
+{"data":{"field":"campaign_missing","rejected":true},"probe":"manifest_boundary"}
+{"data":{"field":"provenance_missing","rejected":true},"probe":"manifest_boundary"}
+{"data":{"bad":"load_nan","finite_commands":true,"ignition_count":0,"injection_count":0,"state":"SyncLost"},"probe":"ecu_boundary"}
+{"data":{"bad":"rpm_nan","finite_commands":true,"ignition_count":0,"injection_count":0,"state":"SyncLost"},"probe":"ecu_boundary"}
+{"data":{"bad":"phase_nan","finite_commands":true,"ignition_count":0,"injection_count":0,"state":"SyncLost"},"probe":"ecu_boundary"}
+{"data":{"panicked":false,"rejected":true},"probe":"calibration_dimension"}
+{"data":{"accepted":true},"probe":"calibration_negative_weight"}
