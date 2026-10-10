@@ -309,3 +309,16 @@ Solo hechos constatables; sin cifras improvisadas.
 - Gate S19: PASS — separación por construcción + demos + tests.
 - Deuda: curvas OEM, heater/retardo O2, PWM IACV, closed-loop, Bode
   completo, corrosión/diafonía.
+
+## 2026-10-10 · S20 · Instrumentos sin panel secreto (APROBADO)
+
+- Crate `diagnostics` (sondas + multímetro + scope + scanner espejo +
+  manual por enlaces + casos ambiguos; SIN dep de `engine`/`assembly`);
+  `d16sim diagnose-demo` (Inconclusive→Discriminated en map y ckp);
+  ADR-027; `docs/physics/diagnostic_tools.md`; H-S20-01..04.
+- Tests: 8 passed (sonda, multímetro, trigger/alias, scanner, manual,
+  2 de ambigüedad con crates reales). 1 tolerancia corregida
+  (cuantización 1 mV).
+- Gate S20: PASS — sin panel secreto por construcción; verdad del
+  harness solo para montar escenarios.
+- Deuda: instrumentos mecánicos S24, Bode, in-cylinder, tutorial/evaluador.

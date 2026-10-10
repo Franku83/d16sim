@@ -1,7 +1,7 @@
 # HANDOFF — punto de entrada al siguiente agente
 
-Fecha: 2026-10-10 · Sprints: **S00–S19 APROBADOS (batch S16–S20)**.
-Siguiente: **S20**. **S21 prohibido sin autorización.**
+Fecha: 2026-10-10 · Sprints: **S00–S20 APROBADOS (batch S16–S20)**.
+**S21 NO iniciado: prohibido sin autorización explícita.**
 
 ## Estado científico/arquitectónico actual
 
@@ -32,9 +32,9 @@ Siguiente: **S20**. **S21 prohibido sin autorización.**
    2026-10-10.
 2. ~~Licencia sin decidir~~ — resuelto: Apache-2.0 solo código propio
    (propietario 2026-10-10); `LICENSE` + `THIRD_PARTY_NOTICES.md` creados.
-3. S01–S19 APROBADOS 2026-10-10 (S18: DTC por persistencia; S19:
-   ECT/MAP falsos cambian acción sin tocar físico). Deuda: instrumentos
-   de taller en S20; curvas OEM; closed-loop.
+3. S01–S20 APROBADOS 2026-10-10 (S19: gate causal; S20: veredicto
+   por complementaria). Deuda: térmico/aceite en S21–S22; estrategia OEM;
+   scope OEM + página de manual.
 
 ## Roles y reglas de cambio (S00)
 
@@ -143,7 +143,15 @@ Crate `ecu` + `ecu-demo` + ADR-025. Ver `docs/sprints/S18.md`.
 
 Cadena sensorial + `sensor-demo` + ADR-026. Ver `docs/sprints/S19.md`.
 
-## Brief S20 (siguiente en batch autorizado)
+## Brief S20 (APROBADO 2026-10-10)
+
+Crate `diagnostics` + `diagnose-demo` + ADR-027. Ver `docs/sprints/S20.md`.
+
+## Brief S21 (PROHIBIDO sin autorización explícita del propietario)
+
+Sistema térmico L1: nodos metal/aceite/refrigerante/ambiente,
+transferencia combustión→paredes→fluidos, termostato/bomba/radiador,
+ECT/IAT reales alimentando ECU y fricción. Dep: S09–S16, S19.
 
 Herramientas diagnósticas sin pistas automáticas: sondas con acceso
 físico/polaridad/masa, multímetro con impedancia, osciloscopio con

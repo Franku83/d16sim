@@ -148,3 +148,12 @@ futuros: toda aproximación pasa por aquí + `ModelCard` (§11.4).
 | H-S19-02 | NTC con pull-up 2k/2k y B=3435 ilustrativos | ECT S19 | Orden típico | Curva ECT OEM |
 | H-S19-03 | O2 narrowband como conmutador con histéresis futura | S19 | Física de sensor | Dinámica con heater |
 | H-S19-04 | Acción ECU sin camino a termodinámica (tipos) | S19 | Decisión ADR-026 | — |
+
+## Registro S20 (instrumentos sin panel secreto)
+
+| ID | Hipótesis | Dominio | Fuente | Invalida si |
+|---|---|---|---|---|
+| H-S20-01 | Multímetro 10 MΩ/20 V/1 mV ilustrativo | S20 | Orden típico | Hoja de instrumento |
+| H-S20-02 | Scope sin antialias: alias declarado, no oculto | S20 | Decisión ADR-027 | Filtro modelado |
+| H-S20-03 | Scanner espejo; manual por enlaces, sin contenido | S20 | Decisión (licencias) | Protocolo variante |
+| H-S20-04 | Ambigüedad exige complementaria; verdad solo monta | S20 | Gate S20 | — |

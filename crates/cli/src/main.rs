@@ -161,6 +161,11 @@ enum Command {
         #[arg(long, default_value = "ect_false_cold")]
         case: String,
     },
+    /// Casos ambiguos con veredicto (S20, sin panel secreto).
+    DiagnoseDemo {
+        #[arg(long, default_value = "map")]
+        case: String,
+    },
     /// Dinámica de cigüeñal con traza motored (S14, ilustrativo).
     CrankDynamics {
         #[arg(long, default_value_t = 750.0)]
@@ -300,6 +305,7 @@ fn run() -> Result<(), EngineError> {
         Command::TriggerWaveform { rpm, fault } => trigger_waveform_cmd(rpm, fault),
         Command::EcuDemo { rpm, fault } => ecu_demo_cmd(rpm, fault),
         Command::SensorDemo { case } => sensor_demo_cmd(&case),
+        Command::DiagnoseDemo { case } => diagnose_demo_cmd(&case),
         Command::CrankDynamics { rpm0, seconds } => crank_dynamics_cmd(rpm0, seconds),
         Command::ColdCrank => cold_crank_cmd(),
     }
@@ -1328,5 +1334,61 @@ fn sensor_demo_cmd(case: &str) -> Result<(), EngineError> {
     println!("  ecu_enrich_factor   : {enrich:.2} (from ECT reading only)");
     println!("  ecu_load_est        : {load_est:.3} (from MAP reading only)");
     println!("  map_monitor_active  : {} (REF-MAP-RANGE)", mon.active);
+    Ok(())
+}
+
+/// Comando S20: dos causas, una lectura. El harness monta los escenarios
+/// (conoce la verdad SOLO para evaluar); los instrumentos no la ven. Sin
+/// panel secreto: el veredicto exige la medición complementaria.
+fn diagnose_demo_cmd(case: &str) -> Result<(), EngineError> {
+    use diagnostics::{edge_interval_variance, AmbiguityCase};
+    use trigger::{DistributorTrigger, TriggerConfig, TriggerFault};
+
+    let err = |e: String| EngineError::SchemaValidation(e);
+    match case {
+        "map" => {
+            let healthy_v = 0.2 + (35.0 - 20.0) * (4.8 - 0.2) / (250.0 - 20.0);
+            let c = AmbiguityCase::MapBiasVsLeak {
+                v_biased: healthy_v + 0.5,
+                v_real_rise: 0.2 + (60.0 - 20.0) * (4.8 - 0.2) / (250.0 - 20.0),
+                tolerance_v: 0.05,
+                ref_biased_kpa: 35.0,
+                ref_real_kpa: 60.0,
+                ref_tolerance_kpa: 5.0,
+            };
+            println!("diagnose-demo case=map (bias +0.5V vs real rise to 60kPa):");
+            println!("  without reference : {:?}", c.without_complementary_test());
+            println!("  with reference    : {:?}", c.with_complementary_test());
+        }
+        "ckp" => {
+            let mut cj = TriggerConfig::generic_family();
+            cj.fault = TriggerFault::Intermittent {
+                channel: 0,
+                seed: 41,
+                drop_probability: 0.15,
+            };
+            let mut co = TriggerConfig::generic_family();
+            co.fault = TriggerFault::DistributorOffset {
+                offset_crank_deg: 10.0,
+            };
+            let tj = DistributorTrigger::new(cj).map_err(|e| err(e.to_string()))?;
+            let to = DistributorTrigger::new(co).map_err(|e| err(e.to_string()))?;
+            let ej = tj
+                .channel_edges(0, 750.0, 0.0, 2.0, 200_000.0, 5)
+                .map_err(|e| err(e.to_string()))?;
+            let eo = to
+                .channel_edges(0, 750.0, 0.0, 2.0, 200_000.0, 5)
+                .map_err(|e| err(e.to_string()))?;
+            let c = AmbiguityCase::CkpJitterVsOffset {
+                interval_variance_a: edge_interval_variance(&ej),
+                interval_variance_b: edge_interval_variance(&eo),
+                separation_ratio: 10.0,
+            };
+            println!("diagnose-demo case=ckp (intermittent vs 10° offset):");
+            println!("  without shape     : {:?}", c.without_complementary_test());
+            println!("  with shape        : {:?}", c.with_complementary_test());
+        }
+        _ => return Err(err(format!("unknown case {case}"))),
+    }
     Ok(())
 }

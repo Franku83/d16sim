@@ -33,7 +33,7 @@ Fuente normativa: `docs/foundation.md` §14–§16. Detalle por sprint:
 | S17 | S01,S05–S06,S15–S16 | CKP/TDC/CYP exactos | Patrón trazado a fuente; si no, `GENERIC_TRIGGER`, prohibido OEM | **APROBADO** (2026-10-10; 7 tests + TRIG-2026-10-10; ver `docs/sprints/S17.md`) |
 | S18 | S13,S15–S17 | ECU trigger decoder + scheduler | Señales erróneas alteran sync/timing causalmente; visible solicitado vs efectivo | **APROBADO** (2026-10-10; 7 tests; ver `docs/sprints/S18.md`) |
 | S19 | S12–S13,S15,S18 | Sensores, cableado | ECT falso cambia ECU sin cambiar T física; MAP falso no cambia p real | **APROBADO** (2026-10-10; 12 tests; ver `docs/sprints/S19.md`) |
-| S20 | S05,S07,S17–S19 | Herramientas diagnósticas | Sin panel secreto; tests conocen causa solo para evaluación | PENDIENTE |
+| S20 | S05,S07,S17–S19 | Herramientas diagnósticas | Sin panel secreto; tests conocen causa solo para evaluación | **APROBADO** (2026-10-10; 8 tests; ver `docs/sprints/S20.md`) |
 | S21 | S09–S16,S19 | Térmico L1 | Todo calor tiene fuente/sumidero; T no cambia por comando de sensor | PENDIENTE |
 | S22 | S14,S21 | Aceite/galerías/cojinetes | Fallo aceite por ruta presión/film/fricción, nunca bandera | PENDIENTE |
 
@@ -57,6 +57,6 @@ ecuaciones con animaciones. Ver foundation §16. Todos PENDIENTE.
 
 ## Regla de avance
 
-S00–S19 APROBADOS. Batch S16–S20 autorizado, siguiente: S20.
+S00–S20 APROBADOS. Batch S16–S20 completo.
 **S21 prohibido sin autorización.** Gates universales §12.3 +
 `docs/definition-of-done.md` aplican.
