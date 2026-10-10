@@ -1,7 +1,7 @@
 # HANDOFF — punto de entrada al siguiente agente
 
-Fecha: 2026-10-10 · Sprints: **S00–S08 APROBADOS (batch S06–S10)**.
-Siguiente: **S09**. **S11 prohibido sin autorización.**
+Fecha: 2026-10-10 · Sprints: **S00–S09 APROBADOS (batch S06–S10)**.
+Siguiente: **S10**. **S11 prohibido sin autorización.**
 
 ## Estado científico/arquitectónico actual
 
@@ -28,9 +28,9 @@ Siguiente: **S09**. **S11 prohibido sin autorización.**
    2026-10-10.
 2. ~~Licencia sin decidir~~ — resuelto: Apache-2.0 solo código propio
    (propietario 2026-10-10); `LICENSE` + `THIRD_PARTY_NOTICES.md` creados.
-3. S01–S08 APROBADOS 2026-10-10 (S07: daño jamás decretado; S08:
-   F seca vs aceitada 25.0/33.3 kN). Deuda: CI Windows sin ejecutar;
-   fuga en S23; K medido en S25; secuencia OEM sin transcribir.
+3. S01–S09 APROBADOS 2026-10-10 (S08: 25.0/33.3 kN; S09: err 7e−11,
+   orden 3.9). Deuda: CI Windows sin ejecutar; γ(T) y fugas pendientes;
+   combustión en S10.
 
 ## Roles y reglas de cambio (S00)
 
@@ -91,9 +91,14 @@ Crate `contacts` + `contact-check`. Ver `docs/sprints/S07.md`.
 Crate `fastener` + `fastener-seal-test` + ADR-015. Ver
 `docs/sprints/S08.md`.
 
-## Brief S09 (siguiente en batch autorizado)
+## Brief S09 (APROBADO 2026-10-10)
 
-Cilindro sellado ideal sin combustión: `ThermoState` + mezcla simple,
-primera ley con geometría variable (Q=0), integración RK4 por ángulo,
-comparación adiabática analítica + convergencia, auditoría energética.
-Gate: coincide con ideal en tolerancia justificada; no «D16 validado».
+Crate `thermo` + `closed-cycle` + ADR-016. Ver `docs/sprints/S09.md`.
+
+## Brief S10 (siguiente en batch autorizado)
+
+Combustión reducida: Wiebe paramétrico (a/m/inicio/duración explícitos),
+acople a primera ley sin doble conteo, torque indicado `p·dV/dθ` y trabajo
+neto, barrido de avance con Q_pared=0, sin calibración a hp de catálogo.
+Gate: retrasar la liberación desplaza presión/trabajo de forma explicable;
+sensibilidad revisada; sin dyno al freno.

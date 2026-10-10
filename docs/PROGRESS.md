@@ -147,3 +147,16 @@ Solo hechos constatables; sin cifras improvisadas.
   calibración pendiente declarada en reporte y física.
 - Deuda: secuencia OEM sin transcribir; interacción elástica; fuga en
   S23; K medido en S25.
+
+## 2026-10-10 · S09 · Cilindro sellado ideal (APROBADO)
+
+- Crate `thermo` (mezcla R/γ + `ThermoState` consistente + ciclo cerrado
+  RK4/Simpson); `d16sim closed-cycle` (W −153.3826 J err 1.4e−10,
+  W_net 8.6e−9 J, orden 3.888); ADR-016; `docs/physics/closed_cylinder.md`;
+  H-S09-01..04.
+- Tests: 3 passed (ideal+reversibilidad+positividad, orden RK4,
+  rechazos). 1 fallo intermedio honesto: cuadratura trapezoidal O(h²)
+  limitaba el trabajo → Simpson (documentado). Build 0 warnings.
+- Gate S09: PASS — coincide con ideal en tolerancia medida; rotulado no
+  validado.
+- Deuda: γ(T,mezcla), fugas, pared, residuales, combustión (S10/S12/S21).

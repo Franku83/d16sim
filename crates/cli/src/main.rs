@@ -89,6 +89,17 @@ enum Command {
         #[arg(long, default_value_t = 10.0)]
         dia_mm: f64,
     },
+    /// Ciclo cerrado ideal sin combustión (S09, entradas ilustrativas).
+    ClosedCycle {
+        #[arg(long, default_value_t = 101.325)]
+        p_bdc_kpa: f64,
+        #[arg(long, default_value_t = 350.0)]
+        t_bdc_k: f64,
+        #[arg(long, default_value_t = 1.35)]
+        gamma: f64,
+        #[arg(long, default_value_t = 0.25)]
+        step_deg: f64,
+    },
 }
 
 fn run() -> Result<(), EngineError> {
@@ -190,6 +201,12 @@ fn run() -> Result<(), EngineError> {
         Command::FastenerSealTest { torque_nm, dia_mm } => {
             fastener_seal_test_cmd(torque_nm, dia_mm)
         }
+        Command::ClosedCycle {
+            p_bdc_kpa,
+            t_bdc_k,
+            gamma,
+            step_deg,
+        } => closed_cycle_cmd(p_bdc_kpa, t_bdc_k, gamma, step_deg),
     }
 }
 
@@ -545,5 +562,51 @@ fn fastener_seal_test_cmd(torque_nm: f64, dia_mm: f64) -> Result<(), EngineError
     println!("  non_uniformity      : {:.4}", field.non_uniformity);
     println!("  seal_status         : {:?}", field.status[0]);
     println!("  conductance         : Unsupported (S23)");
+    Ok(())
+}
+
+/// Comando S09: ciclo cerrado ideal con auditoría y convergencia.
+/// Entradas ilustrativas (no OEM): p/T en BDC, γ constante, paso angular.
+fn closed_cycle_cmd(
+    p_bdc_kpa: f64,
+    t_bdc_k: f64,
+    gamma: f64,
+    step_deg: f64,
+) -> Result<(), EngineError> {
+    use kinematics::GeometryPack;
+    use thermo::{ClosedCycle, Mixture};
+
+    let err = |e: String| EngineError::SchemaValidation(e);
+    let geom = GeometryPack::illustrative_d16_like().map_err(|e| err(e.to_string()))?;
+    let mix = Mixture::new(287.0, gamma).map_err(|e| err(e.to_string()))?;
+    let cycle = ClosedCycle::new(geom, mix, p_bdc_kpa * 1_000.0, t_bdc_k)
+        .map_err(|e| err(e.to_string()))?;
+    if !(step_deg > 0.0 && step_deg <= 2.0) {
+        return Err(err(format!("step_deg {step_deg} outside (0, 2]")));
+    }
+    let (points, mut audit) = cycle.run(step_deg);
+    let (_, order) = cycle.convergence(&[1.0, 0.5, 0.25, 0.125]);
+    audit.conv_order = order;
+    let ptdc = points
+        .iter()
+        .max_by(|a, b| a.p_pa.total_cmp(&b.p_pa))
+        .map(|p| (p.theta_deg, p.p_pa))
+        .unwrap_or((f64::NAN, f64::NAN));
+    println!("closed-cycle (ILLUSTRATIVE inputs; verification only, not D16 validation):");
+    println!(
+        "  trapped_mass_mg    : {:.3}",
+        cycle.trapped_mass_kg() * 1e6
+    );
+    println!(
+        "  pmax_kPa@deg       : {:.1} @ {:.2}",
+        ptdc.1 / 1_000.0,
+        ptdc.0
+    );
+    println!("  W_comp_J (num)     : {:.4}", audit.w_comp_j);
+    println!("  W_comp_J (analytic): {:.4}", audit.w_comp_analytic_j);
+    println!("  W_comp_rel_err     : {:.3e}", audit.w_comp_rel_err);
+    println!("  W_net_J            : {:.4e}", audit.w_net_j);
+    println!("  max_p_rel_err      : {:.3e}", audit.max_p_rel_err);
+    println!("  conv_order         : {:.3}", audit.conv_order);
     Ok(())
 }

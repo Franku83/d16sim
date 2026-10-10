@@ -45,3 +45,12 @@ futuros: toda aproximación pasa por aquí + `ModelCard` (§11.4).
 | H-S08-02 | Rangos K ilustrativos genéricos (NO OEM) | Sensibilidad S08 | Lit. genérica, cal. pendiente | Medición de K |
 | H-S08-03 | Reparto por pesos de rigidez, secuencia sin efecto en L1 | Junta S08 | Supuesto declarado | Modelo elástico S08+ |
 | H-S08-04 | Sellado indeterminado sin ley de fuga | Junta S08 | Decisión (gate S23) | Solver S23 |
+
+## Registro S09 (cilindro sellado ideal)
+
+| ID | Hipótesis | Dominio | Fuente | Invalida si |
+|---|---|---|---|---|
+| H-S09-01 | Gas ideal, R/γ constantes | Ciclo cerrado S09 | Supuesto declarado | cp(T,mezcla) en S10+ |
+| H-S09-02 | Q_pared = 0, sin fugas ni residuales | Ciclo cerrado S09 | Supuesto declarado | Modelos S12/S21/S23 |
+| H-S09-03 | Entradas p/T BDC ilustrativas (101.325 kPa/350 K) | Demo S09 | Supuesto declarado | Medición en motor |
+| H-S09-04 | RK4+Simpson verifica contra adiabática, no valida motor | Tests S09 | ADR-016 | — |

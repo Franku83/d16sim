@@ -167,6 +167,7 @@ dependencies = [
  "physics",
  "serde_json",
  "simulation",
+ "thermo",
  "units",
 ]
 
@@ -365,6 +366,16 @@ dependencies = [
  "proc-macro2",
  "quote",
  "unicode-ident",
+]
+
+[[package]]
+name = "thermo"
+version = "0.1.0"
+dependencies = [
+ "engine-types",
+ "kinematics",
+ "thiserror",
+ "units",
 ]
 
 [[package]]
