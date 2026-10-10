@@ -18,6 +18,7 @@ fastener = { path = "../fastener" }
 flow = { path = "../flow" }
 fuel = { path = "../fuel" }
 crank = { path = "../crank" }
+electrical = { path = "../electrical" }
 kinematics = { path = "../kinematics" }
 thermo = { path = "../thermo" }
 valvetrain = { path = "../valvetrain" }

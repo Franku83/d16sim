@@ -142,6 +142,8 @@ enum Command {
         #[arg(long, default_value_t = 2.0)]
         seconds: f64,
     },
+    /// Arranque arrastrado en frío (S15, sin bootstrap).
+    ColdCrank,
 }
 
 fn run() -> Result<(), EngineError> {
@@ -269,6 +271,7 @@ fn run() -> Result<(), EngineError> {
         } => gas_exchange_cmd(rpm, plenum_l, exhaust_l, throttle_cm2, tailpipe_cm2),
         Command::FuelSupplyTest => fuel_supply_test_cmd(),
         Command::CrankDynamics { rpm0, seconds } => crank_dynamics_cmd(rpm0, seconds),
+        Command::ColdCrank => cold_crank_cmd(),
     }
 }
 
@@ -972,5 +975,63 @@ fn run_crank_with_trace(th: &[f64], pp: &[f64], rpm0: f64, seconds: f64) -> Resu
     println!("  W_fric_J          : {:.3}", r.w_fric_j);
     println!("  dKE_J             : {:.3}", r.delta_ke_j);
     println!("  energy_closure    : {:.3e}", r.energy_closure);
+    Ok(())
+}
+
+/// Comando S15: arranque arrastrado con batería sana + traza motored S12.
+/// Sin bootstrap: el resultado informa `started: false` por diseño.
+fn cold_crank_cmd() -> Result<(), EngineError> {
+    use electrical::{cold_crank, Battery, Coil, ColdCrankInputs, StarterDrive, StarterMotor};
+    use kinematics::GeometryPack;
+
+    let err = |e: String| EngineError::SchemaValidation(e);
+    let geom = GeometryPack::illustrative_d16_like().map_err(|e| err(e.to_string()))?;
+    // Traza motored S12 como carga resistiva (misma que crank-dynamics).
+    let (trace, _) = motored_trace_for_crank().map_err(err)?;
+    let th: Vec<f64> = trace.iter().map(|p| p.theta_deg).collect();
+    let pp: Vec<f64> = trace.iter().map(|p| p.p_cyl_pa).collect();
+    let r = cold_crank(
+        &geom,
+        &ColdCrankInputs {
+            battery: Battery::illustrative_12v(),
+            starter: StarterMotor::illustrative(),
+            drive: StarterDrive::new(12.0).map_err(|e| err(e.to_string()))?,
+            coil: {
+                let mut c = Coil::illustrative();
+                c.dwell_s = 3e-3;
+                c
+            },
+            fuel_present_kg: 25e-6,
+            inertia: crank::InertiaParams::new(0.15, 0.5).map_err(|e| err(e.to_string()))?,
+            friction: crank::FrictionModel::ChenFlynn {
+                coeffs: crank::ChenFlynnCoeffs {
+                    c1_pa: 30_000.0,
+                    c2_dlless: 0.0,
+                    c3_pa_s_m: 8_000.0,
+                    c4_pa_s2_m2: 400.0,
+                },
+            },
+            trace_theta_deg: th,
+            trace_p_pa: pp,
+            t_end_s: 2.0,
+            dt_s: 1e-4,
+        },
+    )
+    .map_err(|e| err(e.to_string()))?;
+    println!("cold-crank (ILLUSTRATIVE electrics; cranks, never starts in S15):");
+    println!(
+        "  started           : {} ({})",
+        r.started, r.no_start_reason
+    );
+    println!("  mean_rpm_last_rev : {:.1}", r.mean_rpm_last_rev);
+    println!("  ripple_rpm        : {:.1}", r.ripple_rpm);
+    println!("  E_supplied_J      : {:.1}", r.e_supplied_j);
+    println!("  E_copper_J        : {:.1}", r.e_copper_j);
+    println!(
+        "  spark_available   : {} ({:.1} mJ)",
+        r.spark.available,
+        r.spark.energy_j * 1e3
+    );
+    println!("  mech_closure      : {:.3e}", r.mech_closure);
     Ok(())
 }

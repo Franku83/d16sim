@@ -101,3 +101,13 @@ futuros: toda aproximación pasa por aquí + `ModelCard` (§11.4).
 | H-S14-02 | J constante por media energética; J(θ) deuda | S14 | Supuesto declarado | J(θ) medido/modelado |
 | H-S14-03 | Chen–Flynn c2=0, coeficientes ilustrativos del llamante | S14 | Pipitone + supuesto | FMEP medido |
 | H-S14-04 | Traza S12 replicada en 4 cilindros idénticos | Demo S14 | Supuesto declarado | Diferenciación S16 |
+
+## Registro S15 (arranque arrastrado)
+
+| ID | Hipótesis | Dominio | Fuente | Invalida si |
+|---|---|---|---|---|
+| H-S15-01 | Batería/starter/bobina ilustrativos 12 V (no medidos) | S15 | Supuesto declarado | Curvas medidas |
+| H-S15-02 | Acoplo τ·(V/V0) lineal L1; eficiencia diagnóstico | S15 | Supuesto + test η≤1 | Modelo V explícito |
+| H-S15-03 | Reductora 12:1 ilustrativa explícita | S15 | Supuesto declarado | Relación OEM |
+| H-S15-04 | Compresión = traza S12 (velocidad pendiente) | S15 | Supuesto declarado | Gas exchange vivo S16 |
+| H-S15-05 | `started=false` por diseño; bootstrap prohibido | S15 | Decisión ADR-022 | Integración S16 |

@@ -37,11 +37,12 @@ pub struct SpinResult {
     pub states: Vec<SpinState>,
     /// ΔKE rotacional (J).
     pub delta_ke_j: f64,
-    /// Trabajo indicado, fricción y carga (J).
+    /// Trabajo indicado, fricción, carga y asistencia externa (J).
     pub w_ind_j: f64,
     pub w_fric_j: f64,
     pub w_load_j: f64,
-    /// Cierre: (ΔKE − (W_ind − W_fric − W_load))/escala.
+    pub w_assist_j: f64,
+    /// Cierre: (ΔKE − (W_ind − W_fric − W_load + W_assist))/escala.
     pub energy_closure: f64,
 }
 
@@ -65,6 +66,40 @@ pub fn spin_down(
     omega0_rad_s: f64,
     t_end_s: f64,
     dt_s: f64,
+) -> Result<SpinResult, SpinError> {
+    spin_with_assist(
+        indicated,
+        geom,
+        friction,
+        load,
+        inertia_j,
+        theta0_deg,
+        omega0_rad_s,
+        t_end_s,
+        dt_s,
+        &|_, _| 0.0,
+    )
+}
+
+/// Como `spin_down` más un par externo `assist(theta_deg, omega)` (p. ej.
+/// starter en S15). Con asistencia cero la trayectoria coincide con
+/// `spin_down` (sumar 0.0 es exacto en IEEE salvo −0.0 firmado).
+///
+/// # Errors
+///
+/// Igual que `spin_down`.
+#[allow(clippy::too_many_arguments)]
+pub fn spin_with_assist(
+    indicated: &IndicatedTorque,
+    geom: &GeometryPack,
+    friction: FrictionModel,
+    load: DynoLaw,
+    inertia_j: f64,
+    theta0_deg: f64,
+    omega0_rad_s: f64,
+    t_end_s: f64,
+    dt_s: f64,
+    assist: &dyn Fn(f64, f64) -> f64,
 ) -> Result<SpinResult, SpinError> {
     let bad = |reason: &str| SpinError::InvalidInput {
         reason: reason.to_owned(),
@@ -99,15 +134,19 @@ pub fn spin_down(
         th_scan += 5.0;
     }
 
-    let accel = |theta_deg: f64, omega: f64| -> Result<(f64, f64, f64, f64), SpinError> {
+    let accel = |theta_deg: f64, omega: f64| -> Result<(f64, f64, f64, f64, f64), SpinError> {
         let tau_ind = indicated.torque_at(theta_deg);
         let rpm = omega.max(0.0) * 60.0 / (2.0 * std::f64::consts::PI);
         let sp = 2.0 * geom.stroke().as_m() * rpm / 60.0;
         let tau_fric = friction
             .torque_mag(sp, pmax_pa, vd, omega)
             .map_err(|_| bad("friction evaluation"))?;
-        let domega = (tau_ind - tau_fric - load_tau) / inertia_j;
-        Ok((omega, domega, tau_ind, tau_fric))
+        let tau_assist = assist(theta_deg, omega);
+        if !tau_assist.is_finite() {
+            return Err(bad("assist torque must be finite"));
+        }
+        let domega = (tau_ind - tau_fric - load_tau + tau_assist) / inertia_j;
+        Ok((omega, domega, tau_ind, tau_fric, tau_assist))
     };
 
     let mut th = theta0_deg;
@@ -119,20 +158,21 @@ pub fn spin_down(
     let mut w_ind = 0.0;
     let mut w_fric = 0.0;
     let mut w_load = 0.0;
+    let mut w_assist = 0.0;
     let mut t = 0.0;
     while t < t_end_s - 1e-15 {
         let h = dt_s.min(t_end_s - t);
         // RK4 sobre (θ, ω) con torques evaluados en subpasos.
-        let (dth1, dom1, ti1, tf1) = accel(th, om)?;
-        let (dth2, dom2, ti2, tf2) = accel(
+        let (dth1, dom1, ti1, tf1, ta1) = accel(th, om)?;
+        let (dth2, dom2, ti2, tf2, ta2) = accel(
             th + dth1 * h / 2.0 * 180.0 / std::f64::consts::PI,
             (om + dom1 * h / 2.0).max(0.0),
         )?;
-        let (dth3, dom3, ti3, tf3) = accel(
+        let (dth3, dom3, ti3, tf3, ta3) = accel(
             th + dth2 * h / 2.0 * 180.0 / std::f64::consts::PI,
             (om + dom2 * h / 2.0).max(0.0),
         )?;
-        let (dth4, dom4, ti4, tf4) = accel(
+        let (dth4, dom4, ti4, tf4, ta4) = accel(
             th + dth3 * h * 180.0 / std::f64::consts::PI,
             (om + dom3 * h).max(0.0),
         )?;
@@ -143,6 +183,7 @@ pub fn spin_down(
         w_ind += (ti1 + 2.0 * ti2 + 2.0 * ti3 + ti4) / 6.0 * om_avg * h;
         w_fric += (tf1 + 2.0 * tf2 + 2.0 * tf3 + tf4) / 6.0 * om_avg * h;
         w_load += load_tau * om_avg * h;
+        w_assist += (ta1 + 2.0 * ta2 + 2.0 * ta3 + ta4) / 6.0 * om_avg * h;
         th += h * (dth1 + 2.0 * dth2 + 2.0 * dth3 + dth4) / 6.0 * 180.0 / std::f64::consts::PI;
         om = om_new;
         t += h;
@@ -153,14 +194,15 @@ pub fn spin_down(
     }
     let ke0 = 0.5 * inertia_j * omega0_rad_s * omega0_rad_s;
     let ke1 = 0.5 * inertia_j * om * om;
-    let scale = (ke0 + w_ind.abs() + w_fric.abs() + w_load.abs()).max(1e-9);
+    let scale = (ke0 + w_ind.abs() + w_fric.abs() + w_load.abs() + w_assist.abs()).max(1e-9);
     Ok(SpinResult {
         states,
         delta_ke_j: ke1 - ke0,
         w_ind_j: w_ind,
         w_fric_j: w_fric,
         w_load_j: w_load,
-        energy_closure: ((ke1 - ke0) - (w_ind - w_fric - w_load)) / scale,
+        w_assist_j: w_assist,
+        energy_closure: ((ke1 - ke0) - (w_ind - w_fric - w_load + w_assist)) / scale,
     })
 }
 

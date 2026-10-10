@@ -13,6 +13,7 @@ members = [
     "crates/flow",
     "crates/fuel",
     "crates/crank",
+    "crates/electrical",
     "crates/physics",
     "crates/simulation",
     "crates/cli",

@@ -12,5 +12,5 @@ pub mod torque;
 
 pub use friction::{ChenFlynnCoeffs, FrictionModel};
 pub use inertia::{effective_inertia_mean, InertiaParams};
-pub use integrate::{spin_down, DynoLaw, SpinResult, SpinState};
+pub use integrate::{spin_down, spin_with_assist, DynoLaw, SpinResult, SpinState};
 pub use torque::IndicatedTorque;

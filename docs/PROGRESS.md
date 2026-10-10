@@ -240,3 +240,17 @@ Solo hechos constatables; sin cifras improvisadas.
   estricta ⇒ neto + auditoría (rizo = volante).
 - Gate S14: PASS — sin energía gratis; torques/inercia en error numérico.
 - Deuda: J(θ), FMEP medido, accesorios/arranque S15, combustión S16.
+
+## 2026-10-10 · S15 · Arranque arrastrado sin bootstrap (APROBADO)
+
+- Crate `electrical` (batería + starter/reductora + bobina/dwell +
+  `cold_crank` con `spin_with_assist`); `d16sim cold-crank` (started
+  false; 236.8 rpm; rizo 295 por compresión; chispa 134 mJ; cierre
+  2e−15); ADR-022; `docs/physics/cranking.md`; H-S15-01..05.
+- Tests: 5 passed (colapso V, chispa V², η≤1, giro+rizo, 4 fallos sin
+  arranque). 1 bug real: par sin acoplo a V ⇒ acoplo L1 documentado.
+  Refactor S14 (`spin_with_assist`) con resultados idénticos (6/6).
+- Gate S15: PASS — sin fuel/chispa no arranca (ni con ellos, por diseño);
+  trazas V·I inspeccionables.
+- Deuda: integración con combustión S16, gas exchange vivo, starter
+  medido, Bendix, fricción fría.
