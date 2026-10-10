@@ -363,3 +363,16 @@ Solo hechos constatables; sin cifras improvisadas.
 - Gate S23: PASS — cero referencias a potencia; todo UNCALIBRATED.
 - Deuda: p_ref y Cd sin calibrar (S25), sin dinámica de anillo, sin
   aceite→exterior (retén S26), sin acople al motor vivo.
+
+## 2026-10-10 · S24 · Diagnóstico mecánico (APROBADO)
+
+- `diagnostics::mech` (compresímetro/cranking L1 + leak-down +
+  galgas + procedencia obligatoria + protocolo de 2 mediciones);
+  `d16sim mech-demo` cableado a S23 (sano sin falta; anillo×2 bajo
+  umbral; subapretada ambigua con anillos + 3er test prescrito;
+  ausente a junta); ADR-031; `docs/physics/mech.md`; H-S24-01..05.
+- Tests: 4 passed (FIELD-07/08, inconclusividad simple, separación
+  doble). Bug real: respiradero sumado al área (pico sano 50 kPa);
+  corregido (1400 kPa).
+- Gate S24: PASS — ≥2 mediciones, sin flags, sin dependencia del truth.
+- Deuda: causa válvula sin modelo S23, curvas reales, umbrales, 3er test.

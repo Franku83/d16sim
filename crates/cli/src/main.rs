@@ -190,6 +190,11 @@ enum Command {
         #[arg(long, default_value = "underclamped_head")]
         scenario: String,
     },
+    /// Protocolo compresión + leak-down con dos mediciones (S24, sin GUI).
+    MechDemo {
+        #[arg(long, default_value = "ring_leak_cyl3")]
+        scenario: String,
+    },
     /// Dinámica de cigüeñal con traza motored (S14, ilustrativo).
     CrankDynamics {
         #[arg(long, default_value_t = 750.0)]
@@ -338,6 +343,7 @@ fn run() -> Result<(), EngineError> {
         } => export_trace_cmd(&scenario, seconds, &out),
         Command::LubricationTest { case } => lubrication_test_cmd(&case),
         Command::LeakTest { scenario } => leak_test_cmd(&scenario),
+        Command::MechDemo { scenario } => mech_demo_cmd(&scenario),
         Command::CrankDynamics { rpm0, seconds } => crank_dynamics_cmd(rpm0, seconds),
         Command::ColdCrank => cold_crank_cmd(),
     }
@@ -1615,5 +1621,113 @@ fn leak_test_cmd(scenario: &str) -> Result<(), EngineError> {
     println!("  mass_closure        : {:.3e}", audit.mass_closure);
     println!("  energy_closure      : {:.3e}", audit.energy_closure);
     println!("  pseal_sensitivity   : {:?}", pseal_sensitivity());
+    Ok(())
+}
+
+/// Comando S24: protocolo `diagnose_low_compression` cableado a los
+/// escenarios S23. El compresímetro usa el área efectiva del escenario +
+/// modelo de cranking L1; el leak-down usa su reparto. Sin GUI, sin flags.
+fn mech_demo_cmd(scenario: &str) -> Result<(), EngineError> {
+    use diagnostics::{
+        cranking_peak_kpa, diagnose_low_compression, CompressionGauge, LeakDownTester, LeakSplit,
+        Provenance, C_CRANK_ILLUSTRATIVE,
+    };
+    use leak::{leak_scenario, run_leakdown, LeakScenario};
+
+    let err = |e: String| EngineError::SchemaValidation(e);
+    let s = match scenario {
+        "healthy_baseline" => LeakScenario::HealthyBaseline,
+        "missing_head_gasket" => LeakScenario::MissingHeadGasket,
+        "underclamped_head" => LeakScenario::UnderclampedHead,
+        "ring_leak_cyl3" => LeakScenario::RingLeakCyl3,
+        _ => return Err(err(format!("unknown scenario {scenario}"))),
+    };
+    let net = leak_scenario(s).map_err(|e| err(e.to_string()))?;
+    let (_, audit, totals) = run_leakdown(&net, 0, 10.0, 5e-4).map_err(|e| err(e.to_string()))?;
+    // Área efectiva de la CÁMARA (solo puertos con from == 0: el
+    // respiradero del cárter NO es fuga de la cámara; bug detectado en la
+    // primera versión del cableado, que lo sumaba y colapsaba el pico).
+    let tot: f64 = totals.iter().sum();
+    let a_total_m2: f64 = net
+        .ports
+        .iter()
+        .filter(|p| p.from == 0)
+        .map(|p| p.conductance)
+        .sum();
+    // Reparto = OBSERVACIÓN del técnico (dónde se escucha/ve escapar el
+    // aire: tapón de aceite / cola de escape / vaso de expansión), provista
+    // por el harness como en S20 (los instrumentos nunca ven el ground
+    // truth). Camino dominante físico por escenario, documentado.
+    let split = match s {
+        LeakScenario::HealthyBaseline | LeakScenario::RingLeakCyl3 => LeakSplit {
+            to_crankcase_01: 1.0,
+            to_exhaust_01: 0.0,
+            to_coolant_01: 0.0,
+        },
+        // Subapretada a 500 kPa estáticos: silba por el tapón de aceite
+        // (misma firma que anillos → ambigüedad documentada, exige 3er
+        // test: reapriete + retest o química del refrigerante).
+        LeakScenario::UnderclampedHead => LeakSplit {
+            to_crankcase_01: 1.0,
+            to_exhaust_01: 0.0,
+            to_coolant_01: 0.0,
+        },
+        // Sin junta: paso abierto cámara→agua, burbujeo violento en vaso.
+        LeakScenario::MissingHeadGasket => LeakSplit {
+            to_crankcase_01: 0.30,
+            to_exhaust_01: 0.10,
+            to_coolant_01: 0.60,
+        },
+    };
+    let peak_true = cranking_peak_kpa(
+        1500.0,
+        1.0,
+        400e-6,
+        8e-6,
+        a_total_m2,
+        200.0,
+        4,
+        C_CRANK_ILLUSTRATIVE,
+    )
+    .map_err(|e| err(e.to_string()))?;
+    let gauge = CompressionGauge {
+        dead_vol_m3: 8e-6,
+        resolution_kpa: 5.0,
+        zero_error_kpa: 0.0,
+    };
+    let prov = Provenance::new(
+        "compression-gauge-A",
+        "CAL-24-01",
+        "op",
+        "2026-10-10",
+        "WOT cranking 200 rpm",
+    )
+    .map_err(|e| err(e.to_string()))?;
+    let comp = gauge
+        .read(peak_true, prov.clone())
+        .map_err(|e| err(e.to_string()))?;
+    let tester = LeakDownTester {
+        supply_kpa: 500.0,
+        orifice_m2: 1e-6,
+        position: "TDC compression".to_owned(),
+    };
+    let (_, leak_pct) = tester
+        .read(a_total_m2, prov.clone())
+        .map_err(|e| err(e.to_string()))?;
+    let verdict =
+        diagnose_low_compression(Some(comp.value), 900.0, Some(leak_pct.value), Some(split));
+    println!("mech-demo scenario={scenario} (L1 instruments, UNCALIBRATED):");
+    println!(
+        "  steady_leak_g_min   : {:.3}",
+        audit.steady_leak_g_s * 60.0
+    );
+    println!("  compression_kPa     : {:.0}", comp.value);
+    println!("  leak_pct            : {:.1}", leak_pct.value);
+    println!(
+        "  split crank/exh/cool: {:.2}/{:.2}/{:.2}",
+        split.to_crankcase_01, split.to_exhaust_01, split.to_coolant_01
+    );
+    println!("  verdict             : {verdict:?}");
+    let _ = tot;
     Ok(())
 }

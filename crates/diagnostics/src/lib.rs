@@ -5,12 +5,17 @@
 //! causas; los casos ambiguos se resuelven con mediciones complementarias.
 
 pub mod ambiguity;
+pub mod mech;
 pub mod multimeter;
 pub mod probes;
 pub mod scan;
 pub mod scope;
 
 pub use ambiguity::{edge_interval_variance, AmbiguityCase, Verdict};
+pub use mech::{
+    cranking_peak_kpa, diagnose_low_compression, BoreGauge, CompressionGauge, LeakDownTester,
+    LeakSplit, MechCause, MechVerdict, Provenance, Reading, C_CRANK_ILLUSTRATIVE,
+};
 pub use multimeter::{Multimeter, ResistanceError};
 pub use probes::{Access, Probe, ProbePoint};
 pub use scan::{ManualIndex, ManualRef, ScanTool};

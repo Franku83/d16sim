@@ -1,7 +1,7 @@
 # HANDOFF — punto de entrada al siguiente agente
 
-Fecha: 2026-10-10 · Sprints: **S00–S23 APROBADOS (batch S21–S25)**.
-Siguiente: **S24**. **S26 prohibido sin autorización.**
+Fecha: 2026-10-10 · Sprints: **S00–S24 APROBADOS (batch S21–S25)**.
+Siguiente: **S25 (último del batch)**. **S26 prohibido sin autorización.**
 
 ## Estado científico/arquitectónico actual
 
@@ -160,11 +160,14 @@ Crate `lube` + `lubrication-test` + ADR-029. Ver `docs/sprints/S22.md`.
 
 Crate `leak` + `leak-test` + ADR-030. Ver `docs/sprints/S23.md`.
 
-## Brief S24 (siguiente en batch autorizado)
+## Brief S24 (APROBADO 2026-10-10)
 
-Instrumentos mecánicos (S24) + rutas S23 con ley EXPLÍCITA y evidencia: dominios de
-fluido/puertos de fuga cámara→cárter/refrigerante/exterior y
-aceite→exterior, conductancia de junta desde `SealContactState` (no de
-daño booleano), conductancia de anillo desde holgura L1, entalpía por
-especie, instrumentos asociados. Gate: sin multiplicador de potencia ni
-rutina de síntomas; fidelidad etiquetada.
+`diagnostics::mech` + `mech-demo` + ADR-031. Ver `docs/sprints/S24.md`.
+
+## Brief S25 (siguiente y último del batch autorizado)
+
+Calibración stock con datos reales o cierre NUMERICALLY_VERIFIED_ONLY:
+campañas, parámetros identificables con priors, train/holdout sin
+leakage, covarianzas, sensibilidad, intervalos por régimen. Gate: todo
+gráfico distingue real/simulado y train/holdout; prohibido inventar
+dyno o validar con sintéticos.

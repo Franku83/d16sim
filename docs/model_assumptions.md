@@ -186,3 +186,13 @@ futuros: toda aproximación pasa por aquí + `ModelCard` (§11.4).
 | H-S23-02 | Anillo geométrico × Cd 0.03 (no calibrado) | S23 | Supuesto declarado | Banco S25 |
 | H-S23-03 | Suministro regulado + PCV + tapón 110 kPa | S23 | Protocolo declarado | Tester S24 |
 | H-S23-04 | Magnitudes no predictivas; direcciones robustas | S23 | Decisión ADR-030 | Calibración |
+
+## Registro S24 (instrumentos mecánicos)
+
+| ID | Hipótesis | Dominio | Fuente | Invalida si |
+|---|---|---|---|---|
+| H-S24-01 | Cranking L1 con C=8e5 ilustrativa | S24 | Supuesto declarado | Banco S25 |
+| H-S24-02 | Leak-down L1 con orificio 1 mm² | S24 | Supuesto declarado | Equipo real |
+| H-S24-03 | Reparto como observación del harness | S24 | Decisión ADR-031 | Tester S25 |
+| H-S24-04 | Umbrales de taller sin calibrar | S24 | Ayuda declarada | Manual/banco |
+| H-S24-05 | Subapretada≈anillos con 2 tests (3º prescrito) | S24 | Límite documentado | 3er test |
