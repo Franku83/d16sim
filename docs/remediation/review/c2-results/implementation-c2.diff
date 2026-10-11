@@ -1,0 +1,1460 @@
+diff --git a/crates/adversarial/src/suite.rs b/crates/adversarial/src/suite.rs
+index 4317404..6f31760 100644
+--- a/crates/adversarial/src/suite.rs
++++ b/crates/adversarial/src/suite.rs
+@@ -260,10 +260,11 @@ mod tests {
+             Some(700.0),
+             900.0,
+             Some(35.0),
++            // R01-C2/C1-03: descomposición completa normalizada (Σ = 1).
+             Some(LeakSplit {
+                 to_crankcase_01: 0.8,
+                 to_exhaust_01: 0.1,
+-                to_coolant_01: 0.0,
++                to_coolant_01: 0.1,
+             }),
+         );
+         let valve = diagnose_low_compression(
+@@ -273,7 +274,7 @@ mod tests {
+             Some(LeakSplit {
+                 to_crankcase_01: 0.1,
+                 to_exhaust_01: 0.8,
+-                to_coolant_01: 0.0,
++                to_coolant_01: 0.1,
+             }),
+         );
+         assert_ne!(rings, valve);
+diff --git a/crates/diagnostics/src/mech.rs b/crates/diagnostics/src/mech.rs
+index 7bc2c70..89a3f65 100644
+--- a/crates/diagnostics/src/mech.rs
++++ b/crates/diagnostics/src/mech.rs
+@@ -314,8 +314,18 @@ pub enum MechVerdict {
+ /// - compresión baja + fuga a escape ⇒ válvula;
+ /// - compresión baja + fuga a refrigerante (o múltiple) ⇒ junta.
+ ///
+-/// R01-C1/RV02: un reparto sin ninguna fracción observada (todas cero) no es
+-/// una medición; no cuenta como segunda medición ni permite discriminar.
++/// R01-C1/RV02 y R01-C2/C1-03: una observación **no válida** no es una
++/// medición. Se exige:
++/// - compresión finita ≥ 0 (si se aporta);
++/// - leak-down finito ∈ [0, 100] % (si se aporta);
++/// - `LeakSplit` como **descomposición completa normalizada**: cada fracción
++///   finita ∈ [0,1] y suma ≈ 1 (tol `1e-6`). Una fracción parcial o imposible
++///   se expresa pasando `None` (observación ausente), nunca un vector
++///   incompleto. Con datos inválidos o parciales el veredicto es
++///   `Inconclusive`; nunca una causa discriminada.
++///
++/// Un reparto sin ninguna fracción observada (todas cero) no es una medición;
++/// no cuenta como segunda medición ni permite discriminar.
+ #[must_use]
+ pub fn diagnose_low_compression(
+     compression_kpa: Option<f64>,
+@@ -323,13 +333,25 @@ pub fn diagnose_low_compression(
+     leak_pct: Option<f64>,
+     split: Option<LeakSplit>,
+ ) -> MechVerdict {
+-    let split_observed =
+-        split.filter(|s| s.to_crankcase_01 + s.to_exhaust_01 + s.to_coolant_01 > 1e-12);
++    // Umbral: sin umbral válido no hay protocolo.
++    if !(low_threshold_kpa.is_finite() && low_threshold_kpa > 0.0) {
++        return MechVerdict::Inconclusive {
++            have_n: 0,
++            need_n: 2,
++        };
++    }
++    let comp_valid = compression_kpa.filter(|v| v.is_finite() && *v >= 0.0);
++    let pct_valid = leak_pct.filter(|v| v.is_finite() && (0.0..=100.0).contains(v));
++    let split_valid = split.filter(|s| {
++        let v = [s.to_crankcase_01, s.to_exhaust_01, s.to_coolant_01];
++        v.iter().all(|x| x.is_finite() && (0.0..=1.0).contains(x))
++            && (v.iter().sum::<f64>() - 1.0).abs() <= 1e-6
++    });
+     let mut n = 0;
+-    if compression_kpa.is_some() {
++    if comp_valid.is_some() {
+         n += 1;
+     }
+-    if leak_pct.is_some() && split_observed.is_some() {
++    if pct_valid.is_some() && split_valid.is_some() {
+         n += 1;
+     }
+     if n < 2 {
+@@ -338,9 +360,9 @@ pub fn diagnose_low_compression(
+             need_n: 2,
+         };
+     }
+-    let comp = compression_kpa.unwrap_or(f64::MAX);
+-    let pct = leak_pct.unwrap_or(0.0);
+-    let s = split_observed.unwrap_or(LeakSplit {
++    let comp = comp_valid.unwrap_or(f64::MAX);
++    let pct = pct_valid.unwrap_or(0.0);
++    let s = split_valid.unwrap_or(LeakSplit {
+         to_crankcase_01: 0.0,
+         to_exhaust_01: 0.0,
+         to_coolant_01: 0.0,
+@@ -466,6 +488,9 @@ mod tests {
+     fn two_measurements_separate_rings_valve_gasket() {
+         // La SEGUNDA medición independiente (reparto del leak-down)
+         // separa las tres causas con la misma compresión baja.
++        // R01-C2/C1-03: el contrato exige una descomposición completa
++        // normalizada (Σ = 1); los fixtures se normalizan sin cambiar la
++        // causa esperada (solo se reparte el 10% no atribuido).
+         let r = diagnose_low_compression(
+             Some(700.0),
+             900.0,
+@@ -473,7 +498,7 @@ mod tests {
+             Some(LeakSplit {
+                 to_crankcase_01: 0.8,
+                 to_exhaust_01: 0.1,
+-                to_coolant_01: 0.0,
++                to_coolant_01: 0.1,
+             }),
+         );
+         let v = diagnose_low_compression(
+@@ -483,7 +508,7 @@ mod tests {
+             Some(LeakSplit {
+                 to_crankcase_01: 0.1,
+                 to_exhaust_01: 0.8,
+-                to_coolant_01: 0.0,
++                to_coolant_01: 0.1,
+             }),
+         );
+         let g = diagnose_low_compression(
+@@ -493,7 +518,7 @@ mod tests {
+             Some(LeakSplit {
+                 to_crankcase_01: 0.3,
+                 to_exhaust_01: 0.3,
+-                to_coolant_01: 0.3,
++                to_coolant_01: 0.4,
+             }),
+         );
+         assert_eq!(
+@@ -550,4 +575,53 @@ mod tests {
+             }
+         );
+     }
++
++    #[test]
++    fn invalid_or_partial_observations_cannot_discriminate() {
++        // R01-C2/C1-03: NaN/Inf/negativos/parciales no son mediciones.
++        let full = LeakSplit {
++            to_crankcase_01: 0.1,
++            to_exhaust_01: 0.7,
++            to_coolant_01: 0.2,
++        };
++        let cases = [
++            (Some(f64::NAN), 900.0, Some(30.0), Some(full)),
++            (Some(f64::INFINITY), 900.0, Some(30.0), Some(full)),
++            (Some(500.0), 900.0, Some(f64::INFINITY), Some(full)),
++            (Some(500.0), 900.0, Some(-1.0), Some(full)),
++            (
++                Some(500.0),
++                900.0,
++                Some(30.0),
++                Some(LeakSplit {
++                    to_crankcase_01: 2.0,
++                    to_exhaust_01: -1.0,
++                    to_coolant_01: 0.0,
++                }),
++            ),
++            (
++                Some(500.0),
++                900.0,
++                Some(30.0),
++                Some(LeakSplit {
++                    to_crankcase_01: 0.1,
++                    to_exhaust_01: 0.0,
++                    to_coolant_01: 0.0,
++                }),
++            ),
++            (Some(500.0), f64::NAN, Some(30.0), Some(full)),
++        ];
++        for (comp, thr, pct, s) in cases {
++            let v = diagnose_low_compression(comp, thr, pct, s);
++            assert!(
++                matches!(v, MechVerdict::Inconclusive { .. }),
++                "{v:?} for {comp:?}/{thr}/{pct:?}"
++            );
++        }
++        // Control válido completo sí discrimina.
++        assert!(matches!(
++            diagnose_low_compression(Some(500.0), 900.0, Some(30.0), Some(full)),
++            MechVerdict::Discriminated { .. }
++        ));
++    }
+ }
+diff --git a/crates/electrical/src/battery.rs b/crates/electrical/src/battery.rs
+index 91394ce..61b3890 100644
+--- a/crates/electrical/src/battery.rs
++++ b/crates/electrical/src/battery.rs
+@@ -47,6 +47,37 @@ impl Battery {
+         }
+     }
+ 
++    /// Valida el estado/parámetros de la batería (R02-C2/C1-01).
++    ///
++    /// # Errors
++    ///
++    /// `InvalidInput` si `soc`/`temp` o los parámetros eléctricos no son
++    /// finitos o violan dominio.
++    pub fn validated(&self) -> Result<(), BatteryError> {
++        let bad = |reason: &str| BatteryError::InvalidInput {
++            reason: reason.to_owned(),
++        };
++        if !(self.soc.is_finite() && (0.0..=1.0).contains(&self.soc)) {
++            return Err(bad("soc must be in [0, 1]"));
++        }
++        for (v, name) in [
++            (self.temp_c, "temp"),
++            (self.v_full, "v_full"),
++            (self.v_slope, "v_slope"),
++            (self.v_temp_coeff, "v_temp_coeff"),
++            (self.r0_ohm, "r0"),
++            (self.r_ground_ohm, "r_ground"),
++        ] {
++            if !v.is_finite() {
++                return Err(bad(name));
++            }
++        }
++        if self.r0_ohm < 0.0 || self.r_ground_ohm < 0.0 {
++            return Err(bad("resistance must be >= 0"));
++        }
++        Ok(())
++    }
++
+     /// Tensión de circuito abierto (V).
+     ///
+     /// # Errors
+diff --git a/crates/electrical/src/starter.rs b/crates/electrical/src/starter.rs
+index 1c16b16..d8d5d57 100644
+--- a/crates/electrical/src/starter.rs
++++ b/crates/electrical/src/starter.rs
+@@ -41,7 +41,12 @@ impl StarterMotor {
+         }
+     }
+ 
+-    fn validated(&self) -> Result<(), StarterError> {
++    /// Valida el motor (magnitudes > 0 finitas y free < stall).
++    ///
++    /// # Errors
++    ///
++    /// `InvalidInput` si algún parámetro viola dominio.
++    pub fn validated(&self) -> Result<(), StarterError> {
+         let bad = |reason: &str| StarterError::InvalidInput {
+             reason: reason.to_owned(),
+         };
+diff --git a/crates/engine/src/run.rs b/crates/engine/src/run.rs
+index fab3799..1aa5b3e 100644
+--- a/crates/engine/src/run.rs
++++ b/crates/engine/src/run.rs
+@@ -9,7 +9,7 @@
+ //! bit-idéntico).
+ 
+ use crate::control::OpenLoopControl;
+-use crate::state::{CylState, EngineSnapshot, EngineState, MigrationProvenance};
++use crate::state::{CylState, EngineSnapshot, EngineState, MigrationProvenance, ModelIdentity};
+ use crank::{FrictionModel, InertiaParams};
+ use electrical::{Battery, Coil, StarterDrive, StarterMotor};
+ use flow::{curtain_area_m2, exhaust_cd, intake_cd, EXHAUST_VALVE_DIA_MM, INTAKE_VALVE_DIA_MM};
+@@ -519,7 +519,11 @@ impl WorkState {
+             ws.therm = Some((thermal::ThermalState::cold(20.0), tp));
+         }
+         if let Some((st, p)) = &ws.therm {
+-            ws.th_u0_j = st.stored_j(p);
++            // Energía inicial representable; un snapshot autenticado no se
++            // asocia con una configuración térmica inválida (R02-C2/C1-02).
++            ws.th_u0_j = st.stored_j_checked(p).ok_or_else(|| EngineError::Invalid {
++                reason: "thermal stored energy not representable".to_owned(),
++            })?;
+         }
+         // Historia de presión para fricción (F07): nativa si existe; en
+         // snapshots previos se migra a una cota inferior física declarada
+@@ -540,43 +544,42 @@ impl WorkState {
+             })
+             .fold(p_amb, f64::max);
+         ws.pmax_pa = s.pmax_pa.unwrap_or(p_cyl_max);
+-        // Procedencia de migración legacy (R02-C1/RV04): separa integridad de
+-        // lectura de equivalencia de continuación física. Un snapshot nativo
+-        // completo conserva su procedencia (None = sin migración); un legacy
+-        // registra esquema/hash de origen, transformación, campos ausentes y
+-        // si la continuación es exacta (estado inicial neutro) o aproximada
+-        // (había combustible/movimiento: la historia no se puede reconstruir).
++        // Identidad de modelo (R02-C2/C1-05): el esquema de serialización NO
++        // identifica al productor. Un snapshot sin marcador `model` es
++        // ambiguo entre R02 (contabilidad diferida) y C1 (por paso): se migra
++        // con procedencia aproximada, nunca como nativo exacto. Un marcador
++        // con convención desconocida se rechaza (fail-closed).
++        let native_model = if s.schema_version == 1 {
++            false
++        } else {
++            match &snap.model {
++                None => false,
++                Some(m) => {
++                    if m.schema_version != s.schema_version {
++                        return Err(EngineError::Invalid {
++                            reason: "model/schema version mismatch".to_owned(),
++                        });
++                    }
++                    if m.combustion_accounting != crate::state::COMBUSTION_ACCOUNTING_STEPWISE {
++                        return Err(EngineError::Invalid {
++                            reason: "unsupported combustion accounting version".to_owned(),
++                        });
++                    }
++                    true
++                }
++            }
++        };
++        // Procedencia de migración legacy (R02-C1/RV04 + C1-05): separa
++        // integridad de lectura de equivalencia de continuación física.
+         ws.provenance = snap.provenance.clone();
+-        let legacy = s.schema_version == 1 || s.pmax_pa.is_none();
++        let legacy = !native_model;
+         if ws.provenance.is_none() && legacy {
+-            let mut missing = vec![
+-                "plen_fuel_kg".to_owned(),
+-                "exh_fuel_kg".to_owned(),
+-                "fuel_emitted_kg".to_owned(),
+-            ];
+-            if s.pmax_pa.is_none() {
+-                missing.push("pmax_pa".to_owned());
+-            }
+-            if s.schema_version == 1 {
+-                missing.push("thermal".to_owned());
+-            }
+-            let neutral = s.time_s == 0.0
+-                && s.omega_rad_s == 0.0
+-                && s.fuel_injected_kg == 0.0
+-                && s.fuel_burned_kg == 0.0
+-                && s.heat_released_j == 0.0
+-                && s.cyls.iter().all(|c| c.fuel_kg == 0.0)
+-                && s.plen_fuel_kg == 0.0
+-                && s.exh_fuel_kg == 0.0;
+             ws.provenance = Some(MigrationProvenance {
+                 from_schema: s.schema_version,
+                 original_hash: snap.state_hash.clone(),
+-                transformation: format!(
+-                    "schema {} -> 2: node fuel inventories absent -> 0; pmax_pa -> max(current cylinder pressure, ambient); thermal per inputs",
+-                    s.schema_version
+-                ),
+-                missing_fields: missing,
+-                continuation: if neutral {
++                transformation: legacy_transformation(s, snap.model.as_ref()),
++                missing_fields: missing_history_fields(s),
++                continuation: if is_neutral_initial(s) {
+                     "exact_neutral"
+                 } else {
+                     "approximate_hot"
+@@ -592,6 +595,51 @@ impl WorkState {
+     }
+ }
+ 
++/// Campos históricos que un snapshot legacy no representaba (R02-C2/C1-05).
++fn missing_history_fields(s: &EngineState) -> Vec<String> {
++    let mut missing = Vec::new();
++    if s.schema_version == 1 {
++        missing.push("thermal".to_owned());
++    }
++    if s.schema_version == 1 || s.pmax_pa.is_none() {
++        missing.extend(["plen_fuel_kg", "exh_fuel_kg", "fuel_emitted_kg"].map(str::to_owned));
++    }
++    if s.pmax_pa.is_none() {
++        missing.push("pmax_pa".to_owned());
++    }
++    // Todo snapshot pre-C2 carece del marcador de convención de contabilidad.
++    missing.push("combustion_accounting".to_owned());
++    missing
++}
++
++/// ¿Estado inicial neutro (sin historia)? Entonces los valores por defecto
++/// son la historia conocida y la continuación no arrastra convención previa.
++fn is_neutral_initial(s: &EngineState) -> bool {
++    s.time_s == 0.0
++        && s.omega_rad_s == 0.0
++        && s.fuel_injected_kg == 0.0
++        && s.fuel_burned_kg == 0.0
++        && s.heat_released_j == 0.0
++        && s.cyls.iter().all(|c| c.fuel_kg == 0.0)
++        && s.plen_fuel_kg == 0.0
++        && s.exh_fuel_kg == 0.0
++}
++
++/// Descripción de la transformación aplicada al migrar un snapshot legacy.
++fn legacy_transformation(s: &EngineState, model: Option<&ModelIdentity>) -> String {
++    let accounting = match model {
++        None => "combustion accounting absent (pre-C2: ambiguous R02 deferred vs C1 stepwise)",
++        Some(m) => match m.combustion_accounting {
++            crate::state::COMBUSTION_ACCOUNTING_STEPWISE => "combustion accounting stepwise",
++            _ => "combustion accounting unknown",
++        },
++    };
++    format!(
++        "schema {} -> 2: {accounting}; node fuel inventories/pmax defaulted per policy; thermal per inputs",
++        s.schema_version
++    )
++}
++
+ /// Valida magnitudes físicas del estado de trabajo (masas/temperaturas/
+ /// fracciones/energías finitas y en dominio). Fail-closed antes de avanzar.
+ fn validate_physical_state(ws: &WorkState, ctx: &str) -> Result<(), EngineError> {
+@@ -633,7 +681,12 @@ fn validate_physical_state(ws: &WorkState, ctx: &str) -> Result<(), EngineError>
+             && (0.0..=1.0).contains(&n.fresh)
+             && n.fuel.is_finite()
+             && n.fuel >= 0.0
+-            && n.fuel <= n.m * (1.0 + 1e-9))
++            && n.fuel <= n.m * (1.0 + 1e-9)
++            // Volumen y cv del nodo: finitos y positivos (R02-C2/C1-01).
++            && n.v.is_finite()
++            && n.v > 0.0
++            && n.cv.is_finite()
++            && n.cv > 0.0)
+         {
+             return Err(bad("node state"));
+         }
+@@ -678,7 +731,12 @@ fn validate_physical_state(ws: &WorkState, ctx: &str) -> Result<(), EngineError>
+             return Err(bad(name));
+         }
+     }
+-    if let Some((st, _)) = &ws.therm {
++    if !ws.th_u0_j.is_finite() {
++        return Err(bad("thermal initial energy"));
++    }
++    if let Some((st, p)) = &ws.therm {
++        // Parámetros y energía derivada representable (R02-C2/C1-02, C1-04).
++        p.validated().map_err(|_| bad("thermal params"))?;
+         for v in [
+             st.t_wall_c,
+             st.t_piston_c,
+@@ -690,6 +748,9 @@ fn validate_physical_state(ws: &WorkState, ctx: &str) -> Result<(), EngineError>
+                 return Err(bad("thermal state"));
+             }
+         }
++        if st.stored_j_checked(p).is_none() {
++            return Err(bad("thermal stored energy not representable"));
++        }
+     }
+     Ok(())
+ }
+@@ -771,7 +832,11 @@ fn initial_state(inputs: &EngineInputs) -> Result<WorkState, EngineError> {
+                 reason: "thermal params".to_owned(),
+             })?;
+             let st = thermal::ThermalState::cold(20.0);
+-            let u = st.stored_j(&p);
++            let u = st
++                .stored_j_checked(&p)
++                .ok_or_else(|| EngineError::Invalid {
++                    reason: "thermal stored energy not representable".to_owned(),
++                })?;
+             (Some((st, p)), u)
+         }
+         None => (None, 0.0),
+@@ -1107,9 +1172,17 @@ fn drive(
+             && ws.time_s < inputs.crank_timeout_s;
+         let tau_starter = if starter_on {
+             if let Some((sm, dr, bat)) = &inputs.starter {
+-                let cur = dr.current(sm, ws.omega_rad_s).unwrap_or(0.0);
+-                let v = bat.terminal_voltage(cur).unwrap_or(0.0);
+-                dr.crank_torque(sm, ws.omega_rad_s).unwrap_or(0.0) * (v / 12.8).clamp(0.0, 1.0)
++                // R02-C2/C1-01: los errores del starter se propagan; no se
++                // sustituyen por un par físico cero silencioso.
++                let cur = dr
++                    .current(sm, ws.omega_rad_s)
++                    .map_err(|_| bad("starter current"))?;
++                let v = bat
++                    .terminal_voltage(cur)
++                    .map_err(|_| bad("battery voltage"))?;
++                dr.crank_torque(sm, ws.omega_rad_s)
++                    .map_err(|_| bad("starter torque"))?
++                    * (v / 12.8).clamp(0.0, 1.0)
+             } else {
+                 0.0
+             }
+@@ -1233,20 +1306,47 @@ pub fn run_engine(inputs: &EngineInputs) -> Result<RunTrace, EngineError> {
+         reason: "initial state".to_owned(),
+     })?;
+     let samples = drive(&mut ws, inputs, inputs.t_end_s, inputs.record_every, 0)?;
++    // Un `Ok` debe contener estado y auditoría finitos (R02-C2/C1-01, C1-04):
++    // no se devuelve un ledger energético no finito ni un estado imposible.
++    validate_physical_state(&ws, "run_engine output")?;
+     let j_eff = crank::effective_inertia_mean(&inputs.geom, inputs.inertia);
+-    Ok(RunTrace {
+-        samples,
+-        audit: audit_of(&ws, inputs.fuel.lhv_j_per_kg, j_eff),
+-    })
++    let audit = audit_of(&ws, inputs.fuel.lhv_j_per_kg, j_eff);
++    if !(audit.mass_closure.is_finite()
++        && audit.energy_closure.is_finite()
++        && audit.fuel_injected_kg.is_finite()
++        && audit.fuel_burned_kg.is_finite()
++        && audit.fuel_stored_kg.is_finite()
++        && audit.fuel_emitted_kg.is_finite()
++        && audit.heat_released_j.is_finite()
++        && audit.w_ind_j.is_finite()
++        && audit.w_fric_j.is_finite()
++        && audit.w_starter_j.is_finite()
++        && audit.w_load_j.is_finite()
++        && audit.th_q_amb_j.is_finite()
++        && audit.pmax_pa.is_finite()
++        && audit.delta_u_j.is_finite()
++        && audit.delta_ke_j.is_finite()
++        && audit.h_amb_net_j.is_finite()
++        && audit.h_fuel_j.is_finite()
++        && audit.final_rpm.is_finite())
++    {
++        return Err(EngineError::Invalid {
++            reason: "non-finite run audit".to_owned(),
++        });
++    }
++    Ok(RunTrace { samples, audit })
+ }
+ 
+ /// Valida el contrato de entradas antes de cualquier mutación/cálculo
+-/// (fail-closed, R02-F15): evita panics (p. ej. `record_every = 0`) y estados
+-/// imposibles (eficiencia de combustión fuera de [0, 1]).
++/// (fail-closed, R02-F15 / R02-C2/C1-01): cubre control open-loop, combustible,
++/// eléctrico/arranque, inercia, térmico y derivadas representables. Evita
++/// panics (p. ej. `record_every = 0`) y configuraciones imposibles. No impone
++/// cotas OEM: solo finitud, positividad y coherencia de dominio.
+ fn validate_inputs(inputs: &EngineInputs) -> Result<(), EngineError> {
+     let bad = |r: &str| EngineError::Invalid {
+         reason: r.to_owned(),
+     };
++    // Temporal.
+     if !(inputs.dt_s.is_finite() && inputs.dt_s > 0.0 && inputs.dt_s <= 2e-4) {
+         return Err(bad("dt in (0, 200us]"));
+     }
+@@ -1256,11 +1356,72 @@ fn validate_inputs(inputs: &EngineInputs) -> Result<(), EngineError> {
+     if inputs.record_every == 0 {
+         return Err(bad("record_every must be > 0"));
+     }
++    // Combustión.
+     if !(inputs.combustion_efficiency.is_finite()
+         && (0.0..=1.0).contains(&inputs.combustion_efficiency))
+     {
+         return Err(bad("combustion_efficiency in [0, 1]"));
+     }
++    if !(inputs.wiebe_a.is_finite() && inputs.wiebe_a > 0.0) {
++        return Err(bad("wiebe_a"));
++    }
++    if !(inputs.wiebe_m.is_finite() && inputs.wiebe_m >= 0.0) {
++        return Err(bad("wiebe_m"));
++    }
++    if !(inputs.wiebe_duration_deg.is_finite() && inputs.wiebe_duration_deg > 0.0) {
++        return Err(bad("wiebe_duration"));
++    }
++    // Control open-loop (R02-C2/C1-01).
++    if !(inputs.control.afr_target.is_finite() && inputs.control.afr_target > 0.0) {
++        return Err(bad("afr_target"));
++    }
++    if !(inputs.control.eta_v_assumed.is_finite()
++        && inputs.control.eta_v_assumed > 0.0
++        && inputs.control.eta_v_assumed <= 1.0)
++    {
++        return Err(bad("eta_v_assumed in (0, 1]"));
++    }
++    if !inputs.control.spark_adv_btdc_deg.is_finite() {
++        return Err(bad("spark_adv"));
++    }
++    // Combustible.
++    if !(inputs.fuel.lhv_j_per_kg.is_finite() && inputs.fuel.lhv_j_per_kg > 0.0) {
++        return Err(bad("lhv"));
++    }
++    if !(inputs.fuel.density_kg_m3.is_finite() && inputs.fuel.density_kg_m3 > 0.0) {
++        return Err(bad("fuel density"));
++    }
++    if !(inputs.fuel.stoich_afr.is_finite() && inputs.fuel.stoich_afr > 0.0) {
++        return Err(bad("stoich_afr"));
++    }
++    // Eléctrico / arranque.
++    if !(inputs.charge_volts.is_finite() && inputs.charge_volts > 0.0) {
++        return Err(bad("charge_volts"));
++    }
++    if !(inputs.dwell_s.is_finite() && inputs.dwell_s >= 0.0) {
++        return Err(bad("dwell"));
++    }
++    if !(inputs.starter_cutout_rpm.is_finite() && inputs.starter_cutout_rpm >= 0.0) {
++        return Err(bad("starter_cutout"));
++    }
++    if !(inputs.crank_timeout_s.is_finite() && inputs.crank_timeout_s >= 0.0) {
++        return Err(bad("crank_timeout"));
++    }
++    if let Some((sm, dr, bat)) = &inputs.starter {
++        if !(dr.ratio.is_finite() && dr.ratio > 0.0) {
++            return Err(bad("starter ratio"));
++        }
++        sm.validated().map_err(|_| bad("starter motor"))?;
++        bat.validated().map_err(|_| bad("battery"))?;
++    }
++    // Inercia.
++    if !(inputs.inertia.rotating_j_kg_m2.is_finite() && inputs.inertia.rotating_j_kg_m2 > 0.0) {
++        return Err(bad("inertia J > 0"));
++    }
++    if !(inputs.inertia.recip_mass_kg.is_finite() && inputs.inertia.recip_mass_kg >= 0.0) {
++        return Err(bad("inertia mass"));
++    }
++    // Presión, áreas y fricción.
+     if !(inputs.regulator_dp_pa.is_finite() && inputs.regulator_dp_pa >= 0.0) {
+         return Err(bad("regulator dp"));
+     }
+@@ -1283,16 +1444,6 @@ fn validate_inputs(inputs: &EngineInputs) -> Result<(), EngineError> {
+     if !(inputs.exhaust_v_m3.is_finite() && inputs.exhaust_v_m3 > 0.0) {
+         return Err(bad("exhaust volume"));
+     }
+-    // Wiebe y fricción: dominio declarado antes de construir/avanzar.
+-    if !(inputs.wiebe_a.is_finite() && inputs.wiebe_a > 0.0) {
+-        return Err(bad("wiebe_a"));
+-    }
+-    if !(inputs.wiebe_m.is_finite() && inputs.wiebe_m >= 0.0) {
+-        return Err(bad("wiebe_m"));
+-    }
+-    if !(inputs.wiebe_duration_deg.is_finite() && inputs.wiebe_duration_deg > 0.0) {
+-        return Err(bad("wiebe_duration"));
+-    }
+     match inputs.friction {
+         FrictionModel::None => {}
+         FrictionModel::Viscous { c_n_m_s } => {
+@@ -1313,6 +1464,17 @@ fn validate_inputs(inputs: &EngineInputs) -> Result<(), EngineError> {
+             }
+         }
+     }
++    // Térmico: parámetros válidos y energía derivada representable a la
++    // temperatura inicial declarada (R02-C2/C1-02, C1-04).
++    if let Some(tp) = &inputs.thermal {
++        tp.validated().map_err(|_| bad("thermal params"))?;
++        if thermal::ThermalState::cold(20.0)
++            .stored_j_checked(tp)
++            .is_none()
++        {
++            return Err(bad("thermal stored energy not representable"));
++        }
++    }
+     Ok(())
+ }
+ 
+@@ -1336,6 +1498,14 @@ pub fn resume(
+     // sobre una COPIA; la copia solo se confirma si `drive` termina bien. Un
+     // error no deja el WorkState ni los ledgers parcialmente mutados.
+     validate_physical_state(ws, "resume input")?;
++    // Coherencia de configuración térmica entre estado e inputs
++    // (R02-C2/C1-01): red presente sin inputs o al revés es inconsistente,
++    // incluso en un avance nulo.
++    if ws.therm.is_some() != inputs.thermal.is_some() {
++        return Err(EngineError::Invalid {
++            reason: "thermal presence mismatch between state and inputs".to_owned(),
++        });
++    }
+     let mut candidate = ws.clone();
+     // Rebase de auditoría para el tramo (el cierre total se verifica en
+     // corridas completas; aquí el contrato es bit-identidad del estado).
+@@ -1350,6 +1520,9 @@ pub fn resume(
+     candidate.h_out_amb_j = 0.0;
+     candidate.h_fuel_in_j = 0.0;
+     let samples = drive(&mut candidate, inputs, t_end, inputs.record_every, 0)?;
++    // El candidato solo se confirma si además es un estado físico válido
++    // (R02-C2/C1-01): una ejecución Ok no puede contener ledgers no finitos.
++    validate_physical_state(&candidate, "resume output")?;
+     *ws = candidate;
+     Ok(samples)
+ }
+@@ -1955,13 +2128,15 @@ mod r01_r02_tests {
+         assert!(prov.missing_fields.iter().any(|f| f == "thermal"));
+         assert_eq!(prov.continuation, "exact_neutral");
+         // Estado en marcha con historia ausente ⇒ continuación aproximada.
++        // Se simula un productor pre-C2 limpiando el marcador de modelo.
+         let mut hot = initial_state(&inp).unwrap();
+         hot.provenance = None;
+         let mut st = hot.snapshot().state;
+         st.pmax_pa = None;
+         st.time_s = 1.0;
+         st.omega_rad_s = 50.0;
+-        let snap2 = EngineSnapshot::capture(&st);
++        let mut snap2 = EngineSnapshot::capture(&st);
++        snap2.model = None;
+         let w2 = WorkState::restore(&snap2, &inp).unwrap();
+         let prov2 = w2.snapshot().provenance.unwrap();
+         assert_eq!(prov2.continuation, "approximate_hot");
+@@ -2031,3 +2206,193 @@ mod r01_r02_tests {
+         assert!(WorkState::restore(&EngineSnapshot::capture(&base), &bad).is_err());
+     }
+ }
++
++#[cfg(test)]
++mod r02_c2_tests {
++    #![allow(clippy::unwrap_used)]
++
++    use super::*;
++
++    fn idle_point(mut inp: EngineInputs) -> EngineInputs {
++        inp.throttle_area_m2 = 0.05e-4;
++        inp.idle_bypass_area_m2 = 0.02e-4;
++        inp.t_end_s = 4.0;
++        inp
++    }
++
++    /// Un input inválido debe rechazarse en run/resume/restore sin mutar el
++    /// estado (matriz de fronteras R02-C2/C1-01).
++    fn assert_rejected(inp: &EngineInputs) {
++        assert!(run_engine(inp).is_err(), "run debe rechazar");
++        let mut w = initial_state(&idle_point(healthy_inputs())).unwrap();
++        w.m_in_amb_kg = 0.12;
++        let before = format!("{w:?}");
++        assert!(resume(&mut w, inp, 0.001).is_err(), "resume debe rechazar");
++        assert_eq!(before, format!("{w:?}"), "estado debe quedar intacto");
++        let snap = initial_state(&idle_point(healthy_inputs()))
++            .unwrap()
++            .snapshot();
++        assert!(
++            WorkState::restore(&snap, inp).is_err(),
++            "restore debe rechazar"
++        );
++    }
++
++    #[test]
++    fn invalid_input_matrix_rejects_atomically() {
++        let base = idle_point(healthy_inputs());
++        // Control open-loop.
++        let mut i = base.clone();
++        i.control.afr_target = f64::NAN;
++        assert_rejected(&i);
++        let mut i = base.clone();
++        i.control.afr_target = 0.0;
++        assert_rejected(&i);
++        let mut i = base.clone();
++        i.control.eta_v_assumed = f64::NAN;
++        assert_rejected(&i);
++        let mut i = base.clone();
++        i.control.spark_adv_btdc_deg = f64::INFINITY;
++        assert_rejected(&i);
++        // Combustible.
++        let mut i = base.clone();
++        i.fuel.lhv_j_per_kg = f64::NAN;
++        assert_rejected(&i);
++        let mut i = base.clone();
++        i.fuel.density_kg_m3 = -1.0;
++        assert_rejected(&i);
++        let mut i = base.clone();
++        i.fuel.stoich_afr = 0.0;
++        assert_rejected(&i);
++        // Eléctrico / arranque.
++        let mut i = base.clone();
++        i.charge_volts = f64::NAN;
++        assert_rejected(&i);
++        let mut i = base.clone();
++        i.dwell_s = -1.0;
++        assert_rejected(&i);
++        let mut i = base.clone();
++        i.starter_cutout_rpm = f64::NAN;
++        assert_rejected(&i);
++        let mut i = base.clone();
++        i.starter.as_mut().unwrap().0.stall_torque_n_m = f64::NAN;
++        assert_rejected(&i);
++        // Inercia.
++        let mut i = base.clone();
++        i.inertia.rotating_j_kg_m2 = f64::NAN;
++        assert_rejected(&i);
++        let mut i = base.clone();
++        i.inertia.rotating_j_kg_m2 = 0.0;
++        i.inertia.recip_mass_kg = 0.0;
++        assert_rejected(&i);
++        // Wiebe.
++        let mut i = base.clone();
++        i.wiebe_duration_deg = f64::INFINITY;
++        assert_rejected(&i);
++        // Áreas.
++        let mut i = base.clone();
++        i.tailpipe_area_m2 = -1.0;
++        assert_rejected(&i);
++        // Térmico.
++        let mut i = base.clone();
++        let mut p = thermal::ThermalParams::illustrative();
++        p.c_wall = 0.0;
++        i.thermal = Some(p);
++        assert_rejected(&i);
++        let mut i = base.clone();
++        let mut p = thermal::ThermalParams::illustrative();
++        p.wall_frac = f64::NAN;
++        i.thermal = Some(p);
++        assert_rejected(&i);
++        let mut i = base.clone();
++        let mut p = thermal::ThermalParams::illustrative();
++        p.c_wall = f64::MAX;
++        i.thermal = Some(p);
++        assert_rejected(&i);
++    }
++
++    #[test]
++    fn valid_inputs_remain_accepted() {
++        let trace = run_engine(&idle_point(healthy_inputs())).unwrap();
++        assert!(trace.audit.energy_closure.is_finite());
++        assert!(trace.audit.mass_closure.is_finite());
++        assert!(trace.audit.final_rpm.is_finite());
++    }
++
++    #[test]
++    fn noop_resume_validates_state_and_thermal_coherence() {
++        let inp = idle_point(healthy_inputs());
++        // Nodo con volumen/cv inválidos.
++        let mut w = initial_state(&inp).unwrap();
++        w.plen.v = 0.0;
++        let before = format!("{w:?}");
++        let t = w.time_s;
++        assert!(resume(&mut w, &inp, t).is_err());
++        assert_eq!(before, format!("{w:?}"));
++        let mut w = initial_state(&inp).unwrap();
++        w.plen.cv = f64::NAN;
++        let before = format!("{w:?}");
++        let t = w.time_s;
++        assert!(resume(&mut w, &inp, t).is_err());
++        assert_eq!(before, format!("{w:?}"));
++        // Incoherencia térmica: inputs con red, estado sin red.
++        let mut tinp = idle_point(healthy_inputs());
++        tinp.thermal = Some(thermal::ThermalParams::illustrative());
++        let mut w = initial_state(&inp).unwrap();
++        let before = format!("{w:?}");
++        let t = w.time_s;
++        assert!(resume(&mut w, &tinp, t).is_err());
++        assert_eq!(before, format!("{w:?}"));
++        // Red presente con energía no representable.
++        let mut p = thermal::ThermalParams::illustrative();
++        p.c_wall = f64::MAX;
++        let mut w = initial_state(&inp).unwrap();
++        w.therm = Some((thermal::ThermalState::cold(20.0), p));
++        w.th_u0_j = 20.0 * p.c_wall;
++        let mut i2 = idle_point(healthy_inputs());
++        i2.thermal = Some(p);
++        let before = format!("{w:?}");
++        let t = w.time_s;
++        assert!(resume(&mut w, &i2, t).is_err());
++        assert_eq!(before, format!("{w:?}"));
++    }
++
++    #[test]
++    fn pre_c2_snapshot_is_not_declared_exact_native() {
++        // Un snapshot estructuralmente completo sin marcador de modelo
++        // (R02/C1) se migra como aproximado, no como nativo exacto (C1-05).
++        let inp = idle_point(healthy_inputs());
++        let mut w = initial_state(&inp).unwrap();
++        drive(&mut w, &inp, 0.4, inp.record_every, 0).unwrap();
++        let mut snap = w.snapshot();
++        snap.model = None; // productor pre-C2
++        assert!(snap.verified());
++        let restored = WorkState::restore(&snap, &inp).unwrap();
++        let prov = restored.snapshot().provenance.unwrap();
++        assert_eq!(prov.continuation, "approximate_hot");
++        assert!(prov
++            .missing_fields
++            .iter()
++            .any(|f| f == "combustion_accounting"));
++        // Un nativo C2 no lleva procedencia y continúa exacto.
++        let native = w.snapshot();
++        assert!(native.model.is_some());
++        let restored2 = WorkState::restore(&native, &inp).unwrap();
++        assert!(restored2.snapshot().provenance.is_none());
++    }
++
++    #[test]
++    fn unknown_or_mismatched_model_is_rejected() {
++        let inp = idle_point(healthy_inputs());
++        let w = initial_state(&inp).unwrap();
++        let snap = w.snapshot();
++        let mut bad = snap.clone();
++        bad.model.as_mut().unwrap().combustion_accounting = 999;
++        assert!(WorkState::restore(&bad, &inp).is_err());
++        let mut mism = snap.clone();
++        mism.model.as_mut().unwrap().schema_version = 1;
++        assert!(WorkState::restore(&mism, &inp).is_err());
++        // Convención conocida: acepta.
++        assert!(WorkState::restore(&snap, &inp).is_ok());
++    }
++}
+diff --git a/crates/engine/src/state.rs b/crates/engine/src/state.rs
+index 24c0a4f..597211e 100644
+--- a/crates/engine/src/state.rs
++++ b/crates/engine/src/state.rs
+@@ -94,6 +94,12 @@ pub struct ThermalSnap {
+ pub struct EngineSnapshot {
+     pub state: EngineState,
+     pub state_hash: String,
++    /// Identidad del modelo/convención que produjo el snapshot (R02-C2/C1-05).
++    /// `None` = formato pre-C2 (productor ambiguo entre R02 y C1): no se
++    /// declara continuación física exacta. `state_hash` **no** cubre este
++    /// campo (metadata, C1-G01).
++    #[serde(default, skip_serializing_if = "Option::is_none")]
++    pub model: Option<ModelIdentity>,
+     /// Procedencia de una migración legacy (R02-C1/RV04). `None` en
+     /// snapshots nativos completos; presente cuando el estado provino de un
+     /// esquema sin los inventarios de nodo o sin historia de presión.
+@@ -101,6 +107,19 @@ pub struct EngineSnapshot {
+     pub provenance: Option<MigrationProvenance>,
+ }
+ 
++/// Convención de contabilidad química actual (consumo por paso, C1+).
++pub const COMBUSTION_ACCOUNTING_STEPWISE: u32 = 1;
++
++/// Identidad explícita del productor (R02-C2/C1-05): separa la versión del
++/// esquema de serialización de la convención de modelo/contabilidad química.
++#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
++pub struct ModelIdentity {
++    /// Versión del esquema de serialización (debe coincidir con el estado).
++    pub schema_version: u32,
++    /// Convención de contabilidad: `COMBUSTION_ACCOUNTING_STEPWISE`.
++    pub combustion_accounting: u32,
++}
++
+ /// Registro de una migración de snapshot legacy (R02-C1/RV04): qué esquema se
+ /// leyó, su hash original, la transformación aplicada, los campos históricos
+ /// ausentes y el alcance de la continuación física.
+@@ -127,6 +146,10 @@ impl EngineSnapshot {
+         Self {
+             state: state.clone(),
+             state_hash: canonical_state_hash(state),
++            model: Some(ModelIdentity {
++                schema_version: state.schema_version,
++                combustion_accounting: COMBUSTION_ACCOUNTING_STEPWISE,
++            }),
+             provenance: None,
+         }
+     }
+@@ -137,6 +160,10 @@ impl EngineSnapshot {
+         Self {
+             state: state.clone(),
+             state_hash: canonical_state_hash(state),
++            model: Some(ModelIdentity {
++                schema_version: state.schema_version,
++                combustion_accounting: COMBUSTION_ACCOUNTING_STEPWISE,
++            }),
+             provenance,
+         }
+     }
+diff --git a/crates/thermal/src/network.rs b/crates/thermal/src/network.rs
+index 2e1358e..1575304 100644
+--- a/crates/thermal/src/network.rs
++++ b/crates/thermal/src/network.rs
+@@ -145,6 +145,14 @@ impl ThermalState {
+             + self.t_cool_c * p.c_cool
+     }
+ 
++    /// Energía almacenada si es representable (finita); `None` si el
++    /// producto/suma derivado desborda (R02-C2/C1-04). No cambia `stored_j`.
++    #[must_use]
++    pub fn stored_j_checked(&self, p: &ThermalParams) -> Option<f64> {
++        let u = self.stored_j(p);
++        u.is_finite().then_some(u)
++    }
++
+     /// Factor del termostato [0, 1] (0 cerrado bajo la banda).
+     #[must_use]
+     pub fn thermostat_factor(&self, p: &ThermalParams) -> f64 {
+@@ -208,7 +216,8 @@ impl ThermalState {
+         if !(ambient_c.is_finite() && ambient_c > ABS_ZERO_C) {
+             return Err(bad);
+         }
+-        // Estado de entrada: temperaturas absolutas válidas antes de tocar nada.
++        // Estado de entrada: temperaturas absolutas válidas y energía
++        // almacenada representable antes de tocar nada (R02-C2/C1-04).
+         for v in [
+             self.t_wall_c,
+             self.t_piston_c,
+@@ -220,6 +229,9 @@ impl ThermalState {
+                 return Err(bad);
+             }
+         }
++        if self.stored_j_checked(p).is_none() {
++            return Err(bad);
++        }
+         let tstat = self.thermostat_factor(p);
+         // Calor neto a ambiente (frontera declarada, R01-F10): pared, aceite y
+         // radiador (según termostato), con las temperaturas del inicio del paso.
+@@ -249,6 +261,13 @@ impl ThermalState {
+                 return Err(bad);
+             }
+         }
++        // Energía almacenada del candidato (producto T·C y suma) finita: no
++        // basta con que cada temperatura y capacidad lo sean (C1-04).
++        let stored_candidate =
++            t_wall * p.c_wall + t_piston * p.c_piston + t_oil * p.c_oil + t_cool * p.c_cool;
++        if !stored_candidate.is_finite() {
++            return Err(bad);
++        }
+         // `q_amb` es energía (J), puede ser negativa (ambiente más caliente);
+         // solo se exige finitud.
+         if !q_amb.is_finite() {
+@@ -361,5 +380,14 @@ mod tests {
+         let before2 = s2;
+         assert!(s2.step(0.1, 100.0, 0.0, 20.0, &p2).is_err());
+         assert_eq!(s2, before2);
++        // Capacidad enorme: la energía almacenada derivada (T·C) desborda y
++        // el candidato se rechaza sin mutar (R02-C2/C1-04).
++        let mut p3 = p;
++        p3.c_wall = f64::MAX;
++        let mut s3 = ThermalState::cold(20.0);
++        let before3 = s3;
++        assert!(s3.step(0.1, 10.0, 3.0, 20.0, &p3).is_err());
++        assert_eq!(s3, before3);
++        assert!(s3.stored_j_checked(&p3).is_none());
+     }
+ }
+diff --git a/docs/PROGRESS.md b/docs/PROGRESS.md
+index 80a0dad..4f86841 100644
+--- a/docs/PROGRESS.md
++++ b/docs/PROGRESS.md
+@@ -509,3 +509,26 @@ detención. Batch S26–S30 autorizado; S31 prohibido.
+   Harness adversarial **19/19** (196 predicados; antes 9/19). Harness original
+   **22/32** con los mismos 10 fallos de R03/R04. F07/F08/F09/F10 conservados.
+ - **STOP**: no se inicia R03/R04/R05 ni S31 sin autorización explícita.
++
++## 2026-10-10 · Remediación R01–R02-C2 (IMPLEMENTED_PENDING_INDEPENDENT_REVIEW)
++
++- Rama `remediation/r01-r02-c2` desde `caad1cb` (C1 verificado con
++  `C1_REMEDIATION_REQUIRED`). Matriz de fronteras:
++  `docs/remediation/R01_R02_C2_BOUNDARY_MATRIX.md`; ADR-040; reporte:
++  `docs/remediation/R01_R02_C2_BATCH_REPORT.md`.
++- **C1-01/F15**: validación integral de EngineInputs (control, combustible,
++  eléctrico/arranque, inercia, Wiebe, térmico), nodos (v/cv), ledgers,
++  coherencia térmica y confirmación del candidato; errores de starter
++  propagados; auditoría finita obligatoria.
++- **C1-02/C1-04/F15**: energía térmica derivada (T·C) validada en
++  `stored_j_checked`, `step`, `restore`, `initial_state` y `run_engine`.
++- **C1-03/F02**: `LeakSplit` como descomposición completa normalizada;
++  observaciones inválidas/parciales ⇒ `Inconclusive`.
++- **C1-05/F06**: identidad semántica `model` (esquema + contabilidad);
++  snapshots pre-C2 migran como aproximados, nunca nativos exactos;
++  metadata de procedencia documentada como no autenticada (C1-G01).
++- Tests: workspace **204 passed / 0 failed** (199 + 5 C2); fmt/clippy OK.
++  Controles C2 **15/15** (150 predicados; antes 10/15). Harness adversarial
++  **19/19**; harness original **22/32** con los mismos 10 fallos de R03/R04.
++  Ralentí nominal idéntico a C1 (1047.3038737 rpm): solo validación.
++- **STOP**: no se inicia R03/R04/R05 ni S31; no se fusiona a `r01-r05`.
+diff --git a/docs/adr/ADR-039-remediation-c1-boundaries.md b/docs/adr/ADR-039-remediation-c1-boundaries.md
+index 2b64cb3..88ce756 100644
+--- a/docs/adr/ADR-039-remediation-c1-boundaries.md
++++ b/docs/adr/ADR-039-remediation-c1-boundaries.md
+@@ -43,3 +43,12 @@
+   de combustión/fricción o migración de esquema incompatible.
+ - **Referencias:** FINDINGS RV01–RV09; `BATCH_GATE_DECISION.md`;
+   `docs/remediation/R01_R02_C1_BATCH_REPORT.md`; ADR-038.
++
++## Nota C2 (2026-10-10) — restricción del claim de validación
++
++El punto 5 («las APIs públicas validan dominio y finitud antes de mutar»)
++queda **acotado** por la matriz `docs/remediation/R01_R02_C2_BOUNDARY_MATRIX.md`:
++en C1 faltaban control/combustible/eléctrico/arranque/inercia, estado de nodos
++(v/cv), coherencia térmica y validación de energía derivada; C2 los cierra
++(ADR-040). La generalización anterior era más amplia que la evidencia
++(C1-D01); no se reescribe la historia, se restringe el alcance vigente.
+diff --git a/docs/adr/ADR-040-remediation-c2-boundaries.md b/docs/adr/ADR-040-remediation-c2-boundaries.md
+new file mode 100644
+index 0000000..2625e1c
+--- /dev/null
++++ b/docs/adr/ADR-040-remediation-c2-boundaries.md
+@@ -0,0 +1,52 @@
++# ADR-040 — Validación integral de fronteras y compatibilidad semántica de snapshots
++
++- **ID:** ADR-040
++- **Fecha:** 2026-10-10
++- **Estado:** ACEPTADO (remediación R01–R02-C2)
++- **Decisión propuesta:**
++  1. **Validación integral de Engine (C1-01):** `validate_inputs` cubre control
++     open-loop (AFR, ηv, avance), combustible (LHV, densidad, AFR
++     estequiométrico), eléctrico/arranque (tensión, dwell, cutout, motor,
++     batería), inercia (J > 0, masa ≥ 0), Wiebe y térmico; `resume` valida
++     además nodos (volumen/cv), ledgers, coherencia de red térmica y confirma
++     solo un candidato válido. Los errores del starter se propagan; no se
++     sustituyen por par cero.
++  2. **Energía térmica derivada (C1-02/C1-04):** se valida el producto T·C y la
++     suma del ledger, no solo los operandos; `stored_j_checked` y `step`
++     rechazan capacidades finitas extremas cuyo estado derivado desborda.
++     `restore`/`initial_state`/`run_engine` rechazan configuraciones y
++     auditorías no representables antes de devolver `Ok`.
++  3. **Dominio diagnóstico (C1-03):** `LeakSplit` es una **descomposición
++     completa normalizada** (finita, en [0,1], Σ ≈ 1 con tol 1e-6);
++     compresión/leak-down/umbral deben ser finitos y de dominio válido. Una
++     observación parcial se expresa con `None`; con datos inválidos o parciales
++     el veredicto es `Inconclusive`, nunca una causa.
++  4. **Identidad semántica de snapshots (C1-05):** se separa la versión de
++     esquema de la convención de contabilidad química mediante `model`
++     (`schema_version` + `combustion_accounting`). Un snapshot sin `model`
++     (pre-C2) es ambiguo entre R02 y C1: se migra con procedencia aproximada,
++     nunca como nativo exacto. Convención desconocida ⇒ rechazo.
++  5. **Alcance de integridad (C1-G01):** `state_hash` autentica solo el estado;
++     `model` y `provenance` son metadata no autenticada y así se documentan. No
++     se firma criptográficamente ni se reescriben hashes históricos.
++- **Contexto/motivo:** la verificación independiente C1
++  (`a0088ff`, `C1_REMEDIATION_REQUIRED`) reprodujo configuraciones inválidas
++  aceptadas, `restore` con capacidad cero/NaN, overflow del ledger térmico,
++  diagnóstico discriminando con observaciones inválidas/parciales y un
++  snapshot R02 genuino durante combustión sin migración semántica.
++- **Alternativas consideradas:** (a) inferir el productor por valores
++  (`pmax`/`burn_accounted`) — rechazada por la spec (deducción arbitraria);
++  (b) restar 1157 J del ledger para «cuadrar» — rechazada (maquillaje);
++  (c) exigir Σ = 1 sin tocar los fixtures históricos — imposible con los
++  tests S24/S29 existentes, que se normalizan sin cambiar su causa esperada;
++  (d) autenticar la metadata con un hash nuevo — fuera de alcance y
++  incompatible con lectores históricos.
++- **Consecuencias:** sin cambio numérico en la trayectoria nominal
++  (ralentí 8 s dt 50 µs idéntico a C1: 1047.3038737 rpm); solo se rechazan
++  entradas/estados inválidos. Los snapshots pre-C2 quedan etiquetados
++  aproximados; los C2 nativos son bit-exactos.
++- **Trigger de revisión:** nueva evidencia experimental (S25), cambio de
++  convención de contabilidad, o adopción de autenticación de metadata.
++- **Referencias:** `C1_FINDINGS.md` C1-01…C1-05, C1-G01, C1-D01;
++  `C1_GATE_DECISION.md`; `docs/remediation/R01_R02_C2_BOUNDARY_MATRIX.md`;
++  `docs/remediation/R01_R02_C2_BATCH_REPORT.md`; ADR-038, ADR-039.
+diff --git a/docs/adr/README.md b/docs/adr/README.md
+index a9760aa..66a1a48 100644
+--- a/docs/adr/README.md
++++ b/docs/adr/README.md
+@@ -32,3 +32,4 @@ Los ADR de la remediación R01–R05 se indexan aparte para no reescribir el
+ |---|---|---|
+ | ADR-038 | `ADR-038-remediation-state-species.md` | ACEPTADO (R01–R02) |
+ | ADR-039 | `ADR-039-remediation-c1-boundaries.md` | ACEPTADO (R01–R02-C1) |
++| ADR-040 | `ADR-040-remediation-c2-boundaries.md` | ACEPTADO (R01–R02-C2) |
+diff --git a/docs/remediation/R01_R02_C2_BATCH_REPORT.md b/docs/remediation/R01_R02_C2_BATCH_REPORT.md
+new file mode 100644
+index 0000000..911fc2b
+--- /dev/null
++++ b/docs/remediation/R01_R02_C2_BATCH_REPORT.md
+@@ -0,0 +1,188 @@
++# Reporte de batch — Remediación R01–R02-C2 (D16SIM)
++
++- **Fecha:** 2026-10-10
++- **Base de implementación:** `remediation/r01-r02-c1` @ `caad1cbf31d01531e0fbd81be6190f52b2d1c2d7`
++- **Segunda verificación independiente:** `verification/r01-r02-2026-10-10` @ `a0088ff0301c07aa89f4ca4f5fab32b53eba9960`
++- **Veredicto vigente antes de C2:** `C1_REMEDIATION_REQUIRED`
++- **Rama/worktree C2:** `remediation/r01-r02-c2` en `/home/franku/projects/d16sim-remediation-c2` (desde `caad1cb`)
++- **Estado del implementador:** `IMPLEMENTED_PENDING_INDEPENDENT_REVIEW`
++- **Toolchain:** rustc/cargo 1.99.0, Linux x86_64
++- **Destino NO tocado:** `remediation/r01-r05` @ `8a7e868` (sin merge/ff/rebase/squash)
++
++> No se declara `VERIFIED_FIXED` (corresponde al revisor). No se inician
++> R03/R04/R05 ni S31. No se usan datos del D16Y7. No se ajustan parámetros
++> físicos nominales ni tolerancias de oráculos.
++
++---
++
++## 1. Estado de C1-01 a C1-05 y RV/F-ID
++
++| Hallazgo | RV/F-ID | Sev. | Estado implementador | Evidencia |
++|---|---|---|---|---|
++| **C1-01** | RV05/F15 | P1 | `IMPLEMENTED_PENDING_INDEPENDENT_REVIEW` | Matriz de inputs/estado/nodos/coherencia; 16 configs inválidas rechazadas en run/resume/restore sin mutar. |
++| **C1-02** | RV06/F15 | P1 | `IMPLEMENTED_PENDING_INDEPENDENT_REVIEW` | `restore` rechaza `c_wall=0`, `wall_frac=NaN`, capacidad MAX (3/3). |
++| **C1-03** | RV02/F02 | P2 | `IMPLEMENTED_PENDING_INDEPENDENT_REVIEW` | Observaciones inválidas/parciales ⇒ `Inconclusive` (4/4). |
++| **C1-04** | RV06/F15 | P2 | `IMPLEMENTED_PENDING_INDEPENDENT_REVIEW` | Energía derivada T·C validada; capacidad MAX ⇒ rechazo atómico. |
++| **C1-05** | RV04/F06 | P1 | `IMPLEMENTED_PENDING_INDEPENDENT_REVIEW` | `model` semántico; R02 mid-burn ⇒ `approximate_hot`; nativos C2 exactos. |
++| **C1-G01** | — | P2 | `DOCUMENTED` | Metadata `model`/`provenance` declarada no autenticada por `state_hash`. |
++| **C1-D01** | — | P2 | `RESTRICTED` | Claim de ADR-039 acotado por la matriz C2 (nota append-only). |
++
++| Contrato | Estado C2 |
++|---|---|
++| **RV02/F02** | Cerrado en el dominio público del protocolo (frontera validada); AUD-R01 multicause sigue abierto. |
++| **RV04/F06** | Lectura/hash históricos + migración pre-R02 + identidad semántica pre-C2/C2. |
++| **RV05/F15** | Matriz integral ejecutada; rollback en todos los negativos. |
++| **RV06/F15** | Params + estado + energía derivada + restore. |
++| **RV01/F01, RV03/F05, RV07/F15, RV08/F15, RV09/F15** | Conservados (regresiones verdes). |
++| **F07/F08/F09/F10** | Conservados (replay, especie fresca, líquidos, balance térmico). |
++
++---
++
++## 2. Reproducciones antes/después (controles C2)
++
++| Caso | Antes (`a0088ff`) | Después (C2) |
++|---|---|---|
++| `control_afr_nan/zero`, `eta_nan`, `spark_adv_nan`, `lhv_nan`, `density_negative`, `charge_nan`, `dwell_nan`, `starter_cut_nan`, `starter_bad`, `inertia_nan/zero`, `wiebe_duration_inf` | aceptados en run/resume/restore | **rechazados, estado intacto, sin panic** |
++| `thermal_capacity_zero/wall_nan` | run/restore rechazaban; **resume aceptaba** | **rechazados (3/3)** |
++| `thermal_capacity_overflow` | run Ok con cierre **no finito** | **rechazado** |
++| `node_v_zero`, `node_cv_nan`, `node_v_nan`, `thermal_presence_mismatch`, `thermal_stored_overflow`, `thermal_params_bad` | aceptados y estado mutado | **rechazados, `unchanged=true` (6/6)** |
++| `thermal_restore_config` capacity_zero/wall_nan/overflow | aceptados (`stored_finite=false` en overflow) | **rechazados (3/3)** |
++| `extended_thermal capacity_large` | `Ok`, `stored_j=Inf`, estado mutado | **rechazado, `unchanged=true`** |
++| `diagnostic_invalid` compresión NaN / leak Inf / split [2,−1,0] / [.1,0,0] | `Rings` (4/4) | **`Inconclusive` (4/4)** |
++| `r02_midburn_migration` | `provenance=None` (nativo sin etiqueta) | **`approximate_hot`**, `missing_fields=["combustion_accounting"]` |
++| `friction_overflow` (estrés legítimo) | aceptado, energía finita | aceptado, energía finita (excluido del gate por diseño) |
++
++`hash_valid=true` en los tres `thermal_restore_config`: el rechazo es por
++configuración física, no por hash (separación integridad/validez).
++
++---
++
++## 3. Resultados originales y nuevos
++
++| Batería | Antes | Después |
++|---|---|---|
++| `cargo test --locked --workspace` | 198/0 | **204/0** (+5 C2, +1 diagnóstico) |
++| `cargo fmt --all -- --check` | OK | OK |
++| `cargo clippy … -D clippy::unwrap_used` | exit 0 | exit 0 |
++| Controles C1/C2 nuevos | 10/15 (121 predicados) | **15/15 (150 predicados)** |
++| Harness adversarial (19) | 19/19 | **19/19** (196 predicados) |
++| Harness original S30 (32) | 22/32 | **22/32** (89 predicados) |
++
++Los 10 fallos del harness original son exactamente los de R03/R04:
++17/18 (F03/F04), 19/20 (F11/F12), 21/22 (F13), 23 (F14), 28 (F16), 31/32
++(F18/F19). No hay fallos nuevos ni ocultos.
++
++---
++
++## 4. Matriz ejecutada y cobertura por API
++
++La matriz completa está en `R01_R02_C2_BOUNDARY_MATRIX.md`. Cobertura ejecutada:
++
++- **Engine `EngineInputs`**: control (AFR, ηv, avance), combustible (LHV,
++  densidad, stoich), eléctrico/arranque (tensión, dwell, cutout, motor,
++  batería), inercia (J, masa), Wiebe, áreas, volúmenes, fricción, térmico.
++- **Engine `WorkState`/nodos**: m/u/fresh/fuel, v/cv, t, historia de eventos,
++  contadores/ledgers, `th_u0_j`, coherencia de red térmica, energía derivada.
++- **Engine resultados**: `run_engine` exige estado y auditoría finitos;
++  `resume` valida el candidato antes de confirmar (atomicidad).
++- **Thermal**: params, estado de entrada, ambiente, candidato y energía
++  almacenada derivada; overflow tiny/MAX.
++- **Diagnostics**: compresión, leak-down, umbral, fracciones y cierre.
++- **Snapshots**: v1 histórico, v2 S30, v2 R02 (nativo y mid-burn), C2 nativo;
++  modelo desconocido/incoherente; metadata manipulada (documentada).
++
++**Dominios no cubiertos**: fuzzing exhaustivo, callback malicioso, segundo
++host/arquitectura, horizontes > 120 s, gradientes espaciales, reconstrucción
++exacta de trayectorias legacy calientes.
++
++---
++
++## 5. Compatibilidad de snapshots por productor
++
++| Productor | Estructura | Clasificación C2 | Continuación |
++|---|---|---|---|
++| v1 `2541266` | schema 1, sin `thermal`/R01 | legacy v1 | `exact_neutral` (frío) / `approximate_hot` (caliente) |
++| v2 S30 `ff09a0d` | schema 2, sin `pmax`/fuel nodos | legacy v2 pre-R02 | idem |
++| v2 R02 `8a7e868` nativo | schema 2, `pmax` presente, sin `model` | **pre-C2 ambiguo** | `approximate_hot` / `exact_neutral`; nunca nativo exacto |
++| v2 R02 mid-burn `8a7e868` | `burn_accounted=false`, exceso 1157 J | **pre-C2 ambiguo** | `approximate_hot` (no se resta el exceso) |
++| C1 `caad1cb` | schema 2, `pmax`, sin `model` | pre-C2 ambiguo (conservador) | aproximado (estado intacto, bit-exacto) |
++| C2 nativo | schema 2 + `model{2,1}` | nativo exacto | bit-exacto |
++
++Lectura/hash históricos se preservan en todos los casos. El exceso químico
++heredado (~1157 J) **no se corrige artificialmente**: se etiqueta la
++procedencia y se limita la continuación. No se infiere el productor por
++valores (`pmax`/`burn_accounted`).
++
++---
++
++## 6. Decisiones de procedencia y confianza (C1-G01)
++
++- `state_hash` autentica **solo el estado canónico**.
++- `model` y `provenance` son **metadata no autenticada**; reserializar no las
++  autentica. Un consumidor que necesite confiar en la procedencia debe
++  verificarla contra una fuente externa fiable.
++- No se añade firma criptográfica ni se reescriben hashes históricos.
++- Control de manipulación (`provenance_tamper_control`): el hash del estado
++  sigue válido y la metadata manipulada se conserva (comportamiento
++  documentado, no un defecto del contrato de hash).
++
++---
++
++## 7. Cambios numéricos significativos
++
++**Ninguno.** El ralentí nominal 8 s/dt 50 µs es idéntico a C1:
++**1047.3038737395177 rpm**, `Q=46146.847889 J`, `W_ind=13286.519774 J`,
++residuo energético `6.95678e-5`. C2 solo añade validación/rechazo; no toca
++ecuaciones, parámetros ni la trayectoria nominal. Los fixtures S24/S29 de
++diagnóstico se normalizan (Σ=1) sin cambiar su causa esperada.
++
++---
++
++## 8. Limitaciones y riesgos abiertos
++
++- **AUD-R01** sigue abierto: la indistinguibilidad multicause no se resuelve
++  con validación de frontera.
++- **F03/F04/F11–F14/F16/F18/F19** (R03/R04) siguen fuera de alcance y rojos en
++  el oráculo original.
++- **K01–K03, G01–G07** vigentes; sin calibración ni validación experimental.
++- La continuación de snapshots pre-C2 calientes es **aproximada por diseño**;
++  no se reconstruye historia no persistida.
++- Metadata de procedencia no autenticada (limitación de confianza).
++- Cobertura numérica finita, no fuzzing exhaustivo; host único.
++- `friction_overflow` (c finito extremo) se mantiene como estrés legítimo, no
++  se rechaza.
++
++---
++
++## 9. Commits y estado Git
++
++| Commit | Contenido |
++|---|---|
++| `698b2e3` | C2: validación integral engine/thermal/eléctrico + identidad semántica de snapshots. |
++| `9021d7d` | C2: dominio diagnóstico y rechazo de observaciones inválidas/parciales. |
++| *(docs)* | Este reporte, matriz de fronteras, ADR-040, snapshot-contract, PROGRESS, nota ADR-039. |
++
++- Cadena: `8a7e868 → 23e48eb → edb36cc → caad1cb → 698b2e3 → 9021d7d → (docs)`.
++- `remediation/r01-r05` @ `8a7e868` **sin tocar**; `master` y worktrees de
++  auditoría/verificación intactos. Sin merge/ff/rebase/squash.
++- Working tree limpio tras el commit de documentación.
++
++---
++
++## 10. Recomendación para verificación independiente
++
++Solicitar verificación de C2 con los tres oráculos intactos:
++
++1. Re-ejecutar los 15 controles C2 (esperado 15/15) y confirmar que los cinco
++   bloqueos C1-01…C1-05 dejan de reproducirse.
++2. Confirmar atomicidad con comparación de `WorkState` completo (incluidos
++   ledgers) en los negativos de engine/thermal.
++3. Verificar la clasificación semántica: R02 mid-burn ⇒ `approximate_hot`;
++   C2 nativo ⇒ exacto; modelo desconocido ⇒ rechazo.
++4. Confirmar que el harness adversarial (19/19) y el original (22/32, 10
++   R03/R04) permanecen sin cambios, y que el ralentí nominal no cambió.
++5. Revisar el alcance de confianza del metadata (C1-G01) y la restricción del
++   claim de ADR-039 (C1-D01).
++
++**STOP.** No se inicia R03/R04/R05 ni S31; la integración a `remediation/r01-r05`
++requiere autorización independiente del revisor.
+diff --git a/docs/remediation/R01_R02_C2_BOUNDARY_MATRIX.md b/docs/remediation/R01_R02_C2_BOUNDARY_MATRIX.md
+new file mode 100644
+index 0000000..449e335
+--- /dev/null
++++ b/docs/remediation/R01_R02_C2_BOUNDARY_MATRIX.md
+@@ -0,0 +1,125 @@
++# Matriz de fronteras R01–R02-C2 (Fase A)
++
++- **Fecha:** 2026-10-10
++- **Base:** `remediation/r01-r02-c1` @ `caad1cbf31d01531e0fbd81be6190f52b2d1c2d7`
++- **Hallazgos que la motivan:** C1-01, C1-02, C1-03, C1-04, C1-05, C1-G01, C1-D01.
++- **Regla:** esta matriz se completa **antes** de implementar; distingue validación por campo, invariantes relacionales y validación de resultados derivados. No introduce cotas físicas OEM inventadas; solo dominio representable y coherencia del contrato.
++
++Leyenda: **V** = validación existente; **A** = ausente (a añadir); **D** = derivada (producto/suma); **R** = relacional entre campos.
++
++## 1. Engine — `EngineInputs` (`crates/engine/src/run.rs::validate_inputs`)
++
++| Campo | Unidad / dominio | Invariante | V/A/D/R | Error | Atomicidad |
++|---|---|---|---|---|---|
++| `dt_s` | s, (0, 200 µs] | finito | V | `Invalid` | antes de mutar |
++| `t_end_s` | s, ≥ 0 finito | finito | V | `Invalid` | antes de mutar |
++| `record_every` | entero > 0 | > 0 | V | `Invalid` | antes de mutar |
++| `combustion_efficiency` | 0–1 | finito ∈ [0,1] | V | `Invalid` | antes de mutar |
++| `regulator_dp_pa` | Pa ≥ 0 | finito | V | `Invalid` | antes de mutar |
++| `throttle/idle_bypass/tailpipe_area_m2` | m² ≥ 0 | finito ≥ 0 | V | `Invalid` | antes de mutar |
++| `accessory_tau_n_m` | N·m finito (signo libre) | finito | V | `Invalid` | antes de mutar |
++| `plenum_v_m3`, `exhaust_v_m3` | m³ > 0 | finito > 0 | V | `Invalid` | antes de mutar |
++| `wiebe_a` | adimensional > 0 | finito > 0 | V | `Invalid` | antes de mutar |
++| `wiebe_m` | ≥ 0 | finito ≥ 0 | V | `Invalid` | antes de mutar |
++| `wiebe_duration_deg` | ° > 0 | finito > 0 | V | `Invalid` | antes de mutar |
++| `friction` | params finitos ≥ 0 | finito ≥ 0 | V | `Invalid` | antes de mutar |
++| `control.afr_target` | adimensional > 0 | finito > 0 | **A** | `Invalid` | antes de mutar |
++| `control.eta_v_assumed` | (0, 1] | finito ∈ (0,1] | **A** | `Invalid` | antes de mutar |
++| `control.spark_adv_btdc_deg` | ° finito (signo libre) | finito | **A** | `Invalid` | antes de mutar |
++| `fuel.lhv_j_per_kg` | J/kg > 0 | finito > 0 | **A** | `Invalid` | antes de mutar |
++| `fuel.density_kg_m3` | kg/m³ > 0 | finito > 0 | **A** | `Invalid` | antes de mutar |
++| `fuel.stoich_afr` | adimensional > 0 | finito > 0 | **A** | `Invalid` | antes de mutar |
++| `charge_volts` | V > 0 | finito > 0 | **A** | `Invalid` | antes de mutar |
++| `dwell_s` | s ≥ 0 | finito ≥ 0 | **A** | `Invalid` | antes de mutar |
++| `starter_cutout_rpm` | rpm ≥ 0 | finito ≥ 0 | **A** | `Invalid` | antes de mutar |
++| `crank_timeout_s` | s ≥ 0 | finito ≥ 0 | **A** | `Invalid` | antes de mutar |
++| `starter.0` (motor) | params > 0 + free<stall | finito > 0 | **A** (vía `torque_at(0)`) | `Invalid` | antes de mutar |
++| `starter.1.ratio` | > 0 | finito > 0 | **A** | `Invalid` | antes de mutar |
++| `starter.2` (batería) | soc∈[0,1], R/params ≥0 finitos | finito | **A** | `Invalid` | antes de mutar |
++| `inertia.rotating_j_kg_m2` | kg·m² > 0 | finito > 0 | **A** | `Invalid` | antes de mutar |
++| `inertia.recip_mass_kg` | kg ≥ 0 | finito ≥ 0 | **A** | `Invalid` | antes de mutar |
++| `thermal` (si `Some`) | `ThermalParams::validated` + energía derivada finita | **D** | `Invalid` | antes de mutar |
++
++## 2. Engine — `WorkState` / nodos (`validate_physical_state`, coherencia)
++
++| Estado | Dominio | Invariante | V/A/D/R | Error | Atomicidad |
++|---|---|---|---|---|---|
++| `time_s`, `theta_rad` | finitos | finito | V | `Invalid` | antes de mutar |
++| `omega_rad_s` | finito ≥ 0 | finito | V | `Invalid` | antes de mutar |
++| `pmax_pa` | finito > 0 | finito | V | `Invalid` | antes de mutar |
++| cámara `m`, `u`, `fresh`, `fuel`, `burn_latched` | finitos, dominios [0,1]/[0,m] | V | `Invalid` | antes de mutar |
++| nodo `m`, `t`, `fresh`, `fuel` | finitos, t>0 | V | `Invalid` | antes de mutar |
++| nodo `v` | m³ > 0 | finito > 0 | **A** | `Invalid` | antes de mutar |
++| nodo `cv` | J/kg·K > 0 | finito > 0 | **A** | `Invalid` | antes de mutar |
++| `prev_local_deg` | finitos | V | `Invalid` | antes de mutar |
++| ledgers/contadores | finitos; ≥0 donde físico | V | `Invalid` | antes de mutar |
++| `th_u0_j` | finito | **A** | `Invalid` | antes de mutar |
++| `therm` (si `Some`) | `ThermalParams::validated` + `stored_j` finito + T > 0 K | **A/D** | `Invalid` | antes de mutar |
++| coherencia `therm.is_some() == inputs.thermal.is_some()` | **R** | **A** | `Invalid` | antes de mutar |
++| resultado `run_engine` (audit) | `mass/energy closure`, contadores finitos | **A/D** | `Invalid` | estado local (sin mutación externa) |
++| resultado `resume` (candidato) | `validate_physical_state` + ledgers finitos | **A/D** | `Invalid` | copia no confirmada |
++| starter en `drive` | errores propagados (sin `.unwrap_or(0.0)`) | **A** | `Invalid` | copia no confirmada |
++
++## 3. Thermal — `ThermalParams`, `ThermalState`
++
++| Campo | Dominio | Invariante | V/A/D/R | Error | Atomicidad |
++|---|---|---|---|---|---|
++| `c_wall/piston/oil/cool` | J/K finito > 0 | V | `Invalid` | antes de mutar |
++| `ha_*` | W/K finito ≥ 0 | V | `Invalid` | antes de mutar |
++| `wall_frac` | finito ∈ [0,1] | V | `Invalid` | antes de mutar |
++| `tstat_lo < tstat_hi` | **R** | V | `Invalid` | antes de mutar |
++| `ect_tau_s` | finito ≥ 0 | V | `Invalid` | antes de mutar |
++| `stored_j` (derivada T·C) | finito | **A/D** | `Invalid` (consumidores) | — |
++| `step`: estado de entrada | T finito > −273.15 °C | V | `Invalid` | antes de mutar |
++| `step`: ambiente | finito > −273.15 °C | V | `Invalid` | antes de mutar |
++| `step`: candidato (T y `q_amb`) | finito, T > 0 K | V | `Invalid` | candidato no confirmado |
++| `step`: energía almacenada candidata | finito | **A/D** | `Invalid` | candidato no confirmado |
++
++## 4. Diagnostics — `diagnose_low_compression` / `LeakSplit`
++
++| Entrada | Dominio | Invariante | V/A/D/R | Política |
++|---|---|---|---|---|
++| `compression_kpa` | Pa finito ≥ 0 (si `Some`) | finito ≥ 0 | **A** | inválido ⇒ no cuenta como medición |
++| `low_threshold_kpa` | Pa finito > 0 | finito > 0 | **A** | inválido ⇒ `Inconclusive` |
++| `leak_pct` | % finito ∈ [0,100] (si `Some`) | finito | **A** | inválido ⇒ no cuenta |
++| `LeakSplit` fracciones | finitas ∈ [0,1] | **A** | inválido ⇒ no cuenta |
++| cierre de fracciones | Σ ≈ 1 (tol 1e-6) | **A/D** | parcial ⇒ no cuenta |
++| `None`/vector vacío | — | V | `Inconclusive` |
++| disponibilidad de canales | `LeakSplit` = descomposición **completa normalizada**; parcialidad se expresa con `None` | **A** (restricción de dominio) | documentada |
++
++## 5. Snapshots — identidad semántica y procedencia
++
++| Elemento | Dominio | Invariante | V/A/D/R | Política |
++|---|---|---|---|---|
++| `state.schema_version` | 1, 2 | verificación por esquema | V | v1/v2 históricos conservan hash |
++| `state_hash` | SHA-256 del estado canónico | V | autentica **solo el estado** |
++| `provenance` (wrapper) | metadata | **A** | no autenticado por `state_hash` (C1-G01) |
++| `model` (wrapper) | `schema_version` + `combustion_accounting` | **A** | separa esquema de convención química |
++| nativo C2 (model conocido) | continuación exacta | **A** | bit-exacto |
++| pre-C2 con `pmax` presente (R02/C1) | ambiguo | **A** | `approximate_hot`/`exact_neutral`, nunca nativo exacto |
++| v2 pre-R02 (`pmax` ausente) | legacy | V | procedencia existente |
++| v1 (`schema==1`) | legacy | V | procedencia existente |
++| modelo/accounting desconocido | — | **A** | rechazo fail-closed |
++| metadata manipulada | — | **A** (documental) | no autenticada; verificar contra fuente externa |
++
++## 6. Dependencias y derivadas susceptibles de overflow
++
++- Engine: `j_eff` (inercia), `u_sys` (m·cv·T), `p_cyl` (m·R·T/V), `stored_j` (T·C), `audit` (sumas), `pmax`.
++- Thermal: `d_*/c_*` (q/C), `T·C`, `q_amb`.
++- Diagnostics: `Σ` fracciones, comparaciones con umbral (NaN no dispara).
++- Snapshots: hash sobre JSON canónico; el metadata no entra en el hash.
++
++## 7. Tests positivos/negativos necesarios
++
++- Engine: matriz NaN/±Inf/cero/negativos por campo (solo inválidos), coherencia térmica on/off, no-op, estado imposible, snapshot histórico válido, errores tras trabajo parcial.
++- Thermal: capacidades 0/NaN/Inf/tiny/MAX, `wall_frac` NaN/fuera de rango, T frío/caliente/absoluta, `dt` extremo, transferencia ±.
++- Diagnostics: firmas completas/incompletas/vacías/negativas/NaN/Inf, etiquetas intercambiadas, ambigüedad.
++- Snapshots: v1/v2 históricos, v2 S30, R02 nativo y mid-burn genuinos, C2 nativo, replay multicorte, round-trip, metadata manipulada.
++
++## 8. Restricciones explícitas del modelo
++
++- No se imponen rangos OEM de capacidades/inercia; solo finitud, positividad y coherencia.
++- No se alteran parámetros nominales ni tolerancias de los oráculos.
++- `friction_overflow` (c finito extremo) es caso de estrés legítimo, no se rechaza por diseño.
++- La cobertura diagnóstica se restringe a descomposiciones completas normalizadas; no se inventan canales.
++- La procedencia/modelo no están autenticados por el hash del estado (documentado, C1-G01).
+diff --git a/docs/snapshot-contract.md b/docs/snapshot-contract.md
+index eb1a818..3316884 100644
+--- a/docs/snapshot-contract.md
++++ b/docs/snapshot-contract.md
+@@ -28,6 +28,20 @@
+   historia) o `approximate_hot` (había combustible/movimiento: la trayectoria
+   histórica no se reconstruye). Los snapshots nativos completos no llevan
+   procedencia y mantienen continuidad exacta.
++- **Identidad semántica de modelo (R02-C2/C1-05):** `model` (en el wrapper)
++  separa la versión del esquema de serialización de la **convención de
++  contabilidad química** (`combustion_accounting`). Un snapshot sin `model`
++  (formato pre-C2) es ambiguo entre R02 (consumo diferido) y C1 (por paso): se
++  migra con procedencia `approximate_hot`/`exact_neutral` y **nunca** se
++  declara nativo exacto. Un `model` con convención desconocida o incoherente
++  con el esquema se rechaza (fail-closed). Los snapshots nativos C2 (con
++  `model`) continúan bit-exactos.
++- **Alcance de integridad (C1-G01):** `state_hash` autentica **solo el estado
++  canónico**. `model` y `provenance` son metadata **no autenticada** por el
++  hash: un consumidor que necesite confiar en la procedencia debe verificarla
++  contra una fuente externa fiable; reserializar no convierte la metadata en
++  autenticada. No se firma criptográficamente el archivo ni se reescriben
++  hashes históricos.
+ - **Validez física fail-closed (R02-F15, R02-C1/RV05–RV06):** un hash válido no
+   implica estado válido. `restore` rechaza masas/temperaturas no positivas o no
+   finitas, fracciones fuera de [0,1], combustible fuera de [0, m], historia de

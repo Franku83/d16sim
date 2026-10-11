@@ -1,0 +1,43 @@
+{"data":{"field":"comp","value":"nan","verdict":"Inconclusive { have_n: 1, need_n: 2 }"},"probe":"diagnostic"}
+{"data":{"field":"comp","value":"inf","verdict":"Inconclusive { have_n: 1, need_n: 2 }"},"probe":"diagnostic"}
+{"data":{"field":"comp","value":"negative","verdict":"Inconclusive { have_n: 1, need_n: 2 }"},"probe":"diagnostic"}
+{"data":{"field":"comp","value":"zero","verdict":"Discriminated { cause: HeadGasket, by_measurements: \"compression + leak-down to coolant/multiple\" }"},"probe":"diagnostic"}
+{"data":{"field":"comp","value":"above","verdict":"Discriminated { cause: HeadGasket, by_measurements: \"compression + leak-down to coolant/multiple\" }"},"probe":"diagnostic"}
+{"data":{"field":"threshold","value":"nan","verdict":"Inconclusive { have_n: 0, need_n: 2 }"},"probe":"diagnostic"}
+{"data":{"field":"threshold","value":"inf","verdict":"Inconclusive { have_n: 0, need_n: 2 }"},"probe":"diagnostic"}
+{"data":{"field":"threshold","value":"negative","verdict":"Inconclusive { have_n: 0, need_n: 2 }"},"probe":"diagnostic"}
+{"data":{"field":"threshold","value":"zero","verdict":"Inconclusive { have_n: 0, need_n: 2 }"},"probe":"diagnostic"}
+{"data":{"field":"threshold","value":"above","verdict":"Inconclusive { have_n: 2, need_n: 2 }"},"probe":"diagnostic"}
+{"data":{"field":"pct","value":"nan","verdict":"Inconclusive { have_n: 1, need_n: 2 }"},"probe":"diagnostic"}
+{"data":{"field":"pct","value":"inf","verdict":"Inconclusive { have_n: 1, need_n: 2 }"},"probe":"diagnostic"}
+{"data":{"field":"pct","value":"negative","verdict":"Inconclusive { have_n: 1, need_n: 2 }"},"probe":"diagnostic"}
+{"data":{"field":"pct","value":"zero","verdict":"Inconclusive { have_n: 2, need_n: 2 }"},"probe":"diagnostic"}
+{"data":{"field":"pct","value":"above","verdict":"Inconclusive { have_n: 1, need_n: 2 }"},"probe":"diagnostic"}
+{"data":{"field":"crank","value":"nan","verdict":"Inconclusive { have_n: 1, need_n: 2 }"},"probe":"diagnostic"}
+{"data":{"field":"crank","value":"inf","verdict":"Inconclusive { have_n: 1, need_n: 2 }"},"probe":"diagnostic"}
+{"data":{"field":"crank","value":"negative","verdict":"Inconclusive { have_n: 1, need_n: 2 }"},"probe":"diagnostic"}
+{"data":{"field":"crank","value":"zero","verdict":"Inconclusive { have_n: 1, need_n: 2 }"},"probe":"diagnostic"}
+{"data":{"field":"crank","value":"above","verdict":"Inconclusive { have_n: 1, need_n: 2 }"},"probe":"diagnostic"}
+{"data":{"field":"exhaust","value":"nan","verdict":"Inconclusive { have_n: 1, need_n: 2 }"},"probe":"diagnostic"}
+{"data":{"field":"exhaust","value":"inf","verdict":"Inconclusive { have_n: 1, need_n: 2 }"},"probe":"diagnostic"}
+{"data":{"field":"exhaust","value":"negative","verdict":"Inconclusive { have_n: 1, need_n: 2 }"},"probe":"diagnostic"}
+{"data":{"field":"exhaust","value":"zero","verdict":"Inconclusive { have_n: 1, need_n: 2 }"},"probe":"diagnostic"}
+{"data":{"field":"exhaust","value":"above","verdict":"Inconclusive { have_n: 1, need_n: 2 }"},"probe":"diagnostic"}
+{"data":{"field":"coolant","value":"nan","verdict":"Inconclusive { have_n: 1, need_n: 2 }"},"probe":"diagnostic"}
+{"data":{"field":"coolant","value":"inf","verdict":"Inconclusive { have_n: 1, need_n: 2 }"},"probe":"diagnostic"}
+{"data":{"field":"coolant","value":"negative","verdict":"Inconclusive { have_n: 1, need_n: 2 }"},"probe":"diagnostic"}
+{"data":{"field":"coolant","value":"zero","verdict":"Inconclusive { have_n: 1, need_n: 2 }"},"probe":"diagnostic"}
+{"data":{"field":"coolant","value":"above","verdict":"Inconclusive { have_n: 1, need_n: 2 }"},"probe":"diagnostic"}
+{"data":{"delta":-1.1e-6,"verdict":"Inconclusive { have_n: 1, need_n: 2 }"},"probe":"split_tolerance"}
+{"data":{"delta":-9e-7,"verdict":"Discriminated { cause: HeadGasket, by_measurements: \"compression + leak-down to coolant/multiple\" }"},"probe":"split_tolerance"}
+{"data":{"delta":0.0,"verdict":"Discriminated { cause: HeadGasket, by_measurements: \"compression + leak-down to coolant/multiple\" }"},"probe":"split_tolerance"}
+{"data":{"delta":9e-7,"verdict":"Discriminated { cause: HeadGasket, by_measurements: \"compression + leak-down to coolant/multiple\" }"},"probe":"split_tolerance"}
+{"data":{"delta":1.1e-6,"verdict":"Inconclusive { have_n: 1, need_n: 2 }"},"probe":"split_tolerance"}
+{"data":{"mask":0,"verdict":"Inconclusive { have_n: 0, need_n: 2 }"},"probe":"missing"}
+{"data":{"mask":1,"verdict":"Inconclusive { have_n: 1, need_n: 2 }"},"probe":"missing"}
+{"data":{"mask":2,"verdict":"Inconclusive { have_n: 0, need_n: 2 }"},"probe":"missing"}
+{"data":{"mask":3,"verdict":"Inconclusive { have_n: 1, need_n: 2 }"},"probe":"missing"}
+{"data":{"mask":4,"verdict":"Inconclusive { have_n: 0, need_n: 2 }"},"probe":"missing"}
+{"data":{"mask":5,"verdict":"Inconclusive { have_n: 1, need_n: 2 }"},"probe":"missing"}
+{"data":{"mask":6,"verdict":"Inconclusive { have_n: 1, need_n: 2 }"},"probe":"missing"}
+{"data":{"mask":7,"verdict":"Discriminated { cause: HeadGasket, by_measurements: \"compression + leak-down to coolant/multiple\" }"},"probe":"missing"}

@@ -1,0 +1,9 @@
+{
+  "docs/foundation.md": true,
+  "docs/EVIDENCE_POLICY.md": true,
+  "docs/definition-of-done.md": true,
+  "docs/SPRINTS.md": true,
+  "docs/HANDOFF.md": true,
+  "destination_ancestor": true,
+  "review_production_unchanged": true
+}

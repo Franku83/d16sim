@@ -1,0 +1,3 @@
+   Compiling d16sim-c2-history-c1 v0.1.0 (/home/franku/projects/d16sim-verification-c2/verification/c2_review/producer_c1)
+    Finished `release` profile [optimized] target(s) in 0.30s
+     Running `verification/c2_review/producer_c1/target/release/previous-control`

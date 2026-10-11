@@ -1,0 +1,16 @@
+{
+  "cases": 10,
+  "passed": 5,
+  "failures": 5,
+  "errors": 0,
+  "predicates_executed": 1269,
+  "rows": 748,
+  "families": 14,
+  "failure_names": [
+    "test_02_public_active_cam_and_injector_parameters",
+    "test_03_derived_physical_temperature_finite",
+    "test_04_finite_actual_thermal_energy_not_factory_temperature",
+    "test_08_all_unknown_or_incoherent_semantic_identifiers_rejected",
+    "test_09_native_history_cannot_be_silently_reconstructed_exact"
+  ]
+}

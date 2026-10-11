@@ -1,0 +1,1210 @@
+[
+  {
+    "continuation_ok": true,
+    "error": null,
+    "fixture": "v1-cold.json",
+    "hash": "deb04a1b413455e20c057ec5cca14c28d691ab52630cef28d172c9224b0dea93",
+    "model": null,
+    "provenance_after": {
+      "continuation": "exact_neutral",
+      "from_schema": 1,
+      "missing_fields": [
+        "thermal",
+        "plen_fuel_kg",
+        "exh_fuel_kg",
+        "fuel_emitted_kg",
+        "pmax_pa",
+        "combustion_accounting"
+      ],
+      "original_hash": "deb04a1b413455e20c057ec5cca14c28d691ab52630cef28d172c9224b0dea93",
+      "transformation": "schema 1 -> 2: combustion accounting absent (pre-C2: ambiguous R02 deferred vs C1 stepwise); node fuel inventories/pmax defaulted per policy; thermal per inputs"
+    },
+    "provenance_before": null,
+    "recapture_hash": "543f13d26e65db5cb110b29a3b3571b5bad3a703cce6474024bb0b79019968c9",
+    "recapture_model": {
+      "combustion_accounting": 1,
+      "schema_version": 2
+    },
+    "reread_provenance": {
+      "continuation": "exact_neutral",
+      "from_schema": 1,
+      "missing_fields": [
+        "thermal",
+        "plen_fuel_kg",
+        "exh_fuel_kg",
+        "fuel_emitted_kg",
+        "pmax_pa",
+        "combustion_accounting"
+      ],
+      "original_hash": "deb04a1b413455e20c057ec5cca14c28d691ab52630cef28d172c9224b0dea93",
+      "transformation": "schema 1 -> 2: combustion accounting absent (pre-C2: ambiguous R02 deferred vs C1 stepwise); node fuel inventories/pmax defaulted per policy; thermal per inputs"
+    },
+    "restore_ok": true,
+    "roundtrip_verified": true,
+    "structure": 1,
+    "verified": true,
+    "original_pmax_pa": null,
+    "fuel_stored_kg": 0.0,
+    "fuel_injected_kg": 0.0,
+    "fuel_burned_kg": 0.0,
+    "burn_accounted": [
+      true,
+      true,
+      true,
+      true
+    ],
+    "time_s": 0.0,
+    "thermal_present": false
+  },
+  {
+    "continuation_ok": true,
+    "error": null,
+    "fixture": "v1-pre.json",
+    "hash": "f30e11f748b6b2303f29f2bf3899b3ef440c93424641899f2028d4a077f1018d",
+    "model": null,
+    "provenance_after": {
+      "continuation": "approximate_hot",
+      "from_schema": 1,
+      "missing_fields": [
+        "thermal",
+        "plen_fuel_kg",
+        "exh_fuel_kg",
+        "fuel_emitted_kg",
+        "pmax_pa",
+        "combustion_accounting"
+      ],
+      "original_hash": "f30e11f748b6b2303f29f2bf3899b3ef440c93424641899f2028d4a077f1018d",
+      "transformation": "schema 1 -> 2: combustion accounting absent (pre-C2: ambiguous R02 deferred vs C1 stepwise); node fuel inventories/pmax defaulted per policy; thermal per inputs"
+    },
+    "provenance_before": null,
+    "recapture_hash": "03612861b3404904779d002656c530e0b27e52da23b6eb627fafd940ddc12afb",
+    "recapture_model": {
+      "combustion_accounting": 1,
+      "schema_version": 2
+    },
+    "reread_provenance": {
+      "continuation": "approximate_hot",
+      "from_schema": 1,
+      "missing_fields": [
+        "thermal",
+        "plen_fuel_kg",
+        "exh_fuel_kg",
+        "fuel_emitted_kg",
+        "pmax_pa",
+        "combustion_accounting"
+      ],
+      "original_hash": "f30e11f748b6b2303f29f2bf3899b3ef440c93424641899f2028d4a077f1018d",
+      "transformation": "schema 1 -> 2: combustion accounting absent (pre-C2: ambiguous R02 deferred vs C1 stepwise); node fuel inventories/pmax defaulted per policy; thermal per inputs"
+    },
+    "restore_ok": true,
+    "roundtrip_verified": true,
+    "structure": 1,
+    "verified": true,
+    "original_pmax_pa": null,
+    "fuel_stored_kg": 2.654880691895046e-05,
+    "fuel_injected_kg": 2.654880691895046e-05,
+    "fuel_burned_kg": 0.0,
+    "burn_accounted": [
+      true,
+      true,
+      true,
+      true
+    ],
+    "time_s": 0.20004999999998613,
+    "thermal_present": false
+  },
+  {
+    "continuation_ok": true,
+    "error": null,
+    "fixture": "v1-mid.json",
+    "hash": "3af5f58dd621ea27e07a5ceed451a979a46659a17b2d3a8845f1b866bc7abe7a",
+    "model": null,
+    "provenance_after": {
+      "continuation": "approximate_hot",
+      "from_schema": 1,
+      "missing_fields": [
+        "thermal",
+        "plen_fuel_kg",
+        "exh_fuel_kg",
+        "fuel_emitted_kg",
+        "pmax_pa",
+        "combustion_accounting"
+      ],
+      "original_hash": "3af5f58dd621ea27e07a5ceed451a979a46659a17b2d3a8845f1b866bc7abe7a",
+      "transformation": "schema 1 -> 2: combustion accounting absent (pre-C2: ambiguous R02 deferred vs C1 stepwise); node fuel inventories/pmax defaulted per policy; thermal per inputs"
+    },
+    "provenance_before": null,
+    "recapture_hash": "952e52adf1d782a60c6d293003cd25b3823135a1d37197be0fbc4dd793858ea2",
+    "recapture_model": {
+      "combustion_accounting": 1,
+      "schema_version": 2
+    },
+    "reread_provenance": {
+      "continuation": "approximate_hot",
+      "from_schema": 1,
+      "missing_fields": [
+        "thermal",
+        "plen_fuel_kg",
+        "exh_fuel_kg",
+        "fuel_emitted_kg",
+        "pmax_pa",
+        "combustion_accounting"
+      ],
+      "original_hash": "3af5f58dd621ea27e07a5ceed451a979a46659a17b2d3a8845f1b866bc7abe7a",
+      "transformation": "schema 1 -> 2: combustion accounting absent (pre-C2: ambiguous R02 deferred vs C1 stepwise); node fuel inventories/pmax defaulted per policy; thermal per inputs"
+    },
+    "restore_ok": true,
+    "roundtrip_verified": true,
+    "structure": 1,
+    "verified": true,
+    "original_pmax_pa": null,
+    "fuel_stored_kg": 5.286190771571205e-05,
+    "fuel_injected_kg": 5.286190771571205e-05,
+    "fuel_burned_kg": 0.0,
+    "burn_accounted": [
+      true,
+      false,
+      true,
+      true
+    ],
+    "time_s": 0.35959999999996856,
+    "thermal_present": false
+  },
+  {
+    "continuation_ok": true,
+    "error": null,
+    "fixture": "v1-post.json",
+    "hash": "99b49b9c2b1dca6c75e6f4834c63b37e8e49d6d5544ac4bf81032901c7c74d2b",
+    "model": null,
+    "provenance_after": {
+      "continuation": "approximate_hot",
+      "from_schema": 1,
+      "missing_fields": [
+        "thermal",
+        "plen_fuel_kg",
+        "exh_fuel_kg",
+        "fuel_emitted_kg",
+        "pmax_pa",
+        "combustion_accounting"
+      ],
+      "original_hash": "99b49b9c2b1dca6c75e6f4834c63b37e8e49d6d5544ac4bf81032901c7c74d2b",
+      "transformation": "schema 1 -> 2: combustion accounting absent (pre-C2: ambiguous R02 deferred vs C1 stepwise); node fuel inventories/pmax defaulted per policy; thermal per inputs"
+    },
+    "provenance_before": null,
+    "recapture_hash": "d5c8406d870125d1ed8a87e1aaecb29e98d4d85b31396d29ccd9263363fa2796",
+    "recapture_model": {
+      "combustion_accounting": 1,
+      "schema_version": 2
+    },
+    "reread_provenance": {
+      "continuation": "approximate_hot",
+      "from_schema": 1,
+      "missing_fields": [
+        "thermal",
+        "plen_fuel_kg",
+        "exh_fuel_kg",
+        "fuel_emitted_kg",
+        "pmax_pa",
+        "combustion_accounting"
+      ],
+      "original_hash": "99b49b9c2b1dca6c75e6f4834c63b37e8e49d6d5544ac4bf81032901c7c74d2b",
+      "transformation": "schema 1 -> 2: combustion accounting absent (pre-C2: ambiguous R02 deferred vs C1 stepwise); node fuel inventories/pmax defaulted per policy; thermal per inputs"
+    },
+    "restore_ok": true,
+    "roundtrip_verified": true,
+    "structure": 1,
+    "verified": true,
+    "original_pmax_pa": null,
+    "fuel_stored_kg": 2.649198525067043e-05,
+    "fuel_injected_kg": 5.286190771571205e-05,
+    "fuel_burned_kg": 2.636992246504162e-05,
+    "burn_accounted": [
+      true,
+      true,
+      true,
+      true
+    ],
+    "time_s": 0.3800499999999663,
+    "thermal_present": false
+  },
+  {
+    "continuation_ok": true,
+    "error": null,
+    "fixture": "v1-hot.json",
+    "hash": "7a6fe8a4f580e2e11c08ddfd380a3c7f7bb9c72e08c07f14b306d22687481fd7",
+    "model": null,
+    "provenance_after": {
+      "continuation": "approximate_hot",
+      "from_schema": 1,
+      "missing_fields": [
+        "thermal",
+        "plen_fuel_kg",
+        "exh_fuel_kg",
+        "fuel_emitted_kg",
+        "pmax_pa",
+        "combustion_accounting"
+      ],
+      "original_hash": "7a6fe8a4f580e2e11c08ddfd380a3c7f7bb9c72e08c07f14b306d22687481fd7",
+      "transformation": "schema 1 -> 2: combustion accounting absent (pre-C2: ambiguous R02 deferred vs C1 stepwise); node fuel inventories/pmax defaulted per policy; thermal per inputs"
+    },
+    "provenance_before": null,
+    "recapture_hash": "f7de772fcc38aeaa11389013ec7550730053f2b311b35397c4f398517ca3298d",
+    "recapture_model": {
+      "combustion_accounting": 1,
+      "schema_version": 2
+    },
+    "reread_provenance": {
+      "continuation": "approximate_hot",
+      "from_schema": 1,
+      "missing_fields": [
+        "thermal",
+        "plen_fuel_kg",
+        "exh_fuel_kg",
+        "fuel_emitted_kg",
+        "pmax_pa",
+        "combustion_accounting"
+      ],
+      "original_hash": "7a6fe8a4f580e2e11c08ddfd380a3c7f7bb9c72e08c07f14b306d22687481fd7",
+      "transformation": "schema 1 -> 2: combustion accounting absent (pre-C2: ambiguous R02 deferred vs C1 stepwise); node fuel inventories/pmax defaulted per policy; thermal per inputs"
+    },
+    "restore_ok": true,
+    "roundtrip_verified": true,
+    "structure": 1,
+    "verified": true,
+    "original_pmax_pa": null,
+    "fuel_stored_kg": 2.1092840418670342e-05,
+    "fuel_injected_kg": 0.00018987813474439117,
+    "fuel_burned_kg": 0.0001687852943257208,
+    "burn_accounted": [
+      true,
+      true,
+      true,
+      true
+    ],
+    "time_s": 0.5000499999999531,
+    "thermal_present": false
+  },
+  {
+    "continuation_ok": true,
+    "error": null,
+    "fixture": "s30-cold.json",
+    "hash": "9c2bdb43cef1e8b74a4e14bf7036fd6249189520f0e8c9464ea5c843ad229561",
+    "model": null,
+    "provenance_after": {
+      "continuation": "exact_neutral",
+      "from_schema": 2,
+      "missing_fields": [
+        "plen_fuel_kg",
+        "exh_fuel_kg",
+        "fuel_emitted_kg",
+        "pmax_pa",
+        "combustion_accounting"
+      ],
+      "original_hash": "9c2bdb43cef1e8b74a4e14bf7036fd6249189520f0e8c9464ea5c843ad229561",
+      "transformation": "schema 2 -> 2: combustion accounting absent (pre-C2: ambiguous R02 deferred vs C1 stepwise); node fuel inventories/pmax defaulted per policy; thermal per inputs"
+    },
+    "provenance_before": null,
+    "recapture_hash": "543f13d26e65db5cb110b29a3b3571b5bad3a703cce6474024bb0b79019968c9",
+    "recapture_model": {
+      "combustion_accounting": 1,
+      "schema_version": 2
+    },
+    "reread_provenance": {
+      "continuation": "exact_neutral",
+      "from_schema": 2,
+      "missing_fields": [
+        "plen_fuel_kg",
+        "exh_fuel_kg",
+        "fuel_emitted_kg",
+        "pmax_pa",
+        "combustion_accounting"
+      ],
+      "original_hash": "9c2bdb43cef1e8b74a4e14bf7036fd6249189520f0e8c9464ea5c843ad229561",
+      "transformation": "schema 2 -> 2: combustion accounting absent (pre-C2: ambiguous R02 deferred vs C1 stepwise); node fuel inventories/pmax defaulted per policy; thermal per inputs"
+    },
+    "restore_ok": true,
+    "roundtrip_verified": true,
+    "structure": 2,
+    "verified": true,
+    "original_pmax_pa": null,
+    "fuel_stored_kg": 0.0,
+    "fuel_injected_kg": 0.0,
+    "fuel_burned_kg": 0.0,
+    "burn_accounted": [
+      true,
+      true,
+      true,
+      true
+    ],
+    "time_s": 0.0,
+    "thermal_present": false
+  },
+  {
+    "continuation_ok": true,
+    "error": null,
+    "fixture": "s30-pre.json",
+    "hash": "a5bc6872b81a95dd80fa97a38ce9032f1e374b8c9f752274cac4a47d681cb5cc",
+    "model": null,
+    "provenance_after": {
+      "continuation": "approximate_hot",
+      "from_schema": 2,
+      "missing_fields": [
+        "plen_fuel_kg",
+        "exh_fuel_kg",
+        "fuel_emitted_kg",
+        "pmax_pa",
+        "combustion_accounting"
+      ],
+      "original_hash": "a5bc6872b81a95dd80fa97a38ce9032f1e374b8c9f752274cac4a47d681cb5cc",
+      "transformation": "schema 2 -> 2: combustion accounting absent (pre-C2: ambiguous R02 deferred vs C1 stepwise); node fuel inventories/pmax defaulted per policy; thermal per inputs"
+    },
+    "provenance_before": null,
+    "recapture_hash": "03612861b3404904779d002656c530e0b27e52da23b6eb627fafd940ddc12afb",
+    "recapture_model": {
+      "combustion_accounting": 1,
+      "schema_version": 2
+    },
+    "reread_provenance": {
+      "continuation": "approximate_hot",
+      "from_schema": 2,
+      "missing_fields": [
+        "plen_fuel_kg",
+        "exh_fuel_kg",
+        "fuel_emitted_kg",
+        "pmax_pa",
+        "combustion_accounting"
+      ],
+      "original_hash": "a5bc6872b81a95dd80fa97a38ce9032f1e374b8c9f752274cac4a47d681cb5cc",
+      "transformation": "schema 2 -> 2: combustion accounting absent (pre-C2: ambiguous R02 deferred vs C1 stepwise); node fuel inventories/pmax defaulted per policy; thermal per inputs"
+    },
+    "restore_ok": true,
+    "roundtrip_verified": true,
+    "structure": 2,
+    "verified": true,
+    "original_pmax_pa": null,
+    "fuel_stored_kg": 2.654880691895046e-05,
+    "fuel_injected_kg": 2.654880691895046e-05,
+    "fuel_burned_kg": 0.0,
+    "burn_accounted": [
+      true,
+      true,
+      true,
+      true
+    ],
+    "time_s": 0.20004999999998613,
+    "thermal_present": false
+  },
+  {
+    "continuation_ok": true,
+    "error": null,
+    "fixture": "s30-mid.json",
+    "hash": "3999d7a580a400803bc86556703ec12951a068e3395512f93f892877b72b676e",
+    "model": null,
+    "provenance_after": {
+      "continuation": "approximate_hot",
+      "from_schema": 2,
+      "missing_fields": [
+        "plen_fuel_kg",
+        "exh_fuel_kg",
+        "fuel_emitted_kg",
+        "pmax_pa",
+        "combustion_accounting"
+      ],
+      "original_hash": "3999d7a580a400803bc86556703ec12951a068e3395512f93f892877b72b676e",
+      "transformation": "schema 2 -> 2: combustion accounting absent (pre-C2: ambiguous R02 deferred vs C1 stepwise); node fuel inventories/pmax defaulted per policy; thermal per inputs"
+    },
+    "provenance_before": null,
+    "recapture_hash": "952e52adf1d782a60c6d293003cd25b3823135a1d37197be0fbc4dd793858ea2",
+    "recapture_model": {
+      "combustion_accounting": 1,
+      "schema_version": 2
+    },
+    "reread_provenance": {
+      "continuation": "approximate_hot",
+      "from_schema": 2,
+      "missing_fields": [
+        "plen_fuel_kg",
+        "exh_fuel_kg",
+        "fuel_emitted_kg",
+        "pmax_pa",
+        "combustion_accounting"
+      ],
+      "original_hash": "3999d7a580a400803bc86556703ec12951a068e3395512f93f892877b72b676e",
+      "transformation": "schema 2 -> 2: combustion accounting absent (pre-C2: ambiguous R02 deferred vs C1 stepwise); node fuel inventories/pmax defaulted per policy; thermal per inputs"
+    },
+    "restore_ok": true,
+    "roundtrip_verified": true,
+    "structure": 2,
+    "verified": true,
+    "original_pmax_pa": null,
+    "fuel_stored_kg": 5.286190771571205e-05,
+    "fuel_injected_kg": 5.286190771571205e-05,
+    "fuel_burned_kg": 0.0,
+    "burn_accounted": [
+      true,
+      false,
+      true,
+      true
+    ],
+    "time_s": 0.35959999999996856,
+    "thermal_present": false
+  },
+  {
+    "continuation_ok": true,
+    "error": null,
+    "fixture": "s30-post.json",
+    "hash": "c705585cff16b9fe21e86789aa4138f09741df6a43e24418e3bf366f2428167a",
+    "model": null,
+    "provenance_after": {
+      "continuation": "approximate_hot",
+      "from_schema": 2,
+      "missing_fields": [
+        "plen_fuel_kg",
+        "exh_fuel_kg",
+        "fuel_emitted_kg",
+        "pmax_pa",
+        "combustion_accounting"
+      ],
+      "original_hash": "c705585cff16b9fe21e86789aa4138f09741df6a43e24418e3bf366f2428167a",
+      "transformation": "schema 2 -> 2: combustion accounting absent (pre-C2: ambiguous R02 deferred vs C1 stepwise); node fuel inventories/pmax defaulted per policy; thermal per inputs"
+    },
+    "provenance_before": null,
+    "recapture_hash": "d5c8406d870125d1ed8a87e1aaecb29e98d4d85b31396d29ccd9263363fa2796",
+    "recapture_model": {
+      "combustion_accounting": 1,
+      "schema_version": 2
+    },
+    "reread_provenance": {
+      "continuation": "approximate_hot",
+      "from_schema": 2,
+      "missing_fields": [
+        "plen_fuel_kg",
+        "exh_fuel_kg",
+        "fuel_emitted_kg",
+        "pmax_pa",
+        "combustion_accounting"
+      ],
+      "original_hash": "c705585cff16b9fe21e86789aa4138f09741df6a43e24418e3bf366f2428167a",
+      "transformation": "schema 2 -> 2: combustion accounting absent (pre-C2: ambiguous R02 deferred vs C1 stepwise); node fuel inventories/pmax defaulted per policy; thermal per inputs"
+    },
+    "restore_ok": true,
+    "roundtrip_verified": true,
+    "structure": 2,
+    "verified": true,
+    "original_pmax_pa": null,
+    "fuel_stored_kg": 2.649198525067043e-05,
+    "fuel_injected_kg": 5.286190771571205e-05,
+    "fuel_burned_kg": 2.636992246504162e-05,
+    "burn_accounted": [
+      true,
+      true,
+      true,
+      true
+    ],
+    "time_s": 0.3800499999999663,
+    "thermal_present": false
+  },
+  {
+    "continuation_ok": true,
+    "error": null,
+    "fixture": "s30-hot.json",
+    "hash": "5dfbc8221e5a0368ec684fc342e6a1292ad945e1d77dcaecb0730ef7a0369adc",
+    "model": null,
+    "provenance_after": {
+      "continuation": "approximate_hot",
+      "from_schema": 2,
+      "missing_fields": [
+        "plen_fuel_kg",
+        "exh_fuel_kg",
+        "fuel_emitted_kg",
+        "pmax_pa",
+        "combustion_accounting"
+      ],
+      "original_hash": "5dfbc8221e5a0368ec684fc342e6a1292ad945e1d77dcaecb0730ef7a0369adc",
+      "transformation": "schema 2 -> 2: combustion accounting absent (pre-C2: ambiguous R02 deferred vs C1 stepwise); node fuel inventories/pmax defaulted per policy; thermal per inputs"
+    },
+    "provenance_before": null,
+    "recapture_hash": "f7de772fcc38aeaa11389013ec7550730053f2b311b35397c4f398517ca3298d",
+    "recapture_model": {
+      "combustion_accounting": 1,
+      "schema_version": 2
+    },
+    "reread_provenance": {
+      "continuation": "approximate_hot",
+      "from_schema": 2,
+      "missing_fields": [
+        "plen_fuel_kg",
+        "exh_fuel_kg",
+        "fuel_emitted_kg",
+        "pmax_pa",
+        "combustion_accounting"
+      ],
+      "original_hash": "5dfbc8221e5a0368ec684fc342e6a1292ad945e1d77dcaecb0730ef7a0369adc",
+      "transformation": "schema 2 -> 2: combustion accounting absent (pre-C2: ambiguous R02 deferred vs C1 stepwise); node fuel inventories/pmax defaulted per policy; thermal per inputs"
+    },
+    "restore_ok": true,
+    "roundtrip_verified": true,
+    "structure": 2,
+    "verified": true,
+    "original_pmax_pa": null,
+    "fuel_stored_kg": 2.1092840418670342e-05,
+    "fuel_injected_kg": 0.00018987813474439117,
+    "fuel_burned_kg": 0.0001687852943257208,
+    "burn_accounted": [
+      true,
+      true,
+      true,
+      true
+    ],
+    "time_s": 0.5000499999999531,
+    "thermal_present": false
+  },
+  {
+    "continuation_ok": true,
+    "error": null,
+    "fixture": "r02-cold.json",
+    "hash": "9c2bdb43cef1e8b74a4e14bf7036fd6249189520f0e8c9464ea5c843ad229561",
+    "model": null,
+    "provenance_after": {
+      "continuation": "exact_neutral",
+      "from_schema": 2,
+      "missing_fields": [
+        "plen_fuel_kg",
+        "exh_fuel_kg",
+        "fuel_emitted_kg",
+        "pmax_pa",
+        "combustion_accounting"
+      ],
+      "original_hash": "9c2bdb43cef1e8b74a4e14bf7036fd6249189520f0e8c9464ea5c843ad229561",
+      "transformation": "schema 2 -> 2: combustion accounting absent (pre-C2: ambiguous R02 deferred vs C1 stepwise); node fuel inventories/pmax defaulted per policy; thermal per inputs"
+    },
+    "provenance_before": null,
+    "recapture_hash": "543f13d26e65db5cb110b29a3b3571b5bad3a703cce6474024bb0b79019968c9",
+    "recapture_model": {
+      "combustion_accounting": 1,
+      "schema_version": 2
+    },
+    "reread_provenance": {
+      "continuation": "exact_neutral",
+      "from_schema": 2,
+      "missing_fields": [
+        "plen_fuel_kg",
+        "exh_fuel_kg",
+        "fuel_emitted_kg",
+        "pmax_pa",
+        "combustion_accounting"
+      ],
+      "original_hash": "9c2bdb43cef1e8b74a4e14bf7036fd6249189520f0e8c9464ea5c843ad229561",
+      "transformation": "schema 2 -> 2: combustion accounting absent (pre-C2: ambiguous R02 deferred vs C1 stepwise); node fuel inventories/pmax defaulted per policy; thermal per inputs"
+    },
+    "restore_ok": true,
+    "roundtrip_verified": true,
+    "structure": 2,
+    "verified": true,
+    "original_pmax_pa": null,
+    "fuel_stored_kg": 0.0,
+    "fuel_injected_kg": 0.0,
+    "fuel_burned_kg": 0.0,
+    "burn_accounted": [
+      true,
+      true,
+      true,
+      true
+    ],
+    "time_s": 0.0,
+    "thermal_present": false
+  },
+  {
+    "continuation_ok": true,
+    "error": null,
+    "fixture": "r02-pre.json",
+    "hash": "cc41975ffd27c2fc39b8673f9757b10e63ea0481ecdc3762cd2af33c2ef46b68",
+    "model": null,
+    "provenance_after": {
+      "continuation": "approximate_hot",
+      "from_schema": 2,
+      "missing_fields": [
+        "combustion_accounting"
+      ],
+      "original_hash": "cc41975ffd27c2fc39b8673f9757b10e63ea0481ecdc3762cd2af33c2ef46b68",
+      "transformation": "schema 2 -> 2: combustion accounting absent (pre-C2: ambiguous R02 deferred vs C1 stepwise); node fuel inventories/pmax defaulted per policy; thermal per inputs"
+    },
+    "provenance_before": null,
+    "recapture_hash": "cc41975ffd27c2fc39b8673f9757b10e63ea0481ecdc3762cd2af33c2ef46b68",
+    "recapture_model": {
+      "combustion_accounting": 1,
+      "schema_version": 2
+    },
+    "reread_provenance": {
+      "continuation": "approximate_hot",
+      "from_schema": 2,
+      "missing_fields": [
+        "combustion_accounting"
+      ],
+      "original_hash": "cc41975ffd27c2fc39b8673f9757b10e63ea0481ecdc3762cd2af33c2ef46b68",
+      "transformation": "schema 2 -> 2: combustion accounting absent (pre-C2: ambiguous R02 deferred vs C1 stepwise); node fuel inventories/pmax defaulted per policy; thermal per inputs"
+    },
+    "restore_ok": true,
+    "roundtrip_verified": true,
+    "structure": 2,
+    "verified": true,
+    "original_pmax_pa": 419178.5043830399,
+    "fuel_stored_kg": 2.654880691895046e-05,
+    "fuel_injected_kg": 2.654880691895046e-05,
+    "fuel_burned_kg": 0.0,
+    "burn_accounted": [
+      true,
+      true,
+      true,
+      true
+    ],
+    "time_s": 0.20004999999998613,
+    "thermal_present": false
+  },
+  {
+    "continuation_ok": true,
+    "error": null,
+    "fixture": "r02-mid.json",
+    "hash": "151f2e8b54d7d154bedce8ae3473f3ba4d38831a468d23c40ae22a46b0f150b8",
+    "model": null,
+    "provenance_after": {
+      "continuation": "approximate_hot",
+      "from_schema": 2,
+      "missing_fields": [
+        "combustion_accounting"
+      ],
+      "original_hash": "151f2e8b54d7d154bedce8ae3473f3ba4d38831a468d23c40ae22a46b0f150b8",
+      "transformation": "schema 2 -> 2: combustion accounting absent (pre-C2: ambiguous R02 deferred vs C1 stepwise); node fuel inventories/pmax defaulted per policy; thermal per inputs"
+    },
+    "provenance_before": null,
+    "recapture_hash": "151f2e8b54d7d154bedce8ae3473f3ba4d38831a468d23c40ae22a46b0f150b8",
+    "recapture_model": {
+      "combustion_accounting": 1,
+      "schema_version": 2
+    },
+    "reread_provenance": {
+      "continuation": "approximate_hot",
+      "from_schema": 2,
+      "missing_fields": [
+        "combustion_accounting"
+      ],
+      "original_hash": "151f2e8b54d7d154bedce8ae3473f3ba4d38831a468d23c40ae22a46b0f150b8",
+      "transformation": "schema 2 -> 2: combustion accounting absent (pre-C2: ambiguous R02 deferred vs C1 stepwise); node fuel inventories/pmax defaulted per policy; thermal per inputs"
+    },
+    "restore_ok": true,
+    "roundtrip_verified": true,
+    "structure": 2,
+    "verified": true,
+    "original_pmax_pa": 5257195.751903657,
+    "fuel_stored_kg": 5.286190771571205e-05,
+    "fuel_injected_kg": 5.286190771571205e-05,
+    "fuel_burned_kg": 0.0,
+    "burn_accounted": [
+      true,
+      false,
+      true,
+      true
+    ],
+    "time_s": 0.35959999999996856,
+    "thermal_present": false
+  },
+  {
+    "continuation_ok": true,
+    "error": null,
+    "fixture": "r02-post.json",
+    "hash": "eeb35289523bb7e2eca0fe1b9a0642b27158b70e2163e2af2e778d10e3626572",
+    "model": null,
+    "provenance_after": {
+      "continuation": "approximate_hot",
+      "from_schema": 2,
+      "missing_fields": [
+        "combustion_accounting"
+      ],
+      "original_hash": "eeb35289523bb7e2eca0fe1b9a0642b27158b70e2163e2af2e778d10e3626572",
+      "transformation": "schema 2 -> 2: combustion accounting absent (pre-C2: ambiguous R02 deferred vs C1 stepwise); node fuel inventories/pmax defaulted per policy; thermal per inputs"
+    },
+    "provenance_before": null,
+    "recapture_hash": "eeb35289523bb7e2eca0fe1b9a0642b27158b70e2163e2af2e778d10e3626572",
+    "recapture_model": {
+      "combustion_accounting": 1,
+      "schema_version": 2
+    },
+    "reread_provenance": {
+      "continuation": "approximate_hot",
+      "from_schema": 2,
+      "missing_fields": [
+        "combustion_accounting"
+      ],
+      "original_hash": "eeb35289523bb7e2eca0fe1b9a0642b27158b70e2163e2af2e778d10e3626572",
+      "transformation": "schema 2 -> 2: combustion accounting absent (pre-C2: ambiguous R02 deferred vs C1 stepwise); node fuel inventories/pmax defaulted per policy; thermal per inputs"
+    },
+    "restore_ok": true,
+    "roundtrip_verified": true,
+    "structure": 2,
+    "verified": true,
+    "original_pmax_pa": 5257195.751903657,
+    "fuel_stored_kg": 2.6491984399894062e-05,
+    "fuel_injected_kg": 5.286190771571205e-05,
+    "fuel_burned_kg": 2.636992246504162e-05,
+    "burn_accounted": [
+      true,
+      true,
+      true,
+      true
+    ],
+    "time_s": 0.3800499999999663,
+    "thermal_present": false
+  },
+  {
+    "continuation_ok": true,
+    "error": null,
+    "fixture": "r02-hot.json",
+    "hash": "bd6ac6da6e18af2820660276dd018b48fb982d9c8a11c9bee94829a65507f2c5",
+    "model": null,
+    "provenance_after": {
+      "continuation": "approximate_hot",
+      "from_schema": 2,
+      "missing_fields": [
+        "combustion_accounting"
+      ],
+      "original_hash": "bd6ac6da6e18af2820660276dd018b48fb982d9c8a11c9bee94829a65507f2c5",
+      "transformation": "schema 2 -> 2: combustion accounting absent (pre-C2: ambiguous R02 deferred vs C1 stepwise); node fuel inventories/pmax defaulted per policy; thermal per inputs"
+    },
+    "provenance_before": null,
+    "recapture_hash": "bd6ac6da6e18af2820660276dd018b48fb982d9c8a11c9bee94829a65507f2c5",
+    "recapture_model": {
+      "combustion_accounting": 1,
+      "schema_version": 2
+    },
+    "reread_provenance": {
+      "continuation": "approximate_hot",
+      "from_schema": 2,
+      "missing_fields": [
+        "combustion_accounting"
+      ],
+      "original_hash": "bd6ac6da6e18af2820660276dd018b48fb982d9c8a11c9bee94829a65507f2c5",
+      "transformation": "schema 2 -> 2: combustion accounting absent (pre-C2: ambiguous R02 deferred vs C1 stepwise); node fuel inventories/pmax defaulted per policy; thermal per inputs"
+    },
+    "restore_ok": true,
+    "roundtrip_verified": true,
+    "structure": 2,
+    "verified": true,
+    "original_pmax_pa": 5257195.751903657,
+    "fuel_stored_kg": 2.0799114256463488e-05,
+    "fuel_injected_kg": 0.0001898822581867062,
+    "fuel_burned_kg": 0.00016828207050969776,
+    "burn_accounted": [
+      true,
+      true,
+      true,
+      true
+    ],
+    "time_s": 0.5000499999999531,
+    "thermal_present": false
+  },
+  {
+    "continuation_ok": true,
+    "error": null,
+    "fixture": "c1-cold.json",
+    "hash": "543f13d26e65db5cb110b29a3b3571b5bad3a703cce6474024bb0b79019968c9",
+    "model": null,
+    "provenance_after": {
+      "continuation": "exact_neutral",
+      "from_schema": 2,
+      "missing_fields": [
+        "combustion_accounting"
+      ],
+      "original_hash": "543f13d26e65db5cb110b29a3b3571b5bad3a703cce6474024bb0b79019968c9",
+      "transformation": "schema 2 -> 2: combustion accounting absent (pre-C2: ambiguous R02 deferred vs C1 stepwise); node fuel inventories/pmax defaulted per policy; thermal per inputs"
+    },
+    "provenance_before": null,
+    "recapture_hash": "543f13d26e65db5cb110b29a3b3571b5bad3a703cce6474024bb0b79019968c9",
+    "recapture_model": {
+      "combustion_accounting": 1,
+      "schema_version": 2
+    },
+    "reread_provenance": {
+      "continuation": "exact_neutral",
+      "from_schema": 2,
+      "missing_fields": [
+        "combustion_accounting"
+      ],
+      "original_hash": "543f13d26e65db5cb110b29a3b3571b5bad3a703cce6474024bb0b79019968c9",
+      "transformation": "schema 2 -> 2: combustion accounting absent (pre-C2: ambiguous R02 deferred vs C1 stepwise); node fuel inventories/pmax defaulted per policy; thermal per inputs"
+    },
+    "restore_ok": true,
+    "roundtrip_verified": true,
+    "structure": 2,
+    "verified": true,
+    "original_pmax_pa": 101325.0,
+    "fuel_stored_kg": 0.0,
+    "fuel_injected_kg": 0.0,
+    "fuel_burned_kg": 0.0,
+    "burn_accounted": [
+      true,
+      true,
+      true,
+      true
+    ],
+    "time_s": 0.0,
+    "thermal_present": false
+  },
+  {
+    "continuation_ok": true,
+    "error": null,
+    "fixture": "c1-pre.json",
+    "hash": "cc41975ffd27c2fc39b8673f9757b10e63ea0481ecdc3762cd2af33c2ef46b68",
+    "model": null,
+    "provenance_after": {
+      "continuation": "approximate_hot",
+      "from_schema": 2,
+      "missing_fields": [
+        "combustion_accounting"
+      ],
+      "original_hash": "cc41975ffd27c2fc39b8673f9757b10e63ea0481ecdc3762cd2af33c2ef46b68",
+      "transformation": "schema 2 -> 2: combustion accounting absent (pre-C2: ambiguous R02 deferred vs C1 stepwise); node fuel inventories/pmax defaulted per policy; thermal per inputs"
+    },
+    "provenance_before": null,
+    "recapture_hash": "cc41975ffd27c2fc39b8673f9757b10e63ea0481ecdc3762cd2af33c2ef46b68",
+    "recapture_model": {
+      "combustion_accounting": 1,
+      "schema_version": 2
+    },
+    "reread_provenance": {
+      "continuation": "approximate_hot",
+      "from_schema": 2,
+      "missing_fields": [
+        "combustion_accounting"
+      ],
+      "original_hash": "cc41975ffd27c2fc39b8673f9757b10e63ea0481ecdc3762cd2af33c2ef46b68",
+      "transformation": "schema 2 -> 2: combustion accounting absent (pre-C2: ambiguous R02 deferred vs C1 stepwise); node fuel inventories/pmax defaulted per policy; thermal per inputs"
+    },
+    "restore_ok": true,
+    "roundtrip_verified": true,
+    "structure": 2,
+    "verified": true,
+    "original_pmax_pa": 419178.5043830399,
+    "fuel_stored_kg": 2.654880691895046e-05,
+    "fuel_injected_kg": 2.654880691895046e-05,
+    "fuel_burned_kg": 0.0,
+    "burn_accounted": [
+      true,
+      true,
+      true,
+      true
+    ],
+    "time_s": 0.20004999999998613,
+    "thermal_present": false
+  },
+  {
+    "continuation_ok": true,
+    "error": null,
+    "fixture": "c1-mid.json",
+    "hash": "5b6238349f4a6073138e7c5061d1b443a262cf86f3b2b815ce4880c9e03d8277",
+    "model": null,
+    "provenance_after": {
+      "continuation": "approximate_hot",
+      "from_schema": 2,
+      "missing_fields": [
+        "combustion_accounting"
+      ],
+      "original_hash": "5b6238349f4a6073138e7c5061d1b443a262cf86f3b2b815ce4880c9e03d8277",
+      "transformation": "schema 2 -> 2: combustion accounting absent (pre-C2: ambiguous R02 deferred vs C1 stepwise); node fuel inventories/pmax defaulted per policy; thermal per inputs"
+    },
+    "provenance_before": null,
+    "recapture_hash": "5b6238349f4a6073138e7c5061d1b443a262cf86f3b2b815ce4880c9e03d8277",
+    "recapture_model": {
+      "combustion_accounting": 1,
+      "schema_version": 2
+    },
+    "reread_provenance": {
+      "continuation": "approximate_hot",
+      "from_schema": 2,
+      "missing_fields": [
+        "combustion_accounting"
+      ],
+      "original_hash": "5b6238349f4a6073138e7c5061d1b443a262cf86f3b2b815ce4880c9e03d8277",
+      "transformation": "schema 2 -> 2: combustion accounting absent (pre-C2: ambiguous R02 deferred vs C1 stepwise); node fuel inventories/pmax defaulted per policy; thermal per inputs"
+    },
+    "restore_ok": true,
+    "roundtrip_verified": true,
+    "structure": 2,
+    "verified": true,
+    "original_pmax_pa": 5257195.751903657,
+    "fuel_stored_kg": 2.6563012532402118e-05,
+    "fuel_injected_kg": 5.286190771571205e-05,
+    "fuel_burned_kg": 2.629889518330992e-05,
+    "burn_accounted": [
+      true,
+      false,
+      true,
+      true
+    ],
+    "time_s": 0.35959999999996856,
+    "thermal_present": false
+  },
+  {
+    "continuation_ok": true,
+    "error": null,
+    "fixture": "c1-post.json",
+    "hash": "550d883a319f37e0fa9a49d742656af1fc7213dbb9fe4e34a825d17718208199",
+    "model": null,
+    "provenance_after": {
+      "continuation": "approximate_hot",
+      "from_schema": 2,
+      "missing_fields": [
+        "combustion_accounting"
+      ],
+      "original_hash": "550d883a319f37e0fa9a49d742656af1fc7213dbb9fe4e34a825d17718208199",
+      "transformation": "schema 2 -> 2: combustion accounting absent (pre-C2: ambiguous R02 deferred vs C1 stepwise); node fuel inventories/pmax defaulted per policy; thermal per inputs"
+    },
+    "provenance_before": null,
+    "recapture_hash": "550d883a319f37e0fa9a49d742656af1fc7213dbb9fe4e34a825d17718208199",
+    "recapture_model": {
+      "combustion_accounting": 1,
+      "schema_version": 2
+    },
+    "reread_provenance": {
+      "continuation": "approximate_hot",
+      "from_schema": 2,
+      "missing_fields": [
+        "combustion_accounting"
+      ],
+      "original_hash": "550d883a319f37e0fa9a49d742656af1fc7213dbb9fe4e34a825d17718208199",
+      "transformation": "schema 2 -> 2: combustion accounting absent (pre-C2: ambiguous R02 deferred vs C1 stepwise); node fuel inventories/pmax defaulted per policy; thermal per inputs"
+    },
+    "restore_ok": true,
+    "roundtrip_verified": true,
+    "structure": 2,
+    "verified": true,
+    "original_pmax_pa": 5257195.751903657,
+    "fuel_stored_kg": 2.6494404273883664e-05,
+    "fuel_injected_kg": 5.286190771571205e-05,
+    "fuel_burned_kg": 2.636750257954301e-05,
+    "burn_accounted": [
+      true,
+      true,
+      true,
+      true
+    ],
+    "time_s": 0.3800499999999663,
+    "thermal_present": false
+  },
+  {
+    "continuation_ok": true,
+    "error": null,
+    "fixture": "c1-hot.json",
+    "hash": "363a48357fe1034dcca9a863601763ed84d8e175e1b39787c50d01f6bbc17f51",
+    "model": null,
+    "provenance_after": {
+      "continuation": "approximate_hot",
+      "from_schema": 2,
+      "missing_fields": [
+        "combustion_accounting"
+      ],
+      "original_hash": "363a48357fe1034dcca9a863601763ed84d8e175e1b39787c50d01f6bbc17f51",
+      "transformation": "schema 2 -> 2: combustion accounting absent (pre-C2: ambiguous R02 deferred vs C1 stepwise); node fuel inventories/pmax defaulted per policy; thermal per inputs"
+    },
+    "provenance_before": null,
+    "recapture_hash": "363a48357fe1034dcca9a863601763ed84d8e175e1b39787c50d01f6bbc17f51",
+    "recapture_model": {
+      "combustion_accounting": 1,
+      "schema_version": 2
+    },
+    "reread_provenance": {
+      "continuation": "approximate_hot",
+      "from_schema": 2,
+      "missing_fields": [
+        "combustion_accounting"
+      ],
+      "original_hash": "363a48357fe1034dcca9a863601763ed84d8e175e1b39787c50d01f6bbc17f51",
+      "transformation": "schema 2 -> 2: combustion accounting absent (pre-C2: ambiguous R02 deferred vs C1 stepwise); node fuel inventories/pmax defaulted per policy; thermal per inputs"
+    },
+    "restore_ok": true,
+    "roundtrip_verified": true,
+    "structure": 2,
+    "verified": true,
+    "original_pmax_pa": 5257195.751903657,
+    "fuel_stored_kg": 2.0798305957786463e-05,
+    "fuel_injected_kg": 0.00018988225026184054,
+    "fuel_burned_kg": 0.0001682964129911633,
+    "burn_accounted": [
+      true,
+      true,
+      true,
+      true
+    ],
+    "time_s": 0.5000499999999531,
+    "thermal_present": false
+  },
+  {
+    "continuation_ok": true,
+    "error": null,
+    "fixture": "c2-cold.json",
+    "hash": "9c2bdb43cef1e8b74a4e14bf7036fd6249189520f0e8c9464ea5c843ad229561",
+    "model": {
+      "combustion_accounting": 1,
+      "schema_version": 2
+    },
+    "provenance_after": null,
+    "provenance_before": null,
+    "recapture_hash": "543f13d26e65db5cb110b29a3b3571b5bad3a703cce6474024bb0b79019968c9",
+    "recapture_model": {
+      "combustion_accounting": 1,
+      "schema_version": 2
+    },
+    "reread_provenance": null,
+    "restore_ok": true,
+    "roundtrip_verified": true,
+    "structure": 2,
+    "verified": true,
+    "original_pmax_pa": null,
+    "fuel_stored_kg": 0.0,
+    "fuel_injected_kg": 0.0,
+    "fuel_burned_kg": 0.0,
+    "burn_accounted": [
+      true,
+      true,
+      true,
+      true
+    ],
+    "time_s": 0.0,
+    "thermal_present": false
+  },
+  {
+    "continuation_ok": true,
+    "error": null,
+    "fixture": "c2-pre.json",
+    "hash": "cc41975ffd27c2fc39b8673f9757b10e63ea0481ecdc3762cd2af33c2ef46b68",
+    "model": {
+      "combustion_accounting": 1,
+      "schema_version": 2
+    },
+    "provenance_after": null,
+    "provenance_before": null,
+    "recapture_hash": "cc41975ffd27c2fc39b8673f9757b10e63ea0481ecdc3762cd2af33c2ef46b68",
+    "recapture_model": {
+      "combustion_accounting": 1,
+      "schema_version": 2
+    },
+    "reread_provenance": null,
+    "restore_ok": true,
+    "roundtrip_verified": true,
+    "structure": 2,
+    "verified": true,
+    "original_pmax_pa": 419178.5043830399,
+    "fuel_stored_kg": 2.654880691895046e-05,
+    "fuel_injected_kg": 2.654880691895046e-05,
+    "fuel_burned_kg": 0.0,
+    "burn_accounted": [
+      true,
+      true,
+      true,
+      true
+    ],
+    "time_s": 0.20004999999998613,
+    "thermal_present": false
+  },
+  {
+    "continuation_ok": true,
+    "error": null,
+    "fixture": "c2-mid.json",
+    "hash": "5b6238349f4a6073138e7c5061d1b443a262cf86f3b2b815ce4880c9e03d8277",
+    "model": {
+      "combustion_accounting": 1,
+      "schema_version": 2
+    },
+    "provenance_after": null,
+    "provenance_before": null,
+    "recapture_hash": "5b6238349f4a6073138e7c5061d1b443a262cf86f3b2b815ce4880c9e03d8277",
+    "recapture_model": {
+      "combustion_accounting": 1,
+      "schema_version": 2
+    },
+    "reread_provenance": null,
+    "restore_ok": true,
+    "roundtrip_verified": true,
+    "structure": 2,
+    "verified": true,
+    "original_pmax_pa": 5257195.751903657,
+    "fuel_stored_kg": 2.6563012532402118e-05,
+    "fuel_injected_kg": 5.286190771571205e-05,
+    "fuel_burned_kg": 2.629889518330992e-05,
+    "burn_accounted": [
+      true,
+      false,
+      true,
+      true
+    ],
+    "time_s": 0.35959999999996856,
+    "thermal_present": false
+  },
+  {
+    "continuation_ok": true,
+    "error": null,
+    "fixture": "c2-post.json",
+    "hash": "550d883a319f37e0fa9a49d742656af1fc7213dbb9fe4e34a825d17718208199",
+    "model": {
+      "combustion_accounting": 1,
+      "schema_version": 2
+    },
+    "provenance_after": null,
+    "provenance_before": null,
+    "recapture_hash": "550d883a319f37e0fa9a49d742656af1fc7213dbb9fe4e34a825d17718208199",
+    "recapture_model": {
+      "combustion_accounting": 1,
+      "schema_version": 2
+    },
+    "reread_provenance": null,
+    "restore_ok": true,
+    "roundtrip_verified": true,
+    "structure": 2,
+    "verified": true,
+    "original_pmax_pa": 5257195.751903657,
+    "fuel_stored_kg": 2.6494404273883664e-05,
+    "fuel_injected_kg": 5.286190771571205e-05,
+    "fuel_burned_kg": 2.636750257954301e-05,
+    "burn_accounted": [
+      true,
+      true,
+      true,
+      true
+    ],
+    "time_s": 0.3800499999999663,
+    "thermal_present": false
+  },
+  {
+    "continuation_ok": true,
+    "error": null,
+    "fixture": "c2-hot.json",
+    "hash": "363a48357fe1034dcca9a863601763ed84d8e175e1b39787c50d01f6bbc17f51",
+    "model": {
+      "combustion_accounting": 1,
+      "schema_version": 2
+    },
+    "provenance_after": null,
+    "provenance_before": null,
+    "recapture_hash": "363a48357fe1034dcca9a863601763ed84d8e175e1b39787c50d01f6bbc17f51",
+    "recapture_model": {
+      "combustion_accounting": 1,
+      "schema_version": 2
+    },
+    "reread_provenance": null,
+    "restore_ok": true,
+    "roundtrip_verified": true,
+    "structure": 2,
+    "verified": true,
+    "original_pmax_pa": 5257195.751903657,
+    "fuel_stored_kg": 2.0798305957786463e-05,
+    "fuel_injected_kg": 0.00018988225026184054,
+    "fuel_burned_kg": 0.0001682964129911633,
+    "burn_accounted": [
+      true,
+      true,
+      true,
+      true
+    ],
+    "time_s": 0.5000499999999531,
+    "thermal_present": false
+  }
+]

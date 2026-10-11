@@ -1,0 +1,14 @@
+   Compiling d16sim-c2-history-c2 v0.1.0 (/home/franku/projects/d16sim-verification-c2/verification/c2_review/producer_c2)
+warning: variable does not need to be mutable
+  --> src/main.rs:58:9
+   |
+58 |     let mut snap = cold(&i);
+   |         ----^^^^
+   |         |
+   |         help: remove this `mut`
+   |
+   = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: `d16sim-c2-history-c2` (bin "d16sim-c2-history-c2") generated 1 warning (run `cargo fix --bin "d16sim-c2-history-c2" -p d16sim-c2-history-c2` to apply 1 suggestion)
+    Finished `release` profile [optimized] target(s) in 0.35s
+     Running `verification/c2_review/producer_c2/target/release/d16sim-c2-history-c2 0`

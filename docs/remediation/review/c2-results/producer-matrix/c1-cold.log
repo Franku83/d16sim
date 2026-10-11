@@ -1,0 +1,39 @@
+   Compiling proc-macro2 v1.0.107
+   Compiling unicode-ident v1.0.26
+   Compiling quote v1.0.47
+   Compiling version_check v0.9.5
+   Compiling typenum v1.20.1
+   Compiling thiserror v2.0.21
+   Compiling serde_core v1.0.229
+   Compiling zmij v1.0.23
+   Compiling serde v1.0.229
+   Compiling serde_json v1.0.151
+   Compiling memchr v2.8.3
+   Compiling itoa v1.0.18
+   Compiling cpufeatures v0.2.17
+   Compiling cfg-if v1.0.5
+   Compiling generic-array v0.14.7
+   Compiling syn v3.0.6
+   Compiling block-buffer v0.10.4
+   Compiling crypto-common v0.1.7
+   Compiling digest v0.10.7
+   Compiling sha2 v0.10.9
+   Compiling thiserror-impl v2.0.21
+   Compiling serde_derive v1.0.229
+   Compiling units v0.1.0 (/home/franku/projects/d16sim-verification-c2/target/remediation-review-c1/crates/units)
+   Compiling math v0.1.0 (/home/franku/projects/d16sim-verification-c2/target/remediation-review-c1/crates/math)
+   Compiling engine-types v0.1.0 (/home/franku/projects/d16sim-verification-c2/target/remediation-review-c1/crates/engine-types)
+   Compiling kinematics v0.1.0 (/home/franku/projects/d16sim-verification-c2/target/remediation-review-c1/crates/kinematics)
+   Compiling fuel v0.1.0 (/home/franku/projects/d16sim-verification-c2/target/remediation-review-c1/crates/fuel)
+   Compiling thermal v0.1.0 (/home/franku/projects/d16sim-verification-c2/target/remediation-review-c1/crates/thermal)
+   Compiling thermo v0.1.0 (/home/franku/projects/d16sim-verification-c2/target/remediation-review-c1/crates/thermo)
+   Compiling contacts v0.1.0 (/home/franku/projects/d16sim-verification-c2/target/remediation-review-c1/crates/contacts)
+   Compiling crank v0.1.0 (/home/franku/projects/d16sim-verification-c2/target/remediation-review-c1/crates/crank)
+   Compiling combustion v0.1.0 (/home/franku/projects/d16sim-verification-c2/target/remediation-review-c1/crates/combustion)
+   Compiling electrical v0.1.0 (/home/franku/projects/d16sim-verification-c2/target/remediation-review-c1/crates/electrical)
+   Compiling valvetrain v0.1.0 (/home/franku/projects/d16sim-verification-c2/target/remediation-review-c1/crates/valvetrain)
+   Compiling flow v0.1.0 (/home/franku/projects/d16sim-verification-c2/target/remediation-review-c1/crates/flow)
+   Compiling engine v0.1.0 (/home/franku/projects/d16sim-verification-c2/target/remediation-review-c1/crates/engine)
+   Compiling d16sim-c2-history-c1 v0.1.0 (/home/franku/projects/d16sim-verification-c2/verification/c2_review/producer_c1)
+    Finished `release` profile [optimized] target(s) in 4.46s
+     Running `verification/c2_review/producer_c1/target/release/d16sim-c2-history-c1 0`

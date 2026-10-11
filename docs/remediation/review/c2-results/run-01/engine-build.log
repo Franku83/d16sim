@@ -1,0 +1,49 @@
+   Compiling proc-macro2 v1.0.107
+   Compiling quote v1.0.47
+   Compiling unicode-ident v1.0.26
+   Compiling version_check v0.9.5
+   Compiling typenum v1.20.1
+   Compiling serde_core v1.0.229
+   Compiling thiserror v2.0.21
+   Compiling zmij v1.0.23
+   Compiling serde v1.0.229
+   Compiling serde_json v1.0.151
+   Compiling cpufeatures v0.2.17
+   Compiling cfg-if v1.0.5
+   Compiling memchr v2.8.3
+   Compiling itoa v1.0.18
+   Compiling generic-array v0.14.7
+   Compiling syn v3.0.6
+   Compiling block-buffer v0.10.4
+   Compiling crypto-common v0.1.7
+   Compiling digest v0.10.7
+   Compiling sha2 v0.10.9
+   Compiling thiserror-impl v2.0.21
+   Compiling serde_derive v1.0.229
+   Compiling units v0.1.0 (/home/franku/projects/d16sim-verification-c2/crates/units)
+   Compiling math v0.1.0 (/home/franku/projects/d16sim-verification-c2/crates/math)
+   Compiling engine-types v0.1.0 (/home/franku/projects/d16sim-verification-c2/crates/engine-types)
+   Compiling kinematics v0.1.0 (/home/franku/projects/d16sim-verification-c2/crates/kinematics)
+   Compiling fuel v0.1.0 (/home/franku/projects/d16sim-verification-c2/crates/fuel)
+   Compiling fastener v0.1.0 (/home/franku/projects/d16sim-verification-c2/crates/fastener)
+   Compiling lube v0.1.0 (/home/franku/projects/d16sim-verification-c2/crates/lube)
+   Compiling thermal v0.1.0 (/home/franku/projects/d16sim-verification-c2/crates/thermal)
+   Compiling trigger v0.1.0 (/home/franku/projects/d16sim-verification-c2/crates/trigger)
+   Compiling calibration v0.1.0 (/home/franku/projects/d16sim-verification-c2/crates/calibration)
+   Compiling contacts v0.1.0 (/home/franku/projects/d16sim-verification-c2/crates/contacts)
+   Compiling thermo v0.1.0 (/home/franku/projects/d16sim-verification-c2/crates/thermo)
+   Compiling crank v0.1.0 (/home/franku/projects/d16sim-verification-c2/crates/crank)
+   Compiling ecu v0.1.0 (/home/franku/projects/d16sim-verification-c2/crates/ecu)
+   Compiling combustion v0.1.0 (/home/franku/projects/d16sim-verification-c2/crates/combustion)
+   Compiling electrical v0.1.0 (/home/franku/projects/d16sim-verification-c2/crates/electrical)
+   Compiling valvetrain v0.1.0 (/home/franku/projects/d16sim-verification-c2/crates/valvetrain)
+   Compiling flow v0.1.0 (/home/franku/projects/d16sim-verification-c2/crates/flow)
+   Compiling diagnostics v0.1.0 (/home/franku/projects/d16sim-verification-c2/crates/diagnostics)
+   Compiling leak v0.1.0 (/home/franku/projects/d16sim-verification-c2/crates/leak)
+   Compiling engine v0.1.0 (/home/franku/projects/d16sim-verification-c2/crates/engine)
+   Compiling wear v0.1.0 (/home/franku/projects/d16sim-verification-c2/crates/wear)
+   Compiling damage v0.1.0 (/home/franku/projects/d16sim-verification-c2/crates/damage)
+   Compiling dyno v0.1.0 (/home/franku/projects/d16sim-verification-c2/crates/dyno)
+   Compiling d16sim-independent-probes v0.1.0 (/home/franku/projects/d16sim-verification-c2/verification/c2_review)
+    Finished `release` profile [optimized] target(s) in 5.37s
+     Running `verification/c2_review/target/release/d16sim-independent-probes engine`

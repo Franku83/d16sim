@@ -1,0 +1,27 @@
+{
+  "engine_validate_inputs": [
+    "crates/engine/src/run.rs",
+    1345,
+    1478
+  ],
+  "restore_model": [
+    "crates/engine/src/run.rs",
+    546,
+    588
+  ],
+  "physical_state": [
+    "crates/engine/src/run.rs",
+    645,
+    755
+  ],
+  "thermal_checked": [
+    "crates/thermal/src/network.rs",
+    149,
+    153
+  ],
+  "battery_resistance": [
+    "crates/electrical/src/battery.rs",
+    100,
+    116
+  ]
+}

@@ -1,0 +1,76 @@
+test_01_listed_nonfinite_inputs_rejected_atomically (__main__.C2.test_01_listed_nonfinite_inputs_rejected_atomically) ... ok
+test_02_public_active_cam_and_injector_parameters (__main__.C2.test_02_public_active_cam_and_injector_parameters) ... FAIL
+test_03_derived_physical_temperature_finite (__main__.C2.test_03_derived_physical_temperature_finite) ... FAIL
+test_04_finite_actual_thermal_energy_not_factory_temperature (__main__.C2.test_04_finite_actual_thermal_energy_not_factory_temperature) ... FAIL
+test_05_thermal_invalid_domains_atomic_and_valid_extremes (__main__.C2.test_05_thermal_invalid_domains_atomic_and_valid_extremes) ... ok
+test_06_diagnostics_domain_and_instrument_absence (__main__.C2.test_06_diagnostics_domain_and_instrument_absence) ... ok
+test_07_genuine_producers_and_provenance_persistence (__main__.C2.test_07_genuine_producers_and_provenance_persistence) ... ok
+test_08_all_unknown_or_incoherent_semantic_identifiers_rejected (__main__.C2.test_08_all_unknown_or_incoherent_semantic_identifiers_rejected) ... FAIL
+test_09_native_history_cannot_be_silently_reconstructed_exact (__main__.C2.test_09_native_history_cannot_be_silently_reconstructed_exact) ... FAIL
+test_10_errors_atomic_and_no_panics (__main__.C2.test_10_errors_atomic_and_no_panics) ... ok
+test_11_relational_inputs (__main__.C2.test_11_relational_inputs) ... ok
+
+======================================================================
+FAIL: test_02_public_active_cam_and_injector_parameters (__main__.C2.test_02_public_active_cam_and_injector_parameters)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/franku/projects/d16sim-verification-c2/verification/c2_review/check_c2.py", line 17, in test_02_public_active_cam_and_injector_parameters
+    if r['value'] in ['nan','inf','minus_inf'] and r['field'].startswith(('injector','deadtime','cam')):self.check(not r['accepted'] and not r['restore_ok'] and not r['run_ok'] and r['unchanged'],r)
+                                                                                                        ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/franku/projects/d16sim-verification-c2/verification/c2_review/check_c2.py", line 10, in check
+    def check(self,ok,msg):C2.predicates+=1;self.assertTrue(ok,str(msg))
+                                            ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+AssertionError: False is not true : {'accepted': True, 'error': None, 'field': 'injector_q', 'interval': 'noop', 'panic': False, 'restore_ok': True, 'run_ok': True, 'run_panic': False, 'unchanged': False, 'value': 'nan'}
+
+======================================================================
+FAIL: test_03_derived_physical_temperature_finite (__main__.C2.test_03_derived_physical_temperature_finite)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/franku/projects/d16sim-verification-c2/verification/c2_review/check_c2.py", line 21, in test_03_derived_physical_temperature_finite
+    for r in rows('derived_cylinder'):self.check(not r['temperature_finite'] and not r['restore_ok'] and not r['noop_ok'] and r['unchanged'],r)
+                                      ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/franku/projects/d16sim-verification-c2/verification/c2_review/check_c2.py", line 10, in check
+    def check(self,ok,msg):C2.predicates+=1;self.assertTrue(ok,str(msg))
+                                            ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+AssertionError: False is not true : {'hash_valid': True, 'noop_ok': True, 'restore_ok': True, 'temperature_finite': False, 'unchanged': False}
+
+======================================================================
+FAIL: test_04_finite_actual_thermal_energy_not_factory_temperature (__main__.C2.test_04_finite_actual_thermal_energy_not_factory_temperature)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/franku/projects/d16sim-verification-c2/verification/c2_review/check_c2.py", line 24, in test_04_finite_actual_thermal_energy_not_factory_temperature
+    for r in rows('finite_actual_thermal'):self.check(r['params_valid'] and r['actual_energy'] is not None and r['standalone_step_ok'] and r['standalone_stored'] is not None and r['resume_ok'] and r['restore_ok'],r)
+                                           ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/franku/projects/d16sim-verification-c2/verification/c2_review/check_c2.py", line 10, in check
+    def check(self,ok,msg):C2.predicates+=1;self.assertTrue(ok,str(msg))
+                                            ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+AssertionError: False is not true : {'actual_energy': 0.0, 'capacity': 1e+307, 'error': 'invalid engine input/state: thermal stored energy not representable', 'params_valid': True, 'restore_ok': False, 'resume_ok': False, 'standalone_step_ok': True, 'standalone_stored': 0.066, 'unchanged': True}
+
+======================================================================
+FAIL: test_08_all_unknown_or_incoherent_semantic_identifiers_rejected (__main__.C2.test_08_all_unknown_or_incoherent_semantic_identifiers_rejected)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/franku/projects/d16sim-verification-c2/verification/c2_review/check_c2.py", line 46, in test_08_all_unknown_or_incoherent_semantic_identifiers_rejected
+    if r['case'] in ['unknown_model','mismatch_model']:self.check(r['hash_valid'] and not r['accepted'],r)
+                                                       ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/franku/projects/d16sim-verification-c2/verification/c2_review/check_c2.py", line 10, in check
+    def check(self,ok,msg):C2.predicates+=1;self.assertTrue(ok,str(msg))
+                                            ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+AssertionError: False is not true : {'accepted': True, 'case': 'unknown_model', 'error': None, 'fixture': 'v1-cold.json', 'hash_valid': True, 'provenance_after': {'continuation': 'exact_neutral', 'from_schema': 1, 'missing_fields': ['thermal', 'plen_fuel_kg', 'exh_fuel_kg', 'fuel_emitted_kg', 'pmax_pa', 'combustion_accounting'], 'original_hash': 'deb04a1b413455e20c057ec5cca14c28d691ab52630cef28d172c9224b0dea93', 'transformation': 'schema 1 -> 2: combustion accounting unknown; node fuel inventories/pmax defaulted per policy; thermal per inputs'}}
+
+======================================================================
+FAIL: test_09_native_history_cannot_be_silently_reconstructed_exact (__main__.C2.test_09_native_history_cannot_be_silently_reconstructed_exact)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/franku/projects/d16sim-verification-c2/verification/c2_review/check_c2.py", line 48, in test_09_native_history_cannot_be_silently_reconstructed_exact
+    for r in rows('native_missing_history'):self.check(r['hash_valid'] and not r['same_trajectory'] and r['provenance'] is not None and r['provenance']['continuation']=='approximate_hot',r)
+                                            ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/franku/projects/d16sim-verification-c2/verification/c2_review/check_c2.py", line 10, in check
+    def check(self,ok,msg):C2.predicates+=1;self.assertTrue(ok,str(msg))
+                                            ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+AssertionError: False is not true : {'hash_valid': True, 'model': {'combustion_accounting': 1, 'schema_version': 2}, 'omega_original': 215.94097001258632, 'omega_reconstructed': 218.37292220188047, 'pressure_original': 5256861.000979931, 'pressure_reconstructed': 701715.9266370728, 'provenance': None, 'same_trajectory': False}
+
+----------------------------------------------------------------------
+Ran 11 tests in 0.004s
+
+FAILED (failures=5)

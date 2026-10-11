@@ -1,0 +1,8 @@
+    Finished `release` profile [optimized] target(s) in 0.02s
+     Running `target/release/d16sim mech-demo --scenario ring_leak_cyl3`
+mech-demo scenario=ring_leak_cyl3 (L1 instruments, UNCALIBRATED):
+  steady_leak_g_min   : 4.090
+  compression_kPa     : 1330
+  leak_pct            : 5.1
+  split crank/exh/cool: 1.00/0.00/0.00 (exh: no port -> not instrumented)
+  verdict             : Inconclusive { have_n: 2, need_n: 2 }

@@ -1,0 +1,67 @@
+[
+  {
+    "ref": "a0040c5",
+    "path": "docs/remediation/D16SIM_REMEDIATION_R01_R05_SPEC_v1.0.md",
+    "blob": "da10f0fc30cccd1024ec0936036d8d330a8da13f"
+  },
+  {
+    "ref": "a0040c5",
+    "path": "docs/remediation/R01_R02_BATCH_REPORT.md",
+    "blob": "519c4ef7b3de4516e1e9b7b7c5df9af7f08ce54f"
+  },
+  {
+    "ref": "a0040c5",
+    "path": "docs/remediation/R01_R02_C1_BATCH_REPORT.md",
+    "blob": "d1107953d3ddf0d973d4998f8a05fa206864d405"
+  },
+  {
+    "ref": "a0040c5",
+    "path": "docs/remediation/R01_R02_C2_BOUNDARY_MATRIX.md",
+    "blob": "449e3350edb944ded5819e4937a4a4d952d57f23"
+  },
+  {
+    "ref": "a0040c5",
+    "path": "docs/remediation/R01_R02_C2_BATCH_REPORT.md",
+    "blob": "911fc2bb401105f9468cf0de010cf12ded494ed9"
+  },
+  {
+    "ref": "a0040c5",
+    "path": "docs/adr/ADR-038-remediation-state-species.md",
+    "blob": "8b84c097456f09f8ca3912e56f84272dca81d807"
+  },
+  {
+    "ref": "a0040c5",
+    "path": "docs/adr/ADR-039-remediation-c1-boundaries.md",
+    "blob": "88ce756044bc8d88c11d14c47b5c75fc9dbf1a35"
+  },
+  {
+    "ref": "a0040c5",
+    "path": "docs/adr/ADR-040-remediation-c2-boundaries.md",
+    "blob": "2625e1c53cc83db7233b1080567a40c093450e56"
+  },
+  {
+    "ref": "a0040c5",
+    "path": "docs/snapshot-contract.md",
+    "blob": "3316884f87fc9ba0ec4f103a401c28f8026e702d"
+  },
+  {
+    "ref": "a0088ff",
+    "path": "docs/remediation/review/R01_R02_C1_INDEPENDENT_VERIFICATION.md",
+    "blob": "4524ea82c4126b92fc826cbb3b95eb325973d0a0"
+  },
+  {
+    "ref": "a0088ff",
+    "path": "docs/remediation/review/C1_FINDINGS.md",
+    "blob": "903428fea91aff35634fb341a694e4c266689210"
+  },
+  {
+    "ref": "a0088ff",
+    "path": "docs/remediation/review/C1_REPRODUCTION.md",
+    "blob": "7c946b0b1f864968c36ec245de505f630350048e"
+  },
+  {
+    "ref": "a0088ff",
+    "path": "docs/remediation/review/C1_GATE_DECISION.md",
+    "blob": "ee1c55861318cbaf2211b5ec100f102f91d83b6f"
+  }
+]

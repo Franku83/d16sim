@@ -1,0 +1,13 @@
+warning: variable does not need to be mutable
+  --> src/main.rs:56:46
+   |
+56 | fn main(){let i=engine::healthy_inputs();let mut snap=cold(&i);let t: f64=std::env::args().nth(1).unwrap().parse().unwrap(); if t==0...
+   |                                              ----^^^^
+   |                                              |
+   |                                              help: remove this `mut`
+   |
+   = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: `d16sim-c2-history-r02` (bin "d16sim-c2-history-r02") generated 1 warning (run `cargo fix --bin "d16sim-c2-history-r02" -p d16sim-c2-history-r02` to apply 1 suggestion)
+    Finished `release` profile [optimized] target(s) in 0.01s
+     Running `verification/c2_review/producer_r02/target/release/d16sim-c2-history-r02 0.35955`
