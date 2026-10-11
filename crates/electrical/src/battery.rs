@@ -72,6 +72,9 @@ impl Battery {
                 return Err(bad(name));
             }
         }
+        if !(self.temp_c > -273.15) {
+            return Err(bad("temp below absolute zero"));
+        }
         if self.r0_ohm < 0.0 || self.r_ground_ohm < 0.0 {
             return Err(bad("resistance must be >= 0"));
         }
@@ -99,18 +102,21 @@ impl Battery {
     ///
     /// # Errors
     ///
-    /// `InvalidInput` si algún parámetro no es finito/negativo.
+    /// `InvalidInput` si una resistencia no es finita/negativa o si la
+    /// temperatura no está por encima del cero absoluto. La temperatura
+    /// Celsius negativa legítima (p. ej. −20 °C) es admisible (R02-C3/C2-06).
     pub fn resistance(&self) -> Result<f64, BatteryError> {
-        for (v, name) in [
-            (self.r0_ohm, "r0"),
-            (self.r_ground_ohm, "r_ground"),
-            (self.temp_c, "temp"),
-        ] {
+        for (v, name) in [(self.r0_ohm, "r0"), (self.r_ground_ohm, "r_ground")] {
             if !(v.is_finite() && v >= 0.0) {
                 return Err(BatteryError::InvalidInput {
                     reason: name.to_owned(),
                 });
             }
+        }
+        if !(self.temp_c.is_finite() && self.temp_c > -273.15) {
+            return Err(BatteryError::InvalidInput {
+                reason: "temp".to_owned(),
+            });
         }
         let cold = 1.0 + 0.02 * (20.0 - self.temp_c).max(0.0);
         Ok((self.r0_ohm * (1.0 + 1.5 * (1.0 - self.soc)) * cold) + self.r_ground_ohm)
@@ -156,5 +162,44 @@ mod tests {
             ..Battery::illustrative_12v()
         };
         assert!(open.terminal_voltage(300.0).unwrap() < 1.0);
+    }
+}
+
+#[cfg(test)]
+mod r02_c3_tests {
+    #![allow(clippy::unwrap_used)]
+
+    use super::*;
+
+    #[test]
+    fn negative_celsius_above_absolute_zero_is_valid() {
+        // R02-C3/C2-06: −20 °C es un ambiente válido; la resistencia es
+        // finita y positiva. Por debajo del cero absoluto se rechaza.
+        for t in [-20.0, -1.0, 0.0, 20.0, 100.0] {
+            let b = Battery {
+                temp_c: t,
+                ..Battery::illustrative_12v()
+            };
+            assert!(b.validated().is_ok(), "t={t}");
+            let r = b.resistance().unwrap();
+            assert!(r.is_finite() && r > 0.0, "t={t} r={r}");
+        }
+        let cold = Battery {
+            temp_c: -20.0,
+            ..Battery::illustrative_12v()
+        };
+        let warm = Battery {
+            temp_c: 20.0,
+            ..Battery::illustrative_12v()
+        };
+        assert!(cold.resistance().unwrap() > warm.resistance().unwrap());
+        for bad in [-273.15, -274.0, f64::NAN, f64::INFINITY] {
+            let b = Battery {
+                temp_c: bad,
+                ..Battery::illustrative_12v()
+            };
+            assert!(b.validated().is_err(), "t={bad}");
+            assert!(b.resistance().is_err(), "t={bad}");
+        }
     }
 }
