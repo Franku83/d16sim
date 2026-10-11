@@ -40,3 +40,12 @@ locales y solo lo confirma si es finito y físico. Temperaturas imposibles,
 ambiente bajo cero absoluto y overflow por capacidad extrema devuelven error
 tipado **sin mutar** el estado (atomicidad). El calor `q_amb` es energía (J) y
 puede ser negativo si el ambiente está más caliente; solo se exige finitud.
+
+## Remediación R02-C3/C2-03 (2026-10-10)
+
+La energía térmica representable se evalúa contra el **estado real** de cada
+API (`validate_physical_state`, `initial_state`), no contra una temperatura de
+fábrica a 20 °C. Un estado con capacidad grande y temperatura baja cuya energía
+actual es finita se acepta; el mismo par capacidad/temperatura que desborda
+T·C se rechaza de forma atómica. `ThermalParams::validated` sigue comprobando
+la validez intrínseca (capacidades > 0, fracción y bandas coherentes).

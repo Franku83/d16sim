@@ -58,3 +58,13 @@ parámetros para preservarlos. Ver el reporte de batch R01–R02.
   una copia, confirmándola solo si termina bien. Un error de fricción se
   propaga; no se convierte en torque cero. `restore` valida también historia
   de eventos y contadores.
+
+## Remediación R02-C3/C2-01 y C2-02 (2026-10-10)
+
+- **Frontera de leva/inyector:** `validate_inputs` valida los parámetros
+  públicos activos (q_ref/p_ref/deadtime/incertidumbre y duración/at050/alzada/
+  flanco/centerline/LSA de ambas levas). Una configuración inválida se rechaza
+  en run/restore/resume; no se degrada a alzada o inyección cero.
+- **Termodinámica derivada:** además de los operandos, se valida
+  `T = U/(m·cv)` y presión/densidad derivadas en las fronteras, incluido el
+  avance nulo, donde el bucle dinámico no llega.

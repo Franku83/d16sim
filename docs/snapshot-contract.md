@@ -28,14 +28,24 @@
   historia) o `approximate_hot` (había combustible/movimiento: la trayectoria
   histórica no se reconstruye). Los snapshots nativos completos no llevan
   procedencia y mantienen continuidad exacta.
-- **Identidad semántica de modelo (R02-C2/C1-05):** `model` (en el wrapper)
-  separa la versión del esquema de serialización de la **convención de
-  contabilidad química** (`combustion_accounting`). Un snapshot sin `model`
-  (formato pre-C2) es ambiguo entre R02 (consumo diferido) y C1 (por paso): se
-  migra con procedencia `approximate_hot`/`exact_neutral` y **nunca** se
-  declara nativo exacto. Un `model` con convención desconocida o incoherente
-  con el esquema se rechaza (fail-closed). Los snapshots nativos C2 (con
-  `model`) continúan bit-exactos.
+- **Identidad semántica de modelo (R02-C2/C1-05 + R02-C3/C2-04):** `model`
+  (en el wrapper) separa la versión del esquema de serialización de la
+  **convención de contabilidad química** (`combustion_accounting`). Un snapshot
+  sin `model` (formato pre-C2) es ambiguo entre R02 (consumo diferido) y C1
+  (por paso): se migra con procedencia `approximate_hot`/`exact_neutral` y
+  **nunca** se declara nativo exacto. Un `model` presente con esquema
+  desconocido (∉ {1,2}) o contabilidad desconocida (≠ 1) se **rechaza** en
+  todos los esquemas, incluido v1, aunque el hash sea válido. Tolerancia
+  documentada: no se exige igualdad exacta `model.schema_version ↔
+  state.schema_version` (el fixture de migración v1 del oráculo independiente
+  captura bajo esquema 2 y reetiqueta el payload a 1); solo se exige que los
+  identificadores sean conocidos.
+- **Historia de presión requerida (R02-C3/C2-05):** un snapshot con `model`
+  conocido y esquema actual solo se declara **nativo exacto** si `pmax_pa` está
+  presente **cuando la fricción activa depende de presión** (Chen–Flynn
+  `c2 ≠ 0`). Si falta `pmax_pa` con `c2 ≠ 0`, la continuación se etiqueta
+  `approximate_hot`; con `c2 = 0` la falta no altera la trayectoria y puede
+  continuar exacta. No se reconstruye presión histórica.
 - **Alcance de integridad (C1-G01):** `state_hash` autentica **solo el estado
   canónico**. `model` y `provenance` son metadata **no autenticada** por el
   hash: un consumidor que necesite confiar en la procedencia debe verificarla

@@ -532,3 +532,25 @@ detención. Batch S26–S30 autorizado; S31 prohibido.
   **19/19**; harness original **22/32** con los mismos 10 fallos de R03/R04.
   Ralentí nominal idéntico a C1 (1047.3038737 rpm): solo validación.
 - **STOP**: no se inicia R03/R04/R05 ni S31; no se fusiona a `r01-r05`.
+
+## 2026-10-10 · Remediación R01–R02-C3 (IMPLEMENTED_PENDING_INDEPENDENT_REVIEW)
+
+- Rama `remediation/r01-r02-c3` desde `a0040c5` (C2 verificado con
+  `C2_REMEDIATION_REQUIRED`). Matriz:
+  `docs/remediation/R01_R02_C3_ACCEPTANCE_MATRIX.md`; ADR-041; reporte:
+  `docs/remediation/R01_R02_C3_BATCH_REPORT.md`.
+- **C2-01/F15**: validación de inyector (q_ref/p_ref/deadtime/incertidumbre) y
+  levas (duración/at050/alzada/flanco/centerline/LSA).
+- **C2-02/F15**: T=U/(m·cv) y p/ρ derivadas validadas en restore/resume
+  (incl. no-op) y run_engine.
+- **C2-03/F15**: energía térmica evaluada con el estado real, no con cold(20).
+- **C2-04/F06**: `model` desconocido/incoherente rechazado en todos los
+  esquemas; histórico sin `model` conservado.
+- **C2-05/F06/F07**: nativo exacto exige `pmax` cuando c2≠0; si falta,
+  `approximate_hot`; control c2=0 exacto.
+- **C2-06/F15**: temperatura de batería negativa legítima admitida.
+- Tests: workspace **209 passed / 0 failed** (204 + 5); fmt/clippy OK.
+  Checker C2 **11/11** (1442 predicados; antes 6/11). Oráculos previos:
+  S30 **22/32**, adversarial **19/19**, C1 **15/15**. Ralentí nominal
+  idéntico (1047.3038737 rpm): solo validación.
+- **STOP**: no se inicia R03/R04/R05 ni S31; no se fusiona a `r01-r05`.
