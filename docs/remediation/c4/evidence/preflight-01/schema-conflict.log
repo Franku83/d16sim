@@ -1,0 +1,12 @@
+   Compiling d16sim-independent-probes v0.1.0 (/home/franku/projects/d16sim-remediation-c4/target/c4-preflight-01/verification/c3_review)
+warning: function `ws` is never used
+  --> src/common.rs:55:4
+   |
+55 | fn ws(i: &EngineInputs) -> WorkState {
+   |    ^^
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `d16sim-independent-probes` (bin "c4-schema-conflict") generated 1 warning
+    Finished `release` profile [optimized] target(s) in 0.83s
+     Running `verification/c3_review/target/release/c4-schema-conflict`

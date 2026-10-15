@@ -1,0 +1,22 @@
+[
+  {
+    "reference": "36919b0455e8eaf741a72ff4a74ae85f40e116ba:docs/remediation/review/R01_R02_C3_INDEPENDENT_VERIFICATION.md",
+    "blob": "0a118f2f4f83d3b81f408b95beb39772e93f9967",
+    "sha256": "08a236f2acba2165f19920aee6a11686041c39808111c5ec28c2a5172a95758d"
+  },
+  {
+    "reference": "36919b0455e8eaf741a72ff4a74ae85f40e116ba:docs/remediation/review/C3_FINDINGS.md",
+    "blob": "9dd6023f0fdf61bbeccbaeb48294611953fe55c9",
+    "sha256": "3a7ae85ec9532ac7d461b275eb3f51e8e03c8161c24c39d920eb62746c053b7f"
+  },
+  {
+    "reference": "36919b0455e8eaf741a72ff4a74ae85f40e116ba:docs/remediation/review/C3_REPRODUCTION.md",
+    "blob": "15e0c0607255b85be9a14f60e498289af085bcf7",
+    "sha256": "6abaa236d8a06b26562bd651d3b2b9c3adcf2b7900b1fbfb257478116a456b46"
+  },
+  {
+    "reference": "36919b0455e8eaf741a72ff4a74ae85f40e116ba:docs/remediation/review/C3_GATE_DECISION.md",
+    "blob": "2433b885981af28ab5c5a28156197ce66e839e57",
+    "sha256": "8f3be1bd0f41c8ca147b03938a53f3d2c1ab6cb2564ae1f09d1c0b39dffc6470"
+  }
+]

@@ -1,0 +1,5 @@
+{"c3_restore_accepted":true,"case":"retagged_original_fixture","hash_verified":true,"model":{"combustion_accounting":1,"schema_version":2},"state_hash":"deb04a1b413455e20c057ec5cca14c28d691ab52630cef28d172c9224b0dea93","state_schema":1,"strict_pair_consistent":false}
+{"c3_restore_accepted":true,"case":"genuine_v1","hash_verified":true,"model":null,"state_hash":"deb04a1b413455e20c057ec5cca14c28d691ab52630cef28d172c9224b0dea93","state_schema":1,"strict_pair_consistent":true}
+{"c3_restore_accepted":true,"case":"coherent_v2","hash_verified":true,"model":{"combustion_accounting":1,"schema_version":2},"state_hash":"9c2bdb43cef1e8b74a4e14bf7036fd6249189520f0e8c9464ea5c843ad229561","state_schema":2,"strict_pair_consistent":true}
+{"c3_restore_accepted":true,"case":"incoherent_v2","hash_verified":true,"model":{"combustion_accounting":1,"schema_version":1},"state_hash":"9c2bdb43cef1e8b74a4e14bf7036fd6249189520f0e8c9464ea5c843ad229561","state_schema":2,"strict_pair_consistent":false}
+{"case":"physical_equivalence","difference_in_wrapper_model_only":true,"genuine_and_retagged_hash_equal":true,"genuine_and_retagged_state_equal":true}

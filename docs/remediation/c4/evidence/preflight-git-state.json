@@ -1,0 +1,60 @@
+[
+  {
+    "path": "/home/franku/projects/d16sim",
+    "head": "ff09a0dda82188e6bf27a80d17c902f8972a39d2",
+    "status": [
+      "?? docs/remediation/D16SIM_REMEDIATION_R01_R05_SPEC_v1.0.md"
+    ]
+  },
+  {
+    "path": "/home/franku/projects/d16sim-audit",
+    "head": "25d528e3ff5b31eaeab0c894c4227b3e7d3a574c",
+    "status": []
+  },
+  {
+    "path": "/home/franku/projects/d16sim-remediation",
+    "head": "8a7e8686e4e8831fb30d1a71b815e67e7d7139ef",
+    "status": []
+  },
+  {
+    "path": "/home/franku/projects/d16sim-remediation-c3",
+    "head": "3aef5f6ccdc076dad6e8be627a5eb836b26ee998",
+    "status": []
+  },
+  {
+    "path": "/home/franku/projects/d16sim-verification",
+    "head": "36919b0455e8eaf741a72ff4a74ae85f40e116ba",
+    "status": []
+  },
+  {
+    "path": "/home/franku/projects/d16sim-remediation-c4",
+    "head": "3aef5f6ccdc076dad6e8be627a5eb836b26ee998",
+    "status": [
+      "?? docs/remediation/c4/C4_SCHEMA_FIXTURE_DECISION.md",
+      "?? docs/remediation/c4/REPRODUCTION.md",
+      "?? docs/remediation/c4/evidence/preflight-01/battery.jsonl",
+      "?? docs/remediation/c4/evidence/preflight-01/battery.log",
+      "?? docs/remediation/c4/evidence/preflight-01/c3-check.jsonl",
+      "?? docs/remediation/c4/evidence/preflight-01/c3-check.log",
+      "?? docs/remediation/c4/evidence/preflight-01/c3-summary.json",
+      "?? docs/remediation/c4/evidence/preflight-01/commands.json",
+      "?? docs/remediation/c4/evidence/preflight-01/completion.json",
+      "?? docs/remediation/c4/evidence/preflight-01/environment.json",
+      "?? docs/remediation/c4/evidence/preflight-01/fields.jsonl",
+      "?? docs/remediation/c4/evidence/preflight-01/fields.log",
+      "?? docs/remediation/c4/evidence/preflight-01/integrity.json",
+      "?? docs/remediation/c4/evidence/preflight-01/replay.jsonl",
+      "?? docs/remediation/c4/evidence/preflight-01/replay.log",
+      "?? docs/remediation/c4/evidence/preflight-01/schema-conflict.jsonl",
+      "?? docs/remediation/c4/evidence/preflight-01/schema-conflict.log",
+      "?? docs/remediation/c4/evidence/preflight-01/semantics.jsonl",
+      "?? docs/remediation/c4/evidence/preflight-01/semantics.log",
+      "?? docs/remediation/c4/evidence/preflight-01/thermal.jsonl",
+      "?? docs/remediation/c4/evidence/preflight-01/thermal.log",
+      "?? docs/remediation/c4/evidence/preflight-01/thermo.jsonl",
+      "?? docs/remediation/c4/evidence/preflight-01/thermo.log",
+      "?? tools/remediation_c4/preflight.py",
+      "?? tools/remediation_c4/schema_conflict.rs"
+    ]
+  }
+]

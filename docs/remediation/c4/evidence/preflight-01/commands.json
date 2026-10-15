@@ -1,0 +1,143 @@
+[
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-remediation-c4/target/c4-preflight-01/verification/c3_review/Cargo.toml",
+      "--bin",
+      "c3-directed",
+      "--",
+      "fields"
+    ],
+    "cwd": "/home/franku/projects/d16sim-remediation-c4/target/c4-preflight-01",
+    "exit": 0,
+    "elapsed_s": 5.775876483000047,
+    "name": "fields"
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-remediation-c4/target/c4-preflight-01/verification/c3_review/Cargo.toml",
+      "--bin",
+      "c3-directed",
+      "--",
+      "thermo"
+    ],
+    "cwd": "/home/franku/projects/d16sim-remediation-c4/target/c4-preflight-01",
+    "exit": 0,
+    "elapsed_s": 0.029909231000146974,
+    "name": "thermo"
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-remediation-c4/target/c4-preflight-01/verification/c3_review/Cargo.toml",
+      "--bin",
+      "c3-directed",
+      "--",
+      "thermal"
+    ],
+    "cwd": "/home/franku/projects/d16sim-remediation-c4/target/c4-preflight-01",
+    "exit": 0,
+    "elapsed_s": 0.03101936199982447,
+    "name": "thermal"
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-remediation-c4/target/c4-preflight-01/verification/c3_review/Cargo.toml",
+      "--bin",
+      "c3-directed",
+      "--",
+      "battery"
+    ],
+    "cwd": "/home/franku/projects/d16sim-remediation-c4/target/c4-preflight-01",
+    "exit": 0,
+    "elapsed_s": 0.08032471099977556,
+    "name": "battery"
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-remediation-c4/target/c4-preflight-01/verification/c3_review/Cargo.toml",
+      "--bin",
+      "c3-directed",
+      "--",
+      "replay"
+    ],
+    "cwd": "/home/franku/projects/d16sim-remediation-c4/target/c4-preflight-01",
+    "exit": 0,
+    "elapsed_s": 0.47374764599999253,
+    "name": "replay"
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-remediation-c4/target/c4-preflight-01/verification/c3_review/Cargo.toml",
+      "--bin",
+      "c3-directed",
+      "--",
+      "semantics"
+    ],
+    "cwd": "/home/franku/projects/d16sim-remediation-c4/target/c4-preflight-01",
+    "exit": 0,
+    "elapsed_s": 0.03740263899999263,
+    "name": "semantics"
+  },
+  {
+    "argv": [
+      "python3",
+      "/home/franku/projects/d16sim-remediation-c4/target/c4-preflight-01/verification/c3_review/check_c3.py"
+    ],
+    "cwd": "/home/franku/projects/d16sim-remediation-c4/target/c4-preflight-01",
+    "exit": 1,
+    "elapsed_s": 0.05288725899981728,
+    "name": "c3-check"
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-remediation-c4/target/c4-preflight-01/verification/c3_review/Cargo.toml",
+      "--bin",
+      "c4-schema-conflict"
+    ],
+    "cwd": "/home/franku/projects/d16sim-remediation-c4/target/c4-preflight-01",
+    "exit": 0,
+    "elapsed_s": 0.8433238490001713,
+    "name": "schema-conflict"
+  }
+]
