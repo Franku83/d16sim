@@ -7,7 +7,8 @@ BASE='3aef5f6ccdc076dad6e8be627a5eb836b26ee998'
 REVIEW='36919b0455e8eaf741a72ff4a74ae85f40e116ba'
 p=argparse.ArgumentParser();p.add_argument('--output',type=Path,required=True);p.add_argument('--archive',type=Path,required=True);a=p.parse_args();o=a.output.resolve();w=a.archive.resolve()
 def git(*args):return subprocess.check_output(['git',*args],cwd=ROOT)
-assert not git('diff',BASE,'--','crates','Cargo.toml','Cargo.lock'),'preflight requires unchanged C3 production'
+assert git('rev-parse',BASE).decode().strip()==BASE,'missing exact historical base'
+# Tests always use the archived C3 sources, regardless of the caller checkout.
 assert not o.exists() or not any(o.iterdir()),'never overwrite logs';assert not w.exists()or not any(w.iterdir()),'archive must be new'
 o.mkdir(parents=True,exist_ok=True);w.mkdir(parents=True,exist_ok=True)
 for ref,paths in [(BASE,[]),(REVIEW,['verification/c3_review'])]:
@@ -39,4 +40,4 @@ assert by_case['physical_equivalence']['difference_in_wrapper_model_only']
 assert not by_case['retagged_original_fixture']['strict_pair_consistent']
 assert by_case['genuine_v1']['strict_pair_consistent']
 assert by_case['retagged_original_fixture']['c3_restore_accepted'] and by_case['genuine_v1']['c3_restore_accepted']
-(o/'completion.json').write_text(json.dumps({'baseline_reproduced':True,'production_fixes_applied':False,'policy_decision':'PENDING_OWNER_DECISION'},indent=2)+'\n')
+(o/'completion.json').write_text(json.dumps({'baseline_reproduced':True,'production_fixes_applied':False,'policy_decision':'OPTION_A_AUTHORIZED_SEPARATELY_SEE_C4_OPTION_A_AUTHORIZATION' },indent=2)+'\n')

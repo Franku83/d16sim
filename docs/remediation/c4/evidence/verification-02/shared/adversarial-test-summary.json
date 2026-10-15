@@ -1,0 +1,11 @@
+{
+  "test_targets": 1,
+  "test_cases": 19,
+  "assertion_predicates_executed": 196,
+  "passed": 19,
+  "failures": 0,
+  "errors": 0,
+  "observation_rows": 198,
+  "families": 31,
+  "failure_names": []
+}

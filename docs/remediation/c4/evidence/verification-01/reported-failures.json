@@ -1,0 +1,27 @@
+{
+  "literal": [
+    "test_14_actual_v1_hash_can_migrate",
+    "test_17_dyno_sparse_tail_matches_resolved_quality",
+    "test_18_dyno_power_channels_share_window",
+    "test_19_unsupported_wear_must_not_produce_prediction",
+    "test_20_no_spontaneous_reversal_of_relaxation",
+    "test_21_decoder_reanchors_after_cyp",
+    "test_22_decoder_origin_is_not_physical_phase",
+    "test_23_wire_declared_seed_controls_realization",
+    "test_28_phase_periodicity_of_complete_engine",
+    "test_31_covariance_is_in_reported_parameter_units",
+    "test_32_exact_initial_optimum_succeeds"
+  ],
+  "adapted": [
+    "test_17_dyno_sparse_tail_matches_resolved_quality",
+    "test_18_dyno_power_channels_share_window",
+    "test_19_unsupported_wear_must_not_produce_prediction",
+    "test_20_no_spontaneous_reversal_of_relaxation",
+    "test_21_decoder_reanchors_after_cyp",
+    "test_22_decoder_origin_is_not_physical_phase",
+    "test_23_wire_declared_seed_controls_realization",
+    "test_28_phase_periodicity_of_complete_engine",
+    "test_31_covariance_is_in_reported_parameter_units",
+    "test_32_exact_initial_optimum_succeeds"
+  ]
+}

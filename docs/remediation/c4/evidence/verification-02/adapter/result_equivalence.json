@@ -1,0 +1,5 @@
+{
+  "only_observation_changed": "v1_hash_migration.accepted: false -> true",
+  "state_bytes_and_hash_identical": true,
+  "all_other_observations_byte_identical": true
+}

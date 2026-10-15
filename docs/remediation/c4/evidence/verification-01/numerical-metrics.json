@@ -1,0 +1,113 @@
+{
+  "literal_nominal": {
+    "dt": 5e-05,
+    "point": "idle",
+    "result": {
+      "Q_j": 46146.847889316596,
+      "energy": 6.956782748242368e-05,
+      "fuel_burn_kg": 0.0010487919974844673,
+      "fuel_in_kg": 0.0010583217284424393,
+      "mass": -7.001368804341125e-12,
+      "ok": true,
+      "rpm": 1047.3038737395177,
+      "tail_rpm_mean": 1035.1923408091127,
+      "thermal": null,
+      "work_ind_j": 13286.519773754073
+    },
+    "seconds": 8.0
+  },
+  "adapted_nominal": {
+    "dt": 5e-05,
+    "point": "idle",
+    "result": {
+      "Q_j": 46146.847889316596,
+      "energy": 6.956782748242368e-05,
+      "fuel_burn_kg": 0.0010487919974844673,
+      "fuel_in_kg": 0.0010583217284424393,
+      "mass": -7.001368804341125e-12,
+      "ok": true,
+      "rpm": 1047.3038737395177,
+      "tail_rpm_mean": 1035.1923408091127,
+      "thermal": null,
+      "work_ind_j": 13286.519773754073
+    },
+    "seconds": 8.0
+  },
+  "inherited_provenance": {
+    "missing_hash_valid": true,
+    "omega_a": 215.94097001258632,
+    "omega_b": 218.37292220188047,
+    "origin_hash_valid": true,
+    "original_provenance": {
+      "continuation": "exact_neutral",
+      "from_schema": 1,
+      "missing_fields": [
+        "thermal",
+        "combustion_accounting",
+        "plen_fuel_kg",
+        "exh_fuel_kg",
+        "fuel_emitted_kg",
+        "pmax_pa"
+      ],
+      "original_hash": "deb04a1b413455e20c057ec5cca14c28d691ab52630cef28d172c9224b0dea93",
+      "transformation": "schema 1 -> 2: historical v1 migrated (thermal/node fuel/pmax per policy)"
+    },
+    "returned_provenance": {
+      "continuation": "approximate_hot",
+      "from_schema": 2,
+      "missing_fields": [
+        "pmax_pa"
+      ],
+      "original_hash": "a840fe7fde7d901a816d3680d9523e1f4cc41f9e66d5739f41fbdd8b8b6b329e",
+      "prior": [
+        {
+          "continuation": "exact_neutral",
+          "from_schema": 1,
+          "missing_fields": [
+            "thermal",
+            "combustion_accounting",
+            "plen_fuel_kg",
+            "exh_fuel_kg",
+            "fuel_emitted_kg",
+            "pmax_pa"
+          ],
+          "original_hash": "deb04a1b413455e20c057ec5cca14c28d691ab52630cef28d172c9224b0dea93",
+          "transformation": "schema 1 -> 2: historical v1 migrated (thermal/node fuel/pmax per policy)"
+        }
+      ],
+      "transformation": "schema 2 with known model but missing required pressure history (pmax); continuation approximate"
+    },
+    "trace_equal": false
+  },
+  "r02_midburn": {
+    "continued_chemical_excess_j": 1157.1513880656353,
+    "continued_provenance": {
+      "continuation": "approximate_hot",
+      "from_schema": 2,
+      "missing_fields": [
+        "combustion_accounting"
+      ],
+      "original_hash": "151f2e8b54d7d154bedce8ae3473f3ba4d38831a468d23c40ae22a46b0f150b8",
+      "transformation": "schema 2 pre-C2: combustion accounting absent (ambiguous R02 deferred vs C1 stepwise); node fuel/pmax per policy"
+    },
+    "hash_verified": true,
+    "historical_hash": "151f2e8b54d7d154bedce8ae3473f3ba4d38831a468d23c40ae22a46b0f150b8",
+    "old_burn_accounted": [
+      true,
+      false,
+      true,
+      true
+    ],
+    "old_chemical_excess_j": 1157.151388065635,
+    "restored_provenance": {
+      "continuation": "approximate_hot",
+      "from_schema": 2,
+      "missing_fields": [
+        "combustion_accounting"
+      ],
+      "original_hash": "151f2e8b54d7d154bedce8ae3473f3ba4d38831a468d23c40ae22a46b0f150b8",
+      "transformation": "schema 2 pre-C2: combustion accounting absent (ambiguous R02 deferred vs C1 stepwise); node fuel/pmax per policy"
+    },
+    "time": 0.35959999999996856
+  }
+}

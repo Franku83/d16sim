@@ -1,0 +1,8 @@
+{
+  "tested_source_tree": "90d51d9a538034dc8ff9d6243cc4c6b1d13904c1",
+  "candidate_executable_source_tests_fixtures_match": true,
+  "candidate_verification_driver_and_probe_match": true,
+  "only_new_crate_document_excluded": "crates/engine/tests/fixtures/README.md",
+  "nominal_initializer_byte_identical_to_C3": true,
+  "foundation_policies_historical_gates_and_parameter_crates_unchanged": true
+}

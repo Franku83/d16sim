@@ -1,0 +1,510 @@
+
+running 4 tests
+test suite::tests::identical_partial_reading_needs_complementary_test ... ok
+test suite::tests::masking_pair_is_nonlinear_not_additive ... ok
+test suite::tests::monte_carlo_seeded_is_reproducible ... ok
+test suite::tests::conservation_holds_under_combined_faults ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 6.42s
+
+
+running 5 tests
+test graph::tests::unknown_schema_is_fail_closed ... ok
+test graph::tests::out_of_order_install_is_allowed_when_ports_exist ... ok
+test graph::tests::incompatible_ports_rejected_and_stale_version_fails ... ok
+test graph::tests::serial_survives_remove_and_save_load_roundtrip ... ok
+test graph::tests::missing_part_does_not_appear_and_duplicates_rejected ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+
+running 3 tests
+test env::tests::env_checks_and_benchmark_complete ... ok
+test chains::tests::all_four_chains_hold ... ok
+test profiles::tests::profiles_agree_and_scale_as_documented ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.51s
+
+
+running 6 tests
+test dataset::tests::non_finite_observation_and_bad_uncertainty_rejected ... ok
+test fit::tests::malformed_callback_is_typed_error_not_panic ... ok
+test dataset::tests::split_rules_hold ... ok
+test params::tests::set_marks_identifiable_and_blocked ... ok
+test sensitivity::tests::ranking_orders_cranking_drivers ... ok
+test fit::tests::recovers_cranking_params_from_synthetic ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 4 tests
+test wiebe::tests::invalid_rejected ... ok
+test wiebe::tests::shape_and_completeness ... ok
+test burn::tests::zero_fuel_recovers_motored_and_inputs_rejected ... ok
+test burn::tests::retarding_heat_release_shifts_and_reduces_work ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 5 tests
+test interference::tests::coaxial_clearance_is_exact ... ok
+test interference::tests::cant_angle_lowers_the_disc_edge ... ok
+test interference::tests::damage_is_never_assessed_and_inputs_validated ... ok
+test measurement::tests::correction_and_uncertainty_are_additive ... ok
+test interference::tests::rod_block_and_thread_follow_inputs ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 6 tests
+test friction::tests::chen_flynn_shape_without_load_term ... ok
+test inertia::tests::separates_topology_from_mass_and_rejects_bad_inputs ... ok
+test torque::tests::constant_pressure_gives_zero_net_work ... ok
+test integrate::tests::locked_rotor_stays_and_inputs_rejected ... ok
+test integrate::tests::energy_audit_closes_and_converges ... ok
+test integrate::tests::friction_without_combustion_spins_down ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.07s
+
+
+running 3 tests
+test r01_f02_tests::instrumented_exhaust_route_enters_denominator ... ok
+test r01_f02_tests::split_comes_from_physical_flow_not_scenario_label ... ok
+test r01_f02_tests::renaming_scenario_preserves_observation ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.07s
+
+
+running 3 tests
+test mechanism::tests::bolt_tolerable_stays_elastic_plastic_needs_full_range ... ok
+test mechanism::tests::starvation_is_risk_never_seizure_and_thread_unsupported ... ok
+test mechanism::tests::timing_offset_without_collision_never_bends_valve ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 14 tests
+test ambiguity::tests::map_bias_vs_leak_needs_reference ... ok
+test mech::tests::gauge_dead_volume_changes_reading_same_engine ... ok
+test mech::tests::single_measurement_is_inconclusive_for_three_causes ... ok
+test mech::tests::invalid_or_partial_observations_cannot_discriminate ... ok
+test mech::tests::throttle_procedure_changes_reading_same_engine ... ok
+test mech::tests::two_measurements_separate_rings_valve_gasket ... ok
+test mech::tests::zero_split_is_not_a_measurement ... ok
+test multimeter::tests::loading_range_resolution_and_powered_guard ... ok
+test probes::tests::polarity_and_access_matter ... ok
+test scan::tests::manual_index_resolves_links_not_content ... ok
+test scan::tests::scanner_shows_only_what_it_was_given ... ok
+test scope::tests::aliasing_is_demonstrable_not_hidden ... ok
+test scope::tests::trigger_and_calibration_visible ... ok
+test ambiguity::tests::jitter_vs_offset_separated_by_waveform_shape ... ok
+
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+
+running 6 tests
+test brake::tests::ambient_below_absolute_zero_is_rejected ... ok
+test brake::tests::correction_is_one_at_standard_and_labeled ... ok
+test brake::tests::overflow_factor_is_rejected ... ok
+test sweep::tests::unsettled_point_is_rejected_not_reported ... ok
+test sweep::tests::more_brake_load_less_rpm_same_throttle ... ok
+test sweep::tests::brake_power_adds_up_from_integrated_torque ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.76s
+
+
+running 10 tests
+test decoder::tests::acquires_720_sync_and_rpm ... ok
+test decoder::tests::missing_edge_degrades_confidence_causally ... ok
+test decoder::tests::nonfinite_observations_do_not_propagate ... ok
+test decoder::tests::rejects_non_finite_and_future_edges ... ok
+test decoder::tests::timeout_loses_sync_and_cyp_gives_360_fallback ... ok
+test dtc::tests::dtc_needs_temporal_persistence_not_fault_id ... ok
+test maps::tests::nodes_exact_and_edges_clamp ... ok
+test scheduler::tests::invalid_observations_inhibit_actuation ... ok
+test scheduler::tests::requested_vs_effective_timing_visible ... ok
+test scheduler::tests::wrong_signals_alter_actuation_causally ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 14 tests
+test battery::r02_c3_tests::negative_celsius_above_absolute_zero_is_valid ... ok
+test battery::r02_c4_tests::calculated_resistance_must_be_representable ... ok
+test battery::tests::voltage_collapses_under_load_when_weak ... ok
+test ignition::tests::spark_needs_dwell_and_voltage ... ok
+test sensors::gate_tests::false_map_changes_load_estimate_only ... ok
+test sensors::gate_tests::false_ect_changes_ecu_action_only ... ok
+test sensors::tests::ntc_and_o2_transfer_shapes ... ok
+test sensors::tests::deterministic_noise_with_seed ... ok
+test sensors::tests::step_response_reaches_63_percent_at_tau ... ok
+test starter::tests::torque_and_current_fall_with_speed_and_efficiency_below_one ... ok
+test wiring::tests::range_monitor_confirms_and_heals ... ok
+test wiring::tests::wire_faults_are_physical_states ... ok
+test crank::tests::healthy_crank_turns_with_compression_ripple ... ok
+test crank::tests::failures_prevent_cranking_but_never_invent_start ... ok
+
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.46s
+
+
+running 41 tests
+test run::r01_r02_tests::homogeneous_outflow_carries_fuel_proportionally ... ok
+test run::r01_r02_tests::invalid_inputs_fail_closed_without_panic ... ok
+test run::r01_r02_tests::native_snapshot_has_no_migration_provenance ... ok
+test run::r01_r02_tests::resume_error_leaves_state_untouched ... ok
+test run::r01_r02_tests::restore_rejects_thermal_mismatch_and_unknown_schema ... ok
+test run::r01_r02_tests::restore_rejects_physically_impossible_state_with_valid_hash ... ok
+test run::r01_r02_tests::restore_rejects_invalid_history_counters_and_thermal ... ok
+test run::r02_c2_tests::noop_resume_validates_state_and_thermal_coherence ... ok
+test run::r01_r02_tests::legacy_migration_records_provenance ... ok
+test run::r01_r02_tests::v1_historical_hash_verifies_before_migration ... ok
+test run::r02_c2_tests::unknown_or_incoherent_model_identifiers_are_rejected ... ok
+test run::r02_c3_tests::cylinder_derived_temperature_rejected_even_on_noop ... ok
+test run::r02_c4_tests::battery_resistance_overflow_is_an_atomic_engine_error ... ok
+test run::r02_c4_tests::composing_provenance_does_not_promote_a_prior_limit ... ok
+test run::r02_c3_tests::thermal_energy_decision_uses_actual_state_not_factory_temperature ... ok
+test run::r02_c4_tests::node_pressure_boundary_rejects_overflow_and_underflow_atomically ... ok
+test run::r02_c4_tests::schema_pair_strict_even_for_cold_retagged_fixture ... ok
+test run::r01_r02_tests::signed_zero_bits_roundtrip ... ok
+test run::r02_c2_tests::invalid_input_matrix_rejects_atomically ... ok
+test run::tests::crossed_edge_handles_wrap ... ok
+test run::r02_c2_tests::pre_c2_snapshot_is_not_declared_exact_native ... ok
+test run::r02_c4_tests::inherited_provenance_records_new_loss_without_erasing_origin ... ok
+test run::r01_r02_tests::json_roundtrip_preserves_bits_and_hash ... ok
+test run::r01_r02_tests::chemical_energy_matches_consumed_fuel_during_burn ... ok
+test run::r02_c2_tests::missing_required_pressure_history_is_marked_approximate ... ok
+test run::r01_r02_tests::insufficient_fuel_burns_no_more_than_available ... ok
+test run::tests::sealed_burn_closes_energy ... ok
+test run::s21_tests::no_burn_no_wall_heating_and_snapshot_migrates ... ok
+test run::r02_c3_tests::injector_and_cam_invalid_matrix_rejected_atomically ... ok
+test run::r01_r02_tests::burn_snapshot_cut_midwindow_resumes_coherently ... ok
+test run::r02_c2_tests::valid_inputs_remain_accepted ... ok
+test run::r01_r02_tests::fuel_inventory_bounded_and_conserved_without_spark ... ok
+test run::tests::healthy_idles_without_clamps_or_magic ... ok
+test run::r01_r02_tests::burned_fuel_never_exceeds_injected_and_energy_needs_mass ... ok
+test run::tests::snapshot_resume_is_bit_identical ... ok
+test run::tests::fuel_cut_shuts_down_coherently ... ok
+test run::tests::determinism_and_convergence ... ok
+test run::tests::failure_scenarios_order_causally ... ok
+test run::r01_r02_tests::replay_split_with_pressure_history_is_bit_identical ... ok
+test run::s21_tests::cold_start_warms_ect_and_enriches ... ok
+test run::r01_r02_tests::thermal_ambient_loss_enters_energy_ledger ... ok
+
+test result: ok. 41 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.79s
+
+
+running 3 tests
+test tests::error_is_structured_not_a_panic ... ok
+test tests::canonical_json_is_stable_across_key_insertion_order ... ok
+test tests::snapshot_hash_changes_when_payload_changes ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 6 tests
+test gasket::tests::conductance_seam_is_unsupported_until_s23 ... ok
+test preload::tests::angle_only_and_bad_inputs_rejected ... ok
+test gasket::tests::uniform_field_and_undertorque_non_uniformity ... ok
+test preload::tests::same_torque_different_lubricant_gives_different_preload ... ok
+test preload::tests::torque_sweep_is_monotone_and_k_uncertainty_propagates ... ok
+test preload::tests::yield_check_needs_material_and_never_decrees_breakage ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 8 tests
+test cycle::tests::invalid_inputs_rejected ... ok
+test data::tests::cd_shape_matches_measured_peak_and_decay ... ok
+test orifice::tests::choked_saturates_and_matches_incompressible_limit ... ok
+test orifice::tests::monotone_in_pressure_drop ... ok
+test cycle::tests::mass_closes_and_stock_overlap_barely_reflows ... ok
+test cycle::backflow_tests::reverse_flow_path_executes_and_species_mix_exactly ... ok
+test cycle::tests::valve_effect_is_causal_not_handset_ve ... ok
+test cycle::backflow_tests::trapped_mass_converges_on_refinement ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+
+running 5 tests
+test injector::tests::commanded_vs_delivered_separated_with_failure_cases ... ok
+test injector::tests::idle_chain_matches_research_arithmetic ... ok
+test injector::tests::sqrt_law_and_voltage_sensitivity ... ok
+test rail::tests::regulator_tracks_manifold_and_pump_off_depressurizes ... ok
+test schedule::tests::strategies_cover_all_cylinders ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 8 tests
+test geometry::tests::illustrative_displacement_matches_expected_value ... ok
+test geometry::tests::impossible_mechanism_rejected ... ok
+test geometry::tests::symmetry_and_analytic_vs_finite_differences ... ok
+test geometry::tests::tdc_bdc_positions_and_volumes ... ok
+test geometry::tests::velocity_acceleration_scale_with_omega ... ok
+test phases::tests::companions_share_crank_angle ... ok
+test phases::tests::firing_spacing_is_180_degrees ... ok
+test phases::tests::four_cylinders_share_one_crank_with_distinct_strokes ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 7 tests
+test conductance::tests::gasket_law_direction_and_ring_geometry ... ok
+test network::tests::liquid_and_gas_use_distinct_unit_paths ... ok
+test scenarios::tests::sensitivities_reported_not_tuned ... ok
+test network::tests::regulated_supply_conserves_and_splits_by_area ... ok
+test network::tests::fresh_species_advects_and_closes ... ok
+test network::tests::liquid_volume_converts_to_mass_by_density ... ok
+test scenarios::tests::robust_orderings_hold_regardless_of_calibration ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.09s
+
+
+running 3 tests
+test bearing::tests::film_orders_and_link_is_causal ... ok
+test gallery::tests::continuity_pressures_and_gallery_response ... ok
+test oil::tests::walther_fits_points_and_falls_with_temperature ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 4 tests
+test tests::clamp_vs_reject_at_edges ... ok
+test tests::invalid_tables_rejected ... ok
+test tests::nodes_are_exact_and_midpoints_linear ... ok
+test tests::dense_sweep_matches_brute_force_segment ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 1 test
+test tests::physics_reports_unimplemented_without_panicking ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 8 tests
+test history::tests::order_key_is_total_and_deterministic ... ok
+test runner::tests::bad_schema_version_is_rejected ... ok
+test validation::tests::missing_variant_is_io_error_not_panic ... ok
+test validation::tests::repo_data_passes_schema_validation ... ok
+test runner::tests::run_then_replay_matches ... ok
+test runner::tests::tampered_traces_fail_replay ... ok
+test history::tests::snapshots_are_immutable_and_version_checked ... ok
+test history::tests::hundred_controlled_sequences_show_no_structural_divergence ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 11.82s
+
+
+running 4 tests
+test network::tests::rejects_invalid_state_and_ambient_atomically ... ok
+test network::tests::heats_cools_and_thermostat_gates ... ok
+test network::tests::returned_ambient_heat_closes_standalone_ledger ... ok
+test network::tests::zero_capacity_is_rejected_before_mutation ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 3 tests
+test closed_cycle::tests::invalid_inputs_rejected ... ok
+test closed_cycle::tests::matches_ideal_within_justified_tolerance ... ok
+test closed_cycle::tests::convergence_order_matches_rk4 ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 7 tests
+test reluctor::tests::tooth_counts_per_cycle_match_family_candidate ... ok
+test vr::tests::amplitude_tracks_speed_and_gap ... ok
+test vr::tests::hysteresis_rejects_chatter_and_finds_edges ... ok
+test channels::tests::distributor_offset_shifts_all_channels ... ok
+test channels::tests::edges_align_with_firing_tdcs_and_cyl1 ... ok
+test channels::tests::tooth_counts_per_720_match_candidate ... ok
+test channels::tests::faults_are_structural_not_labels ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+
+running 14 tests
+test display::tests::display_agrees_with_typed_core ... ok
+test float::tests::negatives_rejected_where_unphysical ... ok
+test float::tests::rejects_nan_and_infinities ... ok
+test display::tests::display_roundtrips_hold ... ok
+test float::tests::subnormals_flush_to_zero_deterministically ... ok
+test fuel::tests::afr_lambda_roundtrip_with_explicit_stoich ... ok
+test fuel::tests::rejects_nonpositive ... ok
+test mechanics::tests::crank_wheel_needs_explicit_efficiency ... ok
+test mechanics::tests::moles_need_molar_mass ... ok
+test mechanics::tests::rpm_rad_s_roundtrip ... ok
+test pressure::tests::negative_abs_rejected ... ok
+test pressure::tests::unit_factors_are_consistent ... ok
+test thermal::tests::rejects_negative_and_nonfinite ... ok
+test pressure::tests::abs_gauge_roundtrip_over_range ... ok
+
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 6 tests
+test belt::tests::one_tooth_shifts_events_without_touching_crank ... ok
+test cam::tests::invalid_specs_rejected ... ok
+test cam::tests::proxy_matches_donor_arithmetic ... ok
+test cam::tests::lift_shape_is_self_consistent_not_tuned ... ok
+test events::tests::all_cylinders_derive_from_shared_cam_and_crank ... ok
+test events::tests::belt_offset_shifts_events_and_trapped_volume_without_damage ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+
+running 4 tests
+test laws::tests::archard_orders_and_rejects ... ok
+test service::tests::service_resets_logged_parts_only ... ok
+test state::tests::replay_and_snapshot_roundtrip ... ok
+test state::tests::step_subdivision_is_time_scale_free ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

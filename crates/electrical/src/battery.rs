@@ -78,6 +78,9 @@ impl Battery {
         if self.r0_ohm < 0.0 || self.r_ground_ohm < 0.0 {
             return Err(bad("resistance must be >= 0"));
         }
+        // La combinación también debe ser representable: restore/no-op no
+        // deben aceptar una configuración cuyo cálculo de R devolvería Err.
+        self.resistance()?;
         Ok(())
     }
 
@@ -106,6 +109,11 @@ impl Battery {
     /// temperatura no está por encima del cero absoluto. La temperatura
     /// Celsius negativa legítima (p. ej. −20 °C) es admisible (R02-C3/C2-06).
     pub fn resistance(&self) -> Result<f64, BatteryError> {
+        if !(self.soc.is_finite() && (0.0..=1.0).contains(&self.soc)) {
+            return Err(BatteryError::InvalidInput {
+                reason: "soc must be in [0, 1]".to_owned(),
+            });
+        }
         for (v, name) in [(self.r0_ohm, "r0"), (self.r_ground_ohm, "r_ground")] {
             if !(v.is_finite() && v >= 0.0) {
                 return Err(BatteryError::InvalidInput {
@@ -119,7 +127,13 @@ impl Battery {
             });
         }
         let cold = 1.0 + 0.02 * (20.0 - self.temp_c).max(0.0);
-        Ok((self.r0_ohm * (1.0 + 1.5 * (1.0 - self.soc)) * cold) + self.r_ground_ohm)
+        let resistance = (self.r0_ohm * (1.0 + 1.5 * (1.0 - self.soc)) * cold) + self.r_ground_ohm;
+        if !(resistance.is_finite() && resistance >= 0.0) {
+            return Err(BatteryError::InvalidInput {
+                reason: "calculated resistance not representable".to_owned(),
+            });
+        }
+        Ok(resistance)
     }
 
     /// Tensión en bornes bajo corriente I (V). Puede colapsar con SOC bajo
@@ -201,5 +215,45 @@ mod r02_c3_tests {
             assert!(b.validated().is_err(), "t={bad}");
             assert!(b.resistance().is_err(), "t={bad}");
         }
+    }
+}
+
+#[cfg(test)]
+mod r02_c4_tests {
+    #![allow(clippy::unwrap_used)]
+    use super::*;
+    #[test]
+    fn calculated_resistance_must_be_representable() {
+        for t in [-20.0, 10.0] {
+            let bad = Battery {
+                temp_c: t,
+                r0_ohm: f64::MAX,
+                ..Battery::illustrative_12v()
+            };
+            assert!(bad.validated().is_err());
+            assert!(bad.resistance().is_err());
+            assert!(bad.terminal_voltage(350.0).is_err());
+            let good = Battery {
+                r0_ohm: f64::MAX / 4.0,
+                ..bad
+            };
+            assert!(good.resistance().unwrap().is_finite());
+        }
+        let warm = Battery {
+            r0_ohm: f64::MAX,
+            ..Battery::illustrative_12v()
+        };
+        assert!(warm.resistance().unwrap().is_finite());
+        let nominal_cold = Battery {
+            temp_c: -20.0,
+            ..Battery::illustrative_12v()
+        };
+        assert!((nominal_cold.resistance().unwrap() - 0.0164).abs() < 1e-12);
+        let ideal = Battery {
+            r0_ohm: 0.0,
+            r_ground_ohm: 0.0,
+            ..Battery::illustrative_12v()
+        };
+        assert_eq!(ideal.resistance().unwrap(), 0.0);
     }
 }

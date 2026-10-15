@@ -1,0 +1,3 @@
+{"accepted":false,"case":"literal","model":{"combustion_accounting":1,"schema_version":2},"state_hash":"deb04a1b413455e20c057ec5cca14c28d691ab52630cef28d172c9224b0dea93","verified":true}
+{"accepted":true,"case":"adapted","model":null,"state_hash":"deb04a1b413455e20c057ec5cca14c28d691ab52630cef28d172c9224b0dea93","verified":true}
+{"accepted":true,"case":"genuine","model":null,"state_hash":"deb04a1b413455e20c057ec5cca14c28d691ab52630cef28d172c9224b0dea93","verified":true}

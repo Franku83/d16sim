@@ -1,0 +1,10 @@
+{"data":{"calls":1,"case":"short_first","error":"invalid fit: callback output dims/finite","panicked":false,"rejected":true},"probe":"fitter_boundaries"}
+{"data":{"calls":1,"case":"long_first","error":"invalid fit: callback output dims/finite","panicked":false,"rejected":true},"probe":"fitter_boundaries"}
+{"data":{"calls":2,"case":"short_later","error":"invalid fit: callback output dims/finite","panicked":false,"rejected":true},"probe":"fitter_boundaries"}
+{"data":{"calls":2,"case":"long_later","error":"invalid fit: callback output dims/finite","panicked":false,"rejected":true},"probe":"fitter_boundaries"}
+{"data":{"calls":1,"case":"nan_first","error":"invalid fit: callback output dims/finite","panicked":false,"rejected":true},"probe":"fitter_boundaries"}
+{"data":{"calls":2,"case":"inf_later","error":"invalid fit: callback output dims/finite","panicked":false,"rejected":true},"probe":"fitter_boundaries"}
+{"data":{"calls":0,"case":"y_nan","error":"invalid fit: non-finite data","panicked":false,"rejected":true},"probe":"fitter_boundaries"}
+{"data":{"calls":0,"case":"w_inf","error":"invalid fit: non-finite data","panicked":false,"rejected":true},"probe":"fitter_boundaries"}
+{"data":{"calls":0,"case":"p_nan","error":"invalid fit: non-finite data","panicked":false,"rejected":true},"probe":"fitter_boundaries"}
+{"data":{"calls":0,"case":"w_mismatch","error":"invalid fit: dims/tol","panicked":false,"rejected":true},"probe":"fitter_boundaries"}

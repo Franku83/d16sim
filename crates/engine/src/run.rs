@@ -550,10 +550,8 @@ impl WorkState {
         // aunque el hash sea válido. Ausente = productor histórico (se
         // conserva la lectura según el contrato de migración).
         //
-        // Tolerancia documentada: no se exige igualdad exacta entre
-        // `model.schema_version` y `state.schema_version`, porque el fixture
-        // de migración v1 del oráculo independiente captura bajo esquema 2 y
-        // reetiqueta el payload a 1; ambos valores son conocidos.
+        // C4: un marcador presente debe coincidir con el payload. Los v1
+        // históricos genuinos no llevan marcador; no necesitan excepción.
         let model_known = match &snap.model {
             None => false,
             Some(m) => {
@@ -565,6 +563,11 @@ impl WorkState {
                 if m.combustion_accounting != crate::state::COMBUSTION_ACCOUNTING_STEPWISE {
                     return Err(EngineError::Invalid {
                         reason: "unsupported combustion accounting version".to_owned(),
+                    });
+                }
+                if m.schema_version != s.schema_version {
+                    return Err(EngineError::Invalid {
+                        reason: "model/schema version mismatch".to_owned(),
                     });
                 }
                 true
@@ -586,8 +589,8 @@ impl WorkState {
         // Procedencia de migración legacy (R02-C1/RV04 + C1-05 + C2-05):
         // separa integridad de lectura de equivalencia de continuación física.
         ws.provenance = snap.provenance.clone();
-        if ws.provenance.is_none() && !native_exact {
-            ws.provenance = Some(MigrationProvenance {
+        if !native_exact {
+            let mut current = MigrationProvenance {
                 from_schema: s.schema_version,
                 original_hash: snap.state_hash.clone(),
                 transformation: legacy_transformation(s, snap.model.as_ref()),
@@ -598,7 +601,32 @@ impl WorkState {
                     "approximate_hot"
                 }
                 .to_owned(),
+                prior: Vec::new(),
+            };
+            // Una limitación previa no se elimina por recapturar defaults.
+            if ws
+                .provenance
+                .as_ref()
+                .is_some_and(|p| p.continuation == "approximate_hot")
+            {
+                current.continuation = "approximate_hot".to_owned();
+            }
+            // La procedencia del origen no acredita una nueva pérdida de
+            // historia. Conservar el registro completo y componer el límite
+            // actual. Releer el mismo envelope no añade eventos duplicados.
+            let already_recorded = ws.provenance.as_ref().is_some_and(|p| {
+                p.from_schema == current.from_schema
+                    && p.original_hash == current.original_hash
+                    && p.transformation == current.transformation
+                    && p.missing_fields == current.missing_fields
+                    && p.continuation == current.continuation
             });
+            if !already_recorded {
+                if let Some(previous) = ws.provenance.take() {
+                    current.prior.push(previous);
+                }
+                ws.provenance = Some(current);
+            }
         }
         ws.m_sys_0_kg = ws.plen.m + ws.exh.m + ws.cyls.iter().map(|c| c.m).sum::<f64>();
         ws.u_sys_0_j = ws.plen.u() + ws.exh.u() + ws.cyls.iter().map(|c| c.u).sum::<f64>();
@@ -814,8 +842,9 @@ fn validate_derived_thermo(
     }
     for n in [&ws.plen, &ws.exh] {
         let rho = n.m / n.v;
-        if !(rho.is_finite() && rho > 0.0) {
-            return Err(bad("node density"));
+        let p = n.p(r_gas);
+        if !(rho.is_finite() && rho > 0.0 && p.is_finite() && p > 0.0) {
+            return Err(bad("node pressure/density"));
         }
     }
     Ok(())
@@ -2503,7 +2532,7 @@ mod r02_c2_tests {
     }
 
     #[test]
-    fn unknown_model_identifiers_are_rejected_known_ones_tolerated() {
+    fn unknown_or_incoherent_model_identifiers_are_rejected() {
         let inp = idle_point(healthy_inputs());
         let w = initial_state(&inp).unwrap();
         let snap = w.snapshot();
@@ -2515,12 +2544,11 @@ mod r02_c2_tests {
         let mut mism = snap.clone();
         mism.model.as_mut().unwrap().schema_version = 999;
         assert!(WorkState::restore(&mism, &inp).is_err());
-        // Identificador conocido (aunque declare otro esquema histórico):
-        // se tolera para preservar el fixture de migración v1 del oráculo
-        // original; la continuación no se declara exacta por ello.
+        // C4: conocido pero incoherente también se rechaza. La adaptación
+        // autorizada del fixture histórico no cambia esta regla productiva.
         let mut known = snap.clone();
         known.model.as_mut().unwrap().schema_version = 1;
-        assert!(WorkState::restore(&known, &inp).is_ok());
+        assert!(WorkState::restore(&known, &inp).is_err());
         // Convención actual coherente: nativo exacto.
         assert!(WorkState::restore(&snap, &inp).is_ok());
     }
@@ -2680,5 +2708,146 @@ mod r02_c3_tests {
             );
             assert_eq!(before, format!("{w20:?}"));
         }
+    }
+}
+
+#[cfg(test)]
+mod r02_c4_tests {
+    #![allow(clippy::unwrap_used)]
+    use super::*;
+
+    #[test]
+    fn composing_provenance_does_not_promote_a_prior_limit() {
+        let i = healthy_inputs();
+        let mut legacy: EngineSnapshot =
+            serde_json::from_str(include_str!("../tests/fixtures/v1_cold_2541266.json")).unwrap();
+        // Synthetic conservative metadata: neutral defaults are not evidence
+        // that an explicitly retained prior uncertainty has been resolved.
+        let mut previous = WorkState::restore(&legacy, &i).unwrap().provenance.unwrap();
+        previous.continuation = "approximate_hot".to_owned();
+        legacy.provenance = Some(previous.clone());
+        let restored = WorkState::restore(&legacy, &i).unwrap();
+        assert_eq!(restored.provenance, Some(previous));
+    }
+
+    #[test]
+    fn node_pressure_boundary_rejects_overflow_and_underflow_atomically() {
+        for plenum in [true, false] {
+            for (m, t, v, valid) in [
+                (1e-5, 1e100, 1e-214, false),
+                (1e-200, 1e-200, 1e-5, false),
+                (1e-5, 1e100, 1e-200, true),
+            ] {
+                let mut i = healthy_inputs();
+                let mut w = initial_state(&i).unwrap();
+                let n = if plenum { &mut w.plen } else { &mut w.exh };
+                n.m = m;
+                n.t = t;
+                n.v = v;
+                if plenum {
+                    i.plenum_v_m3 = v;
+                } else {
+                    i.exhaust_v_m3 = v;
+                }
+                let snap = w.snapshot();
+                assert!(snap.verified());
+                assert_eq!(WorkState::restore(&snap, &i).is_ok(), valid);
+                for end in if valid { vec![0.0] } else { vec![0.0, 1e-4] } {
+                    let mut a = w.clone();
+                    a.m_in_amb_kg = 0.123;
+                    let before = format!("{a:?}");
+                    let result = resume(&mut a, &i, end);
+                    assert_eq!(result.is_ok(), valid);
+                    if !valid {
+                        assert_eq!(before, format!("{a:?}"));
+                    }
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn inherited_provenance_records_new_loss_without_erasing_origin() {
+        let mut i = healthy_inputs();
+        i.friction = FrictionModel::ChenFlynn {
+            coeffs: crank::ChenFlynnCoeffs {
+                c1_pa: 20000.0,
+                c2_dlless: 0.05,
+                c3_pa_s_m: 1000.0,
+                c4_pa_s2_m2: 100.0,
+            },
+        };
+        let legacy: EngineSnapshot =
+            serde_json::from_str(include_str!("../tests/fixtures/v1_cold_2541266.json")).unwrap();
+        assert!(legacy.verified());
+        let mut w = WorkState::restore(&legacy, &i).unwrap();
+        let origin = w.provenance.clone().unwrap();
+        assert_eq!(origin.continuation, "exact_neutral");
+        resume(&mut w, &i, 0.5).unwrap();
+        let full = w.snapshot();
+        let mut payload = full.state.clone();
+        payload.pmax_pa = None;
+        let mut incomplete = EngineSnapshot::capture_with(&payload, full.provenance.clone());
+        let restored = WorkState::restore(&incomplete, &i).unwrap();
+        let composed = restored.provenance.clone().unwrap();
+        assert_eq!(composed.continuation, "approximate_hot");
+        assert_eq!(composed.original_hash, incomplete.state_hash);
+        let json = serde_json::to_value(&composed).unwrap();
+        assert_eq!(json["prior"][0], serde_json::to_value(&origin).unwrap());
+        // Re-reading the same incomplete envelope must not grow the trail.
+        incomplete.provenance = Some(composed.clone());
+        let again = WorkState::restore(&incomplete, &i).unwrap();
+        assert_eq!(again.provenance, Some(composed.clone()));
+        // Native recapture/JSON keeps the limit; it cannot upgrade to exact.
+        let recaptured: EngineSnapshot =
+            serde_json::from_str(&serde_json::to_string(&restored.snapshot()).unwrap()).unwrap();
+        assert!(recaptured.verified());
+        assert_eq!(
+            WorkState::restore(&recaptured, &i).unwrap().provenance,
+            Some(composed)
+        );
+        let mut a = WorkState::restore(&full, &i).unwrap();
+        let mut b = restored;
+        resume(&mut a, &i, 0.55).unwrap();
+        resume(&mut b, &i, 0.55).unwrap();
+        assert_ne!(a.omega_rad_s.to_bits(), b.omega_rad_s.to_bits());
+    }
+
+    #[test]
+    fn schema_pair_strict_even_for_cold_retagged_fixture() {
+        let i = healthy_inputs();
+        let mut retagged = initial_state(&i).unwrap().snapshot().state;
+        retagged.schema_version = 1;
+        let coherent = EngineSnapshot::capture(&retagged);
+        assert!(WorkState::restore(&coherent, &i).is_ok());
+        let mut bad = coherent.clone();
+        bad.model.as_mut().unwrap().schema_version = 2;
+        assert!(bad.verified());
+        assert!(WorkState::restore(&bad, &i).is_err());
+        let genuine: EngineSnapshot =
+            serde_json::from_str(include_str!("../tests/fixtures/v1_cold_2541266.json")).unwrap();
+        assert!(genuine.model.is_none() && genuine.verified());
+        assert!(WorkState::restore(&genuine, &i).is_ok());
+        let mut native = initial_state(&i).unwrap().snapshot();
+        native.model.as_mut().unwrap().schema_version = 1;
+        assert!(native.verified());
+        assert!(WorkState::restore(&native, &i).is_err());
+    }
+
+    #[test]
+    fn battery_resistance_overflow_is_an_atomic_engine_error() {
+        let mut i = healthy_inputs();
+        i.starter.as_mut().unwrap().2.temp_c = 10.0;
+        i.starter.as_mut().unwrap().2.r0_ohm = f64::MAX;
+        i.t_end_s = 0.001;
+        assert!(run_engine(&i).is_err());
+        let mut w = initial_state(&healthy_inputs()).unwrap();
+        w.m_in_amb_kg = 0.123;
+        let before = format!("{w:?}");
+        assert!(WorkState::restore(&w.snapshot(), &i).is_err());
+        assert!(resume(&mut w, &i, 0.0).is_err());
+        assert_eq!(before, format!("{w:?}"));
+        assert!(resume(&mut w, &i, 0.001).is_err());
+        assert_eq!(before, format!("{w:?}"));
     }
 }

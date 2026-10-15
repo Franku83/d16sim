@@ -1,0 +1,2 @@
+    Finished `release` profile [optimized] target(s) in 0.02s
+     Running `target/release/d16sim mech-demo --scenario missing_head_gasket`

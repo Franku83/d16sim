@@ -34,3 +34,4 @@ Los ADR de la remediación R01–R05 se indexan aparte para no reescribir el
 | ADR-039 | `ADR-039-remediation-c1-boundaries.md` | ACEPTADO (R01–R02-C1) |
 | ADR-040 | `ADR-040-remediation-c2-boundaries.md` | ACEPTADO (R01–R02-C2) |
 | ADR-041 | `ADR-041-remediation-c3-boundaries.md` | ACEPTADO (R01–R02-C3) |
+| ADR-042 | `ADR-042-remediation-c4-provenance-and-boundaries.md` | IMPLEMENTED_PENDING_INDEPENDENT_REVIEW (R01–R02-C4) |

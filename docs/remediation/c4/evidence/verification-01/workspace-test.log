@@ -1,0 +1,125 @@
+   Compiling proc-macro2 v1.0.107
+   Compiling quote v1.0.47
+   Compiling unicode-ident v1.0.26
+   Compiling thiserror v2.0.21
+   Compiling version_check v0.9.5
+   Compiling typenum v1.20.1
+   Compiling serde_core v1.0.229
+   Compiling zmij v1.0.23
+   Compiling serde v1.0.229
+   Compiling serde_json v1.0.151
+   Compiling cpufeatures v0.2.17
+   Compiling cfg-if v1.0.5
+   Compiling itoa v1.0.18
+   Compiling memchr v2.8.3
+   Compiling utf8parse v0.2.2
+   Compiling anstyle v1.0.14
+   Compiling is_terminal_polyfill v1.70.2
+   Compiling anstyle-parse v1.0.0
+   Compiling colorchoice v1.0.5
+   Compiling anstyle-query v1.1.5
+   Compiling heck v0.5.0
+   Compiling strsim v0.11.1
+   Compiling clap_lex v1.1.1
+   Compiling anstream v1.0.0
+   Compiling generic-array v0.14.7
+   Compiling clap_builder v4.6.7
+   Compiling syn v3.0.6
+   Compiling crypto-common v0.1.7
+   Compiling block-buffer v0.10.4
+   Compiling digest v0.10.7
+   Compiling sha2 v0.10.9
+   Compiling thiserror-impl v2.0.21
+   Compiling serde_derive v1.0.229
+   Compiling clap_derive v4.6.7
+   Compiling units v0.1.0 (/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/crates/units)
+   Compiling math v0.1.0 (/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/crates/math)
+   Compiling clap v4.6.7
+   Compiling engine-types v0.1.0 (/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/crates/engine-types)
+   Compiling kinematics v0.1.0 (/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/crates/kinematics)
+   Compiling fuel v0.1.0 (/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/crates/fuel)
+   Compiling thermal v0.1.0 (/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/crates/thermal)
+   Compiling fastener v0.1.0 (/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/crates/fastener)
+   Compiling trigger v0.1.0 (/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/crates/trigger)
+   Compiling lube v0.1.0 (/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/crates/lube)
+   Compiling assembly v0.1.0 (/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/crates/assembly)
+   Compiling physics v0.1.0 (/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/crates/physics)
+   Compiling calibration v0.1.0 (/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/crates/calibration)
+   Compiling thermo v0.1.0 (/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/crates/thermo)
+   Compiling contacts v0.1.0 (/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/crates/contacts)
+   Compiling crank v0.1.0 (/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/crates/crank)
+   Compiling ecu v0.1.0 (/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/crates/ecu)
+   Compiling electrical v0.1.0 (/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/crates/electrical)
+   Compiling valvetrain v0.1.0 (/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/crates/valvetrain)
+   Compiling combustion v0.1.0 (/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/crates/combustion)
+   Compiling flow v0.1.0 (/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/crates/flow)
+   Compiling diagnostics v0.1.0 (/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/crates/diagnostics)
+   Compiling leak v0.1.0 (/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/crates/leak)
+   Compiling engine v0.1.0 (/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/crates/engine)
+   Compiling wear v0.1.0 (/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/crates/wear)
+   Compiling simulation v0.1.0 (/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/crates/simulation)
+   Compiling damage v0.1.0 (/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/crates/damage)
+   Compiling adversarial v0.1.0 (/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/crates/adversarial)
+   Compiling audit v0.1.0 (/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/crates/audit)
+   Compiling dyno v0.1.0 (/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/crates/dyno)
+   Compiling d16sim v0.1.0 (/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/crates/cli)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 7.97s
+     Running unittests src/lib.rs (target/debug/deps/adversarial-bccd1cd19c405f9c)
+     Running unittests src/lib.rs (target/debug/deps/assembly-9423331e9c14cfa9)
+     Running unittests src/lib.rs (target/debug/deps/audit-c5c34cb664383611)
+     Running unittests src/lib.rs (target/debug/deps/calibration-f6edbae24bc01536)
+     Running unittests src/lib.rs (target/debug/deps/combustion-b950674908ace251)
+     Running unittests src/lib.rs (target/debug/deps/contacts-708b0393d17aef05)
+     Running unittests src/lib.rs (target/debug/deps/crank-1974606f16750f34)
+     Running unittests src/main.rs (target/debug/deps/d16sim-bba5609c235f2a9b)
+     Running unittests src/lib.rs (target/debug/deps/damage-5cc1df4012744ca0)
+     Running unittests src/lib.rs (target/debug/deps/diagnostics-91fb2ca2b3de6e3a)
+     Running unittests src/lib.rs (target/debug/deps/dyno-09909daf10c28fef)
+     Running unittests src/lib.rs (target/debug/deps/ecu-ead03f5212c0a22a)
+     Running unittests src/lib.rs (target/debug/deps/electrical-7db9fec6531c63d9)
+     Running unittests src/lib.rs (target/debug/deps/engine-bc7ab15eac2c9c92)
+     Running unittests src/lib.rs (target/debug/deps/engine_types-6e4231d89f150e1d)
+     Running unittests src/lib.rs (target/debug/deps/fastener-d5dfad5947025734)
+     Running unittests src/lib.rs (target/debug/deps/flow-0c6e592f70aed7bc)
+     Running unittests src/lib.rs (target/debug/deps/fuel-050122c58b01f879)
+     Running unittests src/lib.rs (target/debug/deps/kinematics-8f3af87f38e036e5)
+     Running unittests src/lib.rs (target/debug/deps/leak-1719beaadf58ee36)
+     Running unittests src/lib.rs (target/debug/deps/lube-7c3af33026ae7c00)
+     Running unittests src/lib.rs (target/debug/deps/math-caf7278e727b0001)
+     Running unittests src/lib.rs (target/debug/deps/physics-78e9f172ade18b4b)
+     Running unittests src/lib.rs (target/debug/deps/simulation-661e0cb177bd2247)
+     Running unittests src/lib.rs (target/debug/deps/thermal-602433bd9755d61f)
+     Running unittests src/lib.rs (target/debug/deps/thermo-5f13e37af3b037a3)
+     Running unittests src/lib.rs (target/debug/deps/trigger-f4460ff01a6ea753)
+     Running unittests src/lib.rs (target/debug/deps/units-d918e4b6170024d0)
+     Running unittests src/lib.rs (target/debug/deps/valvetrain-614766367104cd0a)
+     Running unittests src/lib.rs (target/debug/deps/wear-18f4ee74e568f578)
+   Doc-tests adversarial
+   Doc-tests assembly
+   Doc-tests audit
+   Doc-tests calibration
+   Doc-tests combustion
+   Doc-tests contacts
+   Doc-tests crank
+   Doc-tests damage
+   Doc-tests diagnostics
+   Doc-tests dyno
+   Doc-tests ecu
+   Doc-tests electrical
+   Doc-tests engine
+   Doc-tests engine_types
+   Doc-tests fastener
+   Doc-tests flow
+   Doc-tests fuel
+   Doc-tests kinematics
+   Doc-tests leak
+   Doc-tests lube
+   Doc-tests math
+   Doc-tests physics
+   Doc-tests simulation
+   Doc-tests thermal
+   Doc-tests thermo
+   Doc-tests trigger
+   Doc-tests units
+   Doc-tests valvetrain
+   Doc-tests wear

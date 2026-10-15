@@ -82,3 +82,7 @@ La parada procede de la instrucción explícita del usuario:
 > «Si alguna corrección entra en conflicto legítimo con un contrato anterior, detente y presenta las alternativas; no cambies unilateralmente la política.»
 
 No procede de un requisito de la skill diagnose ni de un rechazo automático de herramientas. Se necesita decidir el tratamiento del fixture; no una autorización para integración.
+
+## Actualización posterior del responsable (2026-10-15)
+
+La opción A fue formalmente autorizada después de este preflight. El contenido anterior y sus resultados permanecen como registro histórico. Estado operativo actual: ver [C4_OPTION_A_AUTHORIZATION.md](C4_OPTION_A_AUTHORIZATION.md) y [C4_BATCH_REPORT.md](C4_BATCH_REPORT.md). El permiso no concede integración ni sustituye al revisor independiente.

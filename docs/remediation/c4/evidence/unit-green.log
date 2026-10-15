@@ -1,0 +1,20 @@
+   Compiling electrical v0.1.0 (/home/franku/projects/d16sim-remediation-c4/crates/electrical)
+   Compiling engine v0.1.0 (/home/franku/projects/d16sim-remediation-c4/crates/engine)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.69s
+     Running unittests src/lib.rs (target/debug/deps/electrical-0cba90f7534e37a0)
+
+running 1 test
+test battery::r02_c4_tests::calculated_resistance_must_be_representable ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 13 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/engine-b295603710f0cfc3)
+
+running 4 tests
+test run::r02_c4_tests::battery_resistance_overflow_is_an_atomic_engine_error ... ok
+test run::r02_c4_tests::schema_pair_strict_even_for_cold_retagged_fixture ... ok
+test run::r02_c4_tests::node_pressure_boundary_rejects_overflow_and_underflow_atomically ... ok
+test run::r02_c4_tests::inherited_provenance_records_new_loss_without_erasing_origin ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 36 filtered out; finished in 0.04s
+

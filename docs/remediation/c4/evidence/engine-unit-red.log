@@ -1,0 +1,46 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.02s
+     Running unittests src/lib.rs (target/debug/deps/engine-b295603710f0cfc3)
+
+running 4 tests
+test run::r02_c4_tests::battery_resistance_overflow_is_an_atomic_engine_error ... FAILED
+test run::r02_c4_tests::node_pressure_boundary_rejects_overflow_and_underflow_atomically ... FAILED
+test run::r02_c4_tests::schema_pair_strict_even_for_cold_retagged_fixture ... FAILED
+test run::r02_c4_tests::inherited_provenance_records_new_loss_without_erasing_origin ... FAILED
+
+failures:
+
+---- run::r02_c4_tests::battery_resistance_overflow_is_an_atomic_engine_error stdout ----
+
+thread 'run::r02_c4_tests::battery_resistance_overflow_is_an_atomic_engine_error' (49529) panicked at crates/engine/src/run.rs:2782:9:
+assertion failed: run_engine(&i).is_err()
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- run::r02_c4_tests::node_pressure_boundary_rejects_overflow_and_underflow_atomically stdout ----
+
+thread 'run::r02_c4_tests::node_pressure_boundary_rejects_overflow_and_underflow_atomically' (49531) panicked at crates/engine/src/run.rs:2706:17:
+assertion `left == right` failed
+  left: true
+ right: false
+
+---- run::r02_c4_tests::schema_pair_strict_even_for_cold_retagged_fixture stdout ----
+
+thread 'run::r02_c4_tests::schema_pair_strict_even_for_cold_retagged_fixture' (49532) panicked at crates/engine/src/run.rs:2766:9:
+assertion failed: WorkState::restore(&bad, &i).is_err()
+
+---- run::r02_c4_tests::inherited_provenance_records_new_loss_without_erasing_origin stdout ----
+
+thread 'run::r02_c4_tests::inherited_provenance_records_new_loss_without_erasing_origin' (49530) panicked at crates/engine/src/run.rs:2737:9:
+assertion `left == right` failed
+  left: "exact_neutral"
+ right: "approximate_hot"
+
+
+failures:
+    run::r02_c4_tests::battery_resistance_overflow_is_an_atomic_engine_error
+    run::r02_c4_tests::inherited_provenance_records_new_loss_without_erasing_origin
+    run::r02_c4_tests::node_pressure_boundary_rejects_overflow_and_underflow_atomically
+    run::r02_c4_tests::schema_pair_strict_even_for_cold_retagged_fixture
+
+test result: FAILED. 0 passed; 4 failed; 0 ignored; 0 measured; 36 filtered out; finished in 0.03s
+
+error: test failed, to rerun pass `-p engine --lib`

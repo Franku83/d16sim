@@ -1,0 +1,55 @@
+{
+  "status": "IMPLEMENTED_PENDING_INDEPENDENT_REVIEW",
+  "rust_cases_passed": 215,
+  "rust_cases_failed": 0,
+  "rust_result_blocks": 59,
+  "rust_blocks_with_cases": 30,
+  "s30_literal_passed": 21,
+  "s30_literal_failed": 11,
+  "s30_adapted_passed": 22,
+  "s30_adapted_failed": 10,
+  "suites": {
+    "adversarial": {
+      "test_targets": 1,
+      "test_cases": 19,
+      "assertion_predicates_executed": 196,
+      "passed": 19,
+      "failures": 0,
+      "errors": 0,
+      "observation_rows": 198,
+      "families": 31,
+      "failure_names": []
+    },
+    "c1": {
+      "test_targets": 1,
+      "cases": 15,
+      "passed": 15,
+      "failures": 0,
+      "errors": 0,
+      "predicates_executed": 150,
+      "rows": 138,
+      "families": 20,
+      "failure_names": []
+    },
+    "c2": {
+      "cases": 11,
+      "passed": 11,
+      "failures": 0,
+      "errors": 0,
+      "predicates_executed": 1442,
+      "rows": 752,
+      "families": 15,
+      "failure_names": []
+    },
+    "c3": {
+      "cases": 11,
+      "passed": 11,
+      "failures": 0,
+      "errors": 0,
+      "predicates_executed": 360,
+      "rows": 333,
+      "families": 11,
+      "failure_names": []
+    }
+  }
+}

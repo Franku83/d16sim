@@ -1,0 +1,1007 @@
+[
+  {
+    "argv": [
+      "cargo",
+      "test",
+      "--locked",
+      "--workspace"
+    ],
+    "cwd": "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01",
+    "exit": 0,
+    "elapsed_s": 35.97167794699999,
+    "name": "workspace-test",
+    "env": {}
+  },
+  {
+    "argv": [
+      "cargo",
+      "fmt",
+      "--all",
+      "--",
+      "--check"
+    ],
+    "cwd": "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01",
+    "exit": 0,
+    "elapsed_s": 0.16580517399961536,
+    "name": "fmt",
+    "env": {}
+  },
+  {
+    "argv": [
+      "cargo",
+      "clippy",
+      "--locked",
+      "--workspace",
+      "--all-targets",
+      "--",
+      "-D",
+      "clippy::unwrap_used"
+    ],
+    "cwd": "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01",
+    "exit": 0,
+    "elapsed_s": 3.2167991000005713,
+    "name": "clippy",
+    "env": {}
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/verification/c3_review/legacy/Cargo.toml",
+      "--bin",
+      "d16sim-historical-v1-producer"
+    ],
+    "cwd": "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01",
+    "exit": 0,
+    "elapsed_s": 5.179040623999754,
+    "name": "shared/historical-v1-hot",
+    "env": {}
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/verification/c3_review/legacy/Cargo.toml",
+      "--bin",
+      "historical-cold-or-hot",
+      "--",
+      "cold"
+    ],
+    "cwd": "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01",
+    "exit": 0,
+    "elapsed_s": 0.33372022100047616,
+    "name": "shared/historical-v1-cold",
+    "env": {}
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/verification/c3_review/legacy_v2/Cargo.toml",
+      "--bin",
+      "d16sim-historical-v2-producer",
+      "--",
+      "cold"
+    ],
+    "cwd": "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01",
+    "exit": 0,
+    "elapsed_s": 4.766851807999956,
+    "name": "shared/historical-v2-cold",
+    "env": {}
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/verification/c3_review/legacy_v2/Cargo.toml",
+      "--bin",
+      "d16sim-historical-v2-producer"
+    ],
+    "cwd": "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01",
+    "exit": 0,
+    "elapsed_s": 0.03666039000017918,
+    "name": "shared/historical-v2-hot",
+    "env": {}
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/verification/c3_review/r02_producer/Cargo.toml",
+      "--bin",
+      "d16sim-r02-native-producer"
+    ],
+    "cwd": "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01",
+    "exit": 0,
+    "elapsed_s": 4.384944596999958,
+    "name": "shared/historical-r02-native",
+    "env": {}
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/verification/c3_review/r02_producer/Cargo.toml",
+      "--bin",
+      "r02-mid-burn"
+    ],
+    "cwd": "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01",
+    "exit": 0,
+    "elapsed_s": 0.3090596069996536,
+    "name": "shared/historical-r02-mid-burn",
+    "env": {}
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/verification/c3_review/Cargo.toml",
+      "--bin",
+      "d16sim-independent-probes",
+      "--",
+      "engine"
+    ],
+    "cwd": "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01",
+    "exit": 0,
+    "elapsed_s": 22.910700092000297,
+    "name": "literal/probes-engine",
+    "env": {}
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/verification/c3_review/Cargo.toml",
+      "--bin",
+      "d16sim-independent-probes",
+      "--",
+      "subsystems"
+    ],
+    "cwd": "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01",
+    "exit": 0,
+    "elapsed_s": 0.07791915300003893,
+    "name": "literal/probes-subsystems",
+    "env": {}
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/verification/c3_review/Cargo.toml",
+      "--bin",
+      "d16sim-independent-probes",
+      "--",
+      "dyno"
+    ],
+    "cwd": "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01",
+    "exit": 0,
+    "elapsed_s": 1.5884570309999617,
+    "name": "literal/probes-dyno",
+    "env": {}
+  },
+  {
+    "argv": [
+      "python3",
+      "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/verification/c3_review/check_contracts.py"
+    ],
+    "cwd": "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01",
+    "exit": 1,
+    "elapsed_s": 0.05831180099994526,
+    "name": "literal/contract-check",
+    "env": {
+      "D16_AUDIT_RESULTS": "/home/franku/projects/d16sim-remediation-c4/docs/remediation/c4/evidence/verification-01/literal"
+    }
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/verification/c3_review/Cargo.toml",
+      "--bin",
+      "v1-fixture-adapted",
+      "--",
+      "engine"
+    ],
+    "cwd": "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01",
+    "exit": 0,
+    "elapsed_s": 18.326474165000036,
+    "name": "adapted/probes-engine",
+    "env": {}
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/verification/c3_review/Cargo.toml",
+      "--bin",
+      "v1-fixture-adapted",
+      "--",
+      "subsystems"
+    ],
+    "cwd": "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01",
+    "exit": 0,
+    "elapsed_s": 0.07172308400004113,
+    "name": "adapted/probes-subsystems",
+    "env": {}
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/verification/c3_review/Cargo.toml",
+      "--bin",
+      "v1-fixture-adapted",
+      "--",
+      "dyno"
+    ],
+    "cwd": "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01",
+    "exit": 0,
+    "elapsed_s": 1.6042593700003636,
+    "name": "adapted/probes-dyno",
+    "env": {}
+  },
+  {
+    "argv": [
+      "python3",
+      "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/verification/c3_review/check_contracts.py"
+    ],
+    "cwd": "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01",
+    "exit": 1,
+    "elapsed_s": 0.0457485649994851,
+    "name": "adapted/contract-check",
+    "env": {
+      "D16_AUDIT_RESULTS": "/home/franku/projects/d16sim-remediation-c4/docs/remediation/c4/evidence/verification-01/adapted"
+    }
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/verification/c3_review/Cargo.toml",
+      "--bin",
+      "remediation-adversarial",
+      "--",
+      "engine"
+    ],
+    "cwd": "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01",
+    "exit": 0,
+    "elapsed_s": 5.081790768000246,
+    "name": "shared/adversarial-engine",
+    "env": {
+      "D16_REVIEW_RESULTS": "/home/franku/projects/d16sim-remediation-c4/docs/remediation/c4/evidence/verification-01/shared"
+    }
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/verification/c3_review/Cargo.toml",
+      "--bin",
+      "remediation-adversarial",
+      "--",
+      "leak"
+    ],
+    "cwd": "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01",
+    "exit": 0,
+    "elapsed_s": 0.027450052999483887,
+    "name": "shared/adversarial-leak",
+    "env": {
+      "D16_REVIEW_RESULTS": "/home/franku/projects/d16sim-remediation-c4/docs/remediation/c4/evidence/verification-01/shared"
+    }
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/verification/c3_review/Cargo.toml",
+      "--bin",
+      "remediation-adversarial",
+      "--",
+      "thermal"
+    ],
+    "cwd": "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01",
+    "exit": 0,
+    "elapsed_s": 0.027702608999788936,
+    "name": "shared/adversarial-thermal",
+    "env": {
+      "D16_REVIEW_RESULTS": "/home/franku/projects/d16sim-remediation-c4/docs/remediation/c4/evidence/verification-01/shared"
+    }
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/verification/c3_review/Cargo.toml",
+      "--bin",
+      "remediation-adversarial",
+      "--",
+      "snapshot"
+    ],
+    "cwd": "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01",
+    "exit": 0,
+    "elapsed_s": 0.09212134800054628,
+    "name": "shared/adversarial-snapshot",
+    "env": {
+      "D16_REVIEW_RESULTS": "/home/franku/projects/d16sim-remediation-c4/docs/remediation/c4/evidence/verification-01/shared"
+    }
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/verification/c3_review/Cargo.toml",
+      "--bin",
+      "remediation-adversarial",
+      "--",
+      "boundary"
+    ],
+    "cwd": "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01",
+    "exit": 0,
+    "elapsed_s": 0.030146119000164617,
+    "name": "shared/adversarial-boundary",
+    "env": {
+      "D16_REVIEW_RESULTS": "/home/franku/projects/d16sim-remediation-c4/docs/remediation/c4/evidence/verification-01/shared"
+    }
+  },
+  {
+    "argv": [
+      "python3",
+      "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/verification/c3_review/check_adversarial.py"
+    ],
+    "cwd": "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01",
+    "exit": 0,
+    "elapsed_s": 0.0472348499997679,
+    "name": "shared/adversarial-check",
+    "env": {
+      "D16_REVIEW_RESULTS": "/home/franku/projects/d16sim-remediation-c4/docs/remediation/c4/evidence/verification-01/shared"
+    }
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/verification/c3_review/Cargo.toml",
+      "--bin",
+      "c1-controls",
+      "--",
+      "boundary"
+    ],
+    "cwd": "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01",
+    "exit": 0,
+    "elapsed_s": 1.1737717949999933,
+    "name": "shared/controls-boundary",
+    "env": {
+      "D16_REVIEW_RESULTS": "/home/franku/projects/d16sim-remediation-c4/docs/remediation/c4/evidence/verification-01/shared"
+    }
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/verification/c3_review/Cargo.toml",
+      "--bin",
+      "c1-controls",
+      "--",
+      "chemistry"
+    ],
+    "cwd": "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01",
+    "exit": 0,
+    "elapsed_s": 2.3607227350003086,
+    "name": "shared/controls-chemistry",
+    "env": {
+      "D16_REVIEW_RESULTS": "/home/franku/projects/d16sim-remediation-c4/docs/remediation/c4/evidence/verification-01/shared"
+    }
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/verification/c3_review/Cargo.toml",
+      "--bin",
+      "c1-controls",
+      "--",
+      "analytic"
+    ],
+    "cwd": "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01",
+    "exit": 0,
+    "elapsed_s": 0.04211639400000422,
+    "name": "shared/controls-analytic",
+    "env": {
+      "D16_REVIEW_RESULTS": "/home/franku/projects/d16sim-remediation-c4/docs/remediation/c4/evidence/verification-01/shared"
+    }
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/verification/c3_review/Cargo.toml",
+      "--bin",
+      "c1-controls",
+      "--",
+      "diagnostic"
+    ],
+    "cwd": "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01",
+    "exit": 0,
+    "elapsed_s": 0.029309280999768816,
+    "name": "shared/controls-diagnostic",
+    "env": {
+      "D16_REVIEW_RESULTS": "/home/franku/projects/d16sim-remediation-c4/docs/remediation/c4/evidence/verification-01/shared"
+    }
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/verification/c3_review/Cargo.toml",
+      "--bin",
+      "c1-controls",
+      "--",
+      "migration"
+    ],
+    "cwd": "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01",
+    "exit": 0,
+    "elapsed_s": 0.0461334440005885,
+    "name": "shared/controls-migration",
+    "env": {
+      "D16_REVIEW_RESULTS": "/home/franku/projects/d16sim-remediation-c4/docs/remediation/c4/evidence/verification-01/shared"
+    }
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/verification/c3_review/Cargo.toml",
+      "--bin",
+      "c1-controls",
+      "--",
+      "thermal"
+    ],
+    "cwd": "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01",
+    "exit": 0,
+    "elapsed_s": 0.02889888499976223,
+    "name": "shared/controls-thermal",
+    "env": {
+      "D16_REVIEW_RESULTS": "/home/franku/projects/d16sim-remediation-c4/docs/remediation/c4/evidence/verification-01/shared"
+    }
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/verification/c3_review/Cargo.toml",
+      "--bin",
+      "c1-controls",
+      "--",
+      "electronics"
+    ],
+    "cwd": "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01",
+    "exit": 0,
+    "elapsed_s": 0.02830717300003016,
+    "name": "shared/controls-electronics",
+    "env": {
+      "D16_REVIEW_RESULTS": "/home/franku/projects/d16sim-remediation-c4/docs/remediation/c4/evidence/verification-01/shared"
+    }
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/verification/c3_review/Cargo.toml",
+      "--bin",
+      "c1-controls",
+      "--",
+      "fit"
+    ],
+    "cwd": "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01",
+    "exit": 0,
+    "elapsed_s": 0.027971866999905615,
+    "name": "shared/controls-fit",
+    "env": {
+      "D16_REVIEW_RESULTS": "/home/franku/projects/d16sim-remediation-c4/docs/remediation/c4/evidence/verification-01/shared"
+    }
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/verification/c3_review/Cargo.toml",
+      "--bin",
+      "c1-controls",
+      "--",
+      "dyno"
+    ],
+    "cwd": "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01",
+    "exit": 0,
+    "elapsed_s": 0.027095657999780087,
+    "name": "shared/controls-dyno",
+    "env": {
+      "D16_REVIEW_RESULTS": "/home/franku/projects/d16sim-remediation-c4/docs/remediation/c4/evidence/verification-01/shared"
+    }
+  },
+  {
+    "argv": [
+      "python3",
+      "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/verification/c3_review/check_c1_controls.py"
+    ],
+    "cwd": "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01",
+    "exit": 0,
+    "elapsed_s": 0.043018272999688634,
+    "name": "shared/c1-check",
+    "env": {
+      "D16_REVIEW_RESULTS": "/home/franku/projects/d16sim-remediation-c4/docs/remediation/c4/evidence/verification-01/shared"
+    }
+  },
+  {
+    "argv": [
+      "python3",
+      "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/verification/c3_review/run_history.py",
+      "--worktree",
+      "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01",
+      "--output",
+      "/home/franku/projects/d16sim-remediation-c4/docs/remediation/c4/evidence/verification-01/c2/producer-matrix"
+    ],
+    "cwd": "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01",
+    "exit": 0,
+    "elapsed_s": 23.635772827999972,
+    "name": "c2/producer-driver",
+    "env": {}
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/verification/c3_review/Cargo.toml",
+      "--bin",
+      "c2-boundaries",
+      "--",
+      "matrix"
+    ],
+    "cwd": "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01",
+    "exit": 0,
+    "elapsed_s": 1.660898843000723,
+    "name": "c2/new-matrix",
+    "env": {
+      "D16_C2_FIXTURES": "/home/franku/projects/d16sim-remediation-c4/docs/remediation/c4/evidence/verification-01/c2/producer-matrix"
+    }
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/verification/c3_review/Cargo.toml",
+      "--bin",
+      "c2-boundaries",
+      "--",
+      "thermal"
+    ],
+    "cwd": "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01",
+    "exit": 0,
+    "elapsed_s": 0.03489216999969358,
+    "name": "c2/new-thermal",
+    "env": {
+      "D16_C2_FIXTURES": "/home/franku/projects/d16sim-remediation-c4/docs/remediation/c4/evidence/verification-01/c2/producer-matrix"
+    }
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/verification/c3_review/Cargo.toml",
+      "--bin",
+      "c2-boundaries",
+      "--",
+      "diagnostics"
+    ],
+    "cwd": "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01",
+    "exit": 0,
+    "elapsed_s": 0.030444883999734884,
+    "name": "c2/new-diagnostic",
+    "env": {
+      "D16_C2_FIXTURES": "/home/franku/projects/d16sim-remediation-c4/docs/remediation/c4/evidence/verification-01/c2/producer-matrix"
+    }
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/verification/c3_review/Cargo.toml",
+      "--bin",
+      "c2-boundaries",
+      "--",
+      "snapshots"
+    ],
+    "cwd": "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01",
+    "exit": 0,
+    "elapsed_s": 0.0371098030000212,
+    "name": "c2/new-snapshots",
+    "env": {
+      "D16_C2_FIXTURES": "/home/franku/projects/d16sim-remediation-c4/docs/remediation/c4/evidence/verification-01/c2/producer-matrix"
+    }
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/verification/c3_review/Cargo.toml",
+      "--bin",
+      "c2-boundaries",
+      "--",
+      "focused"
+    ],
+    "cwd": "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01",
+    "exit": 0,
+    "elapsed_s": 0.0422956010006601,
+    "name": "c2/focused",
+    "env": {
+      "D16_C2_FIXTURES": "/home/franku/projects/d16sim-remediation-c4/docs/remediation/c4/evidence/verification-01/c2/producer-matrix"
+    }
+  },
+  {
+    "argv": [
+      "python3",
+      "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/verification/c3_review/check_c2.py"
+    ],
+    "cwd": "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01",
+    "exit": 0,
+    "elapsed_s": 0.0596271730000808,
+    "name": "c2/check",
+    "env": {
+      "D16_C2_RESULTS": "/home/franku/projects/d16sim-remediation-c4/docs/remediation/c4/evidence/verification-01/c2"
+    }
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/verification/c3_review/Cargo.toml",
+      "--bin",
+      "c3-directed",
+      "--",
+      "fields"
+    ],
+    "cwd": "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01",
+    "exit": 0,
+    "elapsed_s": 1.1681076519998896,
+    "name": "c3/fields",
+    "env": {}
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/verification/c3_review/Cargo.toml",
+      "--bin",
+      "c3-directed",
+      "--",
+      "thermo"
+    ],
+    "cwd": "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01",
+    "exit": 0,
+    "elapsed_s": 0.02907004099961341,
+    "name": "c3/thermo",
+    "env": {}
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/verification/c3_review/Cargo.toml",
+      "--bin",
+      "c3-directed",
+      "--",
+      "thermal"
+    ],
+    "cwd": "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01",
+    "exit": 0,
+    "elapsed_s": 0.029233028999442467,
+    "name": "c3/thermal",
+    "env": {}
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/verification/c3_review/Cargo.toml",
+      "--bin",
+      "c3-directed",
+      "--",
+      "battery"
+    ],
+    "cwd": "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01",
+    "exit": 0,
+    "elapsed_s": 0.08060751099947083,
+    "name": "c3/battery",
+    "env": {}
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/verification/c3_review/Cargo.toml",
+      "--bin",
+      "c3-directed",
+      "--",
+      "replay"
+    ],
+    "cwd": "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01",
+    "exit": 0,
+    "elapsed_s": 0.465522205000525,
+    "name": "c3/replay",
+    "env": {}
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/verification/c3_review/Cargo.toml",
+      "--bin",
+      "c3-directed",
+      "--",
+      "semantics"
+    ],
+    "cwd": "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01",
+    "exit": 0,
+    "elapsed_s": 0.03718240299986064,
+    "name": "c3/semantics",
+    "env": {}
+  },
+  {
+    "argv": [
+      "python3",
+      "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/verification/c3_review/check_c3.py"
+    ],
+    "cwd": "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01",
+    "exit": 0,
+    "elapsed_s": 0.04277010599980713,
+    "name": "c3/check",
+    "env": {
+      "D16_C3_RESULTS": "/home/franku/projects/d16sim-remediation-c4/docs/remediation/c4/evidence/verification-01/c3"
+    }
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01/verification/c3_review/Cargo.toml",
+      "--bin",
+      "verify-v1-adapter"
+    ],
+    "cwd": "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01",
+    "exit": 0,
+    "elapsed_s": 0.8335914869994667,
+    "name": "adapter/behavior",
+    "env": {}
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--bin",
+      "d16sim",
+      "--",
+      "mech-demo",
+      "--scenario",
+      "healthy_baseline"
+    ],
+    "cwd": "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01",
+    "exit": 0,
+    "elapsed_s": 9.809438902000693,
+    "name": "smoke-healthy_baseline",
+    "env": {}
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--bin",
+      "d16sim",
+      "--",
+      "mech-demo",
+      "--scenario",
+      "missing_head_gasket"
+    ],
+    "cwd": "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01",
+    "exit": 0,
+    "elapsed_s": 0.041706922000230406,
+    "name": "smoke-missing_head_gasket",
+    "env": {}
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--bin",
+      "d16sim",
+      "--",
+      "mech-demo",
+      "--scenario",
+      "underclamped_head"
+    ],
+    "cwd": "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01",
+    "exit": 0,
+    "elapsed_s": 0.050437988999874506,
+    "name": "smoke-underclamped_head",
+    "env": {}
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--bin",
+      "d16sim",
+      "--",
+      "mech-demo",
+      "--scenario",
+      "ring_leak_cyl3"
+    ],
+    "cwd": "/home/franku/projects/d16sim-remediation-c4/target/c4-verification-01",
+    "exit": 0,
+    "elapsed_s": 0.04513105200021528,
+    "name": "smoke-ring_leak_cyl3",
+    "env": {}
+  }
+]

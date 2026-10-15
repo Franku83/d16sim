@@ -35,11 +35,13 @@
   (por paso): se migra con procedencia `approximate_hot`/`exact_neutral` y
   **nunca** se declara nativo exacto. Un `model` presente con esquema
   desconocido (∉ {1,2}) o contabilidad desconocida (≠ 1) se **rechaza** en
-  todos los esquemas, incluido v1, aunque el hash sea válido. Tolerancia
-  documentada: no se exige igualdad exacta `model.schema_version ↔
-  state.schema_version` (el fixture de migración v1 del oráculo independiente
-  captura bajo esquema 2 y reetiqueta el payload a 1); solo se exige que los
-  identificadores sean conocidos.
+  todos los esquemas, incluido v1, aunque el hash sea válido. **C4:** además,
+  todo marcador presente debe cumplir `model.schema_version ==
+  state.schema_version`; no hay excepciones frías ni por fixture. El v1
+  genuino sin `model` conserva su lectura. El responsable autorizó adaptar
+  únicamente una copia derivada del fixture reetiquetado a v1, estableciendo
+  `model=None`; los oráculos y su ejecución literal permanecen intactos y
+  reportados por separado (ADR-042 y reporte C4).
 - **Historia de presión requerida (R02-C3/C2-05):** un snapshot con `model`
   conocido y esquema actual solo se declara **nativo exacto** si `pmax_pa` está
   presente **cuando la fricción activa depende de presión** (Chen–Flynn
@@ -67,3 +69,31 @@
   testeada + entrada en CHANGELOG; esta extensión es compatible, no la exige.
 - `docs/export-contract.md` (`trace-bundle-v1`) sigue vigente para el
   spike visual: solo lectura, sin Blender/UI en el core.
+
+## Composición de procedencia y fronteras C4 (2026-10-15)
+
+- Ante una nueva pérdida relevante de historia, `provenance` describe el
+  snapshot entrante actual (esquema/hash, transformación, campos ausentes y
+  alcance). `prior`, opcional y vacío por defecto, conserva el registro
+  anterior **completo**. Cada eslabón conserva a su vez su historia previa.
+  No se sobrescribe el origen ni se inventa la presión perdida.
+- Un origen `exact_neutral` no oculta una nueva continuación caliente
+  aproximada. Una limitación previa `approximate_hot` no se eleva a exacta
+  por recapturar defaults. Releer el mismo envelope ya registrado no agrega
+  otro eslabón; una recaptura nativa completa conserva la limitación.
+- `prior` pertenece al wrapper, fuera de `state_hash`, igual que el resto
+  de la procedencia. Ausente se lee como lista vacía y vacío se omite al
+  escribir; no cambian la forma canónica del estado, los hashes históricos,
+  los bits de f64 ni los campos físicos/ModelIdentity. El struct Rust de
+  metadata añade un miembro público; callers que lo construyan por literal
+  deben inicializar `prior: Vec::new()`. La compatibilidad de lectura JSON
+  no implica compatibilidad de todos los literales de source externos.
+- La presión de plenum/escape debe ser finita y positiva, igual que su
+  densidad, antes de aceptar restore o resume(incluido avance nulo).
+  Overflow/underflow se rechazan sin cotas OEM arbitrarias.
+- La resistencia calculada de batería devuelve error tipado si no es
+  representable, antes de limitar el terminal; temperaturas Celsius
+  negativas legítimas y resistencias ideales cero siguen en su dominio.
+
+Estado de la implementación C4: **IMPLEMENTED_PENDING_INDEPENDENT_REVIEW**.
+No es un gate de integración ni validación experimental.

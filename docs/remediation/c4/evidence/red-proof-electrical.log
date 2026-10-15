@@ -1,0 +1,22 @@
+   Compiling electrical v0.1.0 (/home/franku/projects/d16sim-remediation-c4/target/c4-red-proof/crates/electrical)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.24s
+     Running unittests src/lib.rs (target/c4-red-proof/target/debug/deps/electrical-0cba90f7534e37a0)
+
+running 1 test
+test battery::r02_c4_tests::calculated_resistance_must_be_representable ... FAILED
+
+failures:
+
+---- battery::r02_c4_tests::calculated_resistance_must_be_representable stdout ----
+
+thread 'battery::r02_c4_tests::calculated_resistance_must_be_representable' (73376) panicked at crates/electrical/src/battery.rs:219:13:
+assertion failed: bad.resistance().is_err()
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    battery::r02_c4_tests::calculated_resistance_must_be_representable
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 13 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p electrical --lib`

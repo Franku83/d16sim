@@ -1,0 +1,83 @@
+   Compiling proc-macro2 v1.0.107
+   Compiling unicode-ident v1.0.26
+   Compiling quote v1.0.47
+   Compiling version_check v0.9.5
+   Compiling typenum v1.20.1
+   Compiling thiserror v2.0.21
+   Compiling serde_core v1.0.229
+   Compiling zmij v1.0.23
+   Compiling serde_json v1.0.151
+   Compiling serde v1.0.229
+   Compiling cpufeatures v0.2.17
+   Compiling memchr v2.8.3
+   Compiling itoa v1.0.18
+   Compiling cfg-if v1.0.5
+   Compiling generic-array v0.14.7
+   Compiling syn v3.0.6
+   Compiling crypto-common v0.1.7
+   Compiling block-buffer v0.10.4
+   Compiling digest v0.10.7
+   Compiling sha2 v0.10.9
+   Compiling thiserror-impl v2.0.21
+   Compiling serde_derive v1.0.229
+   Compiling units v0.1.0 (/home/franku/projects/d16sim-remediation-c4/target/c4-red-proof/crates/units)
+   Compiling math v0.1.0 (/home/franku/projects/d16sim-remediation-c4/target/c4-red-proof/crates/math)
+   Compiling engine-types v0.1.0 (/home/franku/projects/d16sim-remediation-c4/target/c4-red-proof/crates/engine-types)
+   Compiling kinematics v0.1.0 (/home/franku/projects/d16sim-remediation-c4/target/c4-red-proof/crates/kinematics)
+   Compiling thermal v0.1.0 (/home/franku/projects/d16sim-remediation-c4/target/c4-red-proof/crates/thermal)
+   Compiling fuel v0.1.0 (/home/franku/projects/d16sim-remediation-c4/target/c4-red-proof/crates/fuel)
+   Compiling thermo v0.1.0 (/home/franku/projects/d16sim-remediation-c4/target/c4-red-proof/crates/thermo)
+   Compiling contacts v0.1.0 (/home/franku/projects/d16sim-remediation-c4/target/c4-red-proof/crates/contacts)
+   Compiling crank v0.1.0 (/home/franku/projects/d16sim-remediation-c4/target/c4-red-proof/crates/crank)
+   Compiling combustion v0.1.0 (/home/franku/projects/d16sim-remediation-c4/target/c4-red-proof/crates/combustion)
+   Compiling electrical v0.1.0 (/home/franku/projects/d16sim-remediation-c4/target/c4-red-proof/crates/electrical)
+   Compiling valvetrain v0.1.0 (/home/franku/projects/d16sim-remediation-c4/target/c4-red-proof/crates/valvetrain)
+   Compiling flow v0.1.0 (/home/franku/projects/d16sim-remediation-c4/target/c4-red-proof/crates/flow)
+   Compiling engine v0.1.0 (/home/franku/projects/d16sim-remediation-c4/target/c4-red-proof/crates/engine)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 4.20s
+     Running unittests src/lib.rs (target/c4-red-proof/target/debug/deps/engine-b295603710f0cfc3)
+
+running 5 tests
+test run::r02_c4_tests::battery_resistance_overflow_is_an_atomic_engine_error ... FAILED
+test run::r02_c4_tests::composing_provenance_does_not_promote_a_prior_limit ... ok
+test run::r02_c4_tests::node_pressure_boundary_rejects_overflow_and_underflow_atomically ... FAILED
+test run::r02_c4_tests::schema_pair_strict_even_for_cold_retagged_fixture ... FAILED
+test run::r02_c4_tests::inherited_provenance_records_new_loss_without_erasing_origin ... FAILED
+
+failures:
+
+---- run::r02_c4_tests::battery_resistance_overflow_is_an_atomic_engine_error stdout ----
+
+thread 'run::r02_c4_tests::battery_resistance_overflow_is_an_atomic_engine_error' (73265) panicked at crates/engine/src/run.rs:2815:9:
+assertion failed: run_engine(&i).is_err()
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- run::r02_c4_tests::node_pressure_boundary_rejects_overflow_and_underflow_atomically stdout ----
+
+thread 'run::r02_c4_tests::node_pressure_boundary_rejects_overflow_and_underflow_atomically' (73268) panicked at crates/engine/src/run.rs:2726:17:
+assertion `left == right` failed
+  left: true
+ right: false
+
+---- run::r02_c4_tests::schema_pair_strict_even_for_cold_retagged_fixture stdout ----
+
+thread 'run::r02_c4_tests::schema_pair_strict_even_for_cold_retagged_fixture' (73269) panicked at crates/engine/src/run.rs:2798:9:
+assertion failed: WorkState::restore(&bad, &i).is_err()
+
+---- run::r02_c4_tests::inherited_provenance_records_new_loss_without_erasing_origin stdout ----
+
+thread 'run::r02_c4_tests::inherited_provenance_records_new_loss_without_erasing_origin' (73267) panicked at crates/engine/src/run.rs:2765:9:
+assertion `left == right` failed
+  left: "exact_neutral"
+ right: "approximate_hot"
+
+
+failures:
+    run::r02_c4_tests::battery_resistance_overflow_is_an_atomic_engine_error
+    run::r02_c4_tests::inherited_provenance_records_new_loss_without_erasing_origin
+    run::r02_c4_tests::node_pressure_boundary_rejects_overflow_and_underflow_atomically
+    run::r02_c4_tests::schema_pair_strict_even_for_cold_retagged_fixture
+
+test result: FAILED. 1 passed; 4 failed; 0 ignored; 0 measured; 36 filtered out; finished in 0.04s
+
+error: test failed, to rerun pass `-p engine --lib`

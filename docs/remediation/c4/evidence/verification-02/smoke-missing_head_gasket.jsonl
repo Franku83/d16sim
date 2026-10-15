@@ -1,0 +1,6 @@
+mech-demo scenario=missing_head_gasket (L1 instruments, UNCALIBRATED):
+  steady_leak_g_min   : 16773.342
+  compression_kPa     : 0
+  leak_pct            : 99.9
+  split crank/exh/cool: 0.14/0.00/0.86 (exh: no port -> not instrumented)
+  verdict             : Discriminated { cause: HeadGasket, by_measurements: "compression + leak-down to coolant/multiple" }

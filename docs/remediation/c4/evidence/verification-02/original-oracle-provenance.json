@@ -1,0 +1,32 @@
+[
+  {
+    "file": "check_contracts.py",
+    "original_git": "25d528e:audit/independent/check_contracts.py",
+    "sha256": "b027d9e3ab697b1974e87980765b7b4872e24e3792153ec3e02b598bd0756b36",
+    "byte_identical": true
+  },
+  {
+    "file": "check_adversarial.py",
+    "original_git": "1d61437:verification/remediation_review/check_adversarial.py",
+    "sha256": "d67f74f3c560a4bee17d703734a2b48ac5e88d0624351e51dfef5356e59f5b9b",
+    "byte_identical": true
+  },
+  {
+    "file": "check_c1_controls.py",
+    "original_git": "a0088ff:verification/c1_review/check_c1_controls.py",
+    "sha256": "b021e634c12c47074cb65d138eed083e544c2323eabcd19f5b372df34c914033",
+    "byte_identical": true
+  },
+  {
+    "file": "check_c2.py",
+    "original_git": "40e75d5:verification/c2_review/check_c2.py",
+    "sha256": "0d51e6a4e00058006ddb2584f6894ba9b53f8be75a950c03bcbd54c72513367f",
+    "byte_identical": true
+  },
+  {
+    "file": "check_c3.py",
+    "original_git": "36919b0:verification/c3_review/check_c3.py",
+    "sha256": "6e76cce1f9eb9ce3b2e88df4766314851bf0d24ee841d99be6f47e5454971e1c",
+    "byte_identical": true
+  }
+]

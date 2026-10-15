@@ -1,0 +1,6 @@
+mech-demo scenario=underclamped_head (L1 instruments, UNCALIBRATED):
+  steady_leak_g_min   : 2163.403
+  compression_kPa     : 0
+  leak_pct            : 99.8
+  split crank/exh/cool: 1.00/0.00/0.00 (exh: no port -> not instrumented)
+  verdict             : Discriminated { cause: Rings, by_measurements: "compression + leak-down to crankcase" }

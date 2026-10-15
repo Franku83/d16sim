@@ -554,3 +554,19 @@ detención. Batch S26–S30 autorizado; S31 prohibido.
   S30 **22/32**, adversarial **19/19**, C1 **15/15**. Ralentí nominal
   idéntico (1047.3038737 rpm): solo validación.
 - **STOP**: no se inicia R03/R04/R05 ni S31; no se fusiona a `r01-r05`.
+
+## 2026-10-15 · Remediación R01–R02-C4 (IMPLEMENTED_PENDING_INDEPENDENT_REVIEW)
+
+- Base3aef5f6, rama aislada remediation/r01-r02-c4. Referencias: ADR-042,
+  docs/remediation/c4/C4_BATCH_REPORT.md y autorización formal opción A.
+- C3-01: presión derivada de plenum/escape validada en restore/no-op;
+  C3-02: procedencia compuesta prior conserva origen y límites actuales;
+  C3-03: coherencia estricta modelo/payload; C3-04: resistencia finita o Err.
+- Estado físico/accounting/parametrización nominal sin cambios; metadata
+  prior opcional, fuera del hash. Ralentí1047.3038737395177RPM preservado.
+- Rust215/0, fmt/clippy exit0, adversarial19/19, C1 15/15, C2 11/11,
+  dirigidos C3 11/11. S30 **literal21/32** (caso14 incoherente rechazado)
+  y **copia adaptada autorizada22/32**; cuatro oráculos byte-idénticos.
+  Las dos ejecuciones y todos los rojos se conservan separados.
+- No se autoconcede gate ni certificación científica; no merge/ff a
+  remediation/r01-r05 ni master. STOP; no R03/R04/R05/S31.

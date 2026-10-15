@@ -137,6 +137,10 @@ pub struct MigrationProvenance {
     /// la historia conocida) o `approximate_hot` (había combustible/movimiento:
     /// la continuación no es equivalente a la trayectoria histórica).
     pub continuation: String,
+    /// Registros anteriores completos, del más reciente hacia su origen.
+    /// Vacío en archivos previos; metadata fuera de `state_hash`.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub prior: Vec<MigrationProvenance>,
 }
 
 impl EngineSnapshot {
