@@ -1,0 +1,15 @@
+{
+  "cases": 11,
+  "passed": 7,
+  "failures": 4,
+  "errors": 0,
+  "predicates_executed": 323,
+  "rows": 333,
+  "families": 11,
+  "failure_names": [
+    "test_02_node_derived_pressure_and_density",
+    "test_06_battery_derived_result_finite",
+    "test_10_incoherent_known_schema_contract",
+    "test_11_inherited_neutral_provenance_does_not_mask_new_history_loss"
+  ]
+}

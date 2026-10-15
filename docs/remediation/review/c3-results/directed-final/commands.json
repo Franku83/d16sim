@@ -1,0 +1,173 @@
+[
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-verification-c3/verification/c3_review/Cargo.toml",
+      "--bin",
+      "c3-directed",
+      "--",
+      "fields"
+    ],
+    "cwd": "/home/franku/projects/d16sim-verification-c3",
+    "exit": 0,
+    "elapsed_s": 0.9575413879999815,
+    "mode": "fields"
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-verification-c3/verification/c3_review/Cargo.toml",
+      "--bin",
+      "c3-directed",
+      "--",
+      "thermo"
+    ],
+    "cwd": "/home/franku/projects/d16sim-verification-c3",
+    "exit": 0,
+    "elapsed_s": 0.028220522000083292,
+    "mode": "thermo"
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-verification-c3/verification/c3_review/Cargo.toml",
+      "--bin",
+      "c3-directed",
+      "--",
+      "thermal"
+    ],
+    "cwd": "/home/franku/projects/d16sim-verification-c3",
+    "exit": 0,
+    "elapsed_s": 0.029795613000032972,
+    "mode": "thermal"
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-verification-c3/verification/c3_review/Cargo.toml",
+      "--bin",
+      "c3-directed",
+      "--",
+      "battery"
+    ],
+    "cwd": "/home/franku/projects/d16sim-verification-c3",
+    "exit": 0,
+    "elapsed_s": 0.08004913299987493,
+    "mode": "battery"
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-verification-c3/verification/c3_review/Cargo.toml",
+      "--bin",
+      "c3-directed",
+      "--",
+      "replay"
+    ],
+    "cwd": "/home/franku/projects/d16sim-verification-c3",
+    "exit": 0,
+    "elapsed_s": 0.4576993760001642,
+    "mode": "replay"
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-verification-c3/verification/c3_review/Cargo.toml",
+      "--bin",
+      "c3-directed",
+      "--",
+      "semantics"
+    ],
+    "cwd": "/home/franku/projects/d16sim-verification-c3",
+    "exit": 0,
+    "elapsed_s": 0.03581985000005261,
+    "mode": "semantics"
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-verification-c3/verification/c3_review/producer_c2/Cargo.toml",
+      "--bin",
+      "c2-directed-control",
+      "--",
+      "thermo"
+    ],
+    "cwd": "/home/franku/projects/d16sim-verification-c3",
+    "exit": 0,
+    "elapsed_s": 0.9500266789998477,
+    "mode": "c2-control-thermo"
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-verification-c3/verification/c3_review/producer_c2/Cargo.toml",
+      "--bin",
+      "c2-directed-control",
+      "--",
+      "battery"
+    ],
+    "cwd": "/home/franku/projects/d16sim-verification-c3",
+    "exit": 0,
+    "elapsed_s": 0.051060035000091375,
+    "mode": "c2-control-battery"
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-verification-c3/verification/c3_review/producer_c2/Cargo.toml",
+      "--bin",
+      "c2-directed-control",
+      "--",
+      "semantics"
+    ],
+    "cwd": "/home/franku/projects/d16sim-verification-c3",
+    "exit": 0,
+    "elapsed_s": 0.035538211999892155,
+    "mode": "c2-control-semantics"
+  }
+]

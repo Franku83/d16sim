@@ -1,0 +1,17 @@
+[package]
+name="d16sim-c2-history-c1"
+version="0.1.0"
+edition="2021"
+publish=false
+[workspace]
+[dependencies]
+engine={path="../../../target/remediation-review-c1/crates/engine"}
+kinematics={path="../../../target/remediation-review-c1/crates/kinematics"}
+serde_json="1.0"
+
+crank={path="../../../target/remediation-review-c1/crates/crank"}
+thermal={path="../../../target/remediation-review-c1/crates/thermal"}
+
+[[bin]]
+name="previous-control"
+path="src/previous_control.rs"

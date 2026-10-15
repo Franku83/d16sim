@@ -1,0 +1,39 @@
+[
+  {
+    "path": "/home/franku/projects/d16sim",
+    "head": "ff09a0dda82188e6bf27a80d17c902f8972a39d2",
+    "status": [
+      "?? docs/remediation/D16SIM_REMEDIATION_R01_R05_SPEC_v1.0.md"
+    ]
+  },
+  {
+    "path": "/home/franku/projects/d16sim-audit",
+    "head": "25d528e3ff5b31eaeab0c894c4227b3e7d3a574c",
+    "status": []
+  },
+  {
+    "path": "/home/franku/projects/d16sim-remediation",
+    "head": "8a7e8686e4e8831fb30d1a71b815e67e7d7139ef",
+    "status": []
+  },
+  {
+    "path": "/home/franku/projects/d16sim-remediation-c1",
+    "head": "caad1cbf31d01531e0fbd81be6190f52b2d1c2d7",
+    "status": []
+  },
+  {
+    "path": "/home/franku/projects/d16sim-remediation-c2",
+    "head": "a0040c58174a6cf6a2ac84e38605eafd2f584159",
+    "status": []
+  },
+  {
+    "path": "/home/franku/projects/d16sim-remediation-c3",
+    "head": "3aef5f6ccdc076dad6e8be627a5eb836b26ee998",
+    "status": []
+  },
+  {
+    "path": "/home/franku/projects/d16sim-verification",
+    "head": "40e75d54ba5b09d33e358b5777314ea2c657740a",
+    "status": []
+  }
+]

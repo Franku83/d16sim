@@ -1,0 +1,173 @@
+[
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-verification-c3/verification/c3_review/Cargo.toml",
+      "--bin",
+      "c3-directed",
+      "--",
+      "fields"
+    ],
+    "cwd": "/home/franku/projects/d16sim-verification-c3",
+    "exit": 0,
+    "elapsed_s": 1.0537111419998837,
+    "mode": "fields"
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-verification-c3/verification/c3_review/Cargo.toml",
+      "--bin",
+      "c3-directed",
+      "--",
+      "thermo"
+    ],
+    "cwd": "/home/franku/projects/d16sim-verification-c3",
+    "exit": 0,
+    "elapsed_s": 0.027109488999940368,
+    "mode": "thermo"
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-verification-c3/verification/c3_review/Cargo.toml",
+      "--bin",
+      "c3-directed",
+      "--",
+      "thermal"
+    ],
+    "cwd": "/home/franku/projects/d16sim-verification-c3",
+    "exit": 0,
+    "elapsed_s": 0.028188334000105897,
+    "mode": "thermal"
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-verification-c3/verification/c3_review/Cargo.toml",
+      "--bin",
+      "c3-directed",
+      "--",
+      "battery"
+    ],
+    "cwd": "/home/franku/projects/d16sim-verification-c3",
+    "exit": 0,
+    "elapsed_s": 0.0804573339999024,
+    "mode": "battery"
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-verification-c3/verification/c3_review/Cargo.toml",
+      "--bin",
+      "c3-directed",
+      "--",
+      "replay"
+    ],
+    "cwd": "/home/franku/projects/d16sim-verification-c3",
+    "exit": 0,
+    "elapsed_s": 0.46352952799998093,
+    "mode": "replay"
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-verification-c3/verification/c3_review/Cargo.toml",
+      "--bin",
+      "c3-directed",
+      "--",
+      "semantics"
+    ],
+    "cwd": "/home/franku/projects/d16sim-verification-c3",
+    "exit": 0,
+    "elapsed_s": 0.03615196900000228,
+    "mode": "semantics"
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-verification-c3/verification/c3_review/producer_c2/Cargo.toml",
+      "--bin",
+      "c2-directed-control",
+      "--",
+      "thermo"
+    ],
+    "cwd": "/home/franku/projects/d16sim-verification-c3",
+    "exit": 0,
+    "elapsed_s": 1.0165694689999327,
+    "mode": "c2-control-thermo"
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-verification-c3/verification/c3_review/producer_c2/Cargo.toml",
+      "--bin",
+      "c2-directed-control",
+      "--",
+      "battery"
+    ],
+    "cwd": "/home/franku/projects/d16sim-verification-c3",
+    "exit": 0,
+    "elapsed_s": 0.05237418899992008,
+    "mode": "c2-control-battery"
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-verification-c3/verification/c3_review/producer_c2/Cargo.toml",
+      "--bin",
+      "c2-directed-control",
+      "--",
+      "semantics"
+    ],
+    "cwd": "/home/franku/projects/d16sim-verification-c3",
+    "exit": 0,
+    "elapsed_s": 0.035301854000181265,
+    "mode": "c2-control-semantics"
+  }
+]

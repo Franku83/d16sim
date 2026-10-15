@@ -1,0 +1,11 @@
+warning: unused import: `std::f64::consts::PI`
+ --> src/c3_directed.rs:4:5
+  |
+4 | use std::f64::consts::PI;
+  |     ^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: `d16sim-independent-probes` (bin "c3-directed") generated 1 warning (run `cargo fix --bin "c3-directed" -p d16sim-independent-probes` to apply 1 suggestion)
+    Finished `release` profile [optimized] target(s) in 0.01s
+     Running `verification/c3_review/target/release/c3-directed replay`

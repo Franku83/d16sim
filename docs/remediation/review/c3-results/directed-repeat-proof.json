@@ -1,0 +1,8 @@
+{
+  "fields": true,
+  "thermo": true,
+  "thermal": true,
+  "battery": true,
+  "replay": true,
+  "semantics": true
+}

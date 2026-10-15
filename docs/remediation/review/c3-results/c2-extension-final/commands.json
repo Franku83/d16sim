@@ -1,0 +1,150 @@
+[
+  {
+    "argv": [
+      "python3",
+      "/home/franku/projects/d16sim-verification-c3/verification/c3_review/run_history.py",
+      "--worktree",
+      "/home/franku/projects/d16sim-verification-c3",
+      "--output",
+      "/home/franku/projects/d16sim-verification/docs/remediation/review/c3-results/c2-extension-final/producer-matrix"
+    ],
+    "exit": 0,
+    "elapsed_s": 25.655303155000183,
+    "label": "producer-driver",
+    "env": null
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-verification-c3/verification/c3_review/producer_c1/Cargo.toml",
+      "--bin",
+      "previous-control"
+    ],
+    "exit": 0,
+    "elapsed_s": 0.3976799449999362,
+    "label": "previous-c1-controls",
+    "env": null
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-verification-c3/verification/c3_review/Cargo.toml",
+      "--bin",
+      "c2-boundaries",
+      "--",
+      "matrix"
+    ],
+    "exit": 0,
+    "elapsed_s": 1.8317672560001483,
+    "label": "new-matrix",
+    "env": {
+      "D16_C2_FIXTURES": "/home/franku/projects/d16sim-verification/docs/remediation/review/c3-results/c2-extension-final/producer-matrix"
+    }
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-verification-c3/verification/c3_review/Cargo.toml",
+      "--bin",
+      "c2-boundaries",
+      "--",
+      "thermal"
+    ],
+    "exit": 0,
+    "elapsed_s": 0.03700878099994043,
+    "label": "new-thermal",
+    "env": {
+      "D16_C2_FIXTURES": "/home/franku/projects/d16sim-verification/docs/remediation/review/c3-results/c2-extension-final/producer-matrix"
+    }
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-verification-c3/verification/c3_review/Cargo.toml",
+      "--bin",
+      "c2-boundaries",
+      "--",
+      "diagnostics"
+    ],
+    "exit": 0,
+    "elapsed_s": 0.029997829999956593,
+    "label": "new-diagnostic",
+    "env": {
+      "D16_C2_FIXTURES": "/home/franku/projects/d16sim-verification/docs/remediation/review/c3-results/c2-extension-final/producer-matrix"
+    }
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-verification-c3/verification/c3_review/Cargo.toml",
+      "--bin",
+      "c2-boundaries",
+      "--",
+      "snapshots"
+    ],
+    "exit": 0,
+    "elapsed_s": 0.03658201200005351,
+    "label": "new-snapshots",
+    "env": {
+      "D16_C2_FIXTURES": "/home/franku/projects/d16sim-verification/docs/remediation/review/c3-results/c2-extension-final/producer-matrix"
+    }
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-verification-c3/verification/c3_review/Cargo.toml",
+      "--bin",
+      "c2-boundaries",
+      "--",
+      "focused"
+    ],
+    "exit": 0,
+    "elapsed_s": 0.03928074699979334,
+    "label": "focused",
+    "env": {
+      "D16_C2_FIXTURES": "/home/franku/projects/d16sim-verification/docs/remediation/review/c3-results/c2-extension-final/producer-matrix"
+    }
+  },
+  {
+    "argv": [
+      "python3",
+      "/home/franku/projects/d16sim-verification-c3/verification/c3_review/check_c2.py"
+    ],
+    "exit": 0,
+    "elapsed_s": 0.059172244999899704,
+    "label": "new-contract-check",
+    "env": {
+      "D16_C2_RESULTS": "/home/franku/projects/d16sim-verification/docs/remediation/review/c3-results/c2-extension-final"
+    }
+  }
+]

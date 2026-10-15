@@ -1,0 +1,15 @@
+{"data":{"expected_valid":false,"label":"-300.0","resistance":null,"resistance_ok":false,"resume_ok":false,"run_ok":false,"t_c":-300.0,"terminal_voltage_ok":false,"unchanged_on_error":true,"validated":false},"probe":"battery"}
+{"data":{"expected_valid":false,"label":"-273.15","resistance":null,"resistance_ok":false,"resume_ok":false,"run_ok":false,"t_c":-273.15,"terminal_voltage_ok":false,"unchanged_on_error":true,"validated":false},"probe":"battery"}
+{"data":{"expected_valid":true,"label":"-273.149999","resistance":0.05690399984,"resistance_ok":true,"resume_ok":true,"run_ok":true,"t_c":-273.149999,"terminal_voltage_ok":true,"unchanged_on_error":true,"validated":true},"probe":"battery"}
+{"data":{"expected_valid":true,"label":"-20.0","resistance":0.0164,"resistance_ok":true,"resume_ok":true,"run_ok":true,"t_c":-20.0,"terminal_voltage_ok":true,"unchanged_on_error":true,"validated":true},"probe":"battery"}
+{"data":{"expected_valid":true,"label":"-1.0","resistance":0.01336,"resistance_ok":true,"resume_ok":true,"run_ok":true,"t_c":-1.0,"terminal_voltage_ok":true,"unchanged_on_error":true,"validated":true},"probe":"battery"}
+{"data":{"expected_valid":true,"label":"0.0","resistance":0.0132,"resistance_ok":true,"resume_ok":true,"run_ok":true,"t_c":0.0,"terminal_voltage_ok":true,"unchanged_on_error":true,"validated":true},"probe":"battery"}
+{"data":{"expected_valid":true,"label":"20.0","resistance":0.01,"resistance_ok":true,"resume_ok":true,"run_ok":true,"t_c":20.0,"terminal_voltage_ok":true,"unchanged_on_error":true,"validated":true},"probe":"battery"}
+{"data":{"expected_valid":true,"label":"100.0","resistance":0.01,"resistance_ok":true,"resume_ok":true,"run_ok":true,"t_c":100.0,"terminal_voltage_ok":true,"unchanged_on_error":true,"validated":true},"probe":"battery"}
+{"data":{"expected_valid":false,"label":"NaN","resistance":null,"resistance_ok":false,"resume_ok":false,"run_ok":false,"t_c":null,"terminal_voltage_ok":false,"unchanged_on_error":true,"validated":false},"probe":"battery"}
+{"data":{"expected_valid":false,"label":"inf","resistance":null,"resistance_ok":false,"resume_ok":false,"run_ok":false,"t_c":null,"terminal_voltage_ok":false,"unchanged_on_error":true,"validated":false},"probe":"battery"}
+{"data":{"expected_valid":false,"label":"-inf","resistance":null,"resistance_ok":false,"resume_ok":false,"run_ok":false,"t_c":null,"terminal_voltage_ok":false,"unchanged_on_error":true,"validated":false},"probe":"battery"}
+{"data":{"r0":4.4942328371557893e+307,"resistance_finite":true,"resistance_ok":true,"run_ok":true,"temp_c":-20.0,"validated":true},"probe":"battery_extreme"}
+{"data":{"r0":1.7976931348623157e+308,"resistance_finite":false,"resistance_ok":true,"run_ok":true,"temp_c":-20.0,"validated":true},"probe":"battery_extreme"}
+{"data":{"r0":4.4942328371557893e+307,"resistance_finite":true,"resistance_ok":true,"run_ok":true,"temp_c":20.0,"validated":true},"probe":"battery_extreme"}
+{"data":{"r0":1.7976931348623157e+308,"resistance_finite":true,"resistance_ok":true,"run_ok":true,"temp_c":20.0,"validated":true},"probe":"battery_extreme"}

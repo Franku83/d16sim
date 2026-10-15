@@ -1,0 +1,8 @@
+{
+  "file": "verification/c3_review/fixtures/genuine-v1-cold.json",
+  "producer_git": "254126618fb17b5e09c398078b2f1efd1963de25",
+  "reference": "40e75d5:docs/remediation/review/c2-results/run-01/historical-v1-cold.json",
+  "file_sha256": "b093fe1836d81be84141173f50e0d524999e8dc6ea00e13054172bbac66b0776",
+  "regenerated_byte_identical": true,
+  "state_hash": "deb04a1b413455e20c057ec5cca14c28d691ab52630cef28d172c9224b0dea93"
+}

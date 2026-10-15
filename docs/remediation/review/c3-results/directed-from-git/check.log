@@ -1,0 +1,51 @@
+test_01_complete_cam_and_injector_fields (__main__.C3.test_01_complete_cam_and_injector_fields) ... ok
+test_02_node_derived_pressure_and_density (__main__.C3.test_02_node_derived_pressure_and_density) ... FAIL
+test_03_cylinder_derived_values (__main__.C3.test_03_cylinder_derived_values) ... ok
+test_04_contextual_thermal_energy (__main__.C3.test_04_contextual_thermal_energy) ... ok
+test_05_battery_temperature_domain (__main__.C3.test_05_battery_temperature_domain) ... ok
+test_06_battery_derived_result_finite (__main__.C3.test_06_battery_derived_result_finite) ... FAIL
+test_07_pressure_history_is_conditionally_required (__main__.C3.test_07_pressure_history_is_conditionally_required) ... ok
+test_08_other_memory_persisted (__main__.C3.test_08_other_memory_persisted) ... ok
+test_09_known_coherent_and_unknown_semantics (__main__.C3.test_09_known_coherent_and_unknown_semantics) ... ok
+test_10_incoherent_known_schema_contract (__main__.C3.test_10_incoherent_known_schema_contract) ... FAIL
+
+======================================================================
+FAIL: test_02_node_derived_pressure_and_density (__main__.C3.test_02_node_derived_pressure_and_density)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/franku/projects/d16sim-verification-c3/verification/c3_review/check_c3.py", line 20, in test_02_node_derived_pressure_and_density
+    if not valid:self.check(not r['restore_ok'] and not r['resume_ok'] and r['unchanged'],r)
+                 ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/franku/projects/d16sim-verification-c3/verification/c3_review/check_c3.py", line 10, in check
+    def check(self,ok,msg):C3.predicates+=1;self.assertTrue(ok,str(msg))
+                                            ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+AssertionError: False is not true : {'case': 'pressure_overflow', 'density_finite_positive': True, 'end': 0.0, 'energy_finite': True, 'error': None, 'hash_valid': True, 'node': 'plenum', 'panic': False, 'pressure': None, 'pressure_finite_positive': False, 'restore_ok': True, 'resume_ok': True, 'unchanged': False}
+
+======================================================================
+FAIL: test_06_battery_derived_result_finite (__main__.C3.test_06_battery_derived_result_finite)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/franku/projects/d16sim-verification-c3/verification/c3_review/check_c3.py", line 34, in test_06_battery_derived_result_finite
+    for r in rows('battery_extreme'):self.check(not r['resistance_ok'] or r['resistance_finite'],r)
+                                     ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/franku/projects/d16sim-verification-c3/verification/c3_review/check_c3.py", line 10, in check
+    def check(self,ok,msg):C3.predicates+=1;self.assertTrue(ok,str(msg))
+                                            ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+AssertionError: False is not true : {'r0': 1.7976931348623157e+308, 'resistance_finite': False, 'resistance_ok': True, 'run_ok': True, 'temp_c': -20.0, 'validated': True}
+
+======================================================================
+FAIL: test_10_incoherent_known_schema_contract (__main__.C3.test_10_incoherent_known_schema_contract)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/franku/projects/d16sim-verification-c3/verification/c3_review/check_c3.py", line 53, in test_10_incoherent_known_schema_contract
+    if m is not None and m['schema_version'] in [1,2] and m['schema_version']!=r['schema']:self.check(not r['accepted'],r)
+                                                                                           ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/home/franku/projects/d16sim-verification-c3/verification/c3_review/check_c3.py", line 10, in check
+    def check(self,ok,msg):C3.predicates+=1;self.assertTrue(ok,str(msg))
+                                            ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+AssertionError: False is not true : {'accepted': True, 'hash_valid': True, 'model': {'combustion_accounting': 1, 'schema_version': 2}, 'provenance': {'continuation': 'approximate_hot', 'from_schema': 1, 'missing_fields': ['thermal'], 'original_hash': 'f78a6f8e49f2874b7feeeaf6dfba4f72519184082e3340a7cf7c389942d195ae', 'transformation': 'schema 1 -> 2: historical v1 migrated (thermal/node fuel/pmax per policy)'}, 'schema': 1}
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.002s
+
+FAILED (failures=3)

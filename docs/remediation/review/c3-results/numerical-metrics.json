@@ -1,0 +1,118 @@
+{
+  "nominal_8s_50us": {
+    "dt": 5e-05,
+    "point": "idle",
+    "result": {
+      "Q_j": 46146.847889316596,
+      "energy": 6.956782748242368e-05,
+      "fuel_burn_kg": 0.0010487919974844673,
+      "fuel_in_kg": 0.0010583217284424393,
+      "mass": -7.001368804341125e-12,
+      "ok": true,
+      "rpm": 1047.3038737395177,
+      "tail_rpm_mean": 1035.1923408091127,
+      "thermal": null,
+      "work_ind_j": 13286.519773754073
+    },
+    "seconds": 8.0
+  },
+  "thermal_long": [
+    {
+      "dt": 0.0001,
+      "result": {
+        "Q_j": 800502.3980138903,
+        "energy": 2.1788798053671818e-05,
+        "fuel_burn_kg": 0.01819323631849832,
+        "fuel_in_kg": 0.018303688469214367,
+        "mass": 2.5028488255383775e-09,
+        "ok": true,
+        "rpm": 973.0157747352358,
+        "tail_rpm_mean": 980.2375965355174,
+        "thermal": {
+          "ect_c": 22.820477171278963,
+          "t_cool_c": 22.966973294570703,
+          "t_oil_c": 27.32701646615972,
+          "t_wall_c": 23.65153674692532,
+          "thermostat_0_1": 0.0
+        },
+        "work_ind_j": 152412.53429849943
+      },
+      "seconds": 120
+    },
+    {
+      "dt": 5e-05,
+      "result": {
+        "Q_j": 744323.1289702242,
+        "energy": 1.119464901329981e-05,
+        "fuel_burn_kg": 0.01691643474932448,
+        "fuel_in_kg": 0.01701779970319172,
+        "mass": 2.622592692097787e-09,
+        "ok": true,
+        "rpm": 910.96041330752,
+        "tail_rpm_mean": 923.4413972212044,
+        "thermal": {
+          "ect_c": 22.616999628978327,
+          "t_cool_c": 22.75251299301516,
+          "t_oil_c": 26.72496315117002,
+          "t_wall_c": 23.385586573894283,
+          "thermostat_0_1": 0.0
+        },
+        "work_ind_j": 141172.17410155034
+      },
+      "seconds": 120
+    },
+    {
+      "dt": 2.5e-05,
+      "result": {
+        "Q_j": 729527.3637884514,
+        "energy": 5.649137701956866e-06,
+        "fuel_burn_kg": 0.01658016735882789,
+        "fuel_in_kg": 0.016680378686217977,
+        "mass": 2.7511555596325522e-09,
+        "ok": true,
+        "rpm": 890.8893440799857,
+        "tail_rpm_mean": 907.7578142531785,
+        "thermal": {
+          "ect_c": 22.5636794798757,
+          "t_cool_c": 22.696265871524847,
+          "t_oil_c": 26.56514371643155,
+          "t_wall_c": 23.31542351403857,
+          "thermostat_0_1": 0.0
+        },
+        "work_ind_j": 138168.5567355106
+      },
+      "seconds": 120
+    }
+  ],
+  "r02_midburn": {
+    "continued_chemical_excess_j": 1157.1513880656353,
+    "continued_provenance": {
+      "continuation": "approximate_hot",
+      "from_schema": 2,
+      "missing_fields": [
+        "combustion_accounting"
+      ],
+      "original_hash": "151f2e8b54d7d154bedce8ae3473f3ba4d38831a468d23c40ae22a46b0f150b8",
+      "transformation": "schema 2 pre-C2: combustion accounting absent (ambiguous R02 deferred vs C1 stepwise); node fuel/pmax per policy"
+    },
+    "hash_verified": true,
+    "historical_hash": "151f2e8b54d7d154bedce8ae3473f3ba4d38831a468d23c40ae22a46b0f150b8",
+    "old_burn_accounted": [
+      true,
+      false,
+      true,
+      true
+    ],
+    "old_chemical_excess_j": 1157.151388065635,
+    "restored_provenance": {
+      "continuation": "approximate_hot",
+      "from_schema": 2,
+      "missing_fields": [
+        "combustion_accounting"
+      ],
+      "original_hash": "151f2e8b54d7d154bedce8ae3473f3ba4d38831a468d23c40ae22a46b0f150b8",
+      "transformation": "schema 2 pre-C2: combustion accounting absent (ambiguous R02 deferred vs C1 stepwise); node fuel/pmax per policy"
+    },
+    "time": 0.35959999999996856
+  }
+}

@@ -1,0 +1,98 @@
+[
+  {
+    "ref": "3aef5f6",
+    "file": "docs/remediation/D16SIM_REMEDIATION_R01_R05_SPEC_v1.0.md",
+    "blob": "da10f0fc30cccd1024ec0936036d8d330a8da13f",
+    "sha256": "2eddc071e35823b51c7868d826ac4870d3e7f688ac7bb681b559975256f3258d"
+  },
+  {
+    "ref": "3aef5f6",
+    "file": "docs/remediation/R01_R02_C2_BOUNDARY_MATRIX.md",
+    "blob": "449e3350edb944ded5819e4937a4a4d952d57f23",
+    "sha256": "9ac025837d220dfa09ad0867b37672f73d9d30ee3f17d98f103c2113632523e0"
+  },
+  {
+    "ref": "3aef5f6",
+    "file": "docs/remediation/R01_R02_C3_ACCEPTANCE_MATRIX.md",
+    "blob": "79a041085d91f10865da5d1717e123327bbadb46",
+    "sha256": "fb8b326217c1961c010fa0304bc5a7bee941f5c9bc9153d89a286f489ec1feab"
+  },
+  {
+    "ref": "3aef5f6",
+    "file": "docs/remediation/R01_R02_C3_BATCH_REPORT.md",
+    "blob": "64022560ddb058e255420c0d768576f6a4b509cd",
+    "sha256": "c1f5d4b5046138a5ed1575e6e905c66b27c955e193c01d87a3459e9756280208"
+  },
+  {
+    "ref": "3aef5f6",
+    "file": "docs/adr/ADR-038-remediation-state-species.md",
+    "blob": "8b84c097456f09f8ca3912e56f84272dca81d807",
+    "sha256": "e7318471214255828d97e1ffd2a21cc91dbfac5bf262ba62d281f884c2176494"
+  },
+  {
+    "ref": "3aef5f6",
+    "file": "docs/adr/ADR-039-remediation-c1-boundaries.md",
+    "blob": "88ce756044bc8d88c11d14c47b5c75fc9dbf1a35",
+    "sha256": "b0a9008e6e6b241a781212290ae4b12d3623b890eed39075ce85ce9d882c7ef5"
+  },
+  {
+    "ref": "3aef5f6",
+    "file": "docs/adr/ADR-040-remediation-c2-boundaries.md",
+    "blob": "2625e1c53cc83db7233b1080567a40c093450e56",
+    "sha256": "4b17f9ce3ee6e09df32f400d4c1b1937943bbf7a9e6212188d7625ac5fb5b939"
+  },
+  {
+    "ref": "3aef5f6",
+    "file": "docs/adr/ADR-041-remediation-c3-boundaries.md",
+    "blob": "697c63826748a03b031b8a8deff3fd28c8b0ea69",
+    "sha256": "235bb6f724d096ee603b2cb2c01fdc85b1d45a57109d353c52751bdefd225ce9"
+  },
+  {
+    "ref": "3aef5f6",
+    "file": "docs/snapshot-contract.md",
+    "blob": "f6fea9699b5e6270c1802cc702408d4bdc26eee2",
+    "sha256": "46c4f97346507da3c5fc228d5616737789b9723e8017a40b690320509fbc3432"
+  },
+  {
+    "ref": "3aef5f6",
+    "file": "docs/foundation.md",
+    "blob": "c36df0817b7489bca34077a49c5b331ecefccc33",
+    "sha256": "80c6797e2464c035ed50bc689546a141a6dcb34df0257c9a648e55812dce4b06"
+  },
+  {
+    "ref": "3aef5f6",
+    "file": "docs/EVIDENCE_POLICY.md",
+    "blob": "5dc5765f498cc7f4c27d45d1b02938ff7fd38e1d",
+    "sha256": "a96a1d21c3f7029cde87bc03b5732c77ef01fa6a031035803f7c37b540db02cc"
+  },
+  {
+    "ref": "3aef5f6",
+    "file": "docs/definition-of-done.md",
+    "blob": "ffbc28c2b2b72964c05acdf18530ba6a46e7d570",
+    "sha256": "2aaed3912137c8660ad337d8a80e50219e14c3734adc2b2767581a7d73ae55dd"
+  },
+  {
+    "ref": "40e75d5",
+    "file": "docs/remediation/review/R01_R02_C2_INDEPENDENT_VERIFICATION.md",
+    "blob": "a4071ee9016cd6bd0d13c9bee9c79b59aa566456",
+    "sha256": "58bab8c48a35f12170291354d90a1d27301f1578808414fd8ddd838439b81647"
+  },
+  {
+    "ref": "40e75d5",
+    "file": "docs/remediation/review/C2_FINDINGS.md",
+    "blob": "d5e8435e151f1d12c284f68cb490407b70134d10",
+    "sha256": "440a5f3e681033608fed573ab6ae43342801c0dacc2b797c039676ce82c40c00"
+  },
+  {
+    "ref": "40e75d5",
+    "file": "docs/remediation/review/C2_REPRODUCTION.md",
+    "blob": "093ddf98a7d7217e9105680a760a4f5bfaf886d3",
+    "sha256": "60c56dd206a31be7697d3d7ee1de9907076e5baebd2d71ea17793b22fa1ab383"
+  },
+  {
+    "ref": "40e75d5",
+    "file": "docs/remediation/review/C2_GATE_DECISION.md",
+    "blob": "4b0614626a88503aef33009fda8d9833fc996ec5",
+    "sha256": "bc672465a25a0d9e35e9eeb23fcf14e071bd9e58608a95d1d531b252d63164ee"
+  }
+]

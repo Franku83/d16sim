@@ -1,0 +1,110 @@
+[
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-verification-c3/verification/c3_review/Cargo.toml",
+      "--bin",
+      "c3-directed",
+      "--",
+      "fields"
+    ],
+    "exit": 0,
+    "elapsed_s": 0.9421916369999508,
+    "mode": "fields"
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-verification-c3/verification/c3_review/Cargo.toml",
+      "--bin",
+      "c3-directed",
+      "--",
+      "thermo"
+    ],
+    "exit": 0,
+    "elapsed_s": 0.027597752000019682,
+    "mode": "thermo"
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-verification-c3/verification/c3_review/Cargo.toml",
+      "--bin",
+      "c3-directed",
+      "--",
+      "thermal"
+    ],
+    "exit": 0,
+    "elapsed_s": 0.02713324499995906,
+    "mode": "thermal"
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-verification-c3/verification/c3_review/Cargo.toml",
+      "--bin",
+      "c3-directed",
+      "--",
+      "battery"
+    ],
+    "exit": 0,
+    "elapsed_s": 0.07841492199986533,
+    "mode": "battery"
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-verification-c3/verification/c3_review/Cargo.toml",
+      "--bin",
+      "c3-directed",
+      "--",
+      "replay"
+    ],
+    "exit": 0,
+    "elapsed_s": 0.45115285299993957,
+    "mode": "replay"
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-verification-c3/verification/c3_review/Cargo.toml",
+      "--bin",
+      "c3-directed",
+      "--",
+      "semantics"
+    ],
+    "exit": 0,
+    "elapsed_s": 0.03648865099989962,
+    "mode": "semantics"
+  }
+]

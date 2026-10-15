@@ -1,0 +1,14 @@
+{
+  "cases": 10,
+  "passed": 7,
+  "failures": 3,
+  "errors": 0,
+  "predicates_executed": 321,
+  "rows": 332,
+  "families": 10,
+  "failure_names": [
+    "test_02_node_derived_pressure_and_density",
+    "test_06_battery_derived_result_finite",
+    "test_10_incoherent_known_schema_contract"
+  ]
+}

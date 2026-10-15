@@ -1,0 +1,26 @@
+[
+  {
+    "file": "check_contracts.py",
+    "reference": "25d528e:audit/independent/check_contracts.py",
+    "sha256": "b027d9e3ab697b1974e87980765b7b4872e24e3792153ec3e02b598bd0756b36",
+    "identical": true
+  },
+  {
+    "file": "check_adversarial.py",
+    "reference": "1d61437:verification/remediation_review/check_adversarial.py",
+    "sha256": "d67f74f3c560a4bee17d703734a2b48ac5e88d0624351e51dfef5356e59f5b9b",
+    "identical": true
+  },
+  {
+    "file": "check_c1_controls.py",
+    "reference": "a0088ff:verification/c1_review/check_c1_controls.py",
+    "sha256": "b021e634c12c47074cb65d138eed083e544c2323eabcd19f5b372df34c914033",
+    "identical": true
+  },
+  {
+    "file": "check_c2.py",
+    "reference": "40e75d5:verification/c2_review/check_c2.py",
+    "sha256": "0d51e6a4e00058006ddb2584f6894ba9b53f8be75a950c03bcbd54c72513367f",
+    "identical": true
+  }
+]

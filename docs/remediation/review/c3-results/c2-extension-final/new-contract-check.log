@@ -1,0 +1,16 @@
+test_01_listed_nonfinite_inputs_rejected_atomically (__main__.C2.test_01_listed_nonfinite_inputs_rejected_atomically) ... ok
+test_02_public_active_cam_and_injector_parameters (__main__.C2.test_02_public_active_cam_and_injector_parameters) ... ok
+test_03_derived_physical_temperature_finite (__main__.C2.test_03_derived_physical_temperature_finite) ... ok
+test_04_finite_actual_thermal_energy_not_factory_temperature (__main__.C2.test_04_finite_actual_thermal_energy_not_factory_temperature) ... ok
+test_05_thermal_invalid_domains_atomic_and_valid_extremes (__main__.C2.test_05_thermal_invalid_domains_atomic_and_valid_extremes) ... ok
+test_06_diagnostics_domain_and_instrument_absence (__main__.C2.test_06_diagnostics_domain_and_instrument_absence) ... ok
+test_07_genuine_producers_and_provenance_persistence (__main__.C2.test_07_genuine_producers_and_provenance_persistence) ... ok
+test_08_all_unknown_or_incoherent_semantic_identifiers_rejected (__main__.C2.test_08_all_unknown_or_incoherent_semantic_identifiers_rejected) ... ok
+test_09_native_history_cannot_be_silently_reconstructed_exact (__main__.C2.test_09_native_history_cannot_be_silently_reconstructed_exact) ... ok
+test_10_errors_atomic_and_no_panics (__main__.C2.test_10_errors_atomic_and_no_panics) ... ok
+test_11_relational_inputs (__main__.C2.test_11_relational_inputs) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 0.004s
+
+OK
