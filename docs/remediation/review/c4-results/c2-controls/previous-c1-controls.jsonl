@@ -1,0 +1,3 @@
+{"capacity":1e+307,"case":"finite_actual_thermal","restore_ok":true,"resume_ok":true}
+{"capacity":1.7976931348623157e+308,"case":"finite_actual_thermal","restore_ok":true,"resume_ok":true}
+{"case":"missing_native_history","provenance":{"continuation":"approximate_hot","from_schema":2,"missing_fields":["plen_fuel_kg","exh_fuel_kg","fuel_emitted_kg","pmax_pa"],"original_hash":"a840fe7fde7d901a816d3680d9523e1f4cc41f9e66d5739f41fbdd8b8b6b329e","transformation":"schema 2 -> 2: node fuel inventories absent -> 0; pmax_pa -> max(current cylinder pressure, ambient); thermal per inputs"}}

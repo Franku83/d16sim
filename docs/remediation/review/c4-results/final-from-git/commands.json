@@ -1,0 +1,168 @@
+[
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-verification-c4/verification/c4_review/Cargo.toml",
+      "--bin",
+      "s30-option-a",
+      "--",
+      "engine"
+    ],
+    "cwd": "/home/franku/projects/d16sim-verification-c4",
+    "label": "adapted-engine",
+    "exit": 0,
+    "elapsed_s": 18.7208165560005,
+    "env": null
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-verification-c4/verification/c4_review/Cargo.toml",
+      "--bin",
+      "s30-option-a",
+      "--",
+      "subsystems"
+    ],
+    "cwd": "/home/franku/projects/d16sim-verification-c4",
+    "label": "adapted-subsystems",
+    "exit": 0,
+    "elapsed_s": 0.10053652899932786,
+    "env": null
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-verification-c4/verification/c4_review/Cargo.toml",
+      "--bin",
+      "s30-option-a",
+      "--",
+      "dyno"
+    ],
+    "cwd": "/home/franku/projects/d16sim-verification-c4",
+    "label": "adapted-dyno",
+    "exit": 0,
+    "elapsed_s": 1.5903703889998724,
+    "env": null
+  },
+  {
+    "argv": [
+      "python3",
+      "/home/franku/projects/d16sim-verification-c4/verification/c4_review/check_contracts.py"
+    ],
+    "cwd": "/home/franku/projects/d16sim-verification-c4",
+    "label": "adapted-check",
+    "exit": 1,
+    "elapsed_s": 0.05228988900034892,
+    "env": {
+      "D16_AUDIT_RESULTS": "/home/franku/projects/d16sim-verification/docs/remediation/review/c4-results/final-from-git/adapted"
+    }
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-verification-c4/verification/c4_review/Cargo.toml",
+      "--bin",
+      "c4-directed",
+      "--",
+      "provenance"
+    ],
+    "cwd": "/home/franku/projects/d16sim-verification-c4",
+    "label": "provenance",
+    "exit": 0,
+    "elapsed_s": 1.2027086070002042,
+    "env": null
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-verification-c4/verification/c4_review/Cargo.toml",
+      "--bin",
+      "c4-directed",
+      "--",
+      "adapter"
+    ],
+    "cwd": "/home/franku/projects/d16sim-verification-c4",
+    "label": "adapter",
+    "exit": 0,
+    "elapsed_s": 0.030709498999385687,
+    "env": null
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-verification-c4/verification/c4_review/Cargo.toml",
+      "--bin",
+      "c4-directed",
+      "--",
+      "battery"
+    ],
+    "cwd": "/home/franku/projects/d16sim-verification-c4",
+    "label": "battery",
+    "exit": 0,
+    "elapsed_s": 0.03561781000007613,
+    "env": null
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-verification-c4/verification/c4_review/Cargo.toml",
+      "--bin",
+      "c4-directed",
+      "--",
+      "nodes"
+    ],
+    "cwd": "/home/franku/projects/d16sim-verification-c4",
+    "label": "nodes",
+    "exit": 0,
+    "elapsed_s": 0.029740226000285475,
+    "env": null
+  },
+  {
+    "argv": [
+      "python3",
+      "/home/franku/projects/d16sim-verification-c4/verification/c4_review/check_c4.py"
+    ],
+    "cwd": "/home/franku/projects/d16sim-verification-c4",
+    "label": "c4-check",
+    "exit": 0,
+    "elapsed_s": 0.0503759640005228,
+    "env": {
+      "D16_C4_RESULTS": "/home/franku/projects/d16sim-verification/docs/remediation/review/c4-results/final-from-git"
+    }
+  }
+]

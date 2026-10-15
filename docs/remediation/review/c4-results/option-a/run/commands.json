@@ -1,0 +1,56 @@
+[
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-verification-c4/verification/c4_review/Cargo.toml",
+      "--bin",
+      "s30-option-a",
+      "--",
+      "engine"
+    ],
+    "exit": 0,
+    "elapsed_s": 22.197312436000175,
+    "mode": "engine"
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-verification-c4/verification/c4_review/Cargo.toml",
+      "--bin",
+      "s30-option-a",
+      "--",
+      "subsystems"
+    ],
+    "exit": 0,
+    "elapsed_s": 0.7797265720000723,
+    "mode": "subsystems"
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-verification-c4/verification/c4_review/Cargo.toml",
+      "--bin",
+      "s30-option-a",
+      "--",
+      "dyno"
+    ],
+    "exit": 0,
+    "elapsed_s": 1.5926638920000187,
+    "mode": "dyno"
+  }
+]

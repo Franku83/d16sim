@@ -1,0 +1,20 @@
+{
+  "reference": "36919b0:docs/remediation/review/c3-results/final-from-git/replay.jsonl::inherited_provenance_loss.original_provenance",
+  "old_record_equals_new_origin": true,
+  "prior_absent_in_old": true,
+  "old_leaf_preserved_and_deserialized_in_composed_roundtrips": true,
+  "old_record": {
+    "continuation": "exact_neutral",
+    "from_schema": 1,
+    "missing_fields": [
+      "thermal",
+      "combustion_accounting",
+      "plen_fuel_kg",
+      "exh_fuel_kg",
+      "fuel_emitted_kg",
+      "pmax_pa"
+    ],
+    "original_hash": "deb04a1b413455e20c057ec5cca14c28d691ab52630cef28d172c9224b0dea93",
+    "transformation": "schema 1 -> 2: historical v1 migrated (thermal/node fuel/pmax per policy)"
+  }
+}

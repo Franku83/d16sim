@@ -1,0 +1,3 @@
+   Compiling d16sim-independent-probes v0.1.0 (/home/franku/projects/d16sim-verification-c4/verification/c4_review)
+    Finished `release` profile [optimized] target(s) in 1.23s
+     Running `/home/franku/projects/d16sim-verification-c4/verification/c4_review/target/release/c4-directed provenance`

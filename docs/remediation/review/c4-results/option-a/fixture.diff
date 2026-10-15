@@ -1,0 +1,10 @@
+--- literal_main.rs
++++ derived_main.rs
+@@ -317,6 +317,7 @@
+     let i = idle();
+     let mut v1 = cold(&i);
+     v1.state.schema_version = 1;
++    v1.model = None;
+     let raw = engine_types::canonical_json(&v1.state).replace(",\"thermal\":null", "");
+     v1.state_hash = engine_types::sha256_hex(raw.as_bytes());
+     emit(

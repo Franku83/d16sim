@@ -1,0 +1,12 @@
+{
+  "cases": 8,
+  "passed": 7,
+  "failures": 1,
+  "errors": 0,
+  "predicates_executed": 252,
+  "rows": 183,
+  "families": 8,
+  "failure_names": [
+    "test_07_derived_resistance_decimal_reference_and_api_consistency"
+  ]
+}

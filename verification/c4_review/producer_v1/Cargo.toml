@@ -1,0 +1,10 @@
+[package]
+name="d16sim-c2-history-v1"
+version="0.1.0"
+edition="2021"
+publish=false
+[workspace]
+[dependencies]
+engine={path="../../../target/remediation-review-legacy/crates/engine"}
+kinematics={path="../../../target/remediation-review-legacy/crates/kinematics"}
+serde_json="1.0"

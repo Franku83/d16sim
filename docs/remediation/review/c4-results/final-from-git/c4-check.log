@@ -1,0 +1,13 @@
+test_01_node_pressure_density_errors_atomic (__main__.C4.test_01_node_pressure_density_errors_atomic) ... ok
+test_02_factory_run_audits_finite_or_error (__main__.C4.test_02_factory_run_audits_finite_or_error) ... ok
+test_03_composition_preserves_order_origin_and_scope (__main__.C4.test_03_composition_preserves_order_origin_and_scope) ... ok
+test_04_idempotence_json_recapture_no_growth (__main__.C4.test_04_idempotence_json_recapture_no_growth) ... ok
+test_05_adapter_reproduces_genuine_state_not_inconsistent_metadata (__main__.C4.test_05_adapter_reproduces_genuine_state_not_inconsistent_metadata) ... ok
+test_06_all_present_schema_pairs_strict (__main__.C4.test_06_all_present_schema_pairs_strict) ... ok
+test_07_derived_resistance_decimal_reference_and_api_consistency (__main__.C4.test_07_derived_resistance_decimal_reference_and_api_consistency) ... ok
+test_08_hash_does_not_authenticate_metadata (__main__.C4.test_08_hash_does_not_authenticate_metadata) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.004s
+
+OK

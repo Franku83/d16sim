@@ -1,0 +1,14 @@
+{"data":{"accepted":true,"apply":false,"factor":1.0,"finite":true,"p":"1e-308","t":"25.0"},"probe":"dyno_boundaries"}
+{"data":{"accepted":false,"apply":true,"factor":null,"finite":null,"p":"1e-308","t":"25.0"},"probe":"dyno_boundaries"}
+{"data":{"accepted":true,"apply":false,"factor":1.0,"finite":true,"p":"2.2250738585072014e-308","t":"25.0"},"probe":"dyno_boundaries"}
+{"data":{"accepted":false,"apply":true,"factor":null,"finite":null,"p":"2.2250738585072014e-308","t":"25.0"},"probe":"dyno_boundaries"}
+{"data":{"accepted":true,"apply":false,"factor":1.0,"finite":true,"p":"99.0","t":"1.7976931348623157e308"},"probe":"dyno_boundaries"}
+{"data":{"accepted":true,"apply":true,"factor":7.764980565874308e+152,"finite":true,"p":"99.0","t":"1.7976931348623157e308"},"probe":"dyno_boundaries"}
+{"data":{"accepted":false,"apply":false,"factor":null,"finite":null,"p":"NaN","t":"25.0"},"probe":"dyno_boundaries"}
+{"data":{"accepted":false,"apply":true,"factor":null,"finite":null,"p":"NaN","t":"25.0"},"probe":"dyno_boundaries"}
+{"data":{"accepted":false,"apply":false,"factor":null,"finite":null,"p":"99.0","t":"inf"},"probe":"dyno_boundaries"}
+{"data":{"accepted":false,"apply":true,"factor":null,"finite":null,"p":"99.0","t":"inf"},"probe":"dyno_boundaries"}
+{"data":{"accepted":false,"apply":false,"factor":null,"finite":null,"p":"99.0","t":"-300.0"},"probe":"dyno_boundaries"}
+{"data":{"accepted":false,"apply":true,"factor":null,"finite":null,"p":"99.0","t":"-300.0"},"probe":"dyno_boundaries"}
+{"data":{"accepted":true,"apply":false,"factor":1.0,"finite":true,"p":"99.0","t":"25.0"},"probe":"dyno_boundaries"}
+{"data":{"accepted":true,"apply":true,"factor":1.0,"finite":true,"p":"99.0","t":"25.0"},"probe":"dyno_boundaries"}

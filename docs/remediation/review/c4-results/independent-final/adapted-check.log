@@ -1,0 +1,157 @@
+test_01_closed_cylinder_independent_invariant (__main__.Contracts.test_01_closed_cylinder_independent_invariant) ... ok
+test_02_flow_scalings_and_bernoulli (__main__.Contracts.test_02_flow_scalings_and_bernoulli) ... ok
+test_03_integrated_mass_balance_in_3_to_30_seconds (__main__.Contracts.test_03_integrated_mass_balance_in_3_to_30_seconds) ... ok
+test_04_causal_cam_changes_both_signs (__main__.Contracts.test_04_causal_cam_changes_both_signs) ... ok
+test_05_negative_start_controls (__main__.Contracts.test_05_negative_start_controls) ... ok
+test_06_wear_film_temperature_and_subdivision (__main__.Contracts.test_06_wear_film_temperature_and_subdivision) ... ok
+test_07_damage_stays_within_declared_support (__main__.Contracts.test_07_damage_stays_within_declared_support) ... ok
+test_08_scheduler_inhibits_and_reports_latency (__main__.Contracts.test_08_scheduler_inhibits_and_reports_latency) ... ok
+test_09_hash_tamper_and_unknown_schema_reject (__main__.Contracts.test_09_hash_tamper_and_unknown_schema_reject) ... ok
+test_10_fuel_species_outflow_and_inventory (__main__.Contracts.test_10_fuel_species_outflow_and_inventory) ... ok
+test_11_replay_includes_pressure_history (__main__.Contracts.test_11_replay_includes_pressure_history) ... ok
+test_12_engine_json_roundtrip_preserves_hash (__main__.Contracts.test_12_engine_json_roundtrip_preserves_hash) ... ok
+test_13_wear_json_roundtrip_preserves_hash (__main__.Contracts.test_13_wear_json_roundtrip_preserves_hash) ... ok
+test_14_actual_v1_hash_can_migrate (__main__.Contracts.test_14_actual_v1_hash_can_migrate) ... ok
+test_15_leak_species_conserve (__main__.Contracts.test_15_leak_species_conserve) ... ok
+test_16_liquid_volume_converts_to_mass (__main__.Contracts.test_16_liquid_volume_converts_to_mass) ... ok
+test_17_dyno_sparse_tail_matches_resolved_quality (__main__.Contracts.test_17_dyno_sparse_tail_matches_resolved_quality) ... FAIL
+test_18_dyno_power_channels_share_window (__main__.Contracts.test_18_dyno_power_channels_share_window) ... FAIL
+test_19_unsupported_wear_must_not_produce_prediction (__main__.Contracts.test_19_unsupported_wear_must_not_produce_prediction) ... FAIL
+test_20_no_spontaneous_reversal_of_relaxation (__main__.Contracts.test_20_no_spontaneous_reversal_of_relaxation) ... FAIL
+test_21_decoder_reanchors_after_cyp (__main__.Contracts.test_21_decoder_reanchors_after_cyp) ... FAIL
+test_22_decoder_origin_is_not_physical_phase (__main__.Contracts.test_22_decoder_origin_is_not_physical_phase) ... FAIL
+test_23_wire_declared_seed_controls_realization (__main__.Contracts.test_23_wire_declared_seed_controls_realization) ... FAIL
+test_24_engine_invalid_config_fails_closed (__main__.Contracts.test_24_engine_invalid_config_fails_closed) ... ok
+test_25_thermal_positive_capacity (__main__.Contracts.test_25_thermal_positive_capacity) ... ok
+test_26_dyno_absolute_temperature (__main__.Contracts.test_26_dyno_absolute_temperature) ... ok
+test_27_dataset_finite_observations_and_uncertainty (__main__.Contracts.test_27_dataset_finite_observations_and_uncertainty) ... ok
+test_28_phase_periodicity_of_complete_engine (__main__.Contracts.test_28_phase_periodicity_of_complete_engine) ... FAIL
+test_29_snapshot_restore_validates_physical_state (__main__.Contracts.test_29_snapshot_restore_validates_physical_state) ... ok
+test_30_decoder_rejects_nonfinite_and_future_edges (__main__.Contracts.test_30_decoder_rejects_nonfinite_and_future_edges) ... ok
+test_31_covariance_is_in_reported_parameter_units (__main__.Contracts.test_31_covariance_is_in_reported_parameter_units) ... FAIL
+test_32_exact_initial_optimum_succeeds (__main__.Contracts.test_32_exact_initial_optimum_succeeds) ... FAIL
+
+======================================================================
+FAIL: test_17_dyno_sparse_tail_matches_resolved_quality (__main__.Contracts.test_17_dyno_sparse_tail_matches_resolved_quality)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/franku/projects/d16sim-verification-c4/verification/c4_review/check_contracts.py", line 121, in test_17_dyno_sparse_tail_matches_resolved_quality
+    self.check(r[0]["tail_torque_resid"] < 0.1, str(r[0]))
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/franku/projects/d16sim-verification-c4/verification/c4_review/check_contracts.py", line 37, in check
+    self.assertTrue(predicate, message)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : {'every': 400, 'global_mech_resid': 4.8975182895598545e-15, 'load': 8.0, 'p_acc_global_w': 2731.5023320054756, 'p_acc_tail_w': 107.45409311931175, 'p_fric_w': 12250.664453620226, 'p_ind_mean_product_w': 14753.874601814983, 'p_ind_tau_omega_w': 14750.19514172085, 'p_load_w': 4656.195106405071, 'rpm_mean': 4446.338803107964, 'samples_tail': 61, 'tail_torque_resid': 0.14592539735544707}
+
+======================================================================
+FAIL: test_18_dyno_power_channels_share_window (__main__.Contracts.test_18_dyno_power_channels_share_window)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/franku/projects/d16sim-verification-c4/verification/c4_review/check_contracts.py", line 126, in test_18_dyno_power_channels_share_window
+    self.check(abs(residue)/r["p_ind_kw"] < 0.01, f"reported channels residual={residue}kW")
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/franku/projects/d16sim-verification-c4/verification/c4_review/check_contracts.py", line 37, in check
+    self.assertTrue(predicate, message)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : reported channels residual=-3.7879635392859665kW
+
+======================================================================
+FAIL: test_19_unsupported_wear_must_not_produce_prediction (__main__.Contracts.test_19_unsupported_wear_must_not_produce_prediction)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/franku/projects/d16sim-verification-c4/verification/c4_review/check_contracts.py", line 129, in test_19_unsupported_wear_must_not_produce_prediction
+    self.check(not one("wear_unsupported")["accepted"], str(one("wear_unsupported")))
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/franku/projects/d16sim-verification-c4/verification/c4_review/check_contracts.py", line 37, in check
+    self.assertTrue(predicate, message)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : {'accepted': True, 'bearing': 0.0, 'oxidation': 1.0}
+
+======================================================================
+FAIL: test_20_no_spontaneous_reversal_of_relaxation (__main__.Contracts.test_20_no_spontaneous_reversal_of_relaxation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/franku/projects/d16sim-verification-c4/verification/c4_review/check_contracts.py", line 133, in test_20_no_spontaneous_reversal_of_relaxation
+    self.check(not r["accepted"] or r["after"] >= r["before"], str(r))
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/franku/projects/d16sim-verification-c4/verification/c4_review/check_contracts.py", line 37, in check
+    self.assertTrue(predicate, message)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : {'accepted': True, 'after': 0.09999075803759254, 'before': 0.1}
+
+======================================================================
+FAIL: test_21_decoder_reanchors_after_cyp (__main__.Contracts.test_21_decoder_reanchors_after_cyp)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/franku/projects/d16sim-verification-c4/verification/c4_review/check_contracts.py", line 137, in test_21_decoder_reanchors_after_cyp
+    self.check(r[0]["phase"] == r[1]["phase"], str(r))
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/franku/projects/d16sim-verification-c4/verification/c4_review/check_contracts.py", line 37, in check
+    self.assertTrue(predicate, message)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : [{'case': 'healthy', 'confidence': 1.0, 'phase': 690.0, 'sync': 'Synced720'}, {'case': 'recovered_after_cyp', 'confidence': 1.0, 'phase': 660.0, 'sync': 'Synced720'}]
+
+======================================================================
+FAIL: test_22_decoder_origin_is_not_physical_phase (__main__.Contracts.test_22_decoder_origin_is_not_physical_phase)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/franku/projects/d16sim-verification-c4/verification/c4_review/check_contracts.py", line 141, in test_22_decoder_origin_is_not_physical_phase
+    self.check(r[0]["phase"] == r[1]["phase"], str(r))
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/franku/projects/d16sim-verification-c4/verification/c4_review/check_contracts.py", line 37, in check
+    self.assertTrue(predicate, message)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : [{'phase': 690.0, 'rpm': 749.9999999999951, 'start': 0, 'sync': 'Synced720'}, {'phase': 540.0, 'rpm': 749.9999999999951, 'start': 5, 'sync': 'Synced720'}]
+
+======================================================================
+FAIL: test_23_wire_declared_seed_controls_realization (__main__.Contracts.test_23_wire_declared_seed_controls_realization)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/franku/projects/d16sim-verification-c4/verification/c4_review/check_contracts.py", line 145, in test_23_wire_declared_seed_controls_realization
+    self.check(r[0]["sequence"] != r[1]["sequence"], "both seeds use hardcoded 7193")
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/franku/projects/d16sim-verification-c4/verification/c4_review/check_contracts.py", line 37, in check
+    self.assertTrue(predicate, message)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : both seeds use hardcoded 7193
+
+======================================================================
+FAIL: test_28_phase_periodicity_of_complete_engine (__main__.Contracts.test_28_phase_periodicity_of_complete_engine)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/franku/projects/d16sim-verification-c4/verification/c4_review/check_contracts.py", line 162, in test_28_phase_periodicity_of_complete_engine
+    self.check(abs(r[720]["rpm"]-r[0]["rpm"]) < 1e-6, str([r[0], r[720]]))
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/franku/projects/d16sim-verification-c4/verification/c4_review/check_contracts.py", line 37, in check
+    self.assertTrue(predicate, message)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : [{'cyl_masses_kg': [6.245436218608003e-05, 6.246805107169447e-05, 3.4096832628619453e-05, 6.242351746733334e-05], 'fuel_kg': 0.0010583217284424393, 'heat_j': 46146.847889316596, 'lift_at_70_mm': 6.371502836318263, 'ok': True, 'rpm': 1047.3038737395177, 'shift_deg': 0.0, 'work_j': 13286.519773754073}, {'cyl_masses_kg': [5.344042525318029e-05, 6.175317887177705e-05, 2.4294667634956212e-05, 6.176387178149631e-05], 'fuel_kg': 0.0010322065516644686, 'heat_j': 44420.4185920162, 'lift_at_70_mm': 6.371502836318263, 'ok': True, 'rpm': 1045.8987259427386, 'shift_deg': 720.0, 'work_j': 12850.302554432208}]
+
+======================================================================
+FAIL: test_31_covariance_is_in_reported_parameter_units (__main__.Contracts.test_31_covariance_is_in_reported_parameter_units)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/franku/projects/d16sim-verification-c4/verification/c4_review/check_contracts.py", line 175, in test_31_covariance_is_in_reported_parameter_units
+    self.check(abs(r["std_reported"]/r["std_independent"]-1) < 1e-6, str(r))
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/franku/projects/d16sim-verification-c4/verification/c4_review/check_contracts.py", line 37, in check
+    self.assertTrue(predicate, message)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : {'ok': True, 'param': 2.0, 'residual': 0.0, 'start': 3.0, 'std_independent': 0.25, 'std_reported': 0.08333333332785307}
+
+======================================================================
+FAIL: test_32_exact_initial_optimum_succeeds (__main__.Contracts.test_32_exact_initial_optimum_succeeds)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/franku/projects/d16sim-verification-c4/verification/c4_review/check_contracts.py", line 179, in test_32_exact_initial_optimum_succeeds
+    self.check(r["ok"], str(r))
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/franku/projects/d16sim-verification-c4/verification/c4_review/check_contracts.py", line 37, in check
+    self.assertTrue(predicate, message)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : {'error': 'invalid fit: no descent', 'ok': False, 'start': 2.0}
+
+----------------------------------------------------------------------
+Ran 32 tests in 0.004s
+
+FAILED (failures=10)

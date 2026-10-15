@@ -1,0 +1,15 @@
+{"data":{"accepted":false,"ambient_Q_finite":null,"case":"nan","stored_energy_finite":false,"unchanged":true},"probe":"extended_thermal"}
+{"data":{"accepted":false,"ambient_Q_finite":null,"case":"inf","stored_energy_finite":false,"unchanged":true},"probe":"extended_thermal"}
+{"data":{"accepted":false,"ambient_Q_finite":null,"case":"below_abs","stored_energy_finite":true,"unchanged":true},"probe":"extended_thermal"}
+{"data":{"accepted":false,"ambient_Q_finite":null,"case":"at_abs","stored_energy_finite":true,"unchanged":true},"probe":"extended_thermal"}
+{"data":{"accepted":false,"ambient_Q_finite":null,"case":"cap_zero","stored_energy_finite":true,"unchanged":true},"probe":"extended_thermal"}
+{"data":{"accepted":false,"ambient_Q_finite":null,"case":"cap_tiny","stored_energy_finite":true,"unchanged":true},"probe":"extended_thermal"}
+{"data":{"accepted":false,"ambient_Q_finite":null,"case":"capacity_large","stored_energy_finite":false,"unchanged":true},"probe":"extended_thermal"}
+{"data":{"accepted":false,"ambient_Q_finite":null,"case":"ambient_inf","stored_energy_finite":true,"unchanged":true},"probe":"extended_thermal"}
+{"data":{"accepted":false,"ambient_Q_finite":null,"case":"ambient_cold","stored_energy_finite":true,"unchanged":true},"probe":"extended_thermal"}
+{"data":{"accepted":false,"ambient_Q_finite":null,"case":"huge_dt","stored_energy_finite":true,"unchanged":true},"probe":"extended_thermal"}
+{"data":{"all_above_abs":true,"closure_j":2.0861676830463693e-9,"initial":-272.0},"probe":"thermal_physical_control"}
+{"data":{"all_above_abs":true,"closure_j":4.4703085677610943e-10,"initial":-100.0},"probe":"thermal_physical_control"}
+{"data":{"all_above_abs":true,"closure_j":1.210719302591201e-10,"initial":20.0},"probe":"thermal_physical_control"}
+{"data":{"all_above_abs":true,"closure_j":-2.2350832296069711e-10,"initial":84.0},"probe":"thermal_physical_control"}
+{"data":{"all_above_abs":true,"closure_j":4.4701664592139423e-10,"initial":100.0},"probe":"thermal_physical_control"}

@@ -1,0 +1,25 @@
+test_01_node_pressure_density_errors_atomic (__main__.C4.test_01_node_pressure_density_errors_atomic) ... ok
+test_02_factory_run_audits_finite_or_error (__main__.C4.test_02_factory_run_audits_finite_or_error) ... ok
+test_03_composition_preserves_order_origin_and_scope (__main__.C4.test_03_composition_preserves_order_origin_and_scope) ... ok
+test_04_idempotence_json_recapture_no_growth (__main__.C4.test_04_idempotence_json_recapture_no_growth) ... ok
+test_05_adapter_reproduces_genuine_state_not_inconsistent_metadata (__main__.C4.test_05_adapter_reproduces_genuine_state_not_inconsistent_metadata) ... ok
+test_06_all_present_schema_pairs_strict (__main__.C4.test_06_all_present_schema_pairs_strict) ... ok
+test_07_derived_resistance_decimal_reference_and_api_consistency (__main__.C4.test_07_derived_resistance_decimal_reference_and_api_consistency) ... FAIL
+test_08_hash_does_not_authenticate_metadata (__main__.C4.test_08_hash_does_not_authenticate_metadata) ... ok
+
+======================================================================
+FAIL: test_07_derived_resistance_decimal_reference_and_api_consistency (__main__.C4.test_07_derived_resistance_decimal_reference_and_api_consistency)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/franku/projects/d16sim-verification-c4/verification/c4_review/check_c4.py", line 36, in test_07_derived_resistance_decimal_reference_and_api_consistency
+    self.check(r['validated']==expected and r['resistance_ok']==expected and r['terminal_ok']==expected and r['resume_ok']==expected and r['restore_ok']==expected and r['run_ok']==expected and r['unchanged_on_error'],r)
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/franku/projects/d16sim-verification-c4/verification/c4_review/check_c4.py", line 11, in check
+    def check(self,x,msg):C4.predicates+=1;self.assertTrue(x,str(msg))
+                                           ~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: False is not true : {'case': 'product_overflow', 'resistance': 1.7976931348623157e+308, 'resistance_finite_nonnegative': True, 'resistance_ok': True, 'restore_ok': True, 'resume_ok': True, 'run_ok': True, 'soc': 1.0, 'temp': 20.0, 'terminal_finite': True, 'terminal_ok': True, 'unchanged_on_error': True, 'validated': True}
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.003s
+
+FAILED (failures=1)

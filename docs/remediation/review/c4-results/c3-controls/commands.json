@@ -1,0 +1,192 @@
+[
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-verification-c4/verification/c4_review/Cargo.toml",
+      "--bin",
+      "c3-directed",
+      "--",
+      "fields"
+    ],
+    "cwd": "/home/franku/projects/d16sim-verification-c4",
+    "exit": 0,
+    "elapsed_s": 1.6662568399997326,
+    "mode": "fields"
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-verification-c4/verification/c4_review/Cargo.toml",
+      "--bin",
+      "c3-directed",
+      "--",
+      "thermo"
+    ],
+    "cwd": "/home/franku/projects/d16sim-verification-c4",
+    "exit": 0,
+    "elapsed_s": 1.711678820999623,
+    "mode": "thermo"
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-verification-c4/verification/c4_review/Cargo.toml",
+      "--bin",
+      "c3-directed",
+      "--",
+      "thermal"
+    ],
+    "cwd": "/home/franku/projects/d16sim-verification-c4",
+    "exit": 0,
+    "elapsed_s": 0.036846926999714924,
+    "mode": "thermal"
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-verification-c4/verification/c4_review/Cargo.toml",
+      "--bin",
+      "c3-directed",
+      "--",
+      "battery"
+    ],
+    "cwd": "/home/franku/projects/d16sim-verification-c4",
+    "exit": 0,
+    "elapsed_s": 0.09197746900008497,
+    "mode": "battery"
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-verification-c4/verification/c4_review/Cargo.toml",
+      "--bin",
+      "c3-directed",
+      "--",
+      "replay"
+    ],
+    "cwd": "/home/franku/projects/d16sim-verification-c4",
+    "exit": 0,
+    "elapsed_s": 0.560560677000467,
+    "mode": "replay"
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-verification-c4/verification/c4_review/Cargo.toml",
+      "--bin",
+      "c3-directed",
+      "--",
+      "semantics"
+    ],
+    "cwd": "/home/franku/projects/d16sim-verification-c4",
+    "exit": 0,
+    "elapsed_s": 0.0426650220006195,
+    "mode": "semantics"
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-verification-c4/verification/c4_review/producer_c2/Cargo.toml",
+      "--bin",
+      "c2-directed-control",
+      "--",
+      "thermo"
+    ],
+    "cwd": "/home/franku/projects/d16sim-verification-c4",
+    "exit": 0,
+    "elapsed_s": 7.472580026999822,
+    "mode": "c2-control-thermo"
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-verification-c4/verification/c4_review/producer_c2/Cargo.toml",
+      "--bin",
+      "c2-directed-control",
+      "--",
+      "battery"
+    ],
+    "cwd": "/home/franku/projects/d16sim-verification-c4",
+    "exit": 0,
+    "elapsed_s": 0.10082886899999721,
+    "mode": "c2-control-battery"
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-verification-c4/verification/c4_review/producer_c2/Cargo.toml",
+      "--bin",
+      "c2-directed-control",
+      "--",
+      "semantics"
+    ],
+    "cwd": "/home/franku/projects/d16sim-verification-c4",
+    "exit": 0,
+    "elapsed_s": 0.0751593730001332,
+    "mode": "c2-control-semantics"
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-verification-c4/verification/c4_review/producer_c2/Cargo.toml",
+      "--bin",
+      "c2-directed-control",
+      "--",
+      "replay"
+    ],
+    "cwd": "/home/franku/projects/d16sim-verification-c4",
+    "exit": 0,
+    "elapsed_s": 0.6161945469993952,
+    "mode": "c2-control-replay"
+  }
+]

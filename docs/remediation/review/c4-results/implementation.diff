@@ -1,0 +1,430 @@
+diff --git a/crates/electrical/src/battery.rs b/crates/electrical/src/battery.rs
+index 590563d..7bc14df 100644
+--- a/crates/electrical/src/battery.rs
++++ b/crates/electrical/src/battery.rs
+@@ -78,6 +78,9 @@ impl Battery {
+         if self.r0_ohm < 0.0 || self.r_ground_ohm < 0.0 {
+             return Err(bad("resistance must be >= 0"));
+         }
++        // La combinación también debe ser representable: restore/no-op no
++        // deben aceptar una configuración cuyo cálculo de R devolvería Err.
++        self.resistance()?;
+         Ok(())
+     }
+ 
+@@ -106,6 +109,11 @@ impl Battery {
+     /// temperatura no está por encima del cero absoluto. La temperatura
+     /// Celsius negativa legítima (p. ej. −20 °C) es admisible (R02-C3/C2-06).
+     pub fn resistance(&self) -> Result<f64, BatteryError> {
++        if !(self.soc.is_finite() && (0.0..=1.0).contains(&self.soc)) {
++            return Err(BatteryError::InvalidInput {
++                reason: "soc must be in [0, 1]".to_owned(),
++            });
++        }
+         for (v, name) in [(self.r0_ohm, "r0"), (self.r_ground_ohm, "r_ground")] {
+             if !(v.is_finite() && v >= 0.0) {
+                 return Err(BatteryError::InvalidInput {
+@@ -119,7 +127,13 @@ impl Battery {
+             });
+         }
+         let cold = 1.0 + 0.02 * (20.0 - self.temp_c).max(0.0);
+-        Ok((self.r0_ohm * (1.0 + 1.5 * (1.0 - self.soc)) * cold) + self.r_ground_ohm)
++        let resistance = (self.r0_ohm * (1.0 + 1.5 * (1.0 - self.soc)) * cold) + self.r_ground_ohm;
++        if !(resistance.is_finite() && resistance >= 0.0) {
++            return Err(BatteryError::InvalidInput {
++                reason: "calculated resistance not representable".to_owned(),
++            });
++        }
++        Ok(resistance)
+     }
+ 
+     /// Tensión en bornes bajo corriente I (V). Puede colapsar con SOC bajo
+@@ -203,3 +217,43 @@ mod r02_c3_tests {
+         }
+     }
+ }
++
++#[cfg(test)]
++mod r02_c4_tests {
++    #![allow(clippy::unwrap_used)]
++    use super::*;
++    #[test]
++    fn calculated_resistance_must_be_representable() {
++        for t in [-20.0, 10.0] {
++            let bad = Battery {
++                temp_c: t,
++                r0_ohm: f64::MAX,
++                ..Battery::illustrative_12v()
++            };
++            assert!(bad.validated().is_err());
++            assert!(bad.resistance().is_err());
++            assert!(bad.terminal_voltage(350.0).is_err());
++            let good = Battery {
++                r0_ohm: f64::MAX / 4.0,
++                ..bad
++            };
++            assert!(good.resistance().unwrap().is_finite());
++        }
++        let warm = Battery {
++            r0_ohm: f64::MAX,
++            ..Battery::illustrative_12v()
++        };
++        assert!(warm.resistance().unwrap().is_finite());
++        let nominal_cold = Battery {
++            temp_c: -20.0,
++            ..Battery::illustrative_12v()
++        };
++        assert!((nominal_cold.resistance().unwrap() - 0.0164).abs() < 1e-12);
++        let ideal = Battery {
++            r0_ohm: 0.0,
++            r_ground_ohm: 0.0,
++            ..Battery::illustrative_12v()
++        };
++        assert_eq!(ideal.resistance().unwrap(), 0.0);
++    }
++}
+diff --git a/crates/engine/src/run.rs b/crates/engine/src/run.rs
+index 4bcf9cc..7f691f8 100644
+--- a/crates/engine/src/run.rs
++++ b/crates/engine/src/run.rs
+@@ -550,10 +550,8 @@ impl WorkState {
+         // aunque el hash sea válido. Ausente = productor histórico (se
+         // conserva la lectura según el contrato de migración).
+         //
+-        // Tolerancia documentada: no se exige igualdad exacta entre
+-        // `model.schema_version` y `state.schema_version`, porque el fixture
+-        // de migración v1 del oráculo independiente captura bajo esquema 2 y
+-        // reetiqueta el payload a 1; ambos valores son conocidos.
++        // C4: un marcador presente debe coincidir con el payload. Los v1
++        // históricos genuinos no llevan marcador; no necesitan excepción.
+         let model_known = match &snap.model {
+             None => false,
+             Some(m) => {
+@@ -567,6 +565,11 @@ impl WorkState {
+                         reason: "unsupported combustion accounting version".to_owned(),
+                     });
+                 }
++                if m.schema_version != s.schema_version {
++                    return Err(EngineError::Invalid {
++                        reason: "model/schema version mismatch".to_owned(),
++                    });
++                }
+                 true
+             }
+         };
+@@ -586,8 +589,8 @@ impl WorkState {
+         // Procedencia de migración legacy (R02-C1/RV04 + C1-05 + C2-05):
+         // separa integridad de lectura de equivalencia de continuación física.
+         ws.provenance = snap.provenance.clone();
+-        if ws.provenance.is_none() && !native_exact {
+-            ws.provenance = Some(MigrationProvenance {
++        if !native_exact {
++            let mut current = MigrationProvenance {
+                 from_schema: s.schema_version,
+                 original_hash: snap.state_hash.clone(),
+                 transformation: legacy_transformation(s, snap.model.as_ref()),
+@@ -598,7 +601,32 @@ impl WorkState {
+                     "approximate_hot"
+                 }
+                 .to_owned(),
++                prior: Vec::new(),
++            };
++            // Una limitación previa no se elimina por recapturar defaults.
++            if ws
++                .provenance
++                .as_ref()
++                .is_some_and(|p| p.continuation == "approximate_hot")
++            {
++                current.continuation = "approximate_hot".to_owned();
++            }
++            // La procedencia del origen no acredita una nueva pérdida de
++            // historia. Conservar el registro completo y componer el límite
++            // actual. Releer el mismo envelope no añade eventos duplicados.
++            let already_recorded = ws.provenance.as_ref().is_some_and(|p| {
++                p.from_schema == current.from_schema
++                    && p.original_hash == current.original_hash
++                    && p.transformation == current.transformation
++                    && p.missing_fields == current.missing_fields
++                    && p.continuation == current.continuation
+             });
++            if !already_recorded {
++                if let Some(previous) = ws.provenance.take() {
++                    current.prior.push(previous);
++                }
++                ws.provenance = Some(current);
++            }
+         }
+         ws.m_sys_0_kg = ws.plen.m + ws.exh.m + ws.cyls.iter().map(|c| c.m).sum::<f64>();
+         ws.u_sys_0_j = ws.plen.u() + ws.exh.u() + ws.cyls.iter().map(|c| c.u).sum::<f64>();
+@@ -814,8 +842,9 @@ fn validate_derived_thermo(
+     }
+     for n in [&ws.plen, &ws.exh] {
+         let rho = n.m / n.v;
+-        if !(rho.is_finite() && rho > 0.0) {
+-            return Err(bad("node density"));
++        let p = n.p(r_gas);
++        if !(rho.is_finite() && rho > 0.0 && p.is_finite() && p > 0.0) {
++            return Err(bad("node pressure/density"));
+         }
+     }
+     Ok(())
+@@ -2503,7 +2532,7 @@ mod r02_c2_tests {
+     }
+ 
+     #[test]
+-    fn unknown_model_identifiers_are_rejected_known_ones_tolerated() {
++    fn unknown_or_incoherent_model_identifiers_are_rejected() {
+         let inp = idle_point(healthy_inputs());
+         let w = initial_state(&inp).unwrap();
+         let snap = w.snapshot();
+@@ -2515,12 +2544,11 @@ mod r02_c2_tests {
+         let mut mism = snap.clone();
+         mism.model.as_mut().unwrap().schema_version = 999;
+         assert!(WorkState::restore(&mism, &inp).is_err());
+-        // Identificador conocido (aunque declare otro esquema histórico):
+-        // se tolera para preservar el fixture de migración v1 del oráculo
+-        // original; la continuación no se declara exacta por ello.
++        // C4: conocido pero incoherente también se rechaza. La adaptación
++        // autorizada del fixture histórico no cambia esta regla productiva.
+         let mut known = snap.clone();
+         known.model.as_mut().unwrap().schema_version = 1;
+-        assert!(WorkState::restore(&known, &inp).is_ok());
++        assert!(WorkState::restore(&known, &inp).is_err());
+         // Convención actual coherente: nativo exacto.
+         assert!(WorkState::restore(&snap, &inp).is_ok());
+     }
+@@ -2682,3 +2710,144 @@ mod r02_c3_tests {
+         }
+     }
+ }
++
++#[cfg(test)]
++mod r02_c4_tests {
++    #![allow(clippy::unwrap_used)]
++    use super::*;
++
++    #[test]
++    fn composing_provenance_does_not_promote_a_prior_limit() {
++        let i = healthy_inputs();
++        let mut legacy: EngineSnapshot =
++            serde_json::from_str(include_str!("../tests/fixtures/v1_cold_2541266.json")).unwrap();
++        // Synthetic conservative metadata: neutral defaults are not evidence
++        // that an explicitly retained prior uncertainty has been resolved.
++        let mut previous = WorkState::restore(&legacy, &i).unwrap().provenance.unwrap();
++        previous.continuation = "approximate_hot".to_owned();
++        legacy.provenance = Some(previous.clone());
++        let restored = WorkState::restore(&legacy, &i).unwrap();
++        assert_eq!(restored.provenance, Some(previous));
++    }
++
++    #[test]
++    fn node_pressure_boundary_rejects_overflow_and_underflow_atomically() {
++        for plenum in [true, false] {
++            for (m, t, v, valid) in [
++                (1e-5, 1e100, 1e-214, false),
++                (1e-200, 1e-200, 1e-5, false),
++                (1e-5, 1e100, 1e-200, true),
++            ] {
++                let mut i = healthy_inputs();
++                let mut w = initial_state(&i).unwrap();
++                let n = if plenum { &mut w.plen } else { &mut w.exh };
++                n.m = m;
++                n.t = t;
++                n.v = v;
++                if plenum {
++                    i.plenum_v_m3 = v;
++                } else {
++                    i.exhaust_v_m3 = v;
++                }
++                let snap = w.snapshot();
++                assert!(snap.verified());
++                assert_eq!(WorkState::restore(&snap, &i).is_ok(), valid);
++                for end in if valid { vec![0.0] } else { vec![0.0, 1e-4] } {
++                    let mut a = w.clone();
++                    a.m_in_amb_kg = 0.123;
++                    let before = format!("{a:?}");
++                    let result = resume(&mut a, &i, end);
++                    assert_eq!(result.is_ok(), valid);
++                    if !valid {
++                        assert_eq!(before, format!("{a:?}"));
++                    }
++                }
++            }
++        }
++    }
++
++    #[test]
++    fn inherited_provenance_records_new_loss_without_erasing_origin() {
++        let mut i = healthy_inputs();
++        i.friction = FrictionModel::ChenFlynn {
++            coeffs: crank::ChenFlynnCoeffs {
++                c1_pa: 20000.0,
++                c2_dlless: 0.05,
++                c3_pa_s_m: 1000.0,
++                c4_pa_s2_m2: 100.0,
++            },
++        };
++        let legacy: EngineSnapshot =
++            serde_json::from_str(include_str!("../tests/fixtures/v1_cold_2541266.json")).unwrap();
++        assert!(legacy.verified());
++        let mut w = WorkState::restore(&legacy, &i).unwrap();
++        let origin = w.provenance.clone().unwrap();
++        assert_eq!(origin.continuation, "exact_neutral");
++        resume(&mut w, &i, 0.5).unwrap();
++        let full = w.snapshot();
++        let mut payload = full.state.clone();
++        payload.pmax_pa = None;
++        let mut incomplete = EngineSnapshot::capture_with(&payload, full.provenance.clone());
++        let restored = WorkState::restore(&incomplete, &i).unwrap();
++        let composed = restored.provenance.clone().unwrap();
++        assert_eq!(composed.continuation, "approximate_hot");
++        assert_eq!(composed.original_hash, incomplete.state_hash);
++        let json = serde_json::to_value(&composed).unwrap();
++        assert_eq!(json["prior"][0], serde_json::to_value(&origin).unwrap());
++        // Re-reading the same incomplete envelope must not grow the trail.
++        incomplete.provenance = Some(composed.clone());
++        let again = WorkState::restore(&incomplete, &i).unwrap();
++        assert_eq!(again.provenance, Some(composed.clone()));
++        // Native recapture/JSON keeps the limit; it cannot upgrade to exact.
++        let recaptured: EngineSnapshot =
++            serde_json::from_str(&serde_json::to_string(&restored.snapshot()).unwrap()).unwrap();
++        assert!(recaptured.verified());
++        assert_eq!(
++            WorkState::restore(&recaptured, &i).unwrap().provenance,
++            Some(composed)
++        );
++        let mut a = WorkState::restore(&full, &i).unwrap();
++        let mut b = restored;
++        resume(&mut a, &i, 0.55).unwrap();
++        resume(&mut b, &i, 0.55).unwrap();
++        assert_ne!(a.omega_rad_s.to_bits(), b.omega_rad_s.to_bits());
++    }
++
++    #[test]
++    fn schema_pair_strict_even_for_cold_retagged_fixture() {
++        let i = healthy_inputs();
++        let mut retagged = initial_state(&i).unwrap().snapshot().state;
++        retagged.schema_version = 1;
++        let coherent = EngineSnapshot::capture(&retagged);
++        assert!(WorkState::restore(&coherent, &i).is_ok());
++        let mut bad = coherent.clone();
++        bad.model.as_mut().unwrap().schema_version = 2;
++        assert!(bad.verified());
++        assert!(WorkState::restore(&bad, &i).is_err());
++        let genuine: EngineSnapshot =
++            serde_json::from_str(include_str!("../tests/fixtures/v1_cold_2541266.json")).unwrap();
++        assert!(genuine.model.is_none() && genuine.verified());
++        assert!(WorkState::restore(&genuine, &i).is_ok());
++        let mut native = initial_state(&i).unwrap().snapshot();
++        native.model.as_mut().unwrap().schema_version = 1;
++        assert!(native.verified());
++        assert!(WorkState::restore(&native, &i).is_err());
++    }
++
++    #[test]
++    fn battery_resistance_overflow_is_an_atomic_engine_error() {
++        let mut i = healthy_inputs();
++        i.starter.as_mut().unwrap().2.temp_c = 10.0;
++        i.starter.as_mut().unwrap().2.r0_ohm = f64::MAX;
++        i.t_end_s = 0.001;
++        assert!(run_engine(&i).is_err());
++        let mut w = initial_state(&healthy_inputs()).unwrap();
++        w.m_in_amb_kg = 0.123;
++        let before = format!("{w:?}");
++        assert!(WorkState::restore(&w.snapshot(), &i).is_err());
++        assert!(resume(&mut w, &i, 0.0).is_err());
++        assert_eq!(before, format!("{w:?}"));
++        assert!(resume(&mut w, &i, 0.001).is_err());
++        assert_eq!(before, format!("{w:?}"));
++    }
++}
+diff --git a/crates/engine/src/state.rs b/crates/engine/src/state.rs
+index 597211e..0cfb40a 100644
+--- a/crates/engine/src/state.rs
++++ b/crates/engine/src/state.rs
+@@ -137,6 +137,10 @@ pub struct MigrationProvenance {
+     /// la historia conocida) o `approximate_hot` (había combustible/movimiento:
+     /// la continuación no es equivalente a la trayectoria histórica).
+     pub continuation: String,
++    /// Registros anteriores completos, del más reciente hacia su origen.
++    /// Vacío en archivos previos; metadata fuera de `state_hash`.
++    #[serde(default, skip_serializing_if = "Vec::is_empty")]
++    pub prior: Vec<MigrationProvenance>,
+ }
+ 
+ impl EngineSnapshot {
+diff --git a/crates/engine/tests/fixtures/README.md b/crates/engine/tests/fixtures/README.md
+new file mode 100644
+index 0000000..c36d5a9
+--- /dev/null
++++ b/crates/engine/tests/fixtures/README.md
+@@ -0,0 +1,7 @@
++# Fixture histórico genuino v1
++
++Productor/tipo original desde Git `254126618fb17b5e09c398078b2f1efd1963de25`. Copia byte-exacta de `36919b0455e8eaf741a72ff4a74ae85f40e116ba:verification/c3_review/fixtures/genuine-v1-cold.json`; fuente generada por el solver/tipo históricos, no un DTO manual ni medición experimental.
++
++SHA256 del archivo: `b093fe1836d81be84141173f50e0d524999e8dc6ea00e13054172bbac66b0776`. Hash canónico del estado: `deb04a1b413455e20c057ec5cca14c28d691ab52630cef28d172c9224b0dea93`.
++
++V1 frío genuino, sin model/provenance ni historia posterior. La regresión C3-02 lo migra, avanza y retira pmax preservando el origen, para comprobar la composición de límites. El fixture no se modifica ni se calibra.
+diff --git a/crates/engine/tests/fixtures/v1_cold_2541266.json b/crates/engine/tests/fixtures/v1_cold_2541266.json
+new file mode 100644
+index 0000000..4d82237
+--- /dev/null
++++ b/crates/engine/tests/fixtures/v1_cold_2541266.json
+@@ -0,0 +1 @@
++{"state":{"schema_version":1,"time_s":0.0,"theta_global_rad":0.0,"omega_rad_s":0.0,"prev_local_deg":[0.0,180.0,540.0,360.0],"cyls":[{"m_kg":0.000057005984276321486,"u_j":13.703269518294983,"fresh_frac":1.0,"fuel_kg":0.0,"burn_latched_kg":0.0,"burn_accounted":true},{"m_kg":0.000535856252197422,"u_j":128.81073347197287,"fresh_frac":1.0,"fuel_kg":0.0,"burn_latched_kg":0.0,"burn_accounted":true},{"m_kg":0.000535856252197422,"u_j":128.81073347197287,"fresh_frac":1.0,"fuel_kg":0.0,"burn_latched_kg":0.0,"burn_accounted":true},{"m_kg":0.000057005984276321486,"u_j":13.703269518294983,"fresh_frac":1.0,"fuel_kg":0.0,"burn_latched_kg":0.0,"burn_accounted":true}],"plen_m_kg":0.0024086561861695714,"plen_t_k":293.15,"plen_fresh":1.0,"exh_m_kg":0.0018064921396271788,"exh_t_k":293.15,"exh_fresh":0.0,"fuel_injected_kg":0.0,"fuel_burned_kg":0.0,"heat_released_j":0.0,"work_ind_j":0.0,"work_fric_j":0.0,"work_starter_j":0.0,"work_load_j":0.0},"state_hash":"deb04a1b413455e20c057ec5cca14c28d691ab52630cef28d172c9224b0dea93"}
+diff --git a/docs/snapshot-contract.md b/docs/snapshot-contract.md
+index f6fea96..0f46fa3 100644
+--- a/docs/snapshot-contract.md
++++ b/docs/snapshot-contract.md
+@@ -35,11 +35,13 @@
+   (por paso): se migra con procedencia `approximate_hot`/`exact_neutral` y
+   **nunca** se declara nativo exacto. Un `model` presente con esquema
+   desconocido (∉ {1,2}) o contabilidad desconocida (≠ 1) se **rechaza** en
+-  todos los esquemas, incluido v1, aunque el hash sea válido. Tolerancia
+-  documentada: no se exige igualdad exacta `model.schema_version ↔
+-  state.schema_version` (el fixture de migración v1 del oráculo independiente
+-  captura bajo esquema 2 y reetiqueta el payload a 1); solo se exige que los
+-  identificadores sean conocidos.
++  todos los esquemas, incluido v1, aunque el hash sea válido. **C4:** además,
++  todo marcador presente debe cumplir `model.schema_version ==
++  state.schema_version`; no hay excepciones frías ni por fixture. El v1
++  genuino sin `model` conserva su lectura. El responsable autorizó adaptar
++  únicamente una copia derivada del fixture reetiquetado a v1, estableciendo
++  `model=None`; los oráculos y su ejecución literal permanecen intactos y
++  reportados por separado (ADR-042 y reporte C4).
+ - **Historia de presión requerida (R02-C3/C2-05):** un snapshot con `model`
+   conocido y esquema actual solo se declara **nativo exacto** si `pmax_pa` está
+   presente **cuando la fricción activa depende de presión** (Chen–Flynn
+@@ -67,3 +69,31 @@
+   testeada + entrada en CHANGELOG; esta extensión es compatible, no la exige.
+ - `docs/export-contract.md` (`trace-bundle-v1`) sigue vigente para el
+   spike visual: solo lectura, sin Blender/UI en el core.
++
++## Composición de procedencia y fronteras C4 (2026-10-15)
++
++- Ante una nueva pérdida relevante de historia, `provenance` describe el
++  snapshot entrante actual (esquema/hash, transformación, campos ausentes y
++  alcance). `prior`, opcional y vacío por defecto, conserva el registro
++  anterior **completo**. Cada eslabón conserva a su vez su historia previa.
++  No se sobrescribe el origen ni se inventa la presión perdida.
++- Un origen `exact_neutral` no oculta una nueva continuación caliente
++  aproximada. Una limitación previa `approximate_hot` no se eleva a exacta
++  por recapturar defaults. Releer el mismo envelope ya registrado no agrega
++  otro eslabón; una recaptura nativa completa conserva la limitación.
++- `prior` pertenece al wrapper, fuera de `state_hash`, igual que el resto
++  de la procedencia. Ausente se lee como lista vacía y vacío se omite al
++  escribir; no cambian la forma canónica del estado, los hashes históricos,
++  los bits de f64 ni los campos físicos/ModelIdentity. El struct Rust de
++  metadata añade un miembro público; callers que lo construyan por literal
++  deben inicializar `prior: Vec::new()`. La compatibilidad de lectura JSON
++  no implica compatibilidad de todos los literales de source externos.
++- La presión de plenum/escape debe ser finita y positiva, igual que su
++  densidad, antes de aceptar restore o resume(incluido avance nulo).
++  Overflow/underflow se rechazan sin cotas OEM arbitrarias.
++- La resistencia calculada de batería devuelve error tipado si no es
++  representable, antes de limitar el terminal; temperaturas Celsius
++  negativas legítimas y resistencias ideales cero siguen en su dominio.
++
++Estado de la implementación C4: **IMPLEMENTED_PENDING_INDEPENDENT_REVIEW**.
++No es un gate de integración ni validación experimental.

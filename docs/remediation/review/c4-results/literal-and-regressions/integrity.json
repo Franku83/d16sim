@@ -1,0 +1,7 @@
+{
+  "oracle_sha256": "b027d9e3ab697b1974e87980765b7b4872e24e3792153ec3e02b598bd0756b36",
+  "neutral_adapter_exact": true,
+  "production_function_extraction_exact": true,
+  "nominal_initializer_byte_identical": true,
+  "reviewed_production": "8c51b5d9c705745b1a558b00e8bc41d73aad0d7f"
+}

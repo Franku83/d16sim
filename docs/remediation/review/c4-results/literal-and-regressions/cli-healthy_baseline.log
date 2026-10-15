@@ -1,0 +1,73 @@
+   Compiling proc-macro2 v1.0.107
+   Compiling quote v1.0.47
+   Compiling unicode-ident v1.0.26
+   Compiling version_check v0.9.5
+   Compiling typenum v1.20.1
+   Compiling thiserror v2.0.21
+   Compiling serde_core v1.0.229
+   Compiling zmij v1.0.23
+   Compiling serde_json v1.0.151
+   Compiling serde v1.0.229
+   Compiling cpufeatures v0.2.17
+   Compiling cfg-if v1.0.5
+   Compiling memchr v2.8.3
+   Compiling itoa v1.0.18
+   Compiling utf8parse v0.2.2
+   Compiling colorchoice v1.0.5
+   Compiling anstyle v1.0.14
+   Compiling anstyle-parse v1.0.0
+   Compiling anstyle-query v1.1.5
+   Compiling is_terminal_polyfill v1.70.2
+   Compiling strsim v0.11.1
+   Compiling clap_lex v1.1.1
+   Compiling heck v0.5.0
+   Compiling anstream v1.0.0
+   Compiling generic-array v0.14.7
+   Compiling clap_builder v4.6.7
+   Compiling syn v3.0.6
+   Compiling block-buffer v0.10.4
+   Compiling crypto-common v0.1.7
+   Compiling digest v0.10.7
+   Compiling sha2 v0.10.9
+   Compiling thiserror-impl v2.0.21
+   Compiling serde_derive v1.0.229
+   Compiling clap_derive v4.6.7
+   Compiling units v0.1.0 (/home/franku/projects/d16sim-verification-c4/crates/units)
+   Compiling math v0.1.0 (/home/franku/projects/d16sim-verification-c4/crates/math)
+   Compiling clap v4.6.7
+   Compiling engine-types v0.1.0 (/home/franku/projects/d16sim-verification-c4/crates/engine-types)
+   Compiling kinematics v0.1.0 (/home/franku/projects/d16sim-verification-c4/crates/kinematics)
+   Compiling fuel v0.1.0 (/home/franku/projects/d16sim-verification-c4/crates/fuel)
+   Compiling fastener v0.1.0 (/home/franku/projects/d16sim-verification-c4/crates/fastener)
+   Compiling thermal v0.1.0 (/home/franku/projects/d16sim-verification-c4/crates/thermal)
+   Compiling trigger v0.1.0 (/home/franku/projects/d16sim-verification-c4/crates/trigger)
+   Compiling lube v0.1.0 (/home/franku/projects/d16sim-verification-c4/crates/lube)
+   Compiling assembly v0.1.0 (/home/franku/projects/d16sim-verification-c4/crates/assembly)
+   Compiling physics v0.1.0 (/home/franku/projects/d16sim-verification-c4/crates/physics)
+   Compiling calibration v0.1.0 (/home/franku/projects/d16sim-verification-c4/crates/calibration)
+   Compiling thermo v0.1.0 (/home/franku/projects/d16sim-verification-c4/crates/thermo)
+   Compiling contacts v0.1.0 (/home/franku/projects/d16sim-verification-c4/crates/contacts)
+   Compiling crank v0.1.0 (/home/franku/projects/d16sim-verification-c4/crates/crank)
+   Compiling ecu v0.1.0 (/home/franku/projects/d16sim-verification-c4/crates/ecu)
+   Compiling electrical v0.1.0 (/home/franku/projects/d16sim-verification-c4/crates/electrical)
+   Compiling combustion v0.1.0 (/home/franku/projects/d16sim-verification-c4/crates/combustion)
+   Compiling valvetrain v0.1.0 (/home/franku/projects/d16sim-verification-c4/crates/valvetrain)
+   Compiling flow v0.1.0 (/home/franku/projects/d16sim-verification-c4/crates/flow)
+   Compiling diagnostics v0.1.0 (/home/franku/projects/d16sim-verification-c4/crates/diagnostics)
+   Compiling engine v0.1.0 (/home/franku/projects/d16sim-verification-c4/crates/engine)
+   Compiling leak v0.1.0 (/home/franku/projects/d16sim-verification-c4/crates/leak)
+   Compiling wear v0.1.0 (/home/franku/projects/d16sim-verification-c4/crates/wear)
+   Compiling simulation v0.1.0 (/home/franku/projects/d16sim-verification-c4/crates/simulation)
+   Compiling damage v0.1.0 (/home/franku/projects/d16sim-verification-c4/crates/damage)
+   Compiling audit v0.1.0 (/home/franku/projects/d16sim-verification-c4/crates/audit)
+   Compiling dyno v0.1.0 (/home/franku/projects/d16sim-verification-c4/crates/dyno)
+   Compiling adversarial v0.1.0 (/home/franku/projects/d16sim-verification-c4/crates/adversarial)
+   Compiling d16sim v0.1.0 (/home/franku/projects/d16sim-verification-c4/crates/cli)
+    Finished `release` profile [optimized] target(s) in 9.93s
+     Running `target/release/d16sim mech-demo --scenario healthy_baseline`
+mech-demo scenario=healthy_baseline (L1 instruments, UNCALIBRATED):
+  steady_leak_g_min   : 2.065
+  compression_kPa     : 1400
+  leak_pct            : 2.6
+  split crank/exh/cool: 1.00/0.00/0.00 (exh: no port -> not instrumented)
+  verdict             : Inconclusive { have_n: 2, need_n: 2 }

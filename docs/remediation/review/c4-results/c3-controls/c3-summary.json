@@ -1,0 +1,10 @@
+{
+  "cases": 11,
+  "passed": 11,
+  "failures": 0,
+  "errors": 0,
+  "predicates_executed": 360,
+  "rows": 333,
+  "families": 11,
+  "failure_names": []
+}

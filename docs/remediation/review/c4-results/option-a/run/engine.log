@@ -1,0 +1,4 @@
+    Blocking waiting for file lock on build directory
+   Compiling d16sim-independent-probes v0.1.0 (/home/franku/projects/d16sim-verification-c4/verification/c4_review)
+    Finished `release` profile [optimized] target(s) in 2.28s
+     Running `verification/c4_review/target/release/s30-option-a engine`

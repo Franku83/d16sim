@@ -1,0 +1,8 @@
+{
+  "authorization": "User C4 request section7 and C4_OPTION_A_AUTHORIZATION.md",
+  "reference": "36919b0455e8eaf741a72ff4a74ae85f40e116ba:verification/c3_review/src/main.rs",
+  "literal_sha256": "b28adcc0b93950aadf73c950e47b4679f6b90f746dba688ad4cad09c37607982",
+  "derived_sha256": "c194a4625139f4bb53ef74a8a5cb1b60bb3212bfb1af586d5615eb0603de4e5b",
+  "only_change": "v1.model = None;",
+  "state_and_hash_unchanged_by_statement": true
+}

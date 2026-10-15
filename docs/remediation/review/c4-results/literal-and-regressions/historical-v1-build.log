@@ -1,0 +1,38 @@
+   Compiling proc-macro2 v1.0.107
+   Compiling unicode-ident v1.0.26
+   Compiling quote v1.0.47
+   Compiling version_check v0.9.5
+   Compiling typenum v1.20.1
+   Compiling thiserror v2.0.21
+   Compiling serde_core v1.0.229
+   Compiling zmij v1.0.23
+   Compiling serde_json v1.0.151
+   Compiling serde v1.0.229
+   Compiling cpufeatures v0.2.17
+   Compiling cfg-if v1.0.5
+   Compiling memchr v2.8.3
+   Compiling itoa v1.0.18
+   Compiling generic-array v0.14.7
+   Compiling syn v3.0.6
+   Compiling crypto-common v0.1.7
+   Compiling block-buffer v0.10.4
+   Compiling digest v0.10.7
+   Compiling sha2 v0.10.9
+   Compiling thiserror-impl v2.0.21
+   Compiling serde_derive v1.0.229
+   Compiling units v0.1.0 (/home/franku/projects/d16sim-verification-c4/target/remediation-review-legacy/crates/units)
+   Compiling math v0.1.0 (/home/franku/projects/d16sim-verification-c4/target/remediation-review-legacy/crates/math)
+   Compiling engine-types v0.1.0 (/home/franku/projects/d16sim-verification-c4/target/remediation-review-legacy/crates/engine-types)
+   Compiling kinematics v0.1.0 (/home/franku/projects/d16sim-verification-c4/target/remediation-review-legacy/crates/kinematics)
+   Compiling fuel v0.1.0 (/home/franku/projects/d16sim-verification-c4/target/remediation-review-legacy/crates/fuel)
+   Compiling thermo v0.1.0 (/home/franku/projects/d16sim-verification-c4/target/remediation-review-legacy/crates/thermo)
+   Compiling contacts v0.1.0 (/home/franku/projects/d16sim-verification-c4/target/remediation-review-legacy/crates/contacts)
+   Compiling crank v0.1.0 (/home/franku/projects/d16sim-verification-c4/target/remediation-review-legacy/crates/crank)
+   Compiling combustion v0.1.0 (/home/franku/projects/d16sim-verification-c4/target/remediation-review-legacy/crates/combustion)
+   Compiling electrical v0.1.0 (/home/franku/projects/d16sim-verification-c4/target/remediation-review-legacy/crates/electrical)
+   Compiling valvetrain v0.1.0 (/home/franku/projects/d16sim-verification-c4/target/remediation-review-legacy/crates/valvetrain)
+   Compiling flow v0.1.0 (/home/franku/projects/d16sim-verification-c4/target/remediation-review-legacy/crates/flow)
+   Compiling engine v0.1.0 (/home/franku/projects/d16sim-verification-c4/target/remediation-review-legacy/crates/engine)
+   Compiling d16sim-historical-v1-producer v0.1.0 (/home/franku/projects/d16sim-verification-c4/verification/c4_review/legacy)
+    Finished `release` profile [optimized] target(s) in 4.55s
+     Running `verification/c4_review/legacy/target/release/d16sim-historical-v1-producer`

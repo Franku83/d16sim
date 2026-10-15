@@ -1,0 +1,168 @@
+[
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-verification-c4/verification/c4_review/Cargo.toml",
+      "--bin",
+      "s30-option-a",
+      "--",
+      "engine"
+    ],
+    "cwd": "/home/franku/projects/d16sim-verification-c4",
+    "label": "adapted-engine",
+    "exit": 0,
+    "elapsed_s": 18.374949344000015,
+    "env": null
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-verification-c4/verification/c4_review/Cargo.toml",
+      "--bin",
+      "s30-option-a",
+      "--",
+      "subsystems"
+    ],
+    "cwd": "/home/franku/projects/d16sim-verification-c4",
+    "label": "adapted-subsystems",
+    "exit": 0,
+    "elapsed_s": 0.07347583999944618,
+    "env": null
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-verification-c4/verification/c4_review/Cargo.toml",
+      "--bin",
+      "s30-option-a",
+      "--",
+      "dyno"
+    ],
+    "cwd": "/home/franku/projects/d16sim-verification-c4",
+    "label": "adapted-dyno",
+    "exit": 0,
+    "elapsed_s": 1.5993540760000542,
+    "env": null
+  },
+  {
+    "argv": [
+      "python3",
+      "/home/franku/projects/d16sim-verification-c4/verification/c4_review/check_contracts.py"
+    ],
+    "cwd": "/home/franku/projects/d16sim-verification-c4",
+    "label": "adapted-check",
+    "exit": 1,
+    "elapsed_s": 0.04722569800014753,
+    "env": {
+      "D16_AUDIT_RESULTS": "/home/franku/projects/d16sim-verification/docs/remediation/review/c4-results/independent-final/adapted"
+    }
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-verification-c4/verification/c4_review/Cargo.toml",
+      "--bin",
+      "c4-directed",
+      "--",
+      "provenance"
+    ],
+    "cwd": "/home/franku/projects/d16sim-verification-c4",
+    "label": "provenance",
+    "exit": 0,
+    "elapsed_s": 1.0296519449993866,
+    "env": null
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-verification-c4/verification/c4_review/Cargo.toml",
+      "--bin",
+      "c4-directed",
+      "--",
+      "adapter"
+    ],
+    "cwd": "/home/franku/projects/d16sim-verification-c4",
+    "label": "adapter",
+    "exit": 0,
+    "elapsed_s": 0.02888427200014121,
+    "env": null
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-verification-c4/verification/c4_review/Cargo.toml",
+      "--bin",
+      "c4-directed",
+      "--",
+      "battery"
+    ],
+    "cwd": "/home/franku/projects/d16sim-verification-c4",
+    "label": "battery",
+    "exit": 0,
+    "elapsed_s": 0.035317431000294164,
+    "env": null
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/home/franku/projects/d16sim-verification-c4/verification/c4_review/Cargo.toml",
+      "--bin",
+      "c4-directed",
+      "--",
+      "nodes"
+    ],
+    "cwd": "/home/franku/projects/d16sim-verification-c4",
+    "label": "nodes",
+    "exit": 0,
+    "elapsed_s": 0.03015949200016621,
+    "env": null
+  },
+  {
+    "argv": [
+      "python3",
+      "/home/franku/projects/d16sim-verification-c4/verification/c4_review/check_c4.py"
+    ],
+    "cwd": "/home/franku/projects/d16sim-verification-c4",
+    "label": "c4-check",
+    "exit": 1,
+    "elapsed_s": 0.05108352699971874,
+    "env": {
+      "D16_C4_RESULTS": "/home/franku/projects/d16sim-verification/docs/remediation/review/c4-results/independent-final"
+    }
+  }
+]

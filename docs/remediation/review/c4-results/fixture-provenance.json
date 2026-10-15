@@ -1,0 +1,5 @@
+{
+  "producer": "254126618fb17b5e09c398078b2f1efd1963de25",
+  "audit_fixture_sha256": "b093fe1836d81be84141173f50e0d524999e8dc6ea00e13054172bbac66b0776",
+  "production_fixture_and_regenerated_producer_byte_identical": true
+}

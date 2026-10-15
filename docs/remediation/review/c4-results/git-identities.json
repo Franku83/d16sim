@@ -1,0 +1,38 @@
+[
+  {
+    "ref": "ff09a0d",
+    "identity": "ff09a0dda82188e6bf27a80d17c902f8972a39d2 4624edf9ebf7615a2595eecda90da0ee1751442a S30: auditoria final y congelacion como research foundation"
+  },
+  {
+    "ref": "25d528e",
+    "identity": "25d528e3ff5b31eaeab0c894c4227b3e7d3a574c ff09a0dda82188e6bf27a80d17c902f8972a39d2 audit: independent scientific and technical review of frozen S00-S30"
+  },
+  {
+    "ref": "8a7e868",
+    "identity": "8a7e8686e4e8831fb30d1a71b815e67e7d7139ef f4dd6102acdea912f2dd4386bd5499fda967bbe6 docs(remediation): R01-R02 batch report, ADR-038 and progress entry"
+  },
+  {
+    "ref": "caad1cb",
+    "identity": "caad1cbf31d01531e0fbd81be6190f52b2d1c2d7 edb36cc72de89a881e7ef8d5944a5f56112a35f4 docs(remediation): R01-R02-C1 batch report, ADR-039, technical addenda and erratum"
+  },
+  {
+    "ref": "a0040c5",
+    "identity": "a0040c58174a6cf6a2ac84e38605eafd2f584159 9021d7dbac4f2fb4b151b8c2e3023861698e6561 docs(remediation): R01-R02-C2 boundary matrix, batch report, ADR-040 and contract addenda"
+  },
+  {
+    "ref": "3aef5f6",
+    "identity": "3aef5f6ccdc076dad6e8be627a5eb836b26ee998 8fc7a59747c5b1acfec7695f830a9b1cd8869d47 docs(remediation): R01-R02-C3 acceptance matrix, batch report, ADR-041 and contract addenda"
+  },
+  {
+    "ref": "36919b0",
+    "identity": "36919b0455e8eaf741a72ff4a74ae85f40e116ba 40e75d54ba5b09d33e358b5777314ea2c657740a audit(C3): separate integration and scientific gates; reproduce residual pressure and provenance defects"
+  },
+  {
+    "ref": "ed56f68",
+    "identity": "ed56f68a95eca81ed20ee2c0b943cf8bba884a5c 3aef5f6ccdc076dad6e8be627a5eb836b26ee998 docs(C4): reproduce C3 defects and document schema-fixture conflict before policy changes"
+  },
+  {
+    "ref": "8c51b5d",
+    "identity": "8c51b5d9c705745b1a558b00e8bc41d73aad0d7f ed56f68a95eca81ed20ee2c0b943cf8bba884a5c remediation(C4): validate node pressure and resistance, compose provenance, enforce strict schema identity"
+  }
+]

@@ -1,0 +1,11 @@
+{"data":{"adapted_accepted":true,"adapted_hash_valid":true,"genuine_accepted":true,"genuine_hash_valid":true,"hash_all_equal":true,"literal_accepted":false,"literal_hash_valid":true,"provenance_all_equal":true,"state_all_equal":true,"state_hash":"deb04a1b413455e20c057ec5cca14c28d691ab52630cef28d172c9224b0dea93"},"probe":"adapter_identity"}
+{"data":{"accepted":true,"expected_valid":true,"hash_valid":true,"model":null,"schema":1},"probe":"schema_pair"}
+{"data":{"accepted":true,"expected_valid":true,"hash_valid":true,"model":{"combustion_accounting":1,"schema_version":1},"schema":1},"probe":"schema_pair"}
+{"data":{"accepted":false,"expected_valid":false,"hash_valid":true,"model":{"combustion_accounting":1,"schema_version":2},"schema":1},"probe":"schema_pair"}
+{"data":{"accepted":false,"expected_valid":false,"hash_valid":true,"model":{"combustion_accounting":999,"schema_version":1},"schema":1},"probe":"schema_pair"}
+{"data":{"accepted":false,"expected_valid":false,"hash_valid":true,"model":{"combustion_accounting":1,"schema_version":999},"schema":1},"probe":"schema_pair"}
+{"data":{"accepted":true,"expected_valid":true,"hash_valid":true,"model":null,"schema":2},"probe":"schema_pair"}
+{"data":{"accepted":true,"expected_valid":true,"hash_valid":true,"model":{"combustion_accounting":1,"schema_version":2},"schema":2},"probe":"schema_pair"}
+{"data":{"accepted":false,"expected_valid":false,"hash_valid":true,"model":{"combustion_accounting":1,"schema_version":1},"schema":2},"probe":"schema_pair"}
+{"data":{"accepted":false,"expected_valid":false,"hash_valid":true,"model":{"combustion_accounting":999,"schema_version":2},"schema":2},"probe":"schema_pair"}
+{"data":{"accepted":false,"expected_valid":false,"hash_valid":true,"model":{"combustion_accounting":1,"schema_version":999},"schema":2},"probe":"schema_pair"}
