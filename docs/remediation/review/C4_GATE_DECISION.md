@@ -45,3 +45,13 @@ Antes de operar: comprobar otra vez HEAD/ref C4 y destino, ascendencia, limpieza
 La evidencia independiente permanece en la rama revisora sobre36919b0. El ff incorpora únicamente la historia de implementación hasta8c; no mezcla estos probes ni documentos de revisión con producción. No se eliminan ramas/worktrees históricos.
 
 **STOP tras eventual integración y smoke. No iniciar R03/R04/R05/S31.**
+
+## Constancia posterior de ejecución — 2026-10-15
+
+**INTEGRATED_FF_AND_SMOKE_PASS.** La decisión previa quedó comprometida en `4ad4820ca9625f5da2f7ab449e1098de49e053ca` antes de actuar. Se revalidaron source/destino y limpieza, HEAD candidato estable y ascendencia. Se ejecutó únicamente `git merge --ff-only 8c51b5d9c705745b1a558b00e8bc41d73aad0d7f` en el checkout de remediation/r01-r05.
+
+Destino antes8a7e8686e4e8831fb30d1a71b815e67e7d7139ef → después8c51b5d9c705745b1a558b00e8bc41d73aad0d7f, exactamente el candidato aprobado. Source C4 conserva8c y ambos working trees están limpios. Smoke posterior: cargo test --locked -p engine -p electrical y CLI mech-demo healthy_baseline, ambos exit0; casos reales en integration-receipt.json. No hubo merge commit ni alteración de la historia de implementación.
+
+Masterff09, auditoría25d y ramas C1/C2/C3/C4 preservados. Los worktrees detached de prueba conservan sus fuentes de auditoría no rastreadas localmente, versionadas en la rama revisora; no tienen cambios productivos rastreados. El master mantiene el spec no rastreado preexistente. El checkout del revisor queda limpio tras el commit separado de esta constancia; no se incorporó su historia a producción.
+
+Registro ejecutable/estado: c4-results/integration-preconditions.json, fast-forward.log, integration-receipt.json, post-ff-smoke/ y final-git-state.json. Esta constancia documenta ejecución, no abre R03/R04/R05/S31 ni convierte la verificación en validación experimental. **STOP.**

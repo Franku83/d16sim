@@ -1,0 +1,12 @@
+{
+  "approved_c4": "8c51b5d9c705745b1a558b00e8bc41d73aad0d7f",
+  "destination_before": "8a7e8686e4e8831fb30d1a71b815e67e7d7139ef",
+  "approval_commit": "4ad4820ca9625f5da2f7ab449e1098de49e053ca",
+  "source_clean": true,
+  "destination_clean": true,
+  "review_clean_before_receipt": true,
+  "source_unchanged": true,
+  "destination_ancestor": true,
+  "strategy": "git merge --ff-only <approved exact SHA>",
+  "preconditions_passed": true
+}

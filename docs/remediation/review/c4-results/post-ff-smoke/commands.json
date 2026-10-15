@@ -1,0 +1,36 @@
+[
+  {
+    "argv": [
+      "cargo",
+      "test",
+      "--locked",
+      "-p",
+      "engine",
+      "-p",
+      "electrical"
+    ],
+    "cwd": "/home/franku/projects/d16sim-remediation",
+    "name": "engine-electrical",
+    "exit": 0,
+    "elapsed_s": 6.237543420000293
+  },
+  {
+    "argv": [
+      "cargo",
+      "run",
+      "--locked",
+      "--offline",
+      "--release",
+      "--bin",
+      "d16sim",
+      "--",
+      "mech-demo",
+      "--scenario",
+      "healthy_baseline"
+    ],
+    "cwd": "/home/franku/projects/d16sim-remediation",
+    "name": "healthy-cli",
+    "exit": 0,
+    "elapsed_s": 9.695348477000152
+  }
+]

@@ -1,0 +1,83 @@
+   Compiling thermal v0.1.0 (/home/franku/projects/d16sim-remediation/crates/thermal)
+   Compiling electrical v0.1.0 (/home/franku/projects/d16sim-remediation/crates/electrical)
+   Compiling engine v0.1.0 (/home/franku/projects/d16sim-remediation/crates/engine)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.04s
+     Running unittests src/lib.rs (target/debug/deps/electrical-0cba90f7534e37a0)
+
+running 14 tests
+test battery::r02_c3_tests::negative_celsius_above_absolute_zero_is_valid ... ok
+test battery::r02_c4_tests::calculated_resistance_must_be_representable ... ok
+test battery::tests::voltage_collapses_under_load_when_weak ... ok
+test ignition::tests::spark_needs_dwell_and_voltage ... ok
+test sensors::gate_tests::false_ect_changes_ecu_action_only ... ok
+test sensors::gate_tests::false_map_changes_load_estimate_only ... ok
+test sensors::tests::ntc_and_o2_transfer_shapes ... ok
+test sensors::tests::deterministic_noise_with_seed ... ok
+test starter::tests::torque_and_current_fall_with_speed_and_efficiency_below_one ... ok
+test wiring::tests::range_monitor_confirms_and_heals ... ok
+test wiring::tests::wire_faults_are_physical_states ... ok
+test sensors::tests::step_response_reaches_63_percent_at_tau ... ok
+test crank::tests::healthy_crank_turns_with_compression_ripple ... ok
+test crank::tests::failures_prevent_cranking_but_never_invent_start ... ok
+
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.46s
+
+     Running unittests src/lib.rs (target/debug/deps/engine-b295603710f0cfc3)
+
+running 41 tests
+test run::r01_r02_tests::homogeneous_outflow_carries_fuel_proportionally ... ok
+test run::r01_r02_tests::invalid_inputs_fail_closed_without_panic ... ok
+test run::r01_r02_tests::native_snapshot_has_no_migration_provenance ... ok
+test run::r01_r02_tests::resume_error_leaves_state_untouched ... ok
+test run::r01_r02_tests::legacy_migration_records_provenance ... ok
+test run::r01_r02_tests::restore_rejects_physically_impossible_state_with_valid_hash ... ok
+test run::r01_r02_tests::v1_historical_hash_verifies_before_migration ... ok
+test run::r01_r02_tests::restore_rejects_invalid_history_counters_and_thermal ... ok
+test run::r01_r02_tests::restore_rejects_thermal_mismatch_and_unknown_schema ... ok
+test run::r01_r02_tests::signed_zero_bits_roundtrip ... ok
+test run::r02_c2_tests::noop_resume_validates_state_and_thermal_coherence ... ok
+test run::r02_c2_tests::unknown_or_incoherent_model_identifiers_are_rejected ... ok
+test run::r02_c4_tests::battery_resistance_overflow_is_an_atomic_engine_error ... ok
+test run::r02_c3_tests::thermal_energy_decision_uses_actual_state_not_factory_temperature ... ok
+test run::r02_c4_tests::composing_provenance_does_not_promote_a_prior_limit ... ok
+test run::r02_c3_tests::cylinder_derived_temperature_rejected_even_on_noop ... ok
+test run::r02_c4_tests::schema_pair_strict_even_for_cold_retagged_fixture ... ok
+test run::r02_c4_tests::node_pressure_boundary_rejects_overflow_and_underflow_atomically ... ok
+test run::r02_c2_tests::invalid_input_matrix_rejects_atomically ... ok
+test run::tests::crossed_edge_handles_wrap ... ok
+test run::r02_c2_tests::pre_c2_snapshot_is_not_declared_exact_native ... ok
+test run::r02_c4_tests::inherited_provenance_records_new_loss_without_erasing_origin ... ok
+test run::r01_r02_tests::json_roundtrip_preserves_bits_and_hash ... ok
+test run::r02_c2_tests::missing_required_pressure_history_is_marked_approximate ... ok
+test run::r01_r02_tests::insufficient_fuel_burns_no_more_than_available ... ok
+test run::r01_r02_tests::chemical_energy_matches_consumed_fuel_during_burn ... ok
+test run::tests::sealed_burn_closes_energy ... ok
+test run::r02_c3_tests::injector_and_cam_invalid_matrix_rejected_atomically ... ok
+test run::r01_r02_tests::burn_snapshot_cut_midwindow_resumes_coherently ... ok
+test run::r02_c2_tests::valid_inputs_remain_accepted ... ok
+test run::r01_r02_tests::fuel_inventory_bounded_and_conserved_without_spark ... ok
+test run::s21_tests::no_burn_no_wall_heating_and_snapshot_migrates ... ok
+test run::tests::healthy_idles_without_clamps_or_magic ... ok
+test run::r01_r02_tests::burned_fuel_never_exceeds_injected_and_energy_needs_mass ... ok
+test run::tests::fuel_cut_shuts_down_coherently ... ok
+test run::tests::snapshot_resume_is_bit_identical ... ok
+test run::tests::determinism_and_convergence ... ok
+test run::tests::failure_scenarios_order_causally ... ok
+test run::r01_r02_tests::replay_split_with_pressure_history_is_bit_identical ... ok
+test run::s21_tests::cold_start_warms_ect_and_enriches ... ok
+test run::r01_r02_tests::thermal_ambient_loss_enters_energy_ledger ... ok
+
+test result: ok. 41 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.61s
+
+   Doc-tests electrical
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests engine
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
